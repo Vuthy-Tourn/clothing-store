@@ -2,37 +2,47 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="relative overflow-hidden h-screen min-h-[500px]">
+    <section class="relative overflow-hidden h-screen min-h-[700px]">
         @foreach ($carousels as $index => $carousel)
-            <div class="hero-slide absolute inset-0 opacity-0 transition-opacity duration-1000 ease-in-out {{ $loop->first ? 'active opacity-100 z-10' : 'z-0' }}"
+            <div class="hero-slide absolute inset-0 opacity-0 transition-all duration-1000 ease-out {{ $loop->first ? 'active opacity-100 z-10' : 'z-0' }}"
                 style="background-image: url('{{ asset($carousel->image_path) }}'); background-size: cover; background-position: center;">
-                <div class="absolute inset-0 bg-black/40"></div>
 
-                <div class="relative z-10 flex flex-col items-center justify-center text-center h-full text-white px-6">
-                    <h1 class="font-extrabold text-5xl md:text-6xl mb-4">{{ $carousel->title }}</h1>
-                    <p class="max-w-2xl text-lg md:text-xl mb-6">{{ $carousel->description }}</p>
+                <!-- Gradient Overlay -->
+                <div class="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-transparent"></div>
 
-                    @if ($carousel->button_text && $carousel->button_link)
-                        <a href="{{ $carousel->button_link }}"
-                            class="bg-gray-900 text-white inline-block px-6 py-3 rounded-full font-semibold transition-all duration-300"
-                            {{ Str::startsWith($carousel->button_link, ['http://', 'https://']) ? 'target=_blank rel=noopener' : '' }}>
-                            {{ $carousel->button_text }}
-                        </a>
-                    @endif
+                <!-- Content -->
+                <div class="relative z-10 flex items-center h-full">
+                    <div class="max-w-7xl mx-auto px-6 lg:px-8 w-full">
+                        <div class="max-w-2xl ml-auto text-right">
+                            <span class="text-white/80 text-sm font-medium tracking-wider mb-4 block">NEW COLLECTION</span>
+                            <h1 class="font-light text-5xl md:text-6xl lg:text-7xl text-white mb-6 leading-tight">
+                                {{ $carousel->title }}
+                            </h1>
+                            <p class="text-xl text-white/80 mb-8 leading-relaxed font-light">
+                                {{ $carousel->description }}
+                            </p>
+                            @if ($carousel->button_text && $carousel->button_link)
+                                <a href="{{ $carousel->button_link }}"
+                                    class="inline-flex items-center border-2 border-white text-white px-8 py-4 hover:bg-white hover:text-gray-900 transition-all duration-500 text-lg font-medium"
+                                    {{ Str::startsWith($carousel->button_link, ['http://', 'https://']) ? 'target=_blank rel=noopener' : '' }}>
+                                    {{ $carousel->button_text }}
+                                    <i
+                                        class="fas fa-arrow-right ml-3 text-sm transition-transform duration-300 group-hover:translate-x-1"></i>
+                                </a>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
         @endforeach
 
-        <!-- Arrows -->
-        <div class="absolute inset-0 flex justify-between items-center px-6 z-20 ">
-            <button id="carousel-prev"
-                class="text-white text-3xl bg-black/40 hover:bg-black/70 rounded-full p-3 transition">
-                &#10094;
-            </button>
-            <button id="carousel-next"
-                class="text-white text-3xl bg-black/40 hover:bg-black/70 rounded-full p-3 transition">
-                &#10095;
-            </button>
+        <!-- Dots Navigation -->
+        <div class="absolute bottom-8 right-8 z-20 flex flex-col space-y-3">
+            @foreach ($carousels as $index => $carousel)
+                <button
+                    class="carousel-dot w-3 h-3 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300 {{ $loop->first ? 'bg-white' : '' }}"
+                    data-slide="{{ $index }}"></button>
+            @endforeach
         </div>
     </section>
     <br>
@@ -303,7 +313,9 @@
         @else
             <form class="optin-form-bottom">
                 <input type="email" placeholder="Enter your email" required disabled class="cursor-not-allowed">
-                <button type="submit" disabled>Login to Subscribe</button>
+                <button type="submit" disabled class="bg-gray-900">
+                    <a href="{{ route('login') }}"> Login to Subscribe</a>
+                </button>
             </form>
         @endauth
 

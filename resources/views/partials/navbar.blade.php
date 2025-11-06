@@ -1,4 +1,4 @@
- <nav class="navbar bg-white shadow-sm sticky top-0 z-50">
+<nav class="navbar fixed top-0 left-0 right-0 z-50 transition-all duration-500 transform -translate-y-full" id="mainNavbar">
      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
          <div class="flex justify-between items-center h-16">
              <!-- Logo -->
@@ -181,11 +181,8 @@
                  </div>
 
                  <!-- Regular Links -->
-                 <a href="index.php#NewArrivals"
-                     class="nav-link text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">New
-                     Arrivals</a>
-                 <a href="{{ route('contact') }}"
-                     class="nav-link text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">Contact</a>
+                 {{-- <a href="{{ route('contact') }}"
+                     class="nav-link text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">Contact</a> --}}
                  <a href="{{ route('products.all') }}"
                      class="nav-link text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">Products</a>
 
@@ -270,10 +267,8 @@
                      class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium">Women</a>
                  <a href="{{ url('kids') }}"
                      class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium">Kids</a>
-                 <a href="index.php#NewArrivals"
-                     class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium">New Arrivals</a>
-                 <a href="{{ route('contact') }}"
-                     class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium">Contact</a>
+                 {{-- <a href="{{ route('contact') }}"
+                     class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium">Contact</a> --}}
                  <a href="{{ route('products.all') }}"
                      class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium">Products</a>
 
@@ -350,5 +345,65 @@
          }
 
          setActiveNavLink();
+
+         // Navbar scroll effect - hidden initially, slides down from top when scrolling
+         const navbar = document.getElementById('mainNavbar');
+         let lastScrollY = window.scrollY;
+         const excludedPages = ['/orders', '/admin','/men','women','kids', '/products']; // Add pages where you want normal behavior
+         
+         function updateNavbarOnScroll() {
+             const currentPath = window.location.pathname;
+             const isExcludedPage = excludedPages.some(page => currentPath.includes(page));
+             
+             if (isExcludedPage) {
+                 // Normal behavior for excluded pages - always visible
+                 navbar.style.transform = 'translateY(0)';
+                 if (window.scrollY > 50) {
+                     navbar.classList.remove('bg-transparent', 'shadow-sm');
+                     navbar.classList.add('bg-white', 'shadow-lg');
+                 } else {
+                     navbar.classList.remove('bg-white', 'shadow-lg');
+                     navbar.classList.add('bg-transparent', 'shadow-sm');
+                 }
+                 return;
+             }
+             
+             // For other pages - hidden initially, slides down when scrolling
+             if (window.scrollY > 100) {
+                 // Show navbar when scrolled down
+                 navbar.style.transform = 'translateY(0)';
+                 
+                 // Change background when scrolled
+                 if (window.scrollY > 50) {
+                     navbar.classList.remove('bg-transparent', 'shadow-sm');
+                     navbar.classList.add('bg-white', 'shadow-lg');
+                 } else {
+                     navbar.classList.remove('bg-white', 'shadow-lg');
+                     navbar.classList.add('bg-transparent', 'shadow-sm');
+                 }
+             } else {
+                 // Hide navbar when at top
+                 navbar.style.transform = 'translateY(-100%)';
+                 navbar.classList.remove('bg-white', 'shadow-lg');
+                 navbar.classList.add('bg-transparent', 'shadow-sm');
+             }
+             
+             lastScrollY = window.scrollY;
+         }
+
+         // Initial check
+         updateNavbarOnScroll();
+         
+         // Listen for scroll events with throttle
+         let ticking = false;
+         window.addEventListener('scroll', function() {
+             if (!ticking) {
+                 window.requestAnimationFrame(function() {
+                     updateNavbarOnScroll();
+                     ticking = false;
+                 });
+                 ticking = true;
+             }
+         });
      });
  </script>

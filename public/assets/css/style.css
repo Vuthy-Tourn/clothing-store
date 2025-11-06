@@ -33,6 +33,7 @@
 html {
     scroll-behavior: smooth;
     scrollbar-width: none !important;
+        overflow-x: hidden;
 }
 
 body {
@@ -79,7 +80,6 @@ body {
     display: none;
     background: none;
     border: none;
-    color: var(--color-primary);
     cursor: pointer;
 }
 
