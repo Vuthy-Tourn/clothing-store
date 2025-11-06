@@ -14,7 +14,7 @@
 
                     @if ($carousel->button_text && $carousel->button_link)
                         <a href="{{ $carousel->button_link }}"
-                            class="hero-btn inline-block px-6 py-3 rounded-full font-semibold transition-all duration-300"
+                            class="bg-gray-900 text-white inline-block px-6 py-3 rounded-full font-semibold transition-all duration-300"
                             {{ Str::startsWith($carousel->button_link, ['http://', 'https://']) ? 'target=_blank rel=noopener' : '' }}>
                             {{ $carousel->button_text }}
                         </a>
@@ -37,27 +37,102 @@
     </section>
     <br>
 
-    <section class="featured-categories py-16 px-4 md:px-8 lg:px-16" data-aos="fade-up">
-        <h2 class="text-3xl md:text-4xl font-extrabold text-center mb-12">Shop by Category</h2>
+    {{-- Feature --}}
+    <section class="featured-categories py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <!-- Section Header -->
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-2 tracking-tight">Explore Collections</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Discover our carefully curated categories designed for
+                    every style and occasion</p>
+            </div>
 
-        <div class="grid gap-6 grid-cols-[repeat(auto-fit,minmax(220px,1fr))]">
-            @forelse ($categories as $category)
-                <a href="{{ url($category->slug) }}" class="group relative block overflow-hidden rounded-xl shadow-lg">
-                    {{-- Category Image --}}
-                    <div class="w-full h-56 sm:h-64 md:h-72 bg-cover transition-transform duration-500 group-hover:scale-105"
-                        style="background-image: url('{{ asset($category->image) }}');">
-                    </div>
+            <!-- Categories List -->
+            <div class="space-y-16">
+                @forelse ($categories as $index => $category)
+                    <div class="category-item group">
+                        <!-- For even indexes: Image on left, content on right -->
+                        @if ($index % 2 == 0)
+                            <div class="flex flex-col lg:flex-row items-center justify-center gap-8">
+                                <!-- Image -->
+                                <div class="w-full lg:w-1/3">
+                                    <div class="overflow-hidden rounded-2xl">
+                                        <img src="{{ asset($category->image) }}" alt="{{ $category->name }}"
+                                            class="w-full h-64 lg:h-80 object-cover transition-transform duration-700 group-hover:scale-105"
+                                            loading="lazy" data-aos="fade-right">
+                                    </div>
+                                </div>
 
-                    {{-- Overlay --}}
-                    <div
-                        class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl">
-                        <h3 class="text-white text-xl sm:text-2xl font-extrabold text-center px-4">{{ $category->name }}
-                        </h3>
+                                <!-- Content -->
+                                <div class="w-full lg:w-1/2 lg:pl-8">
+                                    <div class="text-center lg:text-left" data-aos="fade-left">
+                                        <h3 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
+                                            {{ $category->name }}</h3>
+                                        <p class="text-gray-600 text-lg mb-6 leading-relaxed">
+                                            Discover our exclusive {{ $category->name }} collection featuring the latest
+                                            trends and timeless pieces.
+                                        </p>
+                                        <a href="{{ url($category->slug) }}"
+                                            class="inline-flex items-center text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-900 transition-all duration-300 pb-1">
+                                            Shop {{ $category->name }}
+                                            <i
+                                                class="fas fa-arrow-right ml-2 text-xs transition-transform duration-300 group-hover:translate-x-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- For odd indexes: Content on left, image on right -->
+                        @else
+                            <div class="flex flex-col lg:flex-row items-center justify-center gap-8">
+                                <!-- Content -->
+                                <div class="w-full lg:w-1/2 order-2 lg:order-1 lg:pr-8" data-aos="fade-right">
+                                    <div class="text-center lg:text-left">
+                                        <h3 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
+                                            {{ $category->name }}</h3>
+                                        <p class="text-gray-600 text-lg mb-6 leading-relaxed">
+                                            Explore our premium {{ $category->name }} selection with carefully crafted
+                                            pieces for every occasion.
+                                        </p>
+                                        <a href="{{ url($category->slug) }}"
+                                            class="inline-flex items-center text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-900 transition-all duration-300 pb-1">
+                                            Shop {{ $category->name }}
+                                            <i
+                                                class="fas fa-arrow-right ml-2 text-xs transition-transform duration-300 group-hover:translate-x-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- Image -->
+                                <div class="w-full lg:w-1/3 order-1 lg:order-2">
+                                    <div class="overflow-hidden rounded-2xl" data-aos="fade-left">
+                                        <img src="{{ asset($category->image) }}" alt="{{ $category->name }}"
+                                            class="w-full h-64 lg:h-80 object-cover transition-transform duration-700 group-hover:scale-105"
+                                            loading="lazy">
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
+                @empty
+                    <div class="text-center py-12">
+                        <div class="text-gray-400 mb-4">
+                            <i class="fas fa-folder-open text-6xl"></i>
+                        </div>
+                        <p class="text-gray-500 text-lg">No categories available at the moment.</p>
+                        <p class="text-gray-400 text-sm mt-2">Check back soon for new collections</p>
+                    </div>
+                @endforelse
+            </div>
+
+            <!-- View All Button -->
+            <div class="text-center mt-12">
+                <a href="{{ route('products.all') }}"
+                    class="inline-flex items-center px-8 py-3 border border-gray-300 text-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-900 hover:text-white hover:border-gray-400 transition-all duration-300">
+                    View All Products
+                    <i class="fas fa-arrow-right ml-2 text-xs"></i>
                 </a>
-            @empty
-                <p class="text-center text-gray-500 col-span-full mt-4">No categories available.</p>
-            @endforelse
+            </div>
         </div>
     </section>
     <br>
@@ -87,7 +162,7 @@
 
                             <!-- Quick View Button on Hover -->
                             <a href="#"
-                                class="absolute bottom-3 left-1/2 -translate-x-1/2 bg-white text-gray-900 px-4 py-2 rounded-full text-sm font-semibold opacity-0 group-hover:opacity-100 transition duration-300 shadow hover:bg-gray-100">
+                                class="absolute bottom-3 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-4 py-2 rounded-full text-sm font-semibold opacity-0 group-hover:opacity-100 transition duration-300 shadow hover:bg-gray-100">
                                 Shop Now
                             </a>
 
@@ -113,8 +188,6 @@
         </div>
     </section>
 
-
-
     <!-- About Brand -->
     <section class="about-brand" data-aos="fade-right">
         <div class="about-container">
@@ -122,7 +195,7 @@
                 <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" width="200px" height="200px">
             </div>
             <div class="about-content">
-                <h2 style="font-weight: 900;">About <span>Outfit 818</span></h2>
+                <h2 style="font-weight: 900;">About Outfit 818 </h2>
                 <p>At Outfit 818, we believe fashion is more than just clothing — it’s confidence, creativity, and comfort.
                     Our mission is to blend timeless designs with modern trends to create something truly unique for every
                     individual.</p>
@@ -137,28 +210,59 @@
     @endphp
 
     @if ($featured)
-        <section class="product-of-the-day-grand">
-            <div class="product-bg-overlay" data-aos="zoom-in-up">
-                <div class="product-content-wrapper">
-                    <div class="product-text">
-                        <div class="badge">Product of the Day</div>
-                        <h1 class="product-title">{{ $featured->title }}</h1>
-                        <p class="product-tagline">"{{ $featured->tagline }}"</p>
-                        <p class="product-description">{{ $featured->description }}</p>
-                        <div class="price-box">
-                            <span class="original-price">₹{{ number_format($featured->original_price) }}</span>
-                            <span class="discounted-price">₹{{ number_format($featured->discounted_price) }}</span>
-                            <span
-                                class="discount-badge">-{{ round(100 - ($featured->discounted_price / $featured->original_price) * 100) }}%</span>
+        <section class="relative py-20 overflow-hidden">
+            <div class="relative z-10" data-aos="zoom-in-up">
+                <div class="max-w-7xl mx-auto px-4 md:px-8">
+                    <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+                        <!-- Text Content -->
+                        <div class="flex-1 text-white space-y-6">
+                            <div
+                                class="inline-block bg-[#ffb601] text-white px-6 py-2 rounded-full text-sm font-bold shadow-xl">
+                                Product of the Day
+                            </div>
+
+                            <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold text-gray-900 leading-tight">
+                                {{ $featured->title }}
+                            </h1>
+                            {{-- 
+                            <p class="text-2xl md:text-3xl text-[#ffb601] italic font-light">
+                                "{{ $featured->tagline }}"
+                            </p> --}}
+
+                            <p class="text-gray-600 text-lg md:text-xl leading-relaxed max-w-2xl">
+                                {{ $featured->description }}
+                            </p>
+
+                            <div class="flex flex-wrap items-center gap-4 pt-4">
+                                <span class="text-4xl md:text-5xl font-bold text-[#ffb601]">
+                                    ${{ number_format($featured->discounted_price) }}
+                                </span>
+                                <span class="text-2xl md:text-3xl text-gray-400 line-through font-medium">
+                                    ${{ number_format($featured->original_price) }}
+                                </span>
+                                <span class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+                                    -{{ round(100 - ($featured->discounted_price / $featured->original_price) * 100) }}%
+                                    OFF
+                                </span>
+                            </div>
+
+                            @if ($featured->button_text && $featured->button_link)
+                                <div class="pt-4">
+                                    <a href="{{ $featured->button_link }}"
+                                        class="inline-block font-medium border border-gray-300 hover:bg-gray-900 hover:text-white text-gray-900 px-6 py-2 rounded-full text-lg transition-all duration-300 transform hover:scale-105">
+                                        {{ $featured->button_text }} →
+                                    </a>
+                                </div>
+                            @endif
                         </div>
-                        @if ($featured->button_text && $featured->button_link)
-                            <a href="{{ $featured->button_link }}" class="shop-button">
-                                {{ $featured->button_text }}
-                            </a>
-                        @endif
-                    </div>
-                    <div class="product-image">
-                        <img src="{{ asset('storage/' . $featured->image_path) }}" alt="{{ $featured->title }}">
+
+                        <!-- Product Image -->
+                        <div class="flex-1 w-full max-w-lg">
+                            <div class="relative">
+                                <img src="{{ asset($featured->image_path) }}" alt="{{ $featured->title }}"
+                                    class="relative w-full rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-500 border-4 border-white/10">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -193,7 +297,7 @@
                     @csrf
                     <input type="email" name="email" value="{{ auth()->user()->email }}" readonly
                         class="bg-gray-100 cursor-not-allowed" required>
-                    <button type="submit">Subscribe</button>
+                    <button type="submit" class="bg-gray-900">Subscribe</button>
                 </form>
             @endif
         @else

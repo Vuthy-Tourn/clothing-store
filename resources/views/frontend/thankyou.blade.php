@@ -38,7 +38,7 @@
 
         <div class="bg-white p-6 rounded shadow">
             <h2 class="text-xl font-semibold mb-4">Items in Your Order</h2>
-            <table class="min-w-full">
+            <table class="">
                 <thead class="bg-[#536451] text-[#f3e9d5]">
                     <tr>
                         <th class="py-3 px-4 text-left">Product</th>
@@ -50,22 +50,23 @@
                 </thead>
                 <tbody>
                     @foreach ($order->items as $item)
-                    @php $product = $item->product; @endphp
-                    <tr class="border-b">
-                        <td class="py-4 px-4">
-                            <div class="flex items-center gap-4">
-                                <img src="{{ asset('storage/' . $product->image) }}" class="w-16 h-16 object-cover rounded" alt="">
-                                <div>
-                                    <p class="font-semibold">{{ $item->product_name }}</p>
-                                    <p class="text-sm text-gray-500">#{{ $item->product_id }}</p>
+                        @php $product = $item->product; @endphp
+                        <tr class="border-b">
+                            <td class="py-4 px-4">
+                                <div class="flex items-center gap-4">
+                                    <img src="{{ asset('storage/' . $product->image) }}"
+                                        class="w-16 h-16 object-cover rounded" alt="">
+                                    <div>
+                                        <p class="font-semibold">{{ $item->product_name }}</p>
+                                        <p class="text-sm text-gray-500">#{{ $item->product_id }}</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td class="py-4 px-4">{{ $item->size }}</td>
-                        <td class="py-4 px-4">{{ $item->quantity }}</td>
-                        <td class="py-4 px-4">₹{{ number_format($item->price, 2) }}</td>
-                        <td class="py-4 px-4">₹{{ number_format($item->price * $item->quantity, 2) }}</td>
-                    </tr>
+                            </td>
+                            <td class="py-4 px-4">{{ $item->size }}</td>
+                            <td class="py-4 px-4">{{ $item->quantity }}</td>
+                            <td class="py-4 px-4">₹{{ number_format($item->price, 2) }}</td>
+                            <td class="py-4 px-4">₹{{ number_format($item->price * $item->quantity, 2) }}</td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>

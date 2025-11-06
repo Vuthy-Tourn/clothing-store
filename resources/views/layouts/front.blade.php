@@ -3,6 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@yield('title', 'Outfit 818')</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,7 +15,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             AOS.init({
                 duration: 1000,
-                once: true
+                once: false
             });
         });
     </script>
@@ -28,7 +30,7 @@
 
     @include('partials.footer')
 
-    <script src="{{asset('assets/js/index.js')}}"></script>
+    <script src="{{ asset('assets/js/index.js') }}"></script>
 
 </body>
 
