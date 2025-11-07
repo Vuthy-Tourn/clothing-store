@@ -23,16 +23,22 @@
                         <!-- Product Images -->
                         <div class="space-y-4">
                             @php
-                                // Filter out null or empty images
+                                // Collect only valid image paths (exclude 'products/NULL')
                                 $images = collect([
                                     $product->image,
-                                    $product->image_2 ?? null,
-                                    $product->image_3 ?? null,
-                                    $product->image_4 ?? null,
+                                    $product->image_2,
+                                    $product->image_3,
+                                    $product->image_4,
                                 ])
-                                    ->filter(fn($img) => !empty($img) && $img !== 'null')
+                                    ->filter(
+                                        fn($img) => !empty($img) &&
+                                            $img !== 'products/NULL' &&
+                                            $img !== 'NULL' &&
+                                            $img !== 'null',
+                                    )
                                     ->values();
                             @endphp
+
 
                             <!-- Main Image -->
                             @if ($images->isNotEmpty())
@@ -66,7 +72,8 @@
                                         @if (!empty($img) && $img !== 'null' && file_exists(public_path($img)))
                                             <button onclick="goToSlide({{ $key }})"
                                                 class="flex-1 h-20 rounded-lg overflow-hidden border-2 border-transparent hover:border-gray-300 transition-all thumbnail-btn">
-                                                <img src="{{ asset($img) }}" class="w-full h-full object-cover">
+                                                <img src="{{ asset(Str::startsWith($img, ['http://', 'https://']) ? $img : asset('storage/' . $img)) }}"
+                                                    class="w-full h-full object-cover">
                                             </button>
                                         @endif
                                     @endforeach
@@ -334,14 +341,24 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Check URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+
+            if (urlParams.get('added') === 'true') {
+                showSuccessToast("Product added to cart successfully!");
+                // Clean URL without reloading page
+                const cleanUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, cleanUrl);
+            }
+
+            @if (session('status') === 'added_to_cart')
+                showSuccessToast("Product added to cart successfully!");
+            @endif
+
             @if ($errors->any())
                 @foreach ($errors->all() as $error)
                     showWarningToast("{{ $error }}");
                 @endforeach
-            @endif
-
-            @if (session('success'))
-                showSuccessToast("{{ session('success') }}");
             @endif
 
             @if (session('error'))
@@ -349,8 +366,6 @@
             @endif
         });
     </script>
-
-
 
     <style>
         .line-clamp-1 {
