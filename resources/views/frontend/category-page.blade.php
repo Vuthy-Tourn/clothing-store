@@ -1,135 +1,429 @@
 @extends('layouts.front')
 
-<style>
-    .category-banner {
-        position: relative;
-        width: 100%;
-        height: 400px;
-        background-size: cover;
-        background-position: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .category-banner .overlay {
-        background-color: rgba(0, 0, 0, 0.15);
-        /* dark overlay */
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .category-banner h1 {
-        color: white;
-        font-size: 3rem;
-        font-weight: bold;
-        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
-        text-align: center;
-    }
-
-    .products-list {
-        padding: 60px 20px;
-    }
-
-    .products-list h2 {
-        font-size: 2rem;
-        font-weight: 600;
-        text-align: center;
-        margin-bottom: 40px;
-    }
-</style>
-
 @section('content')
-<section class="category-banner" style="background-image: url('{{ asset('storage/' . $category->image) }}');">
-    <div class="overlay">
-        <h1>{{ $category->name }}</h1>
-    </div>
-</section>
-
-<section class="products-list py-12">
-    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-4 gap-8">
-
-        {{-- Filter Sidebar --}}
-        <aside class="lg:col-span-1">
-            <form action="{{ route('category.show', $category->slug) }}" method="GET" class="bg-green p-6 rounded-lg shadow space-y-6">
-                <h2 class="text-xl font-semibold border-b pb-2 text-[##f3e9d5]">Filter Products</h2>
-
-                <!-- Search -->
-                <div>
-                    <label class="block text-sm font-medium mb-1">Search</label>
-                    <input type="text" name="search" value="{{ request('search') }}"
-                        placeholder="Product name..." class="w-full px-3 py-2 border rounded-md text-gray-700 ">
-                </div>
-
-                <!-- Category (optional in case of browsing) -->
-                <div>
-                    <label class="block text-sm font-medium mb-1">Category</label>
-                    <select name="category" class="w-full px-3 py-2 border rounded-md text-gray-700 " disabled>
-                        <option value="{{ $category->id }}" selected>{{ $category->name }}</option>
-                    </select>
-                </div>
-
-                <!-- Status -->
-                <div>
-                    <label class="block text-sm font-medium mb-1">Status</label>
-                    <select name="status" class="w-full px-3 py-2 border rounded-md text-gray-700 ">
-                        <option value="">All</option>
-                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
-                        <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                    </select>
-                </div>
-
-                <!-- Sort -->
-                <div>
-                    <label class="block text-sm font-medium mb-1">Sort By</label>
-                    <select name="sort" class="w-full px-3 py-2 border rounded-md text-gray-700 ">
-                        <option value="">Default</option>
-                        <option value="low" {{ request('sort') == 'low' ? 'selected' : '' }}>Price: Low to High</option>
-                        <option value="high" {{ request('sort') == 'high' ? 'selected' : '' }}>Price: High to Low</option>
-                    </select>
-                </div>
-
-                <!-- Filter Button -->
-                <div class="pt-2">
-                    <button type="submit"
-                        class="w-full text-white py-2 rounded-md transition">
-                        Apply Filters
-                    </button>
-                </div>
-            </form>
-        </aside>
-
-        {{-- Products Grid --}}
-        <div class="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            @forelse ($products as $product)
-            <div class="bg-white rounded-lg shadow hover:shadow-lg transition p-4">
-                <img src="{{ asset('storage/' . $product->image) }}" class="h-48 w-full object-cover rounded mb-3" alt="{{ $product->name }}">
-                <h3 class="text-lg font-semibold text-gray-800">{{ $product->name }}</h3>
-                <p class="text-[#536451] font-bold">
-                    <span class="text-sm text-gray-500">Starting from</span> ₹{{ number_format($product->sizes->min('price'), 2) }}
-                </p>
-                <span class="text-xs mt-2 inline-block {{ $product->status == 'active' ? 'text-green-600' : 'text-gray-500' }}">
-                    {{ ucfirst($product->status) }}
-                </span><br><br>
-                <a href="{{ route('product.view', $product->id) }}"
-                    class="mt-auto inline-block text-center bg-[#536451] text-[#f3e9d5] hover:bg-[#f3e9d5] hover:text-[#536451] hover:scale-105 transition-transform duration-200 px-4 py-2 rounded">
-                    🛒 Shop Now
-                </a>
+    {{-- Unique Hero Banner with Diagonal Split --}}
+    <section class="relative h-screen overflow-hidden bg-black">
+        {{-- Background Image with Clip Path --}}
+        <div class="absolute inset-0">
+            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                style="background-image: url('{{ asset( $category->image) }}'); clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);">
             </div>
-            @empty
-            <p class="text-gray-500 col-span-full">No products found for this filter.</p>
-            @endforelse
+            <div class="absolute inset-0 bg-gradient-to-br from-black/70 via-black/60 to-black/50"
+                style="clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);"></div>
         </div>
-    </div>
 
-    {{-- Pagination --}}
-    <div class="lg:col-span-3 flex justify-center mt-8">
-        {{ $products->withQueryString()->links() }}
-    </div>
+        {{-- Geometric Shapes --}}
+        <div class="absolute top-20 right-20 w-32 h-32 border border-white/20 rotate-45"></div>
+        <div class="absolute bottom-40 left-10 w-24 h-24 border border-white/20"></div>
 
-</section>
+        {{-- Content --}}
+        <div class="relative h-full flex items-center justify-center">
+            <div class="text-center px-4 max-w-4xl">
+                <div class="overflow-hidden mb-8">
+                    <h1 class="text-7xl md:text-9xl font-bold text-white tracking-tighter animate-[slideUp_0.8s_ease-out]">
+                        {{ $category->name }}
+                    </h1>
+                </div>
+                <div class="flex items-center justify-center gap-4 text-white/80 text-sm tracking-[0.3em] uppercase">
+                    <span class="w-12 h-px bg-white/60"></span>
+                    <span>Collection</span>
+                    <span class="w-12 h-px bg-white/60"></span>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    {{-- Products Section --}}
+    <section class="py-24 bg-white relative">
+        {{-- Background Accent --}}
+        <div class="absolute top-0 right-0 w-1/3 h-64 bg-gradient-to-l from-gray-50 to-transparent"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-16">
+
+                <aside class="lg:col-span-1">
+                    <div class="sticky top-8">
+                        <div class="relative">
+                            {{-- Minimal decorative line --}}
+                            <div class="absolute -left-6 top-0 w-0.5 h-full bg-gradient-to-b from-gray-300 to-transparent">
+                            </div>
+
+                            <div class="space-y-10">
+                                {{-- Search Section --}}
+                                <div class="space-y-4">
+                                    <h2 class="text-base font-medium text-gray-900 tracking-wide">
+                                        SEARCH
+                                    </h2>
+
+                                    <div class="relative">
+                                        <input type="text" id="searchInput" value="{{ request('search') }}"
+                                            placeholder="Find your style..."
+                                            class="w-full px-0 py-3 bg-transparent border-0 border-b border-gray-300 focus:border-black focus:ring-0 transition-all text-sm placeholder:text-gray-400 rounded-none">
+                                        <div class="absolute right-0 top-1/2 -translate-y-1/2">
+                                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Stock Filter --}}
+                                <div class="space-y-4">
+                                    <h2 class="text-base font-medium text-gray-900 tracking-wide">
+                                        STOCK STATUS
+                                    </h2>
+
+                                    <div class="space-y-2">
+                                        <label class="flex items-center gap-3 cursor-pointer py-2">
+                                            <div class="relative">
+                                                <input type="radio" name="status" value=""
+                                                    {{ request('status') == '' ? 'checked' : '' }}
+                                                    class="filter-radio hidden">
+                                                <div
+                                                    class="w-4 h-4 border border-gray-400 rounded-full flex items-center justify-center transition-all radio-custom">
+                                                    <div
+                                                        class="w-2 h-2 bg-black rounded-full scale-0 transition-transform radio-dot">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span class="text-sm text-gray-600">All Items</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 cursor-pointer py-2">
+                                            <div class="relative">
+                                                <input type="radio" name="status" value="active"
+                                                    {{ request('status') == 'active' ? 'checked' : '' }}
+                                                    class="filter-radio hidden">
+                                                <div
+                                                    class="w-4 h-4 border border-gray-400 rounded-full flex items-center justify-center transition-all radio-custom">
+                                                    <div
+                                                        class="w-2 h-2 bg-black rounded-full scale-0 transition-transform radio-dot">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span class="text-sm text-gray-600">In Stock</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 cursor-pointer py-2">
+                                            <div class="relative">
+                                                <input type="radio" name="status" value="inactive"
+                                                    {{ request('status') == 'inactive' ? 'checked' : '' }}
+                                                    class="filter-radio hidden">
+                                                <div
+                                                    class="w-4 h-4 border border-gray-400 rounded-full flex items-center justify-center transition-all radio-custom">
+                                                    <div
+                                                        class="w-2 h-2 bg-black rounded-full scale-0 transition-transform radio-dot">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span class="text-sm text-gray-600">Out of Stock</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                {{-- Sort Filter --}}
+                                <div class="space-y-4">
+                                    <h2 class="text-base font-medium text-gray-900 tracking-wide">
+                                        SORT BY
+                                    </h2>
+
+                                    <div class="space-y-2">
+                                        <label class="flex items-center gap-3 cursor-pointer py-2">
+                                            <div class="relative">
+                                                <input type="radio" name="sort" value=""
+                                                    {{ request('sort') == '' ? 'checked' : '' }}
+                                                    class="filter-radio hidden">
+                                                <div
+                                                    class="w-4 h-4 border border-gray-400 rounded-full flex items-center justify-center transition-all radio-custom">
+                                                    <div
+                                                        class="w-2 h-2 bg-black rounded-full scale-0 transition-transform radio-dot">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span class="text-sm text-gray-600">All price</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 cursor-pointer py-2">
+                                            <div class="relative">
+                                                <input type="radio" name="sort" value="low"
+                                                    {{ request('sort') == 'low' ? 'checked' : '' }}
+                                                    class="filter-radio hidden">
+                                                <div
+                                                    class="w-4 h-4 border border-gray-400 rounded-full flex items-center justify-center transition-all radio-custom">
+                                                    <div
+                                                        class="w-2 h-2 bg-black rounded-full scale-0 transition-transform radio-dot">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span class="text-sm text-gray-600">Price: Low to High</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 cursor-pointer py-2">
+                                            <div class="relative">
+                                                <input type="radio" name="sort" value="high"
+                                                    {{ request('sort') == 'high' ? 'checked' : '' }}
+                                                    class="filter-radio hidden">
+                                                <div
+                                                    class="w-4 h-4 border border-gray-400 rounded-full flex items-center justify-center transition-all radio-custom">
+                                                    <div
+                                                        class="w-2 h-2 bg-black rounded-full scale-0 transition-transform radio-dot">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span class="text-sm text-gray-600">Price: High to Low</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                {{-- Products Grid --}}
+                <div class="lg:col-span-4" id="productsContainer">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+                        @forelse ($products as $product)
+                            <div class="group">
+                                {{-- Image Container --}}
+                                <a href="{{ route('product.view', $product->id) }}"
+                                    class="block relative overflow-hidden bg-gray-100 aspect-[3/4] mb-5">
+                                    <img src="{{ asset($product->image) }}"
+                                        class="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-110"
+                                        alt="{{ $product->name }}">
+
+                                    {{-- Quick View Overlay --}}
+                                    <div
+                                        class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500 flex items-center justify-center">
+                                        <span
+                                            class="text-white text-sm tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-4 group-hover:translate-y-0">
+                                            View Details
+                                        </span>
+                                    </div>
+
+                                    {{-- Status Badge --}}
+                                    @if ($product->status != 'active')
+                                        <div class="absolute top-5 right-5">
+                                            <span
+                                                class="px-4 py-2 bg-black text-white text-xs font-bold tracking-widest uppercase">
+                                                Out
+                                            </span>
+                                        </div>
+                                    @endif
+                                </a>
+
+                                {{-- Content --}}
+                                <div class="space-y-3">
+                                    <a href="{{ route('product.view', $product->id) }}" class="block">
+                                        <h3
+                                            class="text-base font-semibold text-gray-900 tracking-tight group-hover:text-gray-600 transition-colors line-clamp-2 leading-snug">
+                                            {{ $product->name }}
+                                        </h3>
+                                    </a>
+
+                                    {{-- Price --}}
+                                    <div class="flex items-center gap-3">
+                                        <span
+                                            class="text-xs text-gray-500 uppercase tracking-widest font-medium">From</span>
+                                        <span class="text-lg font-bold text-black tracking-tight">
+                                            ${{ number_format($product->sizes->min('price'), 2) }}
+                                        </span>
+                                    </div>
+
+                                    {{-- Action Link --}}
+                                    <a href="{{ route('product.view', $product->id) }}"
+                                        class="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-black hover:gap-3 transition-all group/link">
+                                        <span>Shop Now</span>
+                                        <svg class="w-4 h-4 transition-transform group-hover/link:translate-x-1"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        @empty
+                            {{-- Empty State --}}
+                            <div class="col-span-full flex flex-col items-center justify-center py-32">
+                                <div class="relative">
+                                    <div class="w-24 h-24 border-4 border-gray-200"></div>
+                                    <div
+                                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 border-4 border-black">
+                                    </div>
+                                </div>
+                                <h3 class="text-2xl font-bold tracking-tight text-gray-900 mt-8 mb-3">Nothing Found</h3>
+                                <p class="text-sm text-gray-500 text-center max-w-md tracking-wide leading-relaxed">
+                                    We couldn't find any products matching your search.<br>Try different filters or browse
+                                    our full collection.
+                                </p>
+                            </div>
+                        @endforelse
+                    </div>
+
+                    {{-- Pagination --}}
+                    @if ($products->hasPages())
+                        <div class="mt-20 flex justify-center">
+                            <div class="inline-flex items-center gap-2">
+                                {{ $products->withQueryString()->links() }}
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    {{-- filtering section --}}
+
+    <style>
+        /* Custom radio button states */
+        .filter-radio:checked+.radio-custom {
+            border-color: black;
+        }
+
+        .filter-radio:checked+.radio-custom .radio-dot {
+            transform: scale(1);
+        }
+
+        /* Hover effects */
+        label:hover .radio-custom {
+            border-color: #666;
+        }
+
+        label:hover span {
+            color: #000;
+        }
+
+        /* Smooth transitions */
+        .radio-custom,
+        .radio-dot,
+        span {
+            transition: all 0.2s ease;
+        }
+
+        /* Clean input focus */
+        input:focus {
+            outline: none;
+            box-shadow: none;
+        }
+    </style>
+
+    <script>
+        // Initialize custom radio buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const radios = document.querySelectorAll('.filter-radio');
+
+            radios.forEach(radio => {
+                // Set initial checked state
+                if (radio.checked) {
+                    const dot = radio.nextElementSibling.querySelector('.radio-dot');
+                    dot.style.transform = 'scale(1)';
+                }
+
+                // Add change event
+                radio.addEventListener('change', function() {
+                    const groupName = this.name;
+                    document.querySelectorAll(`input[name="${groupName}"]`).forEach(r => {
+                        const customRadio = r.nextElementSibling;
+                        const dot = customRadio.querySelector('.radio-dot');
+                        dot.style.transform = 'scale(0)';
+                    });
+
+                    const currentDot = this.nextElementSibling.querySelector('.radio-dot');
+                    currentDot.style.transform = 'scale(1)';
+                });
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const categorySlug = "{{ $category->slug }}";
+            const searchInput = document.getElementById('searchInput');
+            const filterInputs = document.querySelectorAll('.filter-radio');
+            const productsContainer = document.getElementById('productsContainer');
+
+            let searchTimeout;
+            let isUpdating = false;
+
+            // Function to update products without page reload
+            function updateProducts() {
+                if (isUpdating) return;
+                isUpdating = true;
+
+                // Get current values
+                const searchValue = searchInput.value;
+                const statusValue = document.querySelector('input[name="status"]:checked')?.value || '';
+                const sortValue = document.querySelector('input[name="sort"]:checked')?.value || '';
+
+                // Build URL with parameters
+                const params = new URLSearchParams();
+                if (searchValue) params.append('search', searchValue);
+                if (statusValue) params.append('status', statusValue);
+                if (sortValue) params.append('sort', sortValue);
+
+                const url = `/${categorySlug}?${params.toString()}`;
+
+                // Update URL without reload
+                window.history.pushState({}, '', url);
+
+                // Fetch new content
+                fetch(url, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.text())
+                    .then(html => {
+                        // Parse the HTML
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const newContent = doc.getElementById('productsContainer');
+
+                        if (newContent) {
+                            // Smooth transition
+                            productsContainer.style.opacity = '0.5';
+                            setTimeout(() => {
+                                productsContainer.innerHTML = newContent.innerHTML;
+                                productsContainer.style.opacity = '1';
+                            }, 200);
+                        }
+                        isUpdating = false;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        isUpdating = false;
+                    });
+            }
+
+            // Search with debounce
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        updateProducts();
+                    }, 600);
+                });
+            }
+
+            // Radio buttons - instant update
+            filterInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    updateProducts();
+                });
+            });
+        });
+    </script>
+
+    <style>
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
 @endsection

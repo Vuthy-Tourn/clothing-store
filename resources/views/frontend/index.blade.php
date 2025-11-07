@@ -15,7 +15,7 @@
                     <div class="max-w-7xl mx-auto px-6 lg:px-8 w-full">
                         <div class="max-w-2xl ml-auto text-right">
                             <span class="text-white/80 text-sm font-medium tracking-wider mb-4 block">NEW COLLECTION</span>
-                            <h1 class="font-light text-5xl md:text-6xl lg:text-7xl text-white mb-6 leading-tight">
+                            <h1 class="font-bold text-5xl md:text-6xl lg:text-7xl text-white mb-6 leading-tight">
                                 {{ $carousel->title }}
                             </h1>
                             <p class="text-xl text-white/80 mb-8 leading-relaxed font-light">
@@ -157,40 +157,52 @@
             <div class="carousel-track" id="new-arrivals-carousel">
                 @forelse ($arrivals as $arrival)
                     <div
-                        class="product-card w-64 bg-white rounded-lg overflow-hidden shadow-sm transition transform hover:-translate-y-2 cursor-pointer">
-                        <!-- Image Container -->
-                        <div class="relative h-80 overflow-hidden group">
-                            <!-- Product Image -->
-                            <div class="h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                                style="background-image: url('{{ asset($arrival->image) }}');"></div>
+                        class="product-card w-72 bg-white rounded-xl overflow-hidden transition-all duration-300 cursor-pointer group">
+                        <a href="{{ route('product.view', $arrival->id) }}" class="block">
+                            <!-- Image Container -->
+                            <div class="relative h-80 overflow-hidden">
+                                <!-- Product Image -->
+                                <img src="{{ asset($arrival->image) }}" alt="{{ $arrival->name }}"
+                                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                    loading="lazy">
 
-                            <!-- Price Badge -->
-                            <span
-                                class="absolute top-3 left-3 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                                ${{ number_format($arrival->price) }}
-                            </span>
+                                <!-- Price Badge -->
+                                <div
+                                    class="absolute top-4 left-4 bg-white/95 backdrop-blur-sm text-gray-900 px-3 py-2 rounded-lg text-sm font-semibold shadow-sm">
+                                    ${{ number_format($arrival->price) }}
+                                </div>
 
-                            <!-- Quick View Button on Hover -->
-                            <a href="#"
-                                class="absolute bottom-3 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-4 py-2 rounded-full text-sm font-semibold opacity-0 group-hover:opacity-100 transition duration-300 shadow hover:bg-gray-100">
-                                Shop Now
-                            </a>
-
-                            <!-- Overlay on hover -->
-                            <div
-                                class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-30 transition duration-500">
+                                <!-- Quick Action Overlay -->
+                               <div
+                                        class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500 flex items-center justify-center">
+                                        <span
+                                            class="text-white text-sm tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-4 group-hover:translate-y-0">
+                                            View Details
+                                        </span>
+                                    </div>
                             </div>
-                        </div>
 
-                        <!-- Product Info -->
-                        <div class="p-4 text-center">
-                            <h3 class="text-lg font-bold text-gray-900 truncate">{{ $arrival->name }}</h3>
-                            <p class="text-gray-500 text-sm mt-1 truncate">{{ $arrival->description }}</p>
-                        </div>
+                            <!-- Product Info -->
+                            <div class="p-5">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-1">{{ $arrival->name }}</h3>
+                                <p class="text-gray-600 text-sm leading-relaxed line-clamp-2">{{ $arrival->description }}
+                                </p>
+                            </div>
+                        </a>
                     </div>
 
                 @empty
-                    <p class="text-gray-500 px-4 py-2">No new arrivals yet.</p>
+                    <div class="col-span-full text-center py-12">
+                        <div class="text-gray-400 mb-4">
+                            <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                    d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4">
+                                </path>
+                            </svg>
+                        </div>
+                        <p class="text-gray-500 text-lg">No new arrivals yet.</p>
+                        <p class="text-gray-400 text-sm mt-2">Check back soon for new products!</p>
+                    </div>
                 @endforelse
             </div>
 
