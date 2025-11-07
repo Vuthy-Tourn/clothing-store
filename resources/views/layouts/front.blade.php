@@ -24,6 +24,8 @@
 <body>
     @include('partials.navbar')
 
+     <x-toast />
+
     <main>
         @yield('content')
     </main>
@@ -31,6 +33,8 @@
     @include('partials.footer')
 
     <script src="{{ asset('assets/js/index.js') }}"></script>
+    @stack('styles')
+       @stack('scripts')
 
 </body>
 

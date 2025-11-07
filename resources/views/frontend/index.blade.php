@@ -169,17 +169,17 @@
                                 <!-- Price Badge -->
                                 <div
                                     class="absolute top-4 left-4 bg-white/95 backdrop-blur-sm text-gray-900 px-3 py-2 rounded-lg text-sm font-semibold shadow-sm">
-                                    ${{ number_format($arrival->price) }}
+                                    ${{ number_format($arrival->sizes->min('price'), 2) }}
                                 </div>
 
                                 <!-- Quick Action Overlay -->
-                               <div
-                                        class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500 flex items-center justify-center">
-                                        <span
-                                            class="text-white text-sm tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-4 group-hover:translate-y-0">
-                                            View Details
-                                        </span>
-                                    </div>
+                                <div
+                                    class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500 flex items-center justify-center">
+                                    <span
+                                        class="text-white text-sm tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-4 group-hover:translate-y-0">
+                                        View Details
+                                    </span>
+                                </div>
                             </div>
 
                             <!-- Product Info -->

@@ -350,7 +350,7 @@
         // Navbar scroll effect - hidden initially, slides down from top when scrolling
         const navbar = document.getElementById('mainNavbar');
         let lastScrollY = window.scrollY;
-        const excludedPages = ['/orders', '/admin', '/products', '/product']; // Add pages where you want normal behavior
+        const excludedPages = ['/orders', '/admin', '/products', '/product','/cart']; // Add pages where you want normal behavior
 
         function updateNavbarOnScroll() {
             const currentPath = window.location.pathname;

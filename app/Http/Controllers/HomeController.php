@@ -15,10 +15,7 @@ class HomeController extends Controller
         $carousels = Carousel::where('is_active', true)->latest()->get();
         $arrivals = NewArrival::where('status', 'active')->latest()->take(6)->get();
         $categories = Category::where('status', 'active')->latest()->take(6)->get();
-        $arrivals = Product::where('status', 'active')
-        ->latest()
-        ->take(8) // Show 8 newest products
-        ->get();
+        $arrivals = Product::with('sizes')->where('status', 'active')->latest()->take(10)->get(); // New arrivals
 
         return view('frontend.index', compact('carousels', 'arrivals', 'categories', 'arrivals'));
     }

@@ -12,20 +12,9 @@
 <body class="bg-gray-50">
     @include('partials.navbar')
 
+    <x-toast />
+
     <main class="py-8">
-        <!-- Success/Error Messages -->
-        @if (session('success'))
-            <div class="max-w-6xl mx-auto mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="max-w-6xl mx-auto mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-                {{ session('error') }}
-            </div>
-        @endif
-
         <div class="max-w-6xl mx-auto px-4 mt-5">
             @if (isset($product))
                 <!-- Single Product View -->
@@ -105,68 +94,78 @@
                                 </div>
                             </div>
 
-                            @auth
-                                <form action="{{ route('cart.add') }}" method="POST" class="space-y-6">
-                                    @csrf
-                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <form id="productForm" action="{{ route('cart.add') }}" method="POST" class="space-y-6">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
 
-                                    <!-- Size Selection -->
-                                    <div>
-                                        <label class="block text-sm font-semibold text-gray-900 mb-3">Select Size</label>
-                                        <div class="grid grid-cols-4 gap-3">
-                                            @foreach ($product->sizes as $size)
-                                                <label class="relative">
-                                                    <input type="radio" name="size" value="{{ $size->size }}"
-                                                        data-price="{{ $size->price }}" data-stock="{{ $size->stock }}"
-                                                        class="hidden size-radio">
-                                                    <div
-                                                        class="size-option border-2 border-gray-200 rounded-lg p-3 text-center cursor-pointer transition-all hover:border-gray-900">
-                                                        <span class="font-medium text-gray-900">{{ $size->size }}</span>
-                                                    </div>
-                                                </label>
-                                            @endforeach
-                                        </div>
+                                <!-- Size Selection -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-900 mb-3">Select Size</label>
+                                    <div class="grid grid-cols-4 gap-3">
+                                        @foreach ($product->sizes as $index => $size)
+                                            <label class="relative">
+                                                <input type="radio" name="size" value="{{ $size->size }}"
+                                                    data-price="{{ $size->price }}" data-stock="{{ $size->stock }}"
+                                                    class="hidden size-radio" {{ $index === 0 ? 'checked' : '' }}>
+                                                <div
+                                                    class="size-option border-2 border-gray-200 rounded-lg p-3 text-center cursor-pointer transition-all hover:border-gray-900 {{ $index === 0 ? 'border-gray-900 text-white' : '' }}">
+                                                    <span class="font-medium text-gray-900">{{ $size->size }}</span>
+                                                </div>
+                                            </label>
+                                        @endforeach
+
                                     </div>
+                                    @error('size')
+                                        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
 
-                                    <!-- Quantity -->
-                                    <div>
-                                        <label class="block text-sm font-semibold text-gray-900 mb-3">Quantity</label>
-                                        <div class="flex items-center space-x-3">
-                                            <button type="button" onclick="decrementQuantity()"
-                                                class="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50">
-                                                −
-                                            </button>
-                                            <input type="number" name="quantity" id="quantity" value="1"
-                                                min="1"
-                                                class="w-20 text-center border-0 bg-transparent text-lg font-semibold">
-                                            <button type="button" onclick="incrementQuantity()"
-                                                class="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50">
-                                                +
-                                            </button>
-                                        </div>
+
+                                <!-- Quantity -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-900 mb-3">Quantity</label>
+                                    <div class="flex items-center space-x-3">
+                                        <button type="button" onclick="decrementQuantity()"
+                                            class="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50">
+                                            −
+                                        </button>
+                                        <input type="number" name="quantity" id="quantity" value="1"
+                                            min="1"
+                                            class="w-20 text-center border-0 bg-transparent text-lg font-semibold">
+                                        <button type="button" onclick="incrementQuantity()"
+                                            class="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50">
+                                            +
+                                        </button>
                                     </div>
+                                </div>
 
-                                    <!-- Action Buttons -->
-                                    <div class="flex space-x-4 pt-4">
+                                <!-- Buttons -->
+                                <div class="flex space-x-4 pt-4">
+                                    @auth
                                         <button type="submit" name="action" value="add"
                                             class="flex-1 bg-gray-900 text-white px-8 py-4 rounded-xl font-semibold hover:bg-gray-800 transition-all hover:scale-105">
                                             Add to Cart
                                         </button>
+
                                         <button type="submit" name="action" value="buy_now"
                                             class="flex-1 text-gray-900 border border-gray-900 px-8 py-4 rounded-xl font-semibold transition-all hover:scale-105">
                                             Buy Now
                                         </button>
-                                    </div>
-                                </form>
-                            @else
-                                <div class="bg-gray-50 rounded-xl p-6 text-center">
-                                    <p class="text-gray-600 mb-3">Please log in to purchase this item</p>
-                                    <a href="{{ route('login') }}"
-                                        class="inline-block bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-all">
-                                        Sign In to Shop
-                                    </a>
+                                    @else
+                                        <button type="button"
+                                            onclick="showWarningToast('Please log in to purchase this item.')"
+                                            class="flex-1 bg-gray-900 text-white px-8 py-4 rounded-xl font-semibold hover:bg-gray-800 transition-all hover:scale-105">
+                                            Add to Cart
+                                        </button>
+                                        <button type="button"
+                                            onclick="showWarningToast('Please log in to purchase this item.')"
+                                            class="flex-1 text-gray-900 border border-gray-900 px-8 py-4 rounded-xl font-semibold transition-all hover:scale-105">
+                                            Buy Now
+                                        </button>
+                                    @endauth
                                 </div>
-                            @endauth
+                            </form>
+
 
                             <!-- Description -->
                             @if ($product->description)
@@ -280,22 +279,16 @@
                 radio.addEventListener('change', function() {
                     // Update active state
                     document.querySelectorAll('.size-option').forEach(opt => {
-                        opt.classList.remove('border-gray-900', 
-                            'text-white');
+                        opt.classList.remove('border-gray-900', 'text-white');
                         opt.classList.add('border-gray-200', 'text-gray-900');
                     });
-
                     this.closest('label').querySelector('.size-option').classList.add(
-                        'border-gray-900',  'text-white');
+                        'border-gray-900', 'text-white');
 
                     // Update price and stock
-                    const price = this.getAttribute('data-price');
-                    const stock = this.getAttribute('data-stock');
-
-                    if (price) {
-                        priceLabel.textContent = '$' + parseFloat(price).toFixed(2);
-                    }
-
+                    const price = this.dataset.price;
+                    const stock = this.dataset.stock;
+                    if (price) priceLabel.textContent = '$' + parseFloat(price).toFixed(2);
                     if (stock) {
                         stockLabel.textContent = `${stock} items in stock`;
                         stockLabel.className =
@@ -304,11 +297,11 @@
                 });
             });
 
-            // Initialize first thumbnail as active
-            if (thumbnails.length > 0) {
-                thumbnails[0].classList.add('border-gray-900');
-            }
+            // Trigger change for the initially checked radio
+            const initial = document.querySelector('.size-radio:checked');
+            if (initial) initial.dispatchEvent(new Event('change'));
         });
+
 
         // Quantity controls
         function incrementQuantity() {
@@ -339,6 +332,26 @@
         }
     </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                    showWarningToast("{{ $error }}");
+                @endforeach
+            @endif
+
+            @if (session('success'))
+                showSuccessToast("{{ session('success') }}");
+            @endif
+
+            @if (session('error'))
+                showWarningToast("{{ session('error') }}");
+            @endif
+        });
+    </script>
+
+
+
     <style>
         .line-clamp-1 {
             overflow: hidden;
@@ -364,6 +377,8 @@
     </style>
 
     @include('partials.footer')
+    @stack('styles')
+    @stack('scripts')
 </body>
 
 </html>
