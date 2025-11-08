@@ -197,7 +197,7 @@
 
                 @auth
                     <a href="{{ route('orders.index') }}"
-                        class="nav-link text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">Orders</a>
+                        class="nav-link text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">ORDERS</a>
 
                     @if (auth()->user()->user_type === 'admin')
                         <a href="{{ route('admin.dashboard') }}"
@@ -282,7 +282,7 @@
 
                 @auth
                     <a href="{{ route('orders.index') }}"
-                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium">Orders</a>
+                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium">ORDERS</a>
 
                     @if (auth()->user()->user_type === 'admin')
                         <a href="{{ route('admin.dashboard') }}"
@@ -350,7 +350,7 @@
         // Navbar scroll effect - hidden initially, slides down from top when scrolling
         const navbar = document.getElementById('mainNavbar');
         let lastScrollY = window.scrollY;
-        const excludedPages = ['/orders', '/admin', '/products', '/product','/cart', '/checkout','thank-you']; // Add pages where you want normal behavior
+        const excludedPages = ['/orders', '/admin', '/products', '/product','/cart', '/checkout','/thank-you','/profile']; // Add pages where you want normal behavior
 
         function updateNavbarOnScroll() {
             const currentPath = window.location.pathname;
