@@ -33,8 +33,8 @@ A fully functional e-commerce clothing website built with Laravel PHP Framework,
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/Nisarg-Vekariya/OUTFIT-818.git
-   cd OUTFIT-818
+   git clone https://github.com/Vuthy-Tourn/clothing-store.git
+   cd clothing-store
    ```
 
 2. **Install dependencies**
@@ -71,8 +71,8 @@ A fully functional e-commerce clothing website built with Laravel PHP Framework,
    MAIL_FROM_ADDRESS=your_email@gmail.com
    
    # Cashfree Payment Gateway
-   CASHFREE_APP_ID=your_cashfree_app_id
-   CASHFREE_SECRET_KEY=your_cashfree_secret_key
+   STRIPE_KEY=your_stripe_app_id
+   STRIPE_SECRET=your_stripe_secret_key
    ```
 
 5. **Import Database**
