@@ -6,7 +6,7 @@
         {{-- Background Image with Clip Path --}}
         <div class="absolute inset-0">
             <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                style="background-image: url('{{ asset( $category->image) }}'); clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);">
+                style="background-image: url('{{ asset($category->image) }}'); clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);">
             </div>
             <div class="absolute inset-0 bg-gradient-to-br from-black/70 via-black/60 to-black/50"
                 style="clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);"></div>
@@ -179,99 +179,11 @@
 
                 {{-- Products Grid --}}
                 <div class="lg:col-span-4" id="productsContainer">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-                        @forelse ($products as $product)
-                            <div class="group">
-                                {{-- Image Container --}}
-                                <a href="{{ route('product.view', $product->id) }}"
-                                    class="block relative overflow-hidden bg-gray-100 aspect-[3/4] mb-5">
-                                    <img src="{{ asset($product->image) }}"
-                                        class="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-110"
-                                        alt="{{ $product->name }}">
-
-                                    {{-- Quick View Overlay --}}
-                                    <div
-                                        class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500 flex items-center justify-center">
-                                        <span
-                                            class="text-white text-sm tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-4 group-hover:translate-y-0">
-                                            View Details
-                                        </span>
-                                    </div>
-
-                                    {{-- Status Badge --}}
-                                    @if ($product->status != 'active')
-                                        <div class="absolute top-5 right-5">
-                                            <span
-                                                class="px-4 py-2 bg-black text-white text-xs font-bold tracking-widest uppercase">
-                                                Out
-                                            </span>
-                                        </div>
-                                    @endif
-                                </a>
-
-                                {{-- Content --}}
-                                <div class="space-y-3">
-                                    <a href="{{ route('product.view', $product->id) }}" class="block">
-                                        <h3
-                                            class="text-base font-semibold text-gray-900 tracking-tight group-hover:text-gray-600 transition-colors line-clamp-2 leading-snug">
-                                            {{ $product->name }}
-                                        </h3>
-                                    </a>
-
-                                    {{-- Price --}}
-                                    <div class="flex items-center gap-3">
-                                        <span
-                                            class="text-xs text-gray-500 uppercase tracking-widest font-medium">From</span>
-                                        <span class="text-lg font-bold text-black tracking-tight">
-                                            ${{ number_format($product->sizes->min('price'), 2) }}
-                                        </span>
-                                    </div>
-
-                                    {{-- Action Link --}}
-                                    <a href="{{ route('product.view', $product->id) }}"
-                                        class="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-black hover:gap-3 transition-all group/link">
-                                        <span>Shop Now</span>
-                                        <svg class="w-4 h-4 transition-transform group-hover/link:translate-x-1"
-                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-                        @empty
-                            {{-- Empty State --}}
-                            <div class="col-span-full flex flex-col items-center justify-center py-32">
-                                <div class="relative">
-                                    <div class="w-24 h-24 border-4 border-gray-200"></div>
-                                    <div
-                                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 border-4 border-black">
-                                    </div>
-                                </div>
-                                <h3 class="text-2xl font-bold tracking-tight text-gray-900 mt-8 mb-3">Nothing Found</h3>
-                                <p class="text-sm text-gray-500 text-center max-w-md tracking-wide leading-relaxed">
-                                    We couldn't find any products matching your search.<br>Try different filters or browse
-                                    our full collection.
-                                </p>
-                            </div>
-                        @endforelse
-                    </div>
-
-                    {{-- Pagination --}}
-                    @if ($products->hasPages())
-                        <div class="mt-20 flex justify-center">
-                            <div class="inline-flex items-center gap-2">
-                                {{ $products->withQueryString()->links() }}
-                            </div>
-                        </div>
-                    @endif
+                    @include('partials.products-grid', ['products' => $products])
                 </div>
             </div>
         </div>
     </section>
-
-
-    {{-- filtering section --}}
 
     <style>
         /* Custom radio button states */
@@ -303,6 +215,74 @@
         input:focus {
             outline: none;
             box-shadow: none;
+        }
+
+        /* Enhanced Pagination Styles */
+        .pagination-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            color: #6b7280;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .pagination-number:hover {
+            border-color: #000;
+            color: #000;
+            transform: translateY(-1px);
+        }
+
+        .pagination-active {
+            background-color: #000;
+            border-color: #000;
+            color: white;
+        }
+
+        .pagination-arrow:hover {
+            background-color: #000;
+            border-color: #000;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .pagination-disabled {
+            background-color: #f9fafb;
+            border-color: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .pagination-disabled:hover {
+            transform: none;
+            background-color: #f9fafb;
+            border-color: #e5e7eb;
+            color: #9ca3af;
+        }
+
+        /* Loading state */
+        .pagination-loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
     </style>
 
@@ -340,27 +320,49 @@
             const searchInput = document.getElementById('searchInput');
             const filterInputs = document.querySelectorAll('.filter-radio');
             const productsContainer = document.getElementById('productsContainer');
+            const paginationContainer = document.getElementById('paginationContainer');
 
             let searchTimeout;
             let isUpdating = false;
 
+            // Function to scroll to top smoothly
+            function scrollToProductsTop() {
+                const productsSection = document.querySelector('section.py-24');
+                if (productsSection) {
+                    const offsetTop = productsSection.offsetTop - 60; // 100px offset from top
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+
             // Function to update products without page reload
-            function updateProducts() {
+            function updateProducts(url = null) {
                 if (isUpdating) return;
                 isUpdating = true;
 
-                // Get current values
-                const searchValue = searchInput.value;
-                const statusValue = document.querySelector('input[name="status"]:checked')?.value || '';
-                const sortValue = document.querySelector('input[name="sort"]:checked')?.value || '';
+                // Show loading state
+                productsContainer.style.opacity = '0.7';
+                if (paginationContainer) {
+                    paginationContainer.classList.add('pagination-loading');
+                }
 
-                // Build URL with parameters
-                const params = new URLSearchParams();
-                if (searchValue) params.append('search', searchValue);
-                if (statusValue) params.append('status', statusValue);
-                if (sortValue) params.append('sort', sortValue);
+                // Build URL with current parameters if no specific URL provided
+                if (!url) {
+                    const searchValue = searchInput.value;
+                    const statusValue = document.querySelector('input[name="status"]:checked')?.value || '';
+                    const sortValue = document.querySelector('input[name="sort"]:checked')?.value || '';
+                    const pageValue = new URLSearchParams(window.location.search).get('page') || '';
 
-                const url = `/${categorySlug}?${params.toString()}`;
+                    const params = new URLSearchParams();
+                    if (searchValue) params.append('search', searchValue);
+                    if (statusValue) params.append('status', statusValue);
+                    if (sortValue) params.append('sort', sortValue);
+                    if (pageValue) params.append('page', pageValue);
+
+                    url = `/${categorySlug}?${params.toString()}`;
+                }
 
                 // Update URL without reload
                 window.history.pushState({}, '', url);
@@ -384,14 +386,42 @@
                             setTimeout(() => {
                                 productsContainer.innerHTML = newContent.innerHTML;
                                 productsContainer.style.opacity = '1';
+
+                                // Scroll to top of products section
+                                scrollToProductsTop();
+
+                                // Re-initialize event listeners for the new pagination
+                                initializePaginationListeners();
                             }, 200);
                         }
                         isUpdating = false;
+
+                        // Remove loading state
+                        if (paginationContainer) {
+                            paginationContainer.classList.remove('pagination-loading');
+                        }
                     })
                     .catch(error => {
                         console.error('Error:', error);
                         isUpdating = false;
+                        productsContainer.style.opacity = '1';
+                        if (paginationContainer) {
+                            paginationContainer.classList.remove('pagination-loading');
+                        }
                     });
+            }
+
+            // Initialize pagination event listeners
+            function initializePaginationListeners() {
+                const paginationLinks = document.querySelectorAll('.pagination-arrow, .pagination-number');
+
+                paginationLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const url = this.getAttribute('href');
+                        updateProducts(url);
+                    });
+                });
             }
 
             // Search with debounce
@@ -410,20 +440,14 @@
                     updateProducts();
                 });
             });
+
+            // Initialize pagination listeners on page load
+            initializePaginationListeners();
+
+            // Handle browser back/forward buttons
+            window.addEventListener('popstate', function() {
+                updateProducts(window.location.href);
+            });
         });
     </script>
-
-    <style>
-        @keyframes slideUp {
-            from {
-                transform: translateY(100px);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-    </style>
 @endsection

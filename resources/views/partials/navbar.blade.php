@@ -12,7 +12,7 @@
                 <!-- Main Categories with Mega Dropdowns -->
                 <div class="relative group" id="menCategory">
                     <a href="{{ url('men') }}"
-                        class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10">MEN</a>
+                        class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10 {{ request()->is('men') || request()->is('men/*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">MEN</a>
                     <!-- Mega Dropdown -->
                     <div
                         class="absolute left-1/2 transform -translate-x-1/3 mt-4 w-screen max-w-6xl bg-white shadow-xl rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
@@ -75,7 +75,7 @@
 
                 <div class="relative group" id="womenCategory">
                     <a href="{{ url('women') }}"
-                        class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10">WOMEN</a>
+                        class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10 {{ request()->is('women') || request()->is('women/*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">WOMEN</a>
                     <!-- Mega Dropdown -->
                     <div
                         class="absolute left-1/2 transform -translate-x-1/3 mt-4 w-screen max-w-6xl bg-white shadow-xl rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
@@ -137,7 +137,7 @@
 
                 <div class="relative group" id="kidsCategory">
                     <a href="{{ url('kids') }}"
-                        class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10">KIDS</a>
+                        class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10 {{ request()->is('kids') || request()->is('kids/*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">KIDS</a>
                     <!-- Mega Dropdown -->
                     <div
                         class="absolute left-1/2 transform -translate-x-1/3 mt-4 w-screen max-w-6xl bg-white shadow-xl rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
@@ -181,27 +181,13 @@
                     </div>
                 </div>
 
-                <!-- Regular Links -->
-                {{-- <a href="{{ route('contact') }}"
-                     class="nav-link text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">Contact</a> --}}
-                {{-- <a href="{{ route('products.all') }}"
-                     class="nav-link text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">Products</a> --}}
-
-                <!-- Conditional Auth Links -->
-                {{-- @guest
-                    <a href="{{ route('register') }}"
-                        class="text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">Sign Up</a>
-                    <a href="{{ route('login') }}"
-                        class="text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">Log In</a>
-                @endguest --}}
-
                 @auth
                     <a href="{{ route('orders.index') }}"
-                        class="nav-link text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">ORDERS</a>
+                        class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 {{ request()->routeIs('orders.*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">ORDERS</a>
 
                     @if (auth()->user()->user_type === 'admin')
                         <a href="{{ route('admin.dashboard') }}"
-                            class="nav-link text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">ADMIN</a>
+                            class="nav-link text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200 {{ request()->routeIs('admin.*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">ADMIN</a>
                     @endif
                 @endauth
             </div>
@@ -214,11 +200,11 @@
                         <button id="userDropdownButton"
                             class="flex items-center focus:outline-none transition-all duration-200 hover:scale-105">
                             @if (auth()->user()->profile_picture)
-                                <img src="{{ asset('storage/' . auth()->user()->profile_picture) }}" 
-                                     alt="Profile" 
-                                     class="w-8 h-8 rounded-full object-cover border-2 border-gray-300 hover:border-gray-400 transition-all duration-200">
+                                <img src="{{ asset('storage/' . auth()->user()->profile_picture) }}" alt="Profile"
+                                    class="w-8 h-8 rounded-full object-cover border-2 border-gray-300 hover:border-gray-400 transition-all duration-200">
                             @else
-                                <div class="w-8 h-8 rounded-full bg-gray-900 flex items-center justify-center border-2 border-gray-300 hover:border-gray-400 transition-all duration-200">
+                                <div
+                                    class="w-8 h-8 rounded-full bg-gray-900 flex items-center justify-center border-2 border-gray-300 hover:border-gray-400 transition-all duration-200">
                                     <span class="text-white text-sm font-semibold">
                                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                                     </span>
@@ -232,16 +218,18 @@
                                 <p class="text-sm font-semibold text-gray-900 truncate">{{ auth()->user()->name }}</p>
                                 <p class="text-xs text-gray-500 truncate">{{ auth()->user()->email }}</p>
                             </div>
-                            
+
                             <!-- Dropdown Items -->
                             <a href="{{ route('profile.show') }}"
-                                class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200 group">
-                                <i class="fas fa-user mr-3 text-gray-400 group-hover:text-gray-600 transition-colors duration-200"></i>
+                                class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200 group {{ request()->routeIs('profile.show') ? 'bg-gray-50 text-gray-900' : '' }}">
+                                <i
+                                    class="fas fa-user mr-3 text-gray-400 group-hover:text-gray-600 transition-colors duration-200"></i>
                                 My Profile
                             </a>
                             <a href="{{ route('orders.index') }}"
-                                class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200 group">
-                                <i class="fas fa-shopping-bag mr-3 text-gray-400 group-hover:text-gray-600 transition-colors duration-200"></i>
+                                class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200 group {{ request()->routeIs('orders.*') ? 'bg-gray-50 text-gray-900' : '' }}">
+                                <i
+                                    class="fas fa-shopping-bag mr-3 text-gray-400 group-hover:text-gray-600 transition-colors duration-200"></i>
                                 My Orders
                             </a>
                             <div class="border-t border-gray-100 mt-1">
@@ -249,7 +237,8 @@
                                     @csrf
                                     <button type="submit"
                                         class="flex items-center w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200 group">
-                                        <i class="fas fa-sign-out-alt mr-3 text-gray-400 group-hover:text-gray-600 transition-colors duration-200"></i>
+                                        <i
+                                            class="fas fa-sign-out-alt mr-3 text-gray-400 group-hover:text-gray-600 transition-colors duration-200"></i>
                                         Sign Out
                                     </button>
                                 </form>
@@ -260,18 +249,21 @@
 
                 @guest
                     <!-- Show icon for guests -->
-                    <a href="{{ route('login') }}" class="text-gray-700 hover:text-gray-900 transition-colors duration-200">
+                    <a href="{{ route('login') }}"
+                        class="text-gray-700 hover:text-gray-900 transition-colors duration-200">
                         <i class="fas fa-user text-lg hover:scale-110 transition-transform duration-200"></i>
                     </a>
                 @endguest
 
                 <!-- Cart -->
-                <a href="{{ route('cart') }}" class="text-gray-700 hover:text-gray-900 relative transition-colors duration-200 group">
-                    <i class="fas fa-shopping-cart text-lg group-hover:scale-110 transition-transform duration-200"></i>
+                <a href="{{ route('cart') }}"
+                    class="text-gray-700 hover:text-gray-900 relative transition-colors duration-200 group {{ request()->routeIs('cart') ? 'text-gray-900' : '' }}">
+                    <i
+                        class="fas fa-shopping-cart text-lg group-hover:scale-110 transition-transform duration-200"></i>
                     @php
                         $cartCount = \App\Models\CartItem::where('user_id', auth()->id())->count();
                     @endphp
-                    @if($cartCount > 0)
+                    @if ($cartCount > 0)
                         <span
                             class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center transform group-hover:scale-110 transition-transform duration-200">
                             {{ $cartCount }}
@@ -281,7 +273,8 @@
 
                 <!-- Mobile menu button -->
                 <div class="md:hidden">
-                    <button id="mobileMenuButton" class="text-gray-700 hover:text-gray-900 focus:outline-none transition-colors duration-200">
+                    <button id="mobileMenuButton"
+                        class="text-gray-700 hover:text-gray-900 focus:outline-none transition-colors duration-200">
                         <i class="fas fa-bars text-xl hover:scale-110 transition-transform duration-200"></i>
                     </button>
                 </div>
@@ -289,20 +282,27 @@
         </div>
 
         <!-- Mobile menu -->
-        <div id="mobileMenu" class="md:hidden hidden bg-white border-t border-gray-200 py-4 shadow-lg">
-            <div class="px-2 pt-2 pb-3 space-y-1">
+        <div id="mobileMenu" class="md:hidden hidden border-t border-gray-200 py-4">
+            <div class="px-2 pt-2 space-y-1">
                 <a href="{{ url('men') }}"
-                    class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200">MEN</a>
+                    class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200 {{ request()->is('men') || request()->is('men/*') ? 'bg-gray-50 text-gray-900 font-semibold' : '' }}">MEN</a>
                 <a href="{{ url('women') }}"
-                    class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200">WOMEN</a>
+                    class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200 {{ request()->is('women') || request()->is('women/*') ? 'bg-gray-50 text-gray-900 font-semibold' : '' }}">WOMEN</a>
                 <a href="{{ url('kids') }}"
-                    class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200">KIDS</a>
-
+                    class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200 {{ request()->is('kids') || request()->is('kids/*') ? 'bg-gray-50 text-gray-900 font-semibold' : '' }}">KIDS</a>
+                @auth
+                    @if (auth()->user()->user_type === 'admin')
+                        <a href="{{ route('admin.dashboard') }}"
+                            class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200 {{ request()->is('kids') || request()->is('kids/*') ? 'bg-gray-50 text-gray-900 font-semibold' : '' }}">ADMIN</a>
+                    @endif
+                @endauth
                 @guest
                     <a href="{{ route('register') }}"
-                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200">Sign Up</a>
+                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200 {{ request()->routeIs('register') ? 'bg-gray-50 text-gray-900 font-semibold' : '' }}">Sign
+                        Up</a>
                     <a href="{{ route('login') }}"
-                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200">Log In</a>
+                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200 {{ request()->routeIs('login') ? 'bg-gray-50 text-gray-900 font-semibold' : '' }}">Log
+                        In</a>
                 @endguest
 
                 @auth
@@ -310,11 +310,11 @@
                     <div class="px-3 py-2 border-t border-gray-200 mt-2 pt-3">
                         <div class="flex items-center space-x-3 mb-3">
                             @if (auth()->user()->profile_picture)
-                                <img src="{{ asset('storage/' . auth()->user()->profile_picture) }}" 
-                                     alt="Profile" 
-                                     class="w-10 h-10 rounded-full object-cover border-2 border-gray-300">
+                                <img src="{{ asset('storage/' . auth()->user()->profile_picture) }}" alt="Profile"
+                                    class="w-10 h-10 rounded-full object-cover border-2 border-gray-300">
                             @else
-                                <div class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center border-2 border-gray-300">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center border-2 border-gray-300">
                                     <span class="text-white text-sm font-semibold">
                                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                                     </span>
@@ -327,21 +327,6 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('orders.index') }}"
-                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200">My Orders</a>
-
-                    @if (auth()->user()->user_type === 'admin')
-                        <a href="{{ route('admin.dashboard') }}"
-                            class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200">Admin Dashboard</a>
-                    @endif
-
-                    <a href="{{ route('profile.show') }}"
-                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200">My Profile</a>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit"
-                            class="block w-full text-left px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200">Sign Out</button>
-                    </form>
                 @endauth
             </div>
         </div>
@@ -390,32 +375,20 @@
 
             // Close mobile menu when clicking outside
             document.addEventListener('click', function(e) {
-                if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target) && !mobileMenu.classList.contains('hidden')) {
+                if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target) && !
+                    mobileMenu.classList.contains('hidden')) {
                     mobileMenu.classList.add('hidden');
                     mobileMenu.classList.remove('animate-slideDown');
                 }
             });
         }
 
-        // Set active nav link based on current page
-        function setActiveNavLink() {
-            const currentPath = window.location.pathname;
-            const navLinks = document.querySelectorAll('.nav-link');
-
-            navLinks.forEach(link => {
-                if (link.getAttribute('href') === currentPath) {
-                    link.classList.add('text-gray-900', 'font-semibold');
-                    link.classList.remove('text-gray-700');
-                }
-            });
-        }
-
-        setActiveNavLink();
-
         // Enhanced Navbar scroll effect
         const navbar = document.getElementById('mainNavbar');
         let lastScrollY = window.scrollY;
-        const excludedPages = ['/orders', '/admin', '/products', '/product','/cart', '/checkout','/thank-you','/profile'];
+        const excludedPages = ['/orders', '/admin', '/products', '/product', '/cart', '/checkout', '/thank-you',
+            '/profile'
+        ];
 
         function updateNavbarOnScroll() {
             const currentPath = window.location.pathname;
@@ -470,7 +443,9 @@
                 });
                 ticking = true;
             }
-        }, { passive: true });
+        }, {
+            passive: true
+        });
 
         // Add CSS for animations
         const style = document.createElement('style');
@@ -488,6 +463,11 @@
             }
             .animate-slideDown {
                 animation: slideDown 0.3s ease-out;
+            }
+            
+            /* Active link indicator for main nav */
+            .nav-link.text-gray-900.font-semibold {
+                position: relative;
             }
         `;
         document.head.appendChild(style);

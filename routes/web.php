@@ -53,6 +53,7 @@ Route::post('/logout', function () {
 
 // Product Routes
 Route::get('/products', [ProductDisplayController::class, 'index'])->name('products.all');
+
 Route::get('/product/{id}', [ProductDisplayController::class, 'view'])->name('product.view');
 
 

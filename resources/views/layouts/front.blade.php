@@ -36,73 +36,81 @@
     @include('partials.footer')
 
     <script src="{{ asset('assets/js/index.js') }}"></script>
+    <script src="{{ asset('assets/js/filter-system.js') }}"></script>
+    
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script>
-document.addEventListener('alpine:init', () => {
-    Alpine.data('datePicker', (initial) => ({
-        show: false,
-        selectedDate: '',
-        displayDate: '',
-        month: 0,
-        year: 0,
-        monthNames: [
-            'January','February','March','April','May','June',
-            'July','August','September','October','November','December'
-        ],
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('datePicker', (initial) => ({
+                show: false,
+                selectedDate: '',
+                displayDate: '',
+                month: 0,
+                year: 0,
+                monthNames: [
+                    'January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'
+                ],
 
-        init() {
-            const today = new Date();
-            this.month = today.getMonth();
-            this.year = today.getFullYear();
+                init() {
+                    const today = new Date();
+                    this.month = today.getMonth();
+                    this.year = today.getFullYear();
 
-            if(initial){
-                const d = new Date(initial);
-                if(!isNaN(d)){
-                    this.month = d.getMonth();
-                    this.year = d.getFullYear();
-                    this.selectDate(d.getDate(), false);
+                    if (initial) {
+                        const d = new Date(initial);
+                        if (!isNaN(d)) {
+                            this.month = d.getMonth();
+                            this.year = d.getFullYear();
+                            this.selectDate(d.getDate(), false);
+                        }
+                    }
+                },
+
+                get daysInMonth() {
+                    return new Date(this.year, this.month + 1, 0).getDate();
+                },
+
+                get blanks() {
+                    return new Array(new Date(this.year, this.month, 1).getDay()).fill(null);
+                },
+
+                selectDate(day, close = true) {
+                    const d = new Date(this.year, this.month, day);
+                    this.selectedDate = d.toISOString().slice(0, 10); // YYYY-MM-DD
+                    this.displayDate =
+                        `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getFullYear()}`;
+                    if (close) this.show = false;
+                },
+
+                selectToday() {
+                    const today = new Date();
+                    this.month = today.getMonth();
+                    this.year = today.getFullYear();
+                    this.selectDate(today.getDate());
+                },
+
+                prevMonth() {
+                    if (this.month === 0) {
+                        this.month = 11;
+                        this.year--;
+                    } else this.month--;
+                },
+
+                nextMonth() {
+                    if (this.month === 11) {
+                        this.month = 0;
+                        this.year++;
+                    } else this.month++;
+                },
+
+                isSelected(day) {
+                    return this.selectedDate === new Date(this.year, this.month, day).toISOString()
+                        .slice(0, 10);
                 }
-            }
-        },
-
-        get daysInMonth() {
-            return new Date(this.year, this.month + 1, 0).getDate();
-        },
-
-        get blanks() {
-            return new Array(new Date(this.year, this.month, 1).getDay()).fill(null);
-        },
-
-        selectDate(day, close = true) {
-            const d = new Date(this.year, this.month, day);
-            this.selectedDate = d.toISOString().slice(0,10); // YYYY-MM-DD
-            this.displayDate = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getFullYear()}`;
-            if(close) this.show = false;
-        },
-
-        selectToday() {
-            const today = new Date();
-            this.month = today.getMonth();
-            this.year = today.getFullYear();
-            this.selectDate(today.getDate());
-        },
-
-        prevMonth() { 
-            if(this.month === 0){ this.month = 11; this.year--; }
-            else this.month--;
-        },
-
-        nextMonth() {
-            if(this.month === 11){ this.month = 0; this.year++; }
-            else this.month++;
-        },
-
-        isSelected(day) {
-            return this.selectedDate === new Date(this.year, this.month, day).toISOString().slice(0,10);
-        }
-    }));
-});
-</script>
+            }));
+        });
+    </script>
 
     @stack('styles')
     @stack('scripts')
