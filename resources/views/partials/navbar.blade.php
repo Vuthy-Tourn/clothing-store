@@ -188,12 +188,12 @@
                      class="nav-link text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">Products</a> --}}
 
                 <!-- Conditional Auth Links -->
-                @guest
+                {{-- @guest
                     <a href="{{ route('register') }}"
                         class="text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">Sign Up</a>
                     <a href="{{ route('login') }}"
                         class="text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">Log In</a>
-                @endguest
+                @endguest --}}
 
                 @auth
                     <a href="{{ route('orders.index') }}"
@@ -201,7 +201,7 @@
 
                     @if (auth()->user()->user_type === 'admin')
                         <a href="{{ route('admin.dashboard') }}"
-                            class="nav-link text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">Admin</a>
+                            class="nav-link text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">ADMIN</a>
                     @endif
                 @endauth
             </div>
@@ -209,92 +209,138 @@
             <!-- Icons Section -->
             <div class="flex items-center space-x-4">
                 @auth
-                    <!-- User Dropdown -->
+                    <!-- User Dropdown with Profile Picture -->
                     <div class="relative">
                         <button id="userDropdownButton"
-                            class="flex items-center text-gray-700 hover:text-gray-900 focus:outline-none">
-                            <i class="fas fa-user text-lg"></i>
+                            class="flex items-center focus:outline-none transition-all duration-200 hover:scale-105">
+                            @if (auth()->user()->profile_picture)
+                                <img src="{{ asset('storage/' . auth()->user()->profile_picture) }}" 
+                                     alt="Profile" 
+                                     class="w-8 h-8 rounded-full object-cover border-2 border-gray-300 hover:border-gray-400 transition-all duration-200">
+                            @else
+                                <div class="w-8 h-8 rounded-full bg-gray-900 flex items-center justify-center border-2 border-gray-300 hover:border-gray-400 transition-all duration-200">
+                                    <span class="text-white text-sm font-semibold">
+                                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                    </span>
+                                </div>
+                            @endif
                         </button>
                         <div id="userDropdown"
-                            class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden">
+                            class="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-xl py-2 z-50 hidden border border-gray-100">
+                            <!-- User Info -->
+                            <div class="px-4 py-3 border-b border-gray-100">
+                                <p class="text-sm font-semibold text-gray-900 truncate">{{ auth()->user()->name }}</p>
+                                <p class="text-xs text-gray-500 truncate">{{ auth()->user()->email }}</p>
+                            </div>
+                            
+                            <!-- Dropdown Items -->
                             <a href="{{ route('profile.show') }}"
-                                class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                <i class="fas fa-user mr-2"></i>
-                                Profile
+                                class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200 group">
+                                <i class="fas fa-user mr-3 text-gray-400 group-hover:text-gray-600 transition-colors duration-200"></i>
+                                My Profile
                             </a>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit"
-                                    class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-sign-out-alt mr-2"></i>
-                                    Logout
-                                </button>
-                            </form>
+                            <a href="{{ route('orders.index') }}"
+                                class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200 group">
+                                <i class="fas fa-shopping-bag mr-3 text-gray-400 group-hover:text-gray-600 transition-colors duration-200"></i>
+                                My Orders
+                            </a>
+                            <div class="border-t border-gray-100 mt-1">
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit"
+                                        class="flex items-center w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200 group">
+                                        <i class="fas fa-sign-out-alt mr-3 text-gray-400 group-hover:text-gray-600 transition-colors duration-200"></i>
+                                        Sign Out
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 @endauth
 
                 @guest
                     <!-- Show icon for guests -->
-                    <a href="{{ route('login') }}" class="text-gray-700 hover:text-gray-900">
-                        <i class="fas fa-user text-lg"></i>
+                    <a href="{{ route('login') }}" class="text-gray-700 hover:text-gray-900 transition-colors duration-200">
+                        <i class="fas fa-user text-lg hover:scale-110 transition-transform duration-200"></i>
                     </a>
                 @endguest
 
                 <!-- Cart -->
-                <a href="{{ route('cart') }}" class="text-gray-700 hover:text-gray-900 relative">
-                    <i class="fas fa-shopping-cart text-lg"></i>
-                    <span
-                        class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                        {{ \App\Models\CartItem::where('user_id', auth()->id())->count() }}
-                    </span>
+                <a href="{{ route('cart') }}" class="text-gray-700 hover:text-gray-900 relative transition-colors duration-200 group">
+                    <i class="fas fa-shopping-cart text-lg group-hover:scale-110 transition-transform duration-200"></i>
+                    @php
+                        $cartCount = \App\Models\CartItem::where('user_id', auth()->id())->count();
+                    @endphp
+                    @if($cartCount > 0)
+                        <span
+                            class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center transform group-hover:scale-110 transition-transform duration-200">
+                            {{ $cartCount }}
+                        </span>
+                    @endif
                 </a>
 
                 <!-- Mobile menu button -->
                 <div class="md:hidden">
-                    <button id="mobileMenuButton" class="text-gray-700 hover:text-gray-900 focus:outline-none">
-                        <i class="fas fa-bars text-xl"></i>
+                    <button id="mobileMenuButton" class="text-gray-700 hover:text-gray-900 focus:outline-none transition-colors duration-200">
+                        <i class="fas fa-bars text-xl hover:scale-110 transition-transform duration-200"></i>
                     </button>
                 </div>
             </div>
         </div>
 
         <!-- Mobile menu -->
-        <div id="mobileMenu" class="md:hidden hidden bg-white border-t border-gray-200 py-4">
+        <div id="mobileMenu" class="md:hidden hidden bg-white border-t border-gray-200 py-4 shadow-lg">
             <div class="px-2 pt-2 pb-3 space-y-1">
                 <a href="{{ url('men') }}"
-                    class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium">Men</a>
+                    class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200">MEN</a>
                 <a href="{{ url('women') }}"
-                    class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium">Women</a>
+                    class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200">WOMEN</a>
                 <a href="{{ url('kids') }}"
-                    class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium">Kids</a>
-                {{-- <a href="{{ route('contact') }}"
-                     class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium">Contact</a> --}}
-                {{-- <a href="{{ route('products.all') }}"
-                     class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium">Products</a> --}}
+                    class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200">KIDS</a>
 
                 @guest
                     <a href="{{ route('register') }}"
-                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium">Sign Up</a>
+                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200">Sign Up</a>
                     <a href="{{ route('login') }}"
-                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium">Log In</a>
+                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200">Log In</a>
                 @endguest
 
                 @auth
+                    <!-- Mobile User Info -->
+                    <div class="px-3 py-2 border-t border-gray-200 mt-2 pt-3">
+                        <div class="flex items-center space-x-3 mb-3">
+                            @if (auth()->user()->profile_picture)
+                                <img src="{{ asset('storage/' . auth()->user()->profile_picture) }}" 
+                                     alt="Profile" 
+                                     class="w-10 h-10 rounded-full object-cover border-2 border-gray-300">
+                            @else
+                                <div class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center border-2 border-gray-300">
+                                    <span class="text-white text-sm font-semibold">
+                                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                    </span>
+                                </div>
+                            @endif
+                            <div>
+                                <p class="text-sm font-semibold text-gray-900">{{ auth()->user()->name }}</p>
+                                <p class="text-xs text-gray-500">{{ auth()->user()->email }}</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <a href="{{ route('orders.index') }}"
-                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium">ORDERS</a>
+                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200">My Orders</a>
 
                     @if (auth()->user()->user_type === 'admin')
                         <a href="{{ route('admin.dashboard') }}"
-                            class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium">Admin</a>
+                            class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200">Admin Dashboard</a>
                     @endif
 
                     <a href="{{ route('profile.show') }}"
-                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium">Profile</a>
+                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200">My Profile</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit"
-                            class="block w-full text-left px-3 py-2 text-gray-700 hover:text-gray-900 font-medium">Logout</button>
+                            class="block w-full text-left px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200">Sign Out</button>
                     </form>
                 @endauth
             </div>
@@ -308,27 +354,46 @@
         const userDropdownButton = document.getElementById('userDropdownButton');
         const userDropdown = document.getElementById('userDropdown');
 
-        if (userDropdownButton) {
+        if (userDropdownButton && userDropdown) {
             userDropdownButton.addEventListener('click', function(e) {
                 e.stopPropagation();
                 userDropdown.classList.toggle('hidden');
+                userDropdown.classList.toggle('animate-fadeIn');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!userDropdown.contains(e.target) && !userDropdownButton.contains(e.target)) {
+                    userDropdown.classList.add('hidden');
+                    userDropdown.classList.remove('animate-fadeIn');
+                }
+            });
+
+            // Close dropdown on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && !userDropdown.classList.contains('hidden')) {
+                    userDropdown.classList.add('hidden');
+                    userDropdown.classList.remove('animate-fadeIn');
+                }
             });
         }
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function() {
-            if (userDropdown) {
-                userDropdown.classList.add('hidden');
-            }
-        });
 
         // Mobile menu functionality
         const mobileMenuButton = document.getElementById('mobileMenuButton');
         const mobileMenu = document.getElementById('mobileMenu');
 
-        if (mobileMenuButton) {
+        if (mobileMenuButton && mobileMenu) {
             mobileMenuButton.addEventListener('click', function() {
                 mobileMenu.classList.toggle('hidden');
+                mobileMenu.classList.toggle('animate-slideDown');
+            });
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target) && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('animate-slideDown');
+                }
             });
         }
 
@@ -347,46 +412,46 @@
 
         setActiveNavLink();
 
-        // Navbar scroll effect - hidden initially, slides down from top when scrolling
+        // Enhanced Navbar scroll effect
         const navbar = document.getElementById('mainNavbar');
         let lastScrollY = window.scrollY;
-        const excludedPages = ['/orders', '/admin', '/products', '/product','/cart', '/checkout','/thank-you','/profile']; // Add pages where you want normal behavior
+        const excludedPages = ['/orders', '/admin', '/products', '/product','/cart', '/checkout','/thank-you','/profile'];
 
         function updateNavbarOnScroll() {
             const currentPath = window.location.pathname;
             const isExcludedPage = excludedPages.some(page => currentPath.includes(page));
 
             if (isExcludedPage) {
-                // Normal behavior for excluded pages - always visible
+                // Normal behavior for excluded pages - always visible with enhanced styling
                 navbar.style.transform = 'translateY(0)';
-                if (window.scrollY > 50) {
-                    navbar.classList.remove('bg-transparent', 'shadow-sm');
-                    navbar.classList.add('bg-white', 'shadow-lg');
+                if (window.scrollY > 20) {
+                    navbar.classList.remove('bg-white/95', 'backdrop-blur-sm');
+                    navbar.classList.add('bg-white', 'shadow-xl', 'border-b', 'border-gray-100');
                 } else {
-                    navbar.classList.remove('bg-white', 'shadow-lg');
-                    navbar.classList.add('bg-transparent', 'shadow-sm');
+                    navbar.classList.remove('bg-white', 'shadow-xl', 'border-b', 'border-gray-100');
+                    navbar.classList.add('bg-white/95', 'backdrop-blur-sm');
                 }
                 return;
             }
 
-            // For other pages - hidden initially, slides down when scrolling
+            // For other pages - enhanced hide/show behavior
             if (window.scrollY > 100) {
-                // Show navbar when scrolled down
+                // Show navbar when scrolled down with smooth animation
                 navbar.style.transform = 'translateY(0)';
 
-                // Change background when scrolled
+                // Enhanced background changes
                 if (window.scrollY > 50) {
-                    navbar.classList.remove('bg-transparent', 'shadow-sm');
-                    navbar.classList.add('bg-white', 'shadow-lg');
+                    navbar.classList.remove('bg-white/95', 'backdrop-blur-sm');
+                    navbar.classList.add('bg-white', 'shadow-xl', 'border-b', 'border-gray-100');
                 } else {
-                    navbar.classList.remove('bg-white', 'shadow-lg');
-                    navbar.classList.add('bg-transparent', 'shadow-sm');
+                    navbar.classList.remove('bg-white', 'shadow-xl', 'border-b', 'border-gray-100');
+                    navbar.classList.add('bg-white/95', 'backdrop-blur-sm');
                 }
             } else {
-                // Hide navbar when at top
+                // Hide navbar when at top with smooth animation
                 navbar.style.transform = 'translateY(-100%)';
-                navbar.classList.remove('bg-white', 'shadow-lg');
-                navbar.classList.add('bg-transparent', 'shadow-sm');
+                navbar.classList.remove('bg-white', 'shadow-xl', 'border-b', 'border-gray-100');
+                navbar.classList.add('bg-white/95', 'backdrop-blur-sm');
             }
 
             lastScrollY = window.scrollY;
@@ -395,7 +460,7 @@
         // Initial check
         updateNavbarOnScroll();
 
-        // Listen for scroll events with throttle
+        // Enhanced scroll event listener with better performance
         let ticking = false;
         window.addEventListener('scroll', function() {
             if (!ticking) {
@@ -405,6 +470,26 @@
                 });
                 ticking = true;
             }
-        });
+        }, { passive: true });
+
+        // Add CSS for animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes slideDown {
+                from { opacity: 0; transform: translateY(-20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .animate-fadeIn {
+                animation: fadeIn 0.2s ease-out;
+            }
+            .animate-slideDown {
+                animation: slideDown 0.3s ease-out;
+            }
+        `;
+        document.head.appendChild(style);
     });
 </script>
