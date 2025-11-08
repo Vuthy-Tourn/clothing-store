@@ -1,6 +1,6 @@
 @extends('layouts.front')
 @section('content')
-<div class="min-h-screen bg-gray-50 py-12 mt-10">
+<div class="min-h-screen py-12 mt-10">
     <div class="max-w-7xl mx-auto px-4">
         <!-- Header Section -->
         <div class="text-center mb-12">

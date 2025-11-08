@@ -108,7 +108,7 @@ class CheckoutController extends Controller
             'payment_method_types' => ['card'],
             'line_items' => $lineItems,
             'mode' => 'payment',
-            'success_url' => route('checkout.thankyou', ['orderId' => $orderId]),
+            'success_url' => route('orders.show', ['orderId' => $orderId]) . '?success=1',
             'cancel_url' => route('checkout.cancel'),
         ]);
 
@@ -144,6 +144,18 @@ class CheckoutController extends Controller
 
         return view('frontend.thankyou', compact('order'));
     }
+
+    public function show($orderId)
+{
+    $order = Order::where('order_id', $orderId)->firstOrFail();
+    
+    // Check if this is a success redirect
+    if (request()->has('success')) {
+        session()->flash('show_order_success', true);
+    }
+    
+    return view('orders.show', compact('order'));
+}
 
     public function downloadInvoice($orderId)
     {

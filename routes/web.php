@@ -123,9 +123,11 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout')->middleware('auth');
-Route::get('/checkout/cancel', function () {
-    return redirect()->route('checkout.index')->withErrors(['msg' => 'Payment was cancelled.']);
-})->name('checkout.cancel');
+
+Route::post('/clear-order-success', function() {
+    session()->forget('show_order_success');
+    return response()->json(['success' => true]);
+})->name('clear.order.success');
 
 Route::get('/thank-you/{orderId}', [CheckoutController::class, 'thankYou'])->name('checkout.thankyou');
 
