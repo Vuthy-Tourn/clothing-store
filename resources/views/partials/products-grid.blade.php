@@ -4,7 +4,9 @@
             {{-- Image Container --}}
             <a href="{{ route('product.view', $product->id) }}"
                 class="block relative overflow-hidden bg-gray-100 aspect-[3/4] mb-5">
-                <img src="{{ asset('storage/' . $product->image) }}"
+                <img src="{{ Str::startsWith($product->image, ['http://', 'https://'])
+                    ? $product->image
+                    : asset('storage/' . $product->image) }}"
                     class="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-110"
                     alt="{{ $product->name }}">
 
@@ -20,8 +22,7 @@
                 {{-- Status Badge --}}
                 @if ($product->status != 'active')
                     <div class="absolute top-5 right-5">
-                        <span
-                            class="px-4 py-2 bg-black text-white text-xs font-bold tracking-widest uppercase">
+                        <span class="px-4 py-2 bg-black text-white text-xs font-bold tracking-widest uppercase">
                             Out of Stock
                         </span>
                     </div>
@@ -42,8 +43,7 @@
 
                 {{-- Price --}}
                 <div class="flex items-center gap-3">
-                    <span
-                        class="text-xs text-gray-500 uppercase tracking-widest font-medium">From</span>
+                    <span class="text-xs text-gray-500 uppercase tracking-widest font-medium">From</span>
                     <span class="text-lg font-bold text-black tracking-tight">
                         ${{ number_format($product->sizes->min('price'), 2) }}
                     </span>
@@ -53,8 +53,8 @@
                 <a href="{{ route('product.view', $product->id) }}"
                     class="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-black hover:gap-3 transition-all group/link">
                     <span>Shop Now</span>
-                    <svg class="w-4 h-4 transition-transform group-hover/link:translate-x-1"
-                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 transition-transform group-hover/link:translate-x-1" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                     </svg>
@@ -87,13 +87,14 @@
             @if ($products->onFirstPage())
                 <span class="pagination-item pagination-disabled">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
                 </span>
             @else
-                <a href="{{ $products->previousPageUrl() }}" class="pagination-item pagination-arrow pagination-prev" data-page="{{ $products->currentPage() - 1 }}">
+                <a href="{{ $products->previousPageUrl() }}" class="pagination-item pagination-arrow pagination-prev"
+                    data-page="{{ $products->currentPage() - 1 }}">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
                 </a>
             @endif
@@ -103,7 +104,8 @@
                 @if ($page == $products->currentPage())
                     <span class="pagination-item pagination-active">{{ $page }}</span>
                 @else
-                    <a href="{{ $url }}" class="pagination-item pagination-number" data-page="{{ $page }}">
+                    <a href="{{ $url }}" class="pagination-item pagination-number"
+                        data-page="{{ $page }}">
                         {{ $page }}
                     </a>
                 @endif
@@ -111,15 +113,16 @@
 
             {{-- Next Page --}}
             @if ($products->hasMorePages())
-                <a href="{{ $products->nextPageUrl() }}" class="pagination-item pagination-arrow pagination-next" data-page="{{ $products->currentPage() + 1 }}">
+                <a href="{{ $products->nextPageUrl() }}" class="pagination-item pagination-arrow pagination-next"
+                    data-page="{{ $products->currentPage() + 1 }}">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
                 </a>
             @else
                 <span class="pagination-item pagination-disabled">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
                 </span>
             @endif
