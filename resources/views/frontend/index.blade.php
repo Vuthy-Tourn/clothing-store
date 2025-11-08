@@ -298,40 +298,67 @@
             <h2>Get Styled, Stay Updated.</h2>
             <p>Be the first to know about exclusive drops, latest arrivals, and limited-time offers from Outfit 818.</p>
         </div>
+
         @auth
             @php
                 $isSubscribed = \App\Models\Email::where('email', auth()->user()->email)->exists();
             @endphp
 
             @if ($isSubscribed)
-                <div class="bg-green-100 text-green-800 p-4 rounded mt-3 flex items-center justify-between">
-                    <span>You are subscribed and will receive notifications via email.</span>
-
-                    <form action="{{ route('emails.unsubscribe') }}" method="POST"
-                        onsubmit="return confirm('Are you sure you want to unsubscribe?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="ml-4 text-red-600 hover:underline">Unsubscribe</button>
-                    </form>
+                <!-- Subscribed State -->
+                <div class="bg-green-50 border border-green-200 rounded-lg p-6 mt-4 max-w-3xl mx-auto">
+                    <div class="flex items-center justify-between gap-20">
+                        <div class="flex items-center space-x-3">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="text-left">
+                                <p class="text-green-800 font-medium">You're subscribed to our updates!</p>
+                                <p class="text-green-600 text-sm">We'll keep you informed about the latest trends and exclusive
+                                    offers.</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="showUnsubscribeModal()"
+                            class="inline-flex items-center px-4 py-2 border border-red-300 text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
+                            Unsubscribe
+                        </button>
+                    </div>
                 </div>
             @else
-                <form action="{{ route('emails.subscribe') }}" method="POST" class="optin-form-bottom">
+                <!-- Not Subscribed State -->
+                <form action="{{ route('emails.subscribe') }}" method="POST" class="optin-form-bottom mt-4">
                     @csrf
-                    <input type="email" name="email" value="{{ auth()->user()->email }}" readonly
-                        class="bg-gray-100 cursor-not-allowed" required>
-                    <button type="submit" class="bg-gray-900">Subscribe</button>
+                    <div class="flex space-x-3">
+                        <input type="email" name="email" value="{{ auth()->user()->email }}" readonly
+                            class="flex-1 px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 cursor-not-allowed focus:outline-none"
+                            required>
+                        <button type="button" onclick="showSubscribeModal()"
+                            class="px-6 py-3 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-200">
+                            Subscribe
+                        </button>
+                    </div>
                 </form>
             @endif
         @else
-            <form class="optin-form-bottom">
-                <input type="email" placeholder="Enter your email" required disabled class="cursor-not-allowed">
-                <button type="submit" disabled class="bg-gray-900">
-                    <a href="{{ route('login') }}"> Login to Subscribe</a>
-                </button>
+            <!-- Guest State -->
+            <form class="optin-form-bottom mt-4">
+                <div class="flex space-x-3">
+                    <input type="email" placeholder="Enter your email" required disabled
+                        class="flex-1 px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-400 cursor-not-allowed focus:outline-none">
+                    <a href="{{ route('login') }}"
+                        class="inline-flex items-center px-6 py-3 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-200">
+                        Login to Subscribe
+                    </a>
+                </div>
             </form>
         @endauth
 
-        <div id="subscribe-message" class="text-sm mt-2"></div>
-
+        <div id="subscribe-message" class="text-sm mt-3"></div>
     </section>
 @endsection

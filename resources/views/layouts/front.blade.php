@@ -28,6 +28,7 @@
     @include('partials.navbar')
 
     <x-toast />
+    <x-subscribe-modal />
 
     <main>
         @yield('content')
