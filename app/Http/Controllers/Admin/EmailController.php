@@ -13,7 +13,7 @@ class EmailController extends Controller
     public function index()
     {
         $emails = Email::latest()->get(); // Fetch all subscribed emails
-        return view('admin.emails', compact('emails'));
+        return view('admin.emails.index', compact('emails'));
     }
 
     public function send(Request $request)

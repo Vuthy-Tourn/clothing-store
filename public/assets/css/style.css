@@ -1088,3 +1088,241 @@ html {
         var(--color-primary), 
         var(--color-accent));
 }
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #fafafa;
+    min-height: 100vh;
+}
+
+.fashion-font {
+    font-family: 'Playfair Display', serif;
+}
+
+/* Glassmorphism Effect */
+.glass-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 20px rgba(31, 38, 135, 0.08);
+}
+
+/* Sidebar Styles */
+.sidebar-elegant {
+    background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.nav-item {
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 12px;
+    margin: 4px 8px;
+}
+
+.nav-item:hover {
+    background: linear-gradient(90deg, rgba(88, 104, 121, 0.08) 0%, transparent 100%);
+    transform: translateX(4px);
+}
+
+.nav-item.active {
+    background: linear-gradient(90deg, rgba(88, 104, 121, 0.15) 0%, rgba(88, 104, 121, 0.05) 100%);
+    box-shadow: 0 2px 8px rgba(88, 104, 121, 0.08);
+}
+
+.nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 60%;
+    background: linear-gradient(to bottom, #586879, #92a4ac);
+    border-radius: 0 4px 4px 0;
+}
+
+/* Dashboard Card Styles */
+.dashboard-card, .card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    transition: all 0.3s ease;
+}
+
+.dashboard-card:hover, .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Animations */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.animate-scale-in {
+    animation: scaleIn 0.3s ease-out;
+}
+
+/* Pulse Animation for Notifications */
+.pulse-dot {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: .5;
+    }
+}
+
+/* Button Hover Effects */
+/* .btn-primary {
+    background: gray;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+} */
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(88, 104, 121, 0.2);
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    border: 3px solid rgba(88, 104, 121, 0.1);
+    border-top-color: #586879;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(88, 104, 121, 0.05);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(88, 104, 121, 0.2);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(88, 104, 121, 0.4);
+}
+
+/* Sidebar Toggle Animation */
+@media (max-width: 1024px) {
+    .sidebar-elegant.hidden-mobile {
+        transform: translateX(-100%);
+    }
+}
+
+/* Main content area styling */
+.main-content {
+    background-color: #fafafa;
+}
+
+/* Period button active state */
+.period-btn.active {
+    background: linear-gradient(135deg, #586879 0%, #92a4ac 100%);
+    color: white;
+}
+
+/* Utility Classes */
+.line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.hover-lift {
+    transition: all 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px);
+}
+
+/* Status indicators */
+.status-online {
+    background: #22c55e;
+}
+
+.status-offline {
+    background: #ef4444;
+}
+
+.status-warning {
+    background: #eab308;
+}

@@ -1,56 +1,56 @@
-@extends('admin.layout')
+@extends('admin.layouts.app')
 
 @section('content')
     <div class="mb-8" data-aos="fade-down">
-        <h1 class="text-3xl font-bold text-white mb-2  ">Order Management</h1>
-        <p class="text-white text-lg">Manage and track customer orders</p>
+        <h1 class="text-3xl font-bold text-black mb-2">Order Management</h1>
+        <p class="text-black text-lg">Manage and track customer orders</p>
     </div>
 
     <!-- Order Stats -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="bg-Pearl border border-Silk p-6 rounded-xl shadow-sm" data-aos="fade-up" data-aos-delay="100">
+        <div class="border border-Silk p-6 rounded-xl shadow-sm" data-aos="fade-up" data-aos-delay="100">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-Wave text-sm font-medium">Total Orders</p>
                     <p class="text-2xl font-bold text-Ocean mt-1">{{ $orders->count() }}</p>
                 </div>
-                <div class="w-12 h-12 rounded-lg bg-Ocean/10 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-lg flex items-center justify-center">
                     <i class="fas fa-shopping-bag text-Ocean text-xl"></i>
                 </div>
             </div>
         </div>
 
-        <div class="bg-Pearl border border-Silk p-6 rounded-xl shadow-sm" data-aos="fade-up" data-aos-delay="150">
+        <div class="border border-Silk p-6 rounded-xl shadow-sm" data-aos="fade-up" data-aos-delay="150">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-Wave text-sm font-medium">Pending</p>
                     <p class="text-2xl font-bold text-yellow-600 mt-1">{{ $orders->where('status', 'pending')->count() }}</p>
                 </div>
-                <div class="w-12 h-12 rounded-lg bg-yellow-100 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-lg flex items-center justify-center">
                     <i class="fas fa-clock text-yellow-600 text-xl"></i>
                 </div>
             </div>
         </div>
 
-        <div class="bg-Pearl border border-Silk p-6 rounded-xl shadow-sm" data-aos="fade-up" data-aos-delay="200">
+        <div class="border border-Silk p-6 rounded-xl shadow-sm" data-aos="fade-up" data-aos-delay="200">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-Wave text-sm font-medium">Completed</p>
-                    <p class="text-2xl font-bold text-green-600 mt-1">{{ $orders->where('status', 'completed')->count() }}</p>
+                    <p class="text-Wave text-sm font-medium">Paid/Completed</p>
+                    <p class="text-2xl font-bold text-green-600 mt-1">{{ $orders->whereIn('status', ['completed', 'paid'])->count() }}</p>
                 </div>
-                <div class="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-lg flex items-center justify-center">
                     <i class="fas fa-check-circle text-green-600 text-xl"></i>
                 </div>
             </div>
         </div>
 
-        <div class="bg-Pearl border border-Silk p-6 rounded-xl shadow-sm" data-aos="fade-up" data-aos-delay="250">
+        <div class="border border-Silk p-6 rounded-xl shadow-sm" data-aos="fade-up" data-aos-delay="250">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-Wave text-sm font-medium">Cancelled</p>
                     <p class="text-2xl font-bold text-red-600 mt-1">{{ $orders->where('status', 'cancelled')->count() }}</p>
                 </div>
-                <div class="w-12 h-12 rounded-lg bg-red-100 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-lg flex items-center justify-center">
                     <i class="fas fa-times-circle text-red-600 text-xl"></i>
                 </div>
             </div>
@@ -58,21 +58,14 @@
     </div>
 
     <!-- Orders Table -->
-    <div class="bg-Pearl border border-Silk rounded-xl shadow-sm overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+    <div class="border border-Silk rounded-xl shadow-sm overflow-hidden" data-aos="fade-up" data-aos-delay="300">
         <div class="p-6 border-b border-Silk flex items-center justify-between">
-            <h2 class="text-xl font-bold text-Ocean  ">All Orders</h2>
-            <div class="flex items-center space-x-3">
-                <div class="relative">
-                    <input type="text" placeholder="Search orders..." 
-                           class="border border-Silk bg-Lace text-Ocean rounded-lg px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-Ocean text-sm">
-                    <i class="fas fa-search absolute left-3 top-3 text-Wave text-sm"></i>
-                </div>
-            </div>
+            <h2 class="text-xl font-bold text-Ocean">All Orders</h2>
         </div>
 
         <div class="overflow-x-auto">
             <table class="w-full">
-                <thead class="bg-Lace border-b border-Silk">
+                <thead class="bg-gray-200 border-b border-Silk">
                     <tr>
                         <th class="py-4 px-6 text-left text-Ocean font-semibold text-sm">#</th>
                         <th class="py-4 px-6 text-left text-Ocean font-semibold text-sm">Order ID</th>
@@ -85,7 +78,7 @@
                 </thead>
                 <tbody class="divide-y divide-Silk">
                     @forelse ($orders as $index => $order)
-                        <tr class="hover:bg-Lace/50 transition-colors" data-aos="fade-in" data-aos-delay="{{ $index * 50 }}">
+                        <tr class="hover:bg-gray-100 transition-colors" data-aos="fade-in" data-aos-delay="{{ $index * 50 }}">
                             <td class="py-4 px-6 text-Wave font-medium">{{ $index + 1 }}</td>
                             <td class="py-4 px-6">
                                 <span class="font-mono font-semibold text-Ocean">{{ $order->order_id }}</span>
@@ -102,11 +95,11 @@
                             <td class="py-4 px-6">
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium 
                                     {{ $order->status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                                       ($order->status === 'completed' ? 'bg-green-100 text-green-700' :
+                                       ($order->status === 'completed' || $order->status === 'paid' ? 'bg-green-100 text-green-700' :
                                        ($order->status === 'cancelled' ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600')) }}">
                                     <span class="w-2 h-2 rounded-full 
                                         {{ $order->status === 'pending' ? 'bg-yellow-500' :
-                                           ($order->status === 'completed' ? 'bg-green-500' :
+                                           ($order->status === 'completed' || $order->status === 'paid' ? 'bg-green-500' :
                                            ($order->status === 'cancelled' ? 'bg-red-500' : 'bg-gray-500')) }} mr-2"></span>
                                     {{ ucfirst($order->status) }}
                                 </span>
@@ -138,7 +131,7 @@
         </div>
 
         @if($orders->count() > 0)
-        <div class="p-4 border-t border-Silk bg-Lace">
+        <div class="p-4 border-t border-Silk bg-gray-200">
             <div class="flex items-center justify-between text-sm text-Wave">
                 <span>Showing {{ $orders->count() }} orders</span>
                 <div class="flex items-center space-x-4">

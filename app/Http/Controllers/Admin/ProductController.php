@@ -19,9 +19,9 @@ class ProductController extends Controller
         $products = Product::with(['category', 'sizes'])->orderBy('created_at', 'desc')->get();
         $categories = Category::orderBy('name')->get();
 
-        return view('admin.products', compact('products', 'categories'));
+        return view('admin.products.index', compact('products', 'categories'));
     }
-
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -67,6 +67,29 @@ class ProductController extends Controller
         }
 
         return redirect()->back()->with('success', 'Product added with sizes and stock successfully!');
+    }
+
+    // Add this edit method
+    public function edit(Product $product)
+    {
+        return response()->json([
+            'id' => $product->id,
+            'name' => $product->name,
+            'category_id' => $product->category_id,
+            'description' => $product->description,
+            'status' => $product->status,
+            'image' => $product->image,
+            'image_2' => $product->image_2,
+            'image_3' => $product->image_3,
+            'image_4' => $product->image_4,
+            'sizes' => $product->sizes->map(function($size) {
+                return [
+                    'size' => $size->size,
+                    'price' => $size->price,
+                    'stock' => $size->stock
+                ];
+            })
+        ]);
     }
 
     public function update(Request $request, $id)

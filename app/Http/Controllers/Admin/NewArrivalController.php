@@ -13,7 +13,7 @@ class NewArrivalController extends Controller
     public function index()
     {
         $arrivals = \App\Models\NewArrival::latest()->get();
-        return view('admin.new-arrivals', compact('arrivals'));
+        return view('admin.new-arrivals.index', compact('arrivals'));
     }
 
     // Store a new arrival
