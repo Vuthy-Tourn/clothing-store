@@ -35,7 +35,7 @@ class CheckoutController extends Controller
         $validated = $request->validate([
             'name'           => ['required', 'string', 'min:2', 'max:100'],
             'email'          => ['required', 'email', 'max:255'],
-            'phone'          => ['required', 'regex:/^[6-9]\d{9}$/'],
+            'phone' => ['required', 'regex:/^(?:\+855|0)(10|11|12|15|16|17|18|19|20|23|24|25|26|27|28|29)\d{6}$/'],
             'city'           => ['required', 'string', 'max:50'],
             'state'          => ['required', 'string', 'max:50'],
             'zip'            => ['required', 'regex:/^\d{5,6}$/'],
@@ -89,14 +89,23 @@ class CheckoutController extends Controller
         // Stripe integration
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
+        // Exchange rate for USD → KHR (adjust as needed)
+    $exchangeRate = 4000; // 1 USD = 4000 KHR
+
         $lineItems = [];
         foreach ($items as $item) {
-            $sizePrice = $item->product->sizes->firstWhere('size', $item->size)?->price ?? 0;
+            $sizePriceUSD = $item->product->sizes->firstWhere('size', $item->size)?->price ?? 0; // USD
+        $sizePriceKHR = $sizePriceUSD * $exchangeRate; // riel
+
+        // Optional: store both for frontend display
+        $item->price_usd = $sizePriceUSD;
+        $item->price_riel = $sizePriceKHR;
             $lineItems[] = [
                 'price_data' => [
                     'currency' => 'usd', // or 'KHR' if you convert
                     'product_data' => [
                         'name' => $item->product->name . ' (Size: ' . $item->size . ')',
+                        'description' => 'Price: $' . number_format($sizePriceUSD, 2) . ' ≈ ' . number_format($sizePriceKHR) . ' KHR',
                     ],
                     'unit_amount' => $sizePrice * 100, // Stripe expects cents
                 ],
@@ -109,7 +118,7 @@ class CheckoutController extends Controller
             'line_items' => $lineItems,
             'mode' => 'payment',
             'success_url' => route('orders.show', ['orderId' => $orderId]) . '?success=1',
-            'cancel_url' => route('checkout.cancel'),
+            // 'cancel_url' => route('checkout.cancel'),
         ]);
 
         // Redirect to Stripe checkout

@@ -23,11 +23,7 @@ class RegisterController extends Controller
 
         'email' => 'required|string|email|max:255|unique:users',
 
-        'phone' => [
-            'required',
-            'regex:/^[0-9]{10}$/',
-            'unique:users',
-        ],
+        'phone' => ['required', 'regex:/^(?:\+855|0)(10|11|12|15|16|17|18|19|20|23|24|25|26|27|28|29)\d{6}$/', 'unique:users',],
 
         'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
 

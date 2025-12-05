@@ -4,7 +4,7 @@ A fully functional e-commerce clothing website built with Laravel PHP Framework,
 
 ## ✨ Features
 
-- **Payment Gateway Integration** - Secure payments powered by Cashfree
+- **Payment Gateway Integration** - Secure payments powered by Stripe
 - **Shopping Cart** - Add to cart functionality with seamless checkout
 - **CSV Import** - Bulk product import via CSV files
 - **Stock Management** - Real-time inventory tracking and management
@@ -20,7 +20,7 @@ A fully functional e-commerce clothing website built with Laravel PHP Framework,
 - **Frontend Styling:** Tailwind CSS (CDN)
 - **Animations:** AOS (Animate On Scroll)
 - **Icons:** Font Awesome 6.4.0
-- **Payment Gateway:** Cashfree
+- **Payment Gateway:** Stripe
 
 ## 📋 Prerequisites
 
@@ -109,7 +109,7 @@ To enable email notifications:
 
 ## 💳 Payment Gateway Setup
 
-1. Create a Cashfree account at [cashfree.com](https://www.cashfree.com)
+1. Create a Stripe account at [stripe.com](https://stripe.com/)
 2. Get your App ID and Secret Key from the dashboard
 3. Add credentials to `.env` file
 
