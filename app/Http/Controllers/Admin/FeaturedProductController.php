@@ -13,7 +13,7 @@ class FeaturedProductController extends Controller
     public function index()
     {
         $product = FeaturedProduct::latest()->first(); // one active product
-        return view('admin.featured-product', compact('product'));
+        return view('admin.featured-product.index', compact('product'));
     }
 
     public function store(Request $request)

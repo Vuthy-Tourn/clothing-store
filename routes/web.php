@@ -8,17 +8,18 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\OtpController;
 use App\Http\Controllers\ProductDisplayController;
 use App\Http\Controllers\CategoryPageController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CarouselController;
 use App\Http\Controllers\Admin\FeaturedProductController;
 use App\Http\Controllers\Admin\NewArrivalController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\EmailController;
+use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\EmailSubscriptionController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -34,14 +35,13 @@ Route::post('/register', [RegisterController::class, 'register']);
 Route::get('/verify-otp', [OtpController::class, 'showVerificationForm'])->name('otp.verify.form');
 Route::post('/verify-otp', [OtpController::class, 'verify'])->name('otp.verify');
 Route::get('/otp/resend', [OtpController::class, 'resend'])
-    ->middleware('throttle:2,1') // 3 requests per minute
+    ->middleware('throttle:2,1')
     ->name('otp.resend');
 
 // Contact Us Page
 Route::get('/contact', function () {
     return view('frontend.contact'); 
 })->name('contact');
-
 
 // Logout
 Route::post('/logout', function () {
@@ -53,16 +53,33 @@ Route::post('/logout', function () {
 
 // Product Routes
 Route::get('/products', [ProductDisplayController::class, 'index'])->name('products.all');
-
 Route::get('/product/{id}', [ProductDisplayController::class, 'view'])->name('product.view');
 
-
+// Admin Routes
 Route::prefix('admin')->middleware('admin')->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    
+    // API Endpoints for Dashboard
+    Route::get('/api/sidebar-stats', [AdminController::class, 'sidebarStats']);
+    Route::get('/api/dashboard-stats', [AdminController::class, 'dashboardStats']);
+    // Route::get('/api/recent-activity', [AdminController::class, 'recentActivity']);
+    Route::get('/api/top-products', [AdminController::class, 'topProducts']);
+    Route::get('/api/sales-chart', [AdminController::class, 'salesChart']);
 
-    // Admin Dashboard
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+    // Dashboard API Endpoints
+    Route::get('/dashboard-stats', [AdminController::class, 'dashboardStats'])->name('admin.dashboard.stats');
+    Route::get('/sales-chart', [AdminController::class, 'salesChart'])->name('admin.sales.chart');
+    Route::get('/recent-activity', [AdminController::class, 'recentActivity'])->name('admin.recent.activity');
+    Route::get('/top-products', [AdminController::class, 'topProducts'])->name('admin.top.products');
+    Route::get('/sidebar-stats', [AdminController::class, 'sidebarStats'])->name('admin.sidebar.stats');
+    
+    // Additional Chart Endpoints
+    Route::get('/order-status-distribution', [AdminController::class, 'orderStatusDistribution'])->name('admin.order.status');
+    Route::get('/performance-metrics', [AdminController::class, 'performanceMetrics'])->name('admin.performance.metrics');
+    Route::get('/category-sales', [AdminController::class, 'categorySales'])->name('admin.category.sales');
+    Route::get('/low-stock-alerts', [AdminController::class, 'lowStockAlerts'])->name('admin.low.stock');
+    Route::get('/revenue-comparison', [AdminController::class, 'revenueComparison'])->name('admin.revenue.comparison');
 
     // Carousel Routes
     Route::get('/carousels', [CarouselController::class, 'index'])->name('admin.carousels.index');
@@ -96,13 +113,14 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::put('/products/{id}', [ProductController::class, 'update'])->name('admin.products.update');
     Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('admin.products.destroy');
     Route::post('/products/import', [ProductController::class, 'import'])->name('admin.products.import');
+    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('admin.products.edit');
 
     // Emails
     Route::get('/emails', [EmailController::class, 'index'])->name('admin.emails.index');
     Route::post('/emails/send', [EmailController::class, 'send'])->name('admin.emails.send');
     Route::delete('/emails/{email}', [EmailController::class, 'destroy'])->name('admin.emails.destroy');
 
-    //Orders
+    // Orders
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
 });
 
@@ -110,10 +128,11 @@ Route::get('/admin/orders/{order}/invoice', [AdminOrderController::class, 'downl
     ->middleware(['auth', 'admin'])
     ->name('admin.orders.invoice');
 
-
+// Email Subscriptions
 Route::post('/subscribe-email', [EmailSubscriptionController::class, 'store'])->name('email.subscribe');
 Route::delete('/unsubscribe', [EmailSubscriptionController::class, 'destroy'])->name('emails.unsubscribe')->middleware('auth');
 
+// Cart Routes
 Route::get('/cart', [CartController::class, 'view'])->name('cart');
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
@@ -123,43 +142,43 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 });
 
+// Checkout Routes
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout')->middleware('auth');
+Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+Route::post('/checkout/verify', [CheckoutController::class, 'verify'])->name('checkout.verify');
+Route::get('/thank-you/{orderId}', [CheckoutController::class, 'thankYou'])->name('checkout.thankyou');
 
 Route::post('/clear-order-success', function() {
     session()->forget('show_order_success');
     return response()->json(['success' => true]);
 })->name('clear.order.success');
 
-Route::get('/thank-you/{orderId}', [CheckoutController::class, 'thankYou'])->name('checkout.thankyou');
-
 Route::middleware(['auth'])->group(function () {
     Route::post('/subscribe', [EmailSubscriptionController::class, 'store'])->name('emails.subscribe');
 });
 
-Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
-Route::post('/checkout/verify', [CheckoutController::class, 'verify'])->name('checkout.verify');
-
-// 👇 For checkout thank-you invoice download (after placing an order)
-Route::get('/order/invoice/{orderId}', [App\Http\Controllers\CheckoutController::class, 'downloadInvoice'])
+// Invoice Downloads
+Route::get('/order/invoice/{orderId}', [CheckoutController::class, 'downloadInvoice'])
     ->name('order.invoice.download')
     ->middleware('auth');
 
-// 👇 For past orders (order history section)
+// Order History
 Route::middleware(['auth'])->group(function () {
-    Route::get('/orders', [App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{orderId}', [App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
-    Route::get('/orders/{orderId}/invoice', [App\Http\Controllers\OrderController::class, 'downloadInvoice'])->name('orders.invoice');
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{orderId}', [OrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders/{orderId}/invoice', [OrderController::class, 'downloadInvoice'])->name('orders.invoice');
 });
 
+// Profile Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 });
 
+// Password Reset Routes
 Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
-
 Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
 

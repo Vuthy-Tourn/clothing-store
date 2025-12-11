@@ -1,0 +1,31 @@
+/* Moeww Color Palette */
+:root {
+    --color-ocean: #586879;
+    --color-wave: #92a4ac;
+    --color-foam: #f9fbfd;
+    --color-ciel: #c6d1db;
+}
+
+.bg-Ocean { background-color: var(--color-ocean); }
+.bg-Wave { background-color: var(--color-wave); }
+.bg-Foam { background-color: var(--color-foam); }
+.bg-Ciel { background-color: var(--color-ciel); }
+
+.text-Ocean { color: var(--color-ocean); }
+.text-Wave { color: var(--color-wave); }
+.text-Foam { color: var(--color-foam); }
+.text-Ciel { color: var(--color-ciel); }
+
+.border-Ocean { border-color: var(--color-ocean); }
+.border-Wave { border-color: var(--color-wave); }
+.border-Foam { border-color: var(--color-foam); }
+.border-Ciel { border-color: var(--color-ciel); }
+
+/* Gradient Backgrounds */
+.gradient-ocean-wave {
+    background: linear-gradient(135deg, var(--color-ocean) 0%, var(--color-wave) 100%);
+}
+
+.gradient-ocean-ciel {
+    background: linear-gradient(135deg, var(--color-ocean) 0%, var(--color-ciel) 100%);
+}
