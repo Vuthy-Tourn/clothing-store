@@ -48,7 +48,7 @@
     <br>
 
     {{-- Feature --}}
-    <section class="featured-categories py-20 px-4 sm:px-6 lg:px-8 bg-white">
+    <section class="featured-categories py-20 px-4 sm:px-6 lg:px-8 ">
         <div class="max-w-7xl mx-auto">
             <!-- Section Header -->
             <div class="text-center mb-16">

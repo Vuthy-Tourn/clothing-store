@@ -15,7 +15,7 @@
                         class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10 {{ request()->is('men') || request()->is('men/*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">MEN</a>
                     <!-- Mega Dropdown -->
                     <div
-                        class="absolute left-1/2 transform -translate-x-1/3 mt-4 w-screen max-w-6xl bg-white shadow-xl rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                        class="absolute left-1/2 transform -translate-x-1/3 mt-4 w-screen max-w-6xl bg-white shadow-md rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                         <div class="px-8 py-6 grid grid-cols-4 gap-8">
                             <div>
                                 <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Clothing
@@ -78,7 +78,7 @@
                         class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10 {{ request()->is('women') || request()->is('women/*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">WOMEN</a>
                     <!-- Mega Dropdown -->
                     <div
-                        class="absolute left-1/2 transform -translate-x-1/3 mt-4 w-screen max-w-6xl bg-white shadow-xl rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                        class="absolute left-1/2 transform -translate-x-1/3 mt-4 w-screen max-w-6xl bg-white shadow-md rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                         <div class="px-8 py-6 grid grid-cols-4 gap-8">
                             <div>
                                 <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Clothing
@@ -140,7 +140,7 @@
                         class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10 {{ request()->is('kids') || request()->is('kids/*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">KIDS</a>
                     <!-- Mega Dropdown -->
                     <div
-                        class="absolute left-1/2 transform -translate-x-1/3 mt-4 w-screen max-w-6xl bg-white shadow-xl rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                        class="absolute left-1/2 transform -translate-x-1/3 mt-4 w-screen max-w-6xl bg-white shadow-md rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                         <div class="px-8 py-6 grid grid-cols-3 gap-8">
                             <div>
                                 <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Boys</h3>
@@ -212,7 +212,7 @@
                             @endif
                         </button>
                         <div id="userDropdown"
-                            class="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-xl py-2 z-50 hidden border border-gray-100">
+                            class="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-md py-2 z-50 hidden border border-gray-100">
                             <!-- User Info -->
                             <div class="px-4 py-3 border-b border-gray-100">
                                 <p class="text-sm font-semibold text-gray-900 truncate">{{ auth()->user()->name }}</p>
@@ -399,9 +399,9 @@
                 navbar.style.transform = 'translateY(0)';
                 if (window.scrollY > 20) {
                     navbar.classList.remove('bg-white/95', 'backdrop-blur-sm');
-                    navbar.classList.add('bg-white', 'shadow-xl', 'border-b', 'border-gray-100');
+                    navbar.classList.add('bg-white', 'shadow-md', 'border-b', 'border-gray-100');
                 } else {
-                    navbar.classList.remove('bg-white', 'shadow-xl', 'border-b', 'border-gray-100');
+                    navbar.classList.remove('bg-white', 'shadow-md', 'border-b', 'border-gray-100');
                     navbar.classList.add('bg-white/95', 'backdrop-blur-sm');
                 }
                 return;
@@ -415,15 +415,15 @@
                 // Enhanced background changes
                 if (window.scrollY > 50) {
                     navbar.classList.remove('bg-white/95', 'backdrop-blur-sm');
-                    navbar.classList.add('bg-white', 'shadow-xl', 'border-b', 'border-gray-100');
+                    navbar.classList.add('bg-white', 'shadow-sm', 'border-b', 'border-gray-100');
                 } else {
-                    navbar.classList.remove('bg-white', 'shadow-xl', 'border-b', 'border-gray-100');
+                    navbar.classList.remove('bg-white', 'shadow-sm', 'border-b', 'border-gray-100');
                     navbar.classList.add('bg-white/95', 'backdrop-blur-sm');
                 }
             } else {
                 // Hide navbar when at top with smooth animation
                 navbar.style.transform = 'translateY(-100%)';
-                navbar.classList.remove('bg-white', 'shadow-xl', 'border-b', 'border-gray-100');
+                navbar.classList.remove('bg-white', 'shadow-sm', 'border-b', 'border-gray-100');
                 navbar.classList.add('bg-white/95', 'backdrop-blur-sm');
             }
 

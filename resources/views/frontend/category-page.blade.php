@@ -34,7 +34,7 @@
     </section>
 
     {{-- Products Section --}}
-    <section class="py-24 bg-white relative">
+    <section class="py-24 relative">
         {{-- Background Accent --}}
         <div class="absolute top-0 right-0 w-1/3 h-64 bg-gradient-to-l from-gray-50 to-transparent"></div>
 
