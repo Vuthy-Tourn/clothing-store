@@ -12,7 +12,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-gray-500 text-sm font-medium">Total Subscribers</p>
-                    <p class="text-2xl font-bold text-gray-900 mt-1">{{ $emails->count() }}</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">{{ $subscribers->count() }}</p>
                 </div>
                 <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
                     <i class="fas fa-users text-gray-700 text-xl"></i>
@@ -107,7 +107,7 @@
         <div class="p-6 border-b border-gray-200 flex items-center justify-between">
             <h2 class="text-xl font-bold text-gray-900 fashion-font flex items-center">
                 <i class="fas fa-users mr-2 text-gray-700"></i> Subscribers List
-                <span class="ml-2 bg-gray-900 text-white text-sm px-2 py-1 rounded-full">{{ $emails->count() }}</span>
+                <span class="ml-2 bg-gray-900 text-white text-sm px-2 py-1 rounded-full">{{ $subscribers->count() }}</span>
             </h2>
             
             <div class="flex items-center space-x-3">
@@ -118,7 +118,7 @@
         </div>
 
         <div class="divide-y divide-gray-200">
-            @forelse ($emails as $email)
+            @forelse ($subscribers as $email)
             <div class="p-6 flex items-center justify-between hover:bg-gray-50 transition-colors group" 
                  data-aos="fade-in" data-aos-delay="{{ $loop->index * 50 }}">
                 <div class="flex items-center space-x-4">
@@ -169,10 +169,10 @@
             @endforelse
         </div>
 
-        @if($emails->count() > 0)
+        @if($subscribers->count() > 0)
         <div class="p-4 border-t border-gray-200 bg-gray-50">
             <div class="flex items-center justify-between text-sm text-gray-500">
-                <span>Showing {{ $emails->count() }} subscribers</span>
+                <span>Showing {{ $subscribers->count() }} subscribers</span>
                 <div class="flex items-center space-x-4">
                     <button class="hover:text-gray-900 transition-colors">Previous</button>
                     <span>Page 1 of 1</span>

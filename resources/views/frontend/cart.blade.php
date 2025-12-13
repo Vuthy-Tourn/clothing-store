@@ -13,20 +13,27 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Cart Items -->
                 <div class="lg:col-span-2 space-y-4">
-                    @php $grandTotal = 0; @endphp
+                    @php $subtotal = 0; @endphp
                     @foreach ($items as $item)
                         @php
-                            $product = $item->product;
-                            $price = $item->unit_price ?? 0;
+                            // Get variant and product info
+                            $variant = $item->variant;
+                            $product = $variant->product ?? null;
+                            
+                            // Get price from variant (sale price if available)
+                            $price = $variant ? ($variant->sale_price ?? $variant->price) : 0;
                             $total = $price * $item->quantity;
-                            $grandTotal += $total;
+                            $subtotal += $total;
+                            
+                            // Get product image
+                            $productImage = $product->images->first()->image_path ?? 'products/placeholder.jpg';
                         @endphp
                         
                         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-300" id="cart-item-{{ $item->id }}">
                             <div class="flex items-start gap-6">
                                 <!-- Product Image -->
                                 <div class="flex-shrink-0">
-                                    <img src="{{ asset($product->image) }}" alt="{{ $product->name }}"
+                                    <img src="{{ asset('storage/' . $productImage) }}" alt="{{ $product->name ?? 'Product' }}"
                                          class="w-24 h-24 object-cover rounded-xl shadow-sm">
                                 </div>
                                 
@@ -34,15 +41,27 @@
                                 <div class="flex-1 min-w-0">
                                     <div class="flex justify-between items-start">
                                         <div>
-                                            <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ $product->name }}</h3>
-                                            <p class="text-sm text-gray-500 mb-2">#{{ $product->id }}</p>
+                                            <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ $product->name ?? 'Product' }}</h3>
+                                            @if($variant)
+                                                <p class="text-sm text-gray-500 mb-2">SKU: {{ $variant->sku }}</p>
+                                            @endif
                                             <div class="flex items-center gap-4 text-sm text-gray-600">
-                                                <span class="bg-gray-100 px-3 py-1 rounded-full">Size: {{ $item->size }}</span>
-                                                <span class="font-medium text-green-600">In Stock</span>
+                                                @if($variant)
+                                                    <span class="bg-gray-100 px-3 py-1 rounded-full">Size: {{ $variant->size }}</span>
+                                                    <span class="bg-gray-100 px-3 py-1 rounded-full">Color: {{ $variant->color }}</span>
+                                                    @if($variant->stock > 0)
+                                                        <span class="font-medium text-green-600">In Stock ({{ $variant->stock }} left)</span>
+                                                    @else
+                                                        <span class="font-medium text-red-600">Out of Stock</span>
+                                                    @endif
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="text-right">
                                             <p class="text-2xl font-bold text-gray-900">${{ number_format($price, 2) }}</p>
+                                            @if($variant && $variant->sale_price)
+                                                <p class="text-sm text-gray-500 line-through">${{ number_format($variant->price, 2) }}</p>
+                                            @endif
                                         </div>
                                     </div>
                                     
@@ -67,11 +86,14 @@
                                                     +
                                                 </button>
                                             </div>
+                                            @if($variant && $variant->stock > 0)
+                                                <span class="text-sm text-gray-500">Max: {{ $variant->stock }}</span>
+                                            @endif
                                         </div>
                                         
                                         <!-- Remove Button -->
                                         <button type="button" 
-                                                onclick="showRemoveConfirmation({{ $item->id }}, '{{ addslashes($product->name) }}')"
+                                                onclick="showRemoveConfirmation({{ $item->id }}, '{{ addslashes($product->name ?? 'Product') }}')"
                                                 class="text-red-500 hover:text-red-700 font-medium text-sm flex items-center gap-2 transition-colors">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -98,21 +120,21 @@
                         
                         <div class="space-y-4 mb-6">
                             <div class="flex justify-between text-gray-600">
-                                <span>Subtotal</span>
-                                <span id="subtotal">${{ number_format($grandTotal, 2) }}</span>
+                                <span>Subtotal ({{ $items->count() }} items)</span>
+                                <span id="subtotal">${{ number_format($subtotal, 2) }}</span>
                             </div>
                             <div class="flex justify-between text-gray-600">
                                 <span>Shipping</span>
                                 <span class="text-green-600">Free</span>
                             </div>
                             <div class="flex justify-between text-gray-600">
-                                <span>Tax</span>
-                                <span>Calculated at checkout</span>
+                                <span>Tax (8%)</span>
+                                <span id="tax">${{ number_format($subtotal * 0.08, 2) }}</span>
                             </div>
                             <div class="border-t border-gray-200 pt-4">
                                 <div class="flex justify-between text-lg font-bold text-gray-900">
                                     <span>Total</span>
-                                    <span id="grand-total">${{ number_format($grandTotal, 2) }}</span>
+                                    <span id="grand-total">${{ number_format($subtotal + ($subtotal * 0.08), 2) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -312,11 +334,17 @@
 
     function updateCartTotals(grandTotal) {
         const subtotalElement = document.getElementById('subtotal');
+        const taxElement = document.getElementById('tax');
         const grandTotalElement = document.getElementById('grand-total');
         
         if (subtotalElement && grandTotalElement) {
-            subtotalElement.textContent = `$${parseFloat(grandTotal).toFixed(2)}`;
-            grandTotalElement.textContent = `$${parseFloat(grandTotal).toFixed(2)}`;
+            const subtotal = parseFloat(grandTotal);
+            const tax = subtotal * 0.08;
+            const total = subtotal + tax;
+            
+            subtotalElement.textContent = `$${subtotal.toFixed(2)}`;
+            taxElement.textContent = `$${tax.toFixed(2)}`;
+            grandTotalElement.textContent = `$${total.toFixed(2)}`;
         }
     }
 

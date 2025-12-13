@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    
+    {{-- In your admin.layouts.app or in this file --}}
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -28,7 +32,7 @@
     @stack('styles')
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
-        
+
         * {
             margin: 0;
             padding: 0;
@@ -79,7 +83,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* Scrollbar */
@@ -118,10 +124,12 @@
         }
     </style>
 </head>
+
 <body class="min-h-screen bg-gray-50">
-    
+
     <!-- Mobile Menu Button -->
-    <button id="mobileMenuButton" class="lg:hidden fixed top-6 left-6 z-50 bg-white text-Ocean p-3 rounded-xl shadow-md hover:shadow-lg transition-all">
+    <button id="mobileMenuButton"
+        class="lg:hidden fixed top-6 left-6 z-50 bg-white text-Ocean p-3 rounded-xl shadow-md hover:shadow-lg transition-all">
         <i class="fas fa-bars text-lg"></i>
     </button>
 
@@ -131,7 +139,8 @@
     <!-- Main Content -->
     <div class="lg:ml-80 min-h-screen">
         <!-- Loading Overlay -->
-        <div id="loadingOverlay" class="hidden fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div id="loadingOverlay"
+            class="hidden fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center">
             <div class="bg-white p-8 rounded-2xl text-center shadow-xl">
                 <div class="loading-spinner w-16 h-16 rounded-full mx-auto mb-4"></div>
                 <p class="text-Ocean font-medium">Loading...</p>
@@ -145,7 +154,7 @@
     </div>
 
     @stack('scripts')
-    
+
     <script>
         // Initialize AOS
         document.addEventListener('DOMContentLoaded', function() {
@@ -163,4 +172,5 @@
         });
     </script>
 </body>
+
 </html>

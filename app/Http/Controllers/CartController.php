@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\CartItem;
-use App\Models\ProductSize;
-use Illuminate\Support\Facades\Auth;
+use App\Models\ProductVariant;
 use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -14,63 +14,75 @@ class CartController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'size' => 'required|string',
+            'variant_id' => 'required|exists:product_variants,id',
             'quantity' => 'required|integer|min:1',
+            'action' => 'required|in:add,buy_now',
         ]);
 
         $user = Auth::user();
 
-        // 👉 Check if stock is available
-        $sizeData = ProductSize::where('product_id', $request->product_id)
-            ->where('size', $request->size)
+        // Get the variant and verify it belongs to the product
+        $variant = ProductVariant::where('id', $request->variant_id)
+            ->where('product_id', $request->product_id)
+            ->where('is_active', true)
             ->first();
 
-        if (!$sizeData || $sizeData->stock < $request->quantity) {
-            return redirect()->back()->with('error', 'Stock not available for the selected size.');
+        if (!$variant) {
+            return redirect()->back()->with('error', 'Selected variant is not available.');
         }
 
-        // Check if item already exists
+        // Check stock availability
+        if ($variant->stock < $request->quantity) {
+            return redirect()->back()->with('error', 'Stock not available for the selected variant. Only ' . $variant->stock . ' items left.');
+        }
+
+        // Check if item already exists in cart (using product_variant_id)
         $existing = CartItem::where('user_id', $user->id)
-            ->where('product_id', $request->product_id)
-            ->where('size', $request->size)
+            ->where('product_variant_id', $request->variant_id)
             ->first();
 
         if ($existing) {
+            // Check if adding more exceeds stock
+            $newTotalQuantity = $existing->quantity + $request->quantity;
+            if ($newTotalQuantity > $variant->stock) {
+                return redirect()->back()->with('error', 'Cannot add more items. Only ' . $variant->stock . ' items left in stock.');
+            }
+            
             $existing->increment('quantity', $request->quantity);
         } else {
             CartItem::create([
                 'user_id' => $user->id,
-                'product_id' => $request->product_id,
-                'size' => $request->size,
+                'product_variant_id' => $request->variant_id,
                 'quantity' => $request->quantity,
             ]);
         }
 
-         if ($request->input('action') === 'buy_now') {
-        return redirect()->route('cart')->with('status', 'added_to_cart');
-    }
+        // Handle buy now action
+        if ($request->input('action') === 'buy_now') {
+            return redirect()->route('checkout')->with('status', 'added_to_cart');
+        }
 
-    // Get the current product ID to redirect back to the same product
-    $productId = $request->product_id;
-    return redirect()->route('product.view', ['id' => $productId, 'added' => 'true']);
+        // Redirect back to product with success message
+        $product = Product::find($request->product_id);
+        return redirect()->route('product.view', ['slug' => $product->slug])->with('status', 'added_to_cart');
     }
 
     public function remove($id)
     {
         $item = CartItem::where('id', $id)
-            ->where('user_id', auth()->id())
-            ->first();
+        ->where('user_id', Auth::id())
+        ->first();
 
         if ($item) {
             $item->delete();
             
             // Return JSON for AJAX requests
             if (request()->expectsJson()) {
-                $grandTotal = $this->calculateGrandTotal();
+                $cartTotal = $this->calculateCartTotal();
                 return response()->json([
                     'success' => true,
                     'message' => 'Item removed from cart.',
-                    'grand_total' => $grandTotal
+                    'cart_total' => $cartTotal
                 ]);
             }
             
@@ -89,15 +101,32 @@ class CartController extends Controller
 
     public function view()
     {
-        $items = CartItem::with(['product.sizes'])->where('user_id', Auth::id())->get();
+        $items = CartItem::with(['variant.product.images'])
+            ->where('user_id', Auth::id())
+            ->get();
 
-        // Inject correct price for each item based on size
+        // Calculate totals
+        $subtotal = 0;
         foreach ($items as $item) {
-            $sizeObj = $item->product->sizes->firstWhere('size', $item->size);
-            $item->unit_price = $sizeObj ? $sizeObj->price : 0;
+            if ($item->variant) {
+                $item->unit_price = $item->variant->sale_price ?? $item->variant->price;
+                $item->total_price = $item->unit_price * $item->quantity;
+                $subtotal += $item->total_price;
+                
+                // Add product info to item for display
+                $item->product_name = $item->variant->product->name ?? 'Product';
+                $item->product_image = $item->variant->product->images->first()->image_path ?? 'products/placeholder.jpg';
+                $item->size = $item->variant->size;
+                $item->color = $item->variant->color;
+            }
         }
 
-        return view('frontend.cart', compact('items'));
+        // Calculate shipping and taxes
+        $shipping = 10.00; // Example flat rate
+        $tax = $subtotal * 0.08; // Example 8% tax
+        $grandTotal = $subtotal + $shipping + $tax;
+
+        return view('frontend.cart', compact('items', 'subtotal', 'shipping', 'tax', 'grandTotal'));
     }
 
     // New method for AJAX quantity updates
@@ -112,6 +141,7 @@ class CartController extends Controller
         
         $cartItem = CartItem::where('id', $request->item_id)
             ->where('user_id', $user->id)
+            ->with('variant')
             ->first();
 
         if (!$cartItem) {
@@ -121,15 +151,11 @@ class CartController extends Controller
             ], 404);
         }
 
-        // Check stock availability
-        $sizeData = ProductSize::where('product_id', $cartItem->product_id)
-            ->where('size', $cartItem->size)
-            ->first();
-
-        if (!$sizeData || $sizeData->stock < $request->quantity) {
+        // Check stock availability using variant
+        if ($cartItem->variant && $cartItem->variant->stock < $request->quantity) {
             return response()->json([
                 'success' => false,
-                'message' => 'Stock not available for the selected quantity.'
+                'message' => 'Stock not available for the selected quantity. Only ' . $cartItem->variant->stock . ' items left.'
             ], 400);
         }
 
@@ -137,30 +163,58 @@ class CartController extends Controller
         $cartItem->update(['quantity' => $request->quantity]);
 
         // Calculate updated totals
-        $sizeObj = $cartItem->product->sizes->firstWhere('size', $cartItem->size);
-        $itemTotal = $sizeObj ? $sizeObj->price * $cartItem->quantity : 0;
-        $grandTotal = $this->calculateGrandTotal();
+        $itemTotal = ($cartItem->variant ? ($cartItem->variant->sale_price ?? $cartItem->variant->price) : 0) * $cartItem->quantity;
+        $cartTotal = $this->calculateCartTotal();
 
         return response()->json([
             'success' => true,
             'message' => 'Quantity updated successfully.',
             'item_total' => $itemTotal,
-            'grand_total' => $grandTotal
+            'cart_total' => $cartTotal
         ]);
     }
 
-    // Helper method to calculate grand total
-    private function calculateGrandTotal()
+    // Helper method to calculate cart total
+    private function calculateCartTotal()
     {
-        $items = CartItem::with(['product.sizes'])->where('user_id', Auth::id())->get();
+        $items = CartItem::with(['variant'])
+            ->where('user_id', Auth::id())
+            ->get();
         
-        $grandTotal = 0;
+        $total = 0;
         foreach ($items as $item) {
-            $sizeObj = $item->product->sizes->firstWhere('size', $item->size);
-            $price = $sizeObj ? $sizeObj->price : 0;
-            $grandTotal += $price * $item->quantity;
+            if ($item->variant) {
+                $price = $item->variant->sale_price ?? $item->variant->price;
+                $total += $price * $item->quantity;
+            }
         }
         
-        return $grandTotal;
+        return $total;
+    }
+
+    // Clear entire cart
+    public function clear()
+    {
+        CartItem::where('user_id', Auth::id())->delete();
+        
+        if (request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Cart cleared successfully.'
+            ]);
+        }
+        
+        return redirect()->route('cart')->with('success', 'Cart cleared successfully.');
+    }
+
+    // Get cart count for navbar
+    public function count()
+    {
+        $count = CartItem::where('user_id', Auth::id())->sum('quantity');
+        
+        return response()->json([
+            'success' => true,
+            'count' => $count
+        ]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\CartItem;
+use App\Models\UserAddress;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -15,135 +16,300 @@ class CheckoutController extends Controller
 {
     public function index()
     {
-        $items = CartItem::with(['product.sizes'])->where('user_id', Auth::id())->get();
+        $items = CartItem::with(['variant.product.images'])
+            ->where('user_id', Auth::id())
+            ->get();
 
-        // Attach correct price to each item
+        // Attach correct price to each item from variant
+        $subtotal = 0;
         foreach ($items as $item) {
-            $sizeObj = $item->product->sizes->firstWhere('size', $item->size);
-            $item->unit_price = $sizeObj ? $sizeObj->price : 0;
+            if ($item->variant) {
+                $item->unit_price = $item->variant->sale_price ?? $item->variant->price;
+                $item->total_price = $item->unit_price * $item->quantity;
+                $subtotal += $item->total_price;
+                
+                // Add product info for display
+                $item->product_name = $item->variant->product->name ?? 'Product';
+                $item->product_image = $item->variant->product->images->first()->image_path ?? 'products/placeholder.jpg';
+                $item->size = $item->variant->size;
+                $item->color = $item->variant->color;
+                $item->sku = $item->variant->sku;
+            }
         }
 
-        $grandTotal = $items->sum(function ($item) {
-            return $item->unit_price * $item->quantity;
-        });
+        $shipping = 10.00; // Flat rate shipping
+        $tax = $subtotal * 0.08; // 8% tax
+        $grandTotal = $subtotal + $shipping + $tax;
 
-        return view('frontend.checkout', compact('items', 'grandTotal'));
+        // Get user's saved addresses
+        $user = Auth::user();
+        $savedAddresses = $user->addresses()->shipping()->get();
+        $defaultAddress = $user->addresses()->shipping()->where('is_default', true)->first();
+        
+        return view('frontend.checkout', compact('items', 'subtotal', 'shipping', 'tax', 'grandTotal', 'savedAddresses', 'defaultAddress', 'user'));
     }
 
     public function process(Request $request)
     {
-        $validated = $request->validate([
-            'name'           => ['required', 'string', 'min:2', 'max:100'],
-            'email'          => ['required', 'email', 'max:255'],
-            'phone' => ['required', 'regex:/^(?:\+855|0)(10|11|12|15|16|17|18|19|20|23|24|25|26|27|28|29)\d{6}$/'],
-            'city'           => ['required', 'string', 'max:50'],
-            'state'          => ['required', 'string', 'max:50'],
-            'zip'            => ['required', 'regex:/^\d{5,6}$/'],
-            'address'        => ['required', 'string', 'min:10', 'max:255'],
+        $userId = Auth::id();
+        $shippingAddressId = null;
+        $billingAddressId = null;
+        $customerEmail = null;
+
+        // Validate based on address selection
+        if ($request->address_option === 'new') {
+            $validated = $request->validate([
+                'name'           => ['required', 'string', 'min:2', 'max:100'],
+                'email'          => ['required', 'email', 'max:255'],
+                'phone'          => ['required', 'regex:/^(?:\+855|0)(10|11|12|15|16|17|18|19|20|23|24|25|26|27|28|29)\d{6}$/'],
+                'city'           => ['required', 'string', 'max:50'],
+                'state'          => ['required', 'string', 'max:50'],
+                'zip'            => ['required', 'regex:/^\d{5,6}$/'],
+                'address'        => ['required', 'string', 'min:10', 'max:255'],
+                'address2'       => ['nullable', 'string', 'max:255'],
+                'payment_method' => ['required', 'in:online'],
+            ]);
+
+            // Save shipping address
+            $shippingAddress = UserAddress::create([
+                'user_id' => $userId,
+                'type' => 'shipping',
+                'address_name' => $request->address_name ?? 'Home',
+                'full_name' => $validated['name'],
+                'phone' => $validated['phone'],
+                'address_line1' => $validated['address'],
+                'address_line2' => $validated['address2'] ?? null,
+                'city' => $validated['city'],
+                'state' => $validated['state'],
+                'zip_code' => $validated['zip'],
+                'country' => $request->country ?? 'United States',
+                'is_default' => $request->make_default ?? false,
+            ]);
+            $shippingAddressId = $shippingAddress->id;
+
+            // Check if separate billing address is needed
+            if ($request->has('different_billing') && $request->different_billing === '1') {
+                $billingAddress = UserAddress::create([
+                    'user_id' => $userId,
+                    'type' => 'billing',
+                    'address_name' => $request->billing_address_name ?? 'Billing',
+                    'full_name' => $request->billing_name ?? $validated['name'],
+                    'phone' => $request->billing_phone ?? $validated['phone'],
+                    'address_line1' => $request->billing_address ?? $validated['address'],
+                    'address_line2' => $request->billing_address2 ?? $validated['address2'] ?? null,
+                    'city' => $request->billing_city ?? $validated['city'],
+                    'state' => $request->billing_state ?? $validated['state'],
+                    'zip_code' => $request->billing_zip ?? $validated['zip'],
+                    'country' => $request->billing_country ?? $request->country ?? 'United States',
+                    'is_default' => false,
+                ]);
+                $billingAddressId = $billingAddress->id;
+            } else {
+                $billingAddressId = $shippingAddressId;
+            }
+
+            $customerEmail = $validated['email'];
+
+        } else {
+            // Using saved address
+            $validated = $request->validate([
+                'saved_address_id' => ['required', 'exists:user_addresses,id,user_id,' . $userId],
+                'payment_method' => ['required', 'in:online'],
+            ]);
+
+            $savedAddress = UserAddress::where('id', $validated['saved_address_id'])
+                ->where('user_id', $userId)
+                ->firstOrFail();
+
+            $shippingAddressId = $savedAddress->id;
+            
+            // For now, use same address for billing unless we implement separate billing address
+            $billingAddressId = $shippingAddressId;
+            $customerEmail = Auth::user()->email;
+        }
+
+        // Validate common fields
+        $request->validate([
             'payment_method' => ['required', 'in:online'],
         ]);
 
-        $userId = Auth::id();
-        $items = CartItem::with('product.sizes')->where('user_id', $userId)->get();
+        $items = CartItem::with(['variant.product'])
+            ->where('user_id', $userId)
+            ->get();
 
         if ($items->isEmpty()) {
-            return redirect()->route('products.all')->withErrors(['msg' => 'Your cart is empty.']);
+            return redirect()->route('cart')->withErrors(['msg' => 'Your cart is empty.']);
         }
 
-        // Calculate grand total
-        $grandTotal = $items->sum(function ($item) {
-            $sizePrice = $item->product->sizes->firstWhere('size', $item->size)?->price ?? 0;
-            return $sizePrice * $item->quantity;
-        });
+        // Calculate grand total from variants
+        $subtotal = 0;
+        foreach ($items as $item) {
+            if ($item->variant) {
+                $price = $item->variant->sale_price ?? $item->variant->price;
+                $subtotal += $price * $item->quantity;
+            }
+        }
+        
+        $shipping = 10.00;
+        $tax = $subtotal * 0.08;
+        $grandTotal = $subtotal + $shipping + $tax;
 
-        // Create order
-        $orderId = 'ORDER_' . uniqid();
+        // Generate order number
+        $orderNumber = 'ORD-' . date('Ymd') . '-' . strtoupper(uniqid());
+        
+        // Create order - using database schema fields
         $order = Order::create([
             'user_id' => $userId,
-            'order_id' => $orderId,
+            'order_number' => $orderNumber,
+            'order_status' => 'pending',
+            'subtotal' => $subtotal,
+            'shipping_amount' => $shipping,
+            'tax_amount' => $tax,
             'total_amount' => $grandTotal,
-            'status' => 'pending',
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'phone' => $validated['phone'],
-            'city' => $validated['city'],
-            'state' => $validated['state'],
-            'zip' => $validated['zip'],
-            'address' => $validated['address'],
+            'payment_method' => 'stripe',
+            'payment_status' => 'pending',
+            'shipping_address_id' => $shippingAddressId,
+            'billing_address_id' => $billingAddressId,
+            'customer_notes' => $request->customer_notes ?? null,
         ]);
 
-        // Save order items
+        // Save order items with variant info
         foreach ($items as $item) {
-            $sizePrice = $item->product->sizes->firstWhere('size', $item->size)?->price ?? 0;
-
-            OrderItem::create([
-                'order_id'     => $order->id,
-                'product_id'   => $item->product_id,
-                'product_name' => $item->product->name,
-                'size'         => $item->size,
-                'quantity'     => $item->quantity,
-                'price'        => $sizePrice,
-            ]);
+            if ($item->variant) {
+                $price = $item->variant->sale_price ?? $item->variant->price;
+                $totalPrice = $price * $item->quantity;
+                
+                // Store variant details as JSON
+                $variantDetails = [
+                    'size' => $item->variant->size,
+                    'color' => $item->variant->color,
+                    'sku' => $item->variant->sku,
+                ];
+                
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_variant_id' => $item->variant->id,
+                    'product_name' => $item->variant->product->name ?? 'Product',
+                    'variant_details' => json_encode($variantDetails),
+                    'quantity' => $item->quantity,
+                    'unit_price' => $price,
+                    'total_price' => $totalPrice,
+                ]);
+            }
         }
 
         // Stripe integration
-        Stripe::setApiKey(env('STRIPE_SECRET'));
+       // Stripe integration
+Stripe::setApiKey(env('STRIPE_SECRET'));
 
-        // Exchange rate for USD → KHR (adjust as needed)
-    $exchangeRate = 4000; // 1 USD = 4000 KHR
+// Exchange rate for USD → KHR
+$exchangeRate = 4000;
 
-        $lineItems = [];
-        foreach ($items as $item) {
-            $sizePriceUSD = $item->product->sizes->firstWhere('size', $item->size)?->price ?? 0; // USD
-        $sizePriceKHR = $sizePriceUSD * $exchangeRate; // riel
-
-        // Optional: store both for frontend display
-        $item->price_usd = $sizePriceUSD;
-        $item->price_riel = $sizePriceKHR;
-            $lineItems[] = [
-                'price_data' => [
-                    'currency' => 'usd', // or 'KHR' if you convert
-                    'product_data' => [
-                        'name' => $item->product->name . ' (Size: ' . $item->size . ')',
-                        'description' => 'Price: $' . number_format($sizePriceUSD, 2) . ' ≈ ' . number_format($sizePriceKHR) . ' KHR',
-                    ],
-                    'unit_amount' => $sizePrice * 100, // Stripe expects cents
+$lineItems = [];
+foreach ($items as $item) {
+    if ($item->variant) {
+        $priceUSD = $item->variant->sale_price ?? $item->variant->price;
+        $priceKHR = $priceUSD * $exchangeRate;
+        
+        $lineItems[] = [
+            'price_data' => [
+                'currency' => 'usd',
+                'product_data' => [
+                    'name' => $item->variant->product->name . 
+                             ' (Size: ' . $item->variant->size . 
+                             ', Color: ' . $item->variant->color . ')',
+                    'description' => 'SKU: ' . $item->variant->sku . 
+                                   ' | $' . number_format($priceUSD, 2) . 
+                                   ' ≈ ' . number_format($priceKHR) . ' KHR',
                 ],
-                'quantity' => $item->quantity,
-            ];
-        }
+                'unit_amount' => round($priceUSD * 100),
+            ],
+            'quantity' => $item->quantity,
+        ];
+    }
+}
 
-        $session = StripeSession::create([
-            'payment_method_types' => ['card'],
-            'line_items' => $lineItems,
-            'mode' => 'payment',
-            'success_url' => route('orders.show', ['orderId' => $orderId]) . '?success=1',
-            // 'cancel_url' => route('checkout.cancel'),
-        ]);
+// Add shipping as a line item
+$lineItems[] = [
+    'price_data' => [
+        'currency' => 'usd',
+        'product_data' => [
+            'name' => 'Shipping Fee',
+            'description' => 'Standard shipping',
+        ],
+        'unit_amount' => round($shipping * 100),
+    ],
+    'quantity' => 1,
+];
+
+// Get shipping info for metadata
+$shippingInfo = [];
+if ($request->address_option === 'new') {
+    $shippingInfo = [
+        'shipping_name' => $validated['name'] ?? '',
+        'shipping_city' => $validated['city'] ?? '',
+        'shipping_country' => $request->country ?? 'United States',
+    ];
+} else {
+    $shippingAddress = UserAddress::find($shippingAddressId);
+    if ($shippingAddress) {
+        $shippingInfo = [
+            'shipping_name' => $shippingAddress->full_name ?? '',
+            'shipping_city' => $shippingAddress->city ?? '',
+            'shipping_country' => $shippingAddress->country ?? 'United States',
+        ];
+    }
+}
+
+$session = StripeSession::create([
+    'payment_method_types' => ['card'],
+    'line_items' => $lineItems,
+    'mode' => 'payment',
+    'success_url' => route('orders.show', ['orderNumber' => $orderNumber]) . '?success=1',
+    'cancel_url' => route('cart') . '?canceled=1',
+    'metadata' => array_merge([
+        'order_number' => $orderNumber,
+        'user_id' => $userId,
+    ], $shippingInfo),
+    'customer_email' => $customerEmail,
+    // REMOVE THIS LINE to prevent Stripe from asking for shipping again:
+    // 'shipping_address_collection' => [
+    //     'allowed_countries' => ['KH', 'US', 'CA', 'GB', 'AU'],
+    // ],
+]);
+
+// Save Stripe session ID to order
+$order->update([
+    'payment_id' => $session->id,
+]);
 
         // Redirect to Stripe checkout
         return redirect($session->url);
     }
 
-    public function thankYou($orderId)
+    public function thankYou($orderNumber)
     {
-        $order = Order::with(['items.product'])->where('order_id', $orderId)->firstOrFail();
+        $order = Order::with(['items.variant.product', 'shippingAddress', 'billingAddress'])
+            ->where('order_number', $orderNumber)
+            ->firstOrFail();
 
         // Only allow the order owner
         if ($order->user_id !== Auth::id()) {
             abort(403);
         }
 
-        if ($order->status !== 'paid') {
-            $order->status = 'paid';
-            $order->save();
+        // If payment was successful, update order status and deduct stock
+        if ($order->order_status === 'pending' && request()->has('success')) {
+            $order->update([
+                'order_status' => 'confirmed',
+                'payment_status' => 'paid',
+                'payment_date' => now(),
+            ]);
 
-            // Deduct stock
+            // Deduct stock from variants
             foreach ($order->items as $item) {
-                $productSize = $item->product->sizes()->where('size', $item->size)->first();
-                if ($productSize) {
-                    $productSize->stock = max(0, $productSize->stock - $item->quantity);
-                    $productSize->save();
+                if ($item->variant) {
+                    $item->variant->decrement('stock', $item->quantity);
                 }
             }
 
@@ -154,22 +320,135 @@ class CheckoutController extends Controller
         return view('frontend.thankyou', compact('order'));
     }
 
-    public function show($orderId)
-{
-    $order = Order::where('order_id', $orderId)->firstOrFail();
-    
-    // Check if this is a success redirect
-    if (request()->has('success')) {
-        session()->flash('show_order_success', true);
-    }
-    
-    return view('orders.show', compact('order'));
-}
-
-    public function downloadInvoice($orderId)
+    public function show($orderNumber)
     {
-        $order = Order::with(['items.product'])->where('order_id', $orderId)->firstOrFail();
+        $order = Order::with(['items.variant.product', 'shippingAddress', 'billingAddress'])
+            ->where('order_number', $orderNumber)
+            ->firstOrFail();
+        
+        // Check if this is a success redirect
+        if (request()->has('success')) {
+            session()->flash('show_order_success', true);
+        }
+        
+        return view('orders.show', compact('order'));
+    }
+
+    public function downloadInvoice($orderNumber)
+    {
+        $order = Order::with(['items.variant.product', 'shippingAddress', 'billingAddress'])
+            ->where('order_number', $orderNumber)
+            ->firstOrFail();
+            
         $pdf = Pdf::loadView('frontend.invoice', compact('order'));
-        return $pdf->download('invoice_' . $orderId . '.pdf');
+        return $pdf->download('invoice_' . $orderNumber . '.pdf');
+    }
+
+    // Webhook endpoint for Stripe
+    public function stripeWebhook(Request $request)
+    {
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+        
+        $payload = $request->getContent();
+        $sig_header = $request->header('Stripe-Signature');
+        $endpoint_secret = env('STRIPE_WEBHOOK_SECRET');
+
+        try {
+            $event = \Stripe\Webhook::constructEvent(
+                $payload, $sig_header, $endpoint_secret
+            );
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+
+        // Handle the event
+        switch ($event->type) {
+            case 'checkout.session.completed':
+                $session = $event->data->object;
+                
+                // Update order status
+                $order = Order::where('stripe_session_id', $session->id)->first();
+                if ($order) {
+                    $order->update([
+                        'order_status' => 'confirmed',
+                        'payment_status' => 'paid',
+                        'payment_date' => now(),
+                    ]);
+                    
+                    // Deduct stock
+                    foreach ($order->items as $item) {
+                        if ($item->variant) {
+                            $item->variant->decrement('stock', $item->quantity);
+                        }
+                    }
+                    
+                    // Clear cart
+                    CartItem::where('user_id', $order->user_id)->delete();
+                }
+                break;
+                
+            case 'checkout.session.expired':
+                $session = $event->data->object;
+                $order = Order::where('stripe_session_id', $session->id)->first();
+                if ($order && $order->order_status === 'pending') {
+                    $order->update([
+                        'order_status' => 'cancelled',
+                        'payment_status' => 'failed',
+                    ]);
+                }
+                break;
+        }
+
+        return response()->json(['status' => 'success']);
+    }
+
+    // Add new address via AJAX
+    public function addAddress(Request $request)
+    {
+        $validated = $request->validate([
+            'address_name' => ['required', 'string', 'max:100'],
+            'full_name' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:20'],
+            'address_line1' => ['required', 'string'],
+            'address_line2' => ['nullable', 'string'],
+            'city' => ['required', 'string', 'max:100'],
+            'state' => ['required', 'string', 'max:100'],
+            'zip_code' => ['required', 'string', 'max:20'],
+            'country' => ['required', 'string', 'max:100'],
+            'type' => ['required', 'in:shipping,billing'],
+            'is_default' => ['boolean'],
+        ]);
+
+        $address = UserAddress::create([
+            'user_id' => Auth::id(),
+            ...$validated
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'address' => $address,
+            'message' => 'Address saved successfully'
+        ]);
+    }
+
+    // Set default address
+    public function setDefaultAddress(Request $request, $id)
+    {
+        $address = UserAddress::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        // Remove default from all addresses of this type
+        UserAddress::where('user_id', Auth::id())
+            ->where('type', $address->type)
+            ->update(['is_default' => false]);
+
+        // Set this as default
+        $address->update(['is_default' => true]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Default address updated'
+        ]);
     }
 }

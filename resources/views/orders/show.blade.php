@@ -1,4 +1,4 @@
-<title>Order #{{ $order->order_id }} - Outfit 818</title>
+<title>Order #{{ $order->order_number }} - Outfit 818</title>
 @extends('layouts.front')
 @section('content')
     <div class="min-h-screen py-12 mt-10">
@@ -9,7 +9,7 @@
                     <i class="fas fa-receipt text-green-600 text-3xl"></i>
                 </div>
                 <h1 class="text-4xl font-bold text-gray-900 mb-3">Order Details</h1>
-                <p class="text-xl text-gray-600">Order #{{ $order->order_id }}</p>
+                <p class="text-xl text-gray-600">Order #{{ $order->order_number }}</p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -21,31 +21,43 @@
                             <h2 class="text-2xl font-bold text-gray-900">Order Summary</h2>
                             <span
                                 class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium capitalize 
-                            @if ($order->status == 'paid') bg-green-100 text-green-800 border border-green-200
-                            @elseif($order->status == 'pending') bg-yellow-100 text-yellow-800 border border-yellow-200
-                            @elseif($order->status == 'cancelled') bg-red-100 text-red-800 border border-red-200
+                            @if ($order->payment_status == 'paid') bg-green-100 text-green-800 border border-green-200
+                            @elseif($order->payment_status == 'pending') bg-yellow-100 text-yellow-800 border border-yellow-200
+                            @elseif($order->order_status == 'cancelled') bg-red-100 text-red-800 border border-red-200
                             @else bg-blue-100 text-blue-800 border border-blue-200 @endif">
                                 <i
                                     class="fas 
-                                @if ($order->status == 'paid') fa-check-circle 
-                                @elseif($order->status == 'pending') fa-clock
-                                @elseif($order->status == 'cancelled') fa-times-circle
+                                @if ($order->payment_status == 'paid') fa-check-circle 
+                                @elseif($order->payment_status == 'pending') fa-clock
+                                @elseif($order->order_status == 'cancelled') fa-times-circle
                                 @else fa-info-circle @endif mr-2">
                                 </i>
-                                {{ ucfirst($order->status) }}
+                                @if($order->payment_status == 'paid')
+                                    Paid
+                                @elseif($order->order_status == 'cancelled')
+                                    Cancelled
+                                @else
+                                    {{ ucfirst($order->order_status) }}
+                                @endif
                             </span>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-4">
                                 <div>
-                                    <p class="text-sm font-medium text-gray-500 mb-1">Order ID</p>
-                                    <p class="text-lg font-semibold text-gray-900">{{ $order->order_id }}</p>
+                                    <p class="text-sm font-medium text-gray-500 mb-1">Order Number</p>
+                                    <p class="text-lg font-semibold text-gray-900">{{ $order->order_number }}</p>
                                 </div>
                                 <div>
                                     <p class="text-sm font-medium text-gray-500 mb-1">Order Date</p>
                                     <p class="text-lg font-semibold text-gray-900">
                                         {{ $order->created_at->format('d M Y, h:i A') }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500 mb-1">Payment Method</p>
+                                    <p class="text-lg font-semibold text-gray-900">
+                                        {{ ucfirst($order->payment_method) }}
+                                    </p>
                                 </div>
                             </div>
                             <div class="space-y-4">
@@ -57,6 +69,12 @@
                                 <div>
                                     <p class="text-sm font-medium text-gray-500 mb-1">Items</p>
                                     <p class="text-lg font-semibold text-gray-900">{{ $order->items->count() }} items</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500 mb-1">Payment Status</p>
+                                    <p class="text-lg font-semibold text-gray-900">
+                                        {{ ucfirst($order->payment_status) }}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -73,37 +91,129 @@
 
                         <div class="space-y-6">
                             @foreach ($order->items as $item)
-                                @php $product = $item->product; @endphp
+                                @php
+                                    $variantDetails = json_decode($item->variant_details, true) ?? [];
+                                    $size = $variantDetails['size'] ?? 'N/A';
+                                    $color = $variantDetails['color'] ?? 'N/A';
+                                    $sku = $variantDetails['sku'] ?? 'N/A';
+                                    $productImage = null;
+                                    
+                                    // Get product image from variant relationship if available
+                                    if ($item->variant && $item->variant->product && $item->variant->product->images) {
+                                        $productImage = $item->variant->product->images->first();
+                                    }
+                                @endphp
                                 <div
                                     class="flex items-center gap-6 p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-300">
-                                    <img src="{{ Str::startsWith($product->image, ['http://', 'https://'])
-                                        ? $product->image
-                                        : asset('storage/' . $product->image) }}"
-                                        alt="{{ $item->product_name }}" class="w-20 h-20 object-cover rounded-lg shadow-sm">
+                                    @if($productImage && $productImage->image_path)
+                                        <img src="{{ Str::startsWith($productImage->image_path, ['http://', 'https://'])
+                                            ? $productImage->image_path
+                                            : asset('storage/' . $productImage->image_path) }}"
+                                            alt="{{ $item->product_name }}" 
+                                            class="w-20 h-20 object-cover rounded-lg shadow-sm">
+                                    @else
+                                        <div class="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-tshirt text-gray-400 text-2xl"></i>
+                                        </div>
+                                    @endif
                                     <div class="flex-1 min-w-0">
                                         <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $item->product_name }}</h3>
                                         <div class="flex items-center gap-4 text-sm text-gray-600">
-                                            <span class="bg-white px-3 py-1 rounded-full border">Size:
-                                                {{ $item->size }}</span>
-                                            <span class="bg-white px-3 py-1 rounded-full border">Qty:
-                                                {{ $item->quantity }}</span>
-                                            <span
-                                                class="bg-white px-3 py-1 rounded-full border">#{{ $item->product_id }}</span>
+                                            <span class="bg-white px-3 py-1 rounded-full border">Size: {{ $size }}</span>
+                                            <span class="bg-white px-3 py-1 rounded-full border">Color: {{ $color }}</span>
+                                            <span class="bg-white px-3 py-1 rounded-full border">Qty: {{ $item->quantity }}</span>
+                                            <span class="bg-white px-3 py-1 rounded-full border">SKU: {{ $sku }}</span>
                                         </div>
                                     </div>
                                     <div class="text-right">
                                         <p class="text-xl font-bold text-gray-900 mb-1">
-                                            ${{ number_format($item->price * $item->quantity, 2) }}</p>
-                                        <p class="text-sm text-gray-500">${{ number_format($item->price, 2) }} each</p>
+                                            ${{ number_format($item->total_price, 2) }}</p>
+                                        <p class="text-sm text-gray-500">${{ number_format($item->unit_price, 2) }} each</p>
                                     </div>
                                 </div>
                             @endforeach
+                        </div>
+                    </div>
+
+                    <!-- Shipping & Billing Information -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Shipping Address -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-truck text-green-600"></i>
+                                </div>
+                                <h3 class="font-semibold text-gray-900">Shipping Address</h3>
+                            </div>
+                            @if($order->shippingAddress)
+                                <div class="space-y-2">
+                                    <p class="font-medium text-gray-900">{{ $order->shippingAddress->full_name }}</p>
+                                    <p class="text-gray-600">{{ $order->shippingAddress->address_line1 }}</p>
+                                    @if($order->shippingAddress->address_line2)
+                                        <p class="text-gray-600">{{ $order->shippingAddress->address_line2 }}</p>
+                                    @endif
+                                    <p class="text-gray-600">{{ $order->shippingAddress->city }}, {{ $order->shippingAddress->state }} {{ $order->shippingAddress->zip_code }}</p>
+                                    <p class="text-gray-600">{{ $order->shippingAddress->country }}</p>
+                                    <p class="text-gray-600">{{ $order->shippingAddress->phone }}</p>
+                                </div>
+                            @else
+                                <p class="text-gray-500 italic">No shipping address saved</p>
+                            @endif
+                        </div>
+
+                        <!-- Billing Address -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-credit-card text-blue-600"></i>
+                                </div>
+                                <h3 class="font-semibold text-gray-900">Billing Address</h3>
+                            </div>
+                            @if($order->billingAddress && $order->billingAddress->id !== $order->shippingAddress->id)
+                                <div class="space-y-2">
+                                    <p class="font-medium text-gray-900">{{ $order->billingAddress->full_name }}</p>
+                                    <p class="text-gray-600">{{ $order->billingAddress->address_line1 }}</p>
+                                    @if($order->billingAddress->address_line2)
+                                        <p class="text-gray-600">{{ $order->billingAddress->address_line2 }}</p>
+                                    @endif
+                                    <p class="text-gray-600">{{ $order->billingAddress->city }}, {{ $order->billingAddress->state }} {{ $order->billingAddress->zip_code }}</p>
+                                    <p class="text-gray-600">{{ $order->billingAddress->country }}</p>
+                                    <p class="text-gray-600">{{ $order->billingAddress->phone }}</p>
+                                </div>
+                            @else
+                                <p class="text-gray-600">Same as shipping address</p>
+                            @endif
                         </div>
                     </div>
                 </div>
 
                 <!-- Sidebar Actions -->
                 <div class="space-y-6">
+                    <!-- Order Totals -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                        <h3 class="font-semibold text-gray-900 mb-4">Order Totals</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between text-gray-600">
+                                <span>Subtotal</span>
+                                <span>${{ number_format($order->subtotal, 2) }}</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Shipping</span>
+                                <span>${{ number_format($order->shipping_amount, 2) }}</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Tax</span>
+                                <span>${{ number_format($order->tax_amount, 2) }}</span>
+                            </div>
+                            <div class="border-t border-gray-200 pt-3">
+                                <div class="flex justify-between text-lg font-bold text-gray-900">
+                                    <span>Total</span>
+                                    <span>${{ number_format($order->total_amount, 2) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Download Invoice Card -->
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                         <div class="text-center mb-4">
@@ -113,7 +223,7 @@
                             <h3 class="font-semibold text-gray-900 mb-2">Download Invoice</h3>
                             <p class="text-sm text-gray-500">Get your official order receipt</p>
                         </div>
-                        <a href="{{ route('orders.invoice', $order->order_id) }}"
+                        <a href="{{ route('orders.invoice', $order->order_number) }}"
                             class="w-full bg-gray-900 text-white py-3 px-4 rounded-xl font-semibold hover:bg-gray-800 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-3">
                             <i class="fas fa-download"></i>
                             Download Invoice
@@ -134,6 +244,7 @@
                                     <p class="text-sm text-gray-500">{{ $order->created_at->format('d M Y, h:i A') }}</p>
                                 </div>
                             </div>
+                            @if($order->order_status !== 'pending')
                             <div class="flex items-start gap-3">
                                 <div
                                     class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
@@ -144,26 +255,35 @@
                                     <p class="text-sm text-gray-500">Preparing your order</p>
                                 </div>
                             </div>
+                            @endif
+                            @if(in_array($order->order_status, ['shipped', 'delivered']))
                             <div class="flex items-start gap-3">
                                 <div
-                                    class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                    <i class="fas fa-shipping-fast text-gray-400 text-sm"></i>
+                                    class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                    <i class="fas fa-shipping-fast text-purple-600 text-sm"></i>
                                 </div>
                                 <div>
-                                    <p class="font-medium text-gray-500">Shipped</p>
-                                    <p class="text-sm text-gray-400">Will update soon</p>
+                                    <p class="font-medium text-gray-900">Shipped</p>
+                                    @if($order->tracking_number)
+                                        <p class="text-sm text-gray-500">Tracking: {{ $order->tracking_number }}</p>
+                                    @else
+                                        <p class="text-sm text-gray-500">Shipped on {{ $order->updated_at->format('d M Y') }}</p>
+                                    @endif
                                 </div>
                             </div>
+                            @endif
+                            @if($order->order_status === 'delivered')
                             <div class="flex items-start gap-3">
                                 <div
-                                    class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                    <i class="fas fa-home text-gray-400 text-sm"></i>
+                                    class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                    <i class="fas fa-home text-green-600 text-sm"></i>
                                 </div>
                                 <div>
-                                    <p class="font-medium text-gray-500">Delivered</p>
-                                    <p class="text-sm text-gray-400">Expected in 3-5 days</p>
+                                    <p class="font-medium text-gray-900">Delivered</p>
+                                    <p class="text-sm text-gray-500">{{ $order->delivered_at?->format('d M Y, h:i A') ?? 'Delivered' }}</p>
                                 </div>
                             </div>
+                            @endif
                         </div>
                     </div>
 
@@ -173,10 +293,10 @@
                             <i class="fas fa-headset text-2xl mb-3"></i>
                             <h3 class="font-semibold mb-2">Need Help?</h3>
                             <p class="text-sm text-green-100 mb-4">Our support team is here to assist you</p>
-                            <button
-                                class="w-full bg-white text-green-600 py-2 px-4 rounded-xl font-semibold hover:bg-green-50 transition-all">
+                            <a href="mailto:support@outfit818.com"
+                                class="w-full inline-block bg-white text-green-600 py-2 px-4 rounded-xl font-semibold hover:bg-green-50 transition-all text-center">
                                 Contact Support
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -210,7 +330,7 @@
             <!-- Order ID -->
             <div class="bg-gray-50 rounded-lg p-4 mb-6">
                 <p class="text-sm text-gray-500 mb-1">Order Reference</p>
-                <p class="font-semibold text-gray-900 text-lg">{{ $order->order_id }}</p>
+                                <p class="font-semibold text-gray-900 text-lg">{{ $order->order_number }}</p>
             </div>
             
             <!-- Action Button -->

@@ -55,7 +55,7 @@
 
                 @auth
                     @php
-                        $isSubscribed = \App\Models\Email::where('email', auth()->user()->email)->exists();
+                        $isSubscribed = \App\Models\NewsletterSubscription::where('email', auth()->user()->email)->exists();
                     @endphp
 
                     @if ($isSubscribed)

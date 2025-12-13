@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Email;
+use App\Models\NewsletterSubscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class EmailSubscriptionController extends Controller
 {
@@ -25,32 +26,69 @@ class EmailSubscriptionController extends Controller
             return redirect()->back()->with('error', 'Invalid email submission.');
         }
 
-        // ✅ Check if already subscribed
-        if (Email::where('email', $user->email)->exists()) {
+        // ✅ Check if already subscribed (active subscription)
+        $existingSubscription = NewsletterSubscription::where('email', $user->email)
+            ->where('is_subscribed', true)
+            ->first();
+
+        if ($existingSubscription) {
             return redirect()->back()
                 ->with('info', 'You are already subscribed.')
                 ->with('subscribed', true);
         }
 
-        // ✅ Save subscription
-        Email::create([
-            'user_id' => $user->id,
-            'email' => $user->email,
-        ]);
+        // ✅ Check if there's a previous subscription that was unsubscribed
+        $previousSubscription = NewsletterSubscription::where('email', $user->email)
+            ->where('is_subscribed', false)
+            ->first();
 
-        return redirect()->back()
-            ->with('success', 'Thank you for subscribing!')
-            ->with('subscribed', true);
+        DB::beginTransaction();
+        try {
+            if ($previousSubscription) {
+                // Reactivate the subscription
+                $previousSubscription->update([
+                    'is_subscribed' => true,
+                    'subscribed_at' => now(),
+                    'unsubscribed_at' => null,
+                    'user_id' => $user->id
+                ]);
+            } else {
+                // Create new subscription
+                NewsletterSubscription::create([
+                    'user_id' => $user->id,
+                    'email' => $user->email,
+                    'is_subscribed' => true,
+                    'subscribed_at' => now(),
+                    'unsubscribed_at' => null
+                ]);
+            }
+            
+            DB::commit();
+            
+            return redirect()->back()
+                ->with('success', 'Thank you for subscribing!')
+                ->with('subscribed', true);
+                
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'An error occurred. Please try again.');
+        }
     }
 
     public function destroy(Request $request)
     {
         $user = Auth::user();
 
-        $subscription = Email::where('user_id', $user->id)->first();
+        $subscription = NewsletterSubscription::where('email', $user->email)
+            ->where('is_subscribed', true)
+            ->first();
 
         if ($subscription) {
-            $subscription->delete();
+            $subscription->update([
+                'is_subscribed' => false,
+                'unsubscribed_at' => now()
+            ]);
+            
             return redirect()->back()->with('success', 'You have been unsubscribed successfully.');
         }
 

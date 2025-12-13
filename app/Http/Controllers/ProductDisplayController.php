@@ -10,69 +10,222 @@ class ProductDisplayController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with(['category', 'sizes']);
+        // Use eager loading for relationships
+        $query = Product::with(['category', 'variants', 'images'])
+            ->where('status', 'active');
 
+        // Search
         if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where(function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                  ->orWhere('description', 'like', '%' . $request->search . '%')
+                  ->orWhere('sku', 'like', '%' . $request->search . '%');
+            });
         }
 
+        // Category filter
         if ($request->filled('category')) {
             $query->where('category_id', $request->category);
         }
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
+        // Price range filter
+        if ($request->filled('min_price') || $request->filled('max_price')) {
+            $query->whereHas('variants', function($q) use ($request) {
+                if ($request->filled('min_price')) {
+                    $q->where('price', '>=', $request->min_price);
+                }
+                if ($request->filled('max_price')) {
+                    $q->where('price', '<=', $request->max_price);
+                }
+            });
         }
 
-        // Get products first (pagination comes later)
-        $products = $query->get();
+        // Size filter
+        if ($request->filled('size')) {
+            $query->whereHas('variants', function($q) use ($request) {
+                $q->where('size', $request->size)
+                  ->where('stock', '>', 0);
+            });
+        }
 
-        // Apply sorting manually based on sizes
+        // Color filter
+        if ($request->filled('color')) {
+            $query->whereHas('variants', function($q) use ($request) {
+                $q->where('color', $request->color)
+                  ->where('stock', '>', 0);
+            });
+        }
+
+        // Featured or new products
+        if ($request->filled('type')) {
+            if ($request->type === 'featured') {
+                $query->where('is_featured', true);
+            } elseif ($request->type === 'new') {
+                $query->where('is_new', true);
+            }
+        }
+
+        // Sorting
         if ($request->filled('sort')) {
-            if ($request->sort === 'low') {
-                $products = $products->sortBy(function ($product) {
-                    return $product->sizes->min('price') ?? PHP_INT_MAX;
-                });
-            } elseif ($request->sort === 'high') {
-                $products = $products->sortByDesc(function ($product) {
-                    return $product->sizes->min('price') ?? 0;
-                });
+            switch ($request->sort) {
+                case 'price_low':
+                    // Sort by minimum variant price
+                    $query->orderByRaw('(
+                        SELECT MIN(price) FROM product_variants 
+                        WHERE product_id = products.id AND stock > 0
+                    ) ASC');
+                    break;
+                case 'price_high':
+                    // Sort by maximum variant price
+                    $query->orderByRaw('(
+                        SELECT MAX(price) FROM product_variants 
+                        WHERE product_id = products.id AND stock > 0
+                    ) DESC');
+                    break;
+                case 'newest':
+                    $query->orderBy('created_at', 'desc');
+                    break;
+                case 'popular':
+                    $query->orderBy('view_count', 'desc');
+                    break;
+                case 'name_asc':
+                    $query->orderBy('name', 'asc');
+                    break;
+                case 'name_desc':
+                    $query->orderBy('name', 'desc');
+                    break;
+                default:
+                    $query->orderBy('created_at', 'desc');
             }
         } else {
-            // Default sort by latest
-            $products = $products->sortByDesc('created_at');
+            $query->orderBy('created_at', 'desc');
         }
 
-        // Manually paginate the collection
-        $perPage = 30;
-        $page = request()->get('page', 1);
-        $paginated = new \Illuminate\Pagination\LengthAwarePaginator(
-            $products->forPage($page, $perPage)->values(),
-            $products->count(),
-            $perPage,
-            $page,
-            ['path' => request()->url(), 'query' => request()->query()]
-        );
+        // Pagination
+        $perPage = $request->get('per_page', 30);
+        $products = $query->paginate($perPage);
 
-        $categories = Category::all();
+        $categories = Category::where('status', 'active')->get();
 
         return view('frontend.all-products', [
-            'products' => $paginated,
+            'products' => $products,
             'categories' => $categories,
         ]);
     }
 
     public function showAll()
     {
-        $products = Product::where('status', 'active')->latest()->get();
-        $categories = Category::all();
+        $products = Product::with(['category', 'variants', 'images'])
+            ->where('status', 'active')
+            ->orderBy('created_at', 'desc')
+            ->paginate(30);
+            
+        $categories = Category::where('status', 'active')->get();
 
         return view('frontend.all-products', compact('products', 'categories'));
     }
 
-    public function view($id)
+    public function view($slug)
     {
-        $product = Product::with('category')->findOrFail($id);
-        return view('frontend.view-product', compact('product'));
+        // Find by slug using route model binding or manual query
+        $product = Product::with(['category', 'variants' => function($query) {
+            $query->where('is_active', true)
+                  ->orderByRaw("FIELD(size, 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'FREE')");
+        }, 'images' => function($query) {
+            $query->orderBy('is_primary', 'desc')
+                  ->orderBy('sort_order', 'asc');
+        }])
+        ->where('slug', $slug)
+        ->where('status', 'active')
+        ->firstOrFail();
+
+        // Increment view count
+        $product->increment('view_count');
+
+        // Get related products
+        $relatedProducts = Product::with(['images' => function($query) {
+            $query->orderBy('is_primary', 'desc')->limit(1);
+        }])
+        ->where('category_id', $product->category_id)
+        ->where('id', '!=', $product->id)
+        ->where('status', 'active')
+        ->take(4)
+        ->get();
+
+        return view('frontend.view-product', compact('product', 'relatedProducts'));
+    }
+
+    // New arrival products
+    public function newArrivals()
+    {
+        $arrivals = Product::with(['images' => function($query) {
+            $query->orderBy('is_primary', 'desc')->limit(1);
+        }, 'variants'])
+        ->where('is_new', true)
+        ->where('status', 'active')
+        ->orderBy('created_at', 'desc')
+        ->take(20)
+        ->get();
+
+        return view('frontend.new-arrivals', compact('arrivals'));
+    }
+
+    // Featured products
+    public function featured()
+    {
+        $featured = Product::with(['images' => function($query) {
+            $query->orderBy('is_primary', 'desc')->limit(1);
+        }, 'variants'])
+        ->where('is_featured', true)
+        ->where('status', 'active')
+        ->orderBy('created_at', 'desc')
+        ->take(20)
+        ->get();
+
+        return view('frontend.featured-products', compact('featured'));
+    }
+
+    // Category products
+    public function category($categorySlug)
+    {
+        $category = Category::where('slug', $categorySlug)
+            ->where('status', 'active')
+            ->firstOrFail();
+
+        $products = Product::with(['images' => function($query) {
+            $query->orderBy('is_primary', 'desc')->limit(1);
+        }, 'variants'])
+        ->where('category_id', $category->id)
+        ->where('status', 'active')
+        ->orderBy('created_at', 'desc')
+        ->paginate(30);
+
+        return view('frontend.category-products', compact('products', 'category'));
+    }
+
+    // Search products
+    public function search(Request $request)
+    {
+        $request->validate([
+            'q' => 'required|string|min:2|max:100',
+        ]);
+
+        $products = Product::with(['images' => function($query) {
+            $query->orderBy('is_primary', 'desc')->limit(1);
+        }, 'variants', 'category'])
+        ->where(function($query) use ($request) {
+            $query->where('name', 'like', '%' . $request->q . '%')
+                  ->orWhere('description', 'like', '%' . $request->q . '%')
+                  ->orWhere('short_description', 'like', '%' . $request->q . '%')
+                  ->orWhere('sku', 'like', '%' . $request->q . '%');
+        })
+        ->where('status', 'active')
+        ->orderBy('created_at', 'desc')
+        ->paginate(30);
+
+        return view('frontend.search-results', [
+            'products' => $products,
+            'searchQuery' => $request->q,
+        ]);
     }
 }

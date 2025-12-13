@@ -53,12 +53,13 @@ Route::post('/logout', function () {
 
 // Product Routes
 Route::get('/products', [ProductDisplayController::class, 'index'])->name('products.all');
-Route::get('/product/{id}', [ProductDisplayController::class, 'view'])->name('product.view');
+Route::get('/product/{slug}', [ProductDisplayController::class, 'view'])->name('product.view');
 
 // Admin Routes
 Route::prefix('admin')->middleware('admin')->group(function () {
     // Dashboard
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/admin/products/search', [ProductController::class, 'search'])->name('admin.products.search');
     
     // API Endpoints for Dashboard
     Route::get('/api/sidebar-stats', [AdminController::class, 'sidebarStats']);
@@ -128,6 +129,11 @@ Route::get('/admin/orders/{order}/invoice', [AdminOrderController::class, 'downl
     ->middleware(['auth', 'admin'])
     ->name('admin.orders.invoice');
 
+    // routes/web.php (temporary)
+Route::get('/test-product', function() {
+    return view('test-product-form');
+});
+
 // Email Subscriptions
 Route::post('/subscribe-email', [EmailSubscriptionController::class, 'store'])->name('email.subscribe');
 Route::delete('/unsubscribe', [EmailSubscriptionController::class, 'destroy'])->name('emails.unsubscribe')->middleware('auth');
@@ -165,7 +171,7 @@ Route::get('/order/invoice/{orderId}', [CheckoutController::class, 'downloadInvo
 // Order History
 Route::middleware(['auth'])->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{orderId}', [OrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders/{orderNumber}', [OrderController::class, 'show'])->name('orders.show');
     Route::get('/orders/{orderId}/invoice', [OrderController::class, 'downloadInvoice'])->name('orders.invoice');
 });
 
