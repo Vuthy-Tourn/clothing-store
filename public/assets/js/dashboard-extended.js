@@ -1,5 +1,3 @@
-
-
 let orderStatusChart;
 
 // Initialize extended features
@@ -183,7 +181,7 @@ async function loadRecentOrders() {
                     }</span>
                 </td>
                 <td class="py-3 px-4">
-                    <span class="font-semibold text-gray-900">₹${parseFloat(
+                    <span class="font-semibold text-gray-900">$${parseFloat(
                         order.total_amount
                     ).toLocaleString()}</span>
                 </td>
@@ -259,7 +257,7 @@ async function loadPerformanceMetrics() {
         // Average Order Value
         if (document.getElementById("avgOrderValue")) {
             document.getElementById("avgOrderValue").textContent =
-                "₹" + metrics.avgOrderValue.toLocaleString();
+                "$" + metrics.avgOrderValue.toLocaleString();
             const percentage =
                 (metrics.avgOrderValue / metrics.maxOrderValue) * 100;
             setTimeout(() => {

@@ -19,19 +19,13 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-900 mb-2">Product Name *</label>
+                    <label class="block text-sm font-medium text-gray-900 mb-2">Product Name   <span class="ml-1 text-red-500">*</span></label>
                     <input type="text" name="name" id="editName" required
                         class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-900 mb-2">SKU</label>
-                    <input type="text" name="sku" id="editSku"
-                        class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-900 mb-2">Category *</label>
+                    <label class="block text-sm font-medium text-gray-900 mb-2">Category   <span class="ml-1 text-red-500">*</span></label>
                     <select name="category_id" id="editCategoryId" required
                         class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3">
                         <option value="">Select category</option>
@@ -49,15 +43,54 @@
             </div>
 
             <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-900 mb-2">Short Description</label>
-                <textarea name="short_description" id="editShortDescription" rows="2"
+                <label class="block text-sm font-medium text-gray-900 mb-2">Description   <span class="ml-1 text-red-500">*</span></label>
+                <textarea name="description" id="editDescription" rows="4" required
                     class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3 resize-none"></textarea>
             </div>
 
-            <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-900 mb-2">Full Description *</label>
-                <textarea name="description" id="editDescription" rows="4" required
-                    class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3 resize-none"></textarea>
+            <!-- Product-Level Discount Section for Edit -->
+            <div class="mb-8 border border-gray-200 rounded-lg p-6 bg-gray-50">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                    <i class="fas fa-tag mr-2 text-blue-600"></i> Product Discount Settings
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-900 mb-2">Discount Type</label>
+                            <select name="discount_type" id="editDiscountType"
+                                class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 discount-type-select">
+                                <option value="">No Discount</option>
+                                <option value="percentage">Percentage (%)</option>
+                                <option value="fixed">Fixed Amount</option>
+                            </select>
+                        </div>
+
+                        <div class="discount-value-field" style="display: none;">
+                            <label class="block text-sm font-medium text-gray-900 mb-2">Discount Value</label>
+                            <div class="relative">
+                                <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 discount-prefix">%</div>
+                                <input type="number" step="0.01" name="discount_value" id="editDiscountValue"
+                                    class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg pl-10 pr-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="e.g., 10">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-900 mb-2">Discount Start Date</label>
+                            <input type="datetime-local" name="discount_start" id="editDiscountStart"
+                                class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-900 mb-2">Discount End Date</label>
+                            <input type="datetime-local" name="discount_end" id="editDiscountEnd"
+                                class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Variants Section for Edit -->
@@ -107,7 +140,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-900 mb-2">Status *</label>
+                    <label class="block text-sm font-medium text-gray-900 mb-2">Status   <span class="ml-1 text-red-500">*</span></label>
                     <select name="status" id="editStatus" required
                         class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3">
                         <option value="active">Active</option>

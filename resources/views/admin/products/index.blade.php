@@ -94,10 +94,9 @@
             <table class="w-full">
                 <thead class="bg-gray-50 border-b border-gray-200">
                     <tr>
-                        <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">#</th>
+                        <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">ID</th>
                         <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">Image</th>
                         <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">Product</th>
-                        <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">SKU</th>
                         <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">Category</th>
                         <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">Price Range</th>
                         <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">Stock</th>
@@ -132,10 +131,6 @@
                                 </div>
                             </td>
                             <td class="py-4 px-6">
-                                <code
-                                    class="text-sm bg-gray-100 px-2 py-1 rounded text-gray-700">{{ $product->sku }}</code>
-                            </td>
-                            <td class="py-4 px-6">
                                 <span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
                                     {{ $product->category->name ?? 'N/A' }}
                                 </span>
@@ -144,10 +139,10 @@
                                 @if ($product->variants->count() > 0)
                                     <div class="text-sm">
                                         <span
-                                            class="text-gray-900 font-medium">₹{{ number_format($product->min_price, 2) }}</span>
+                                            class="text-gray-900 font-medium">${{ number_format($product->min_price, 2) }}</span>
                                         <span class="text-gray-500 mx-1">-</span>
                                         <span
-                                            class="text-gray-900 font-medium">₹{{ number_format($product->max_price, 2) }}</span>
+                                            class="text-gray-900 font-medium">${{ number_format($product->max_price, 2) }}</span>
                                     </div>
                                 @else
                                     <span class="text-gray-500 text-sm">No variants</span>

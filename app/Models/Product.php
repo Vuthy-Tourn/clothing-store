@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -22,9 +23,16 @@ class Product extends Model
         'status',
         'is_featured',
         'is_new',
+        'price',
         'rating_cache',
         'review_count',
-        'view_count'
+        'view_count',
+        // DISCOUNT FIELDS
+        'discount_type',
+        'discount_value',
+        'discount_start',
+        'discount_end',
+        'has_discount'
     ];
 
     protected $casts = [
@@ -32,7 +40,12 @@ class Product extends Model
         'is_new' => 'boolean',
         'rating_cache' => 'decimal:2',
         'review_count' => 'integer',
-        'view_count' => 'integer'
+        'view_count' => 'integer',
+        'has_discount' => 'boolean',
+        'discount_start' => 'datetime',
+        'discount_end' => 'datetime',
+        'discount_value' => 'decimal:2',
+         'price' => 'decimal:2'
     ];
 
     protected static function boot()
@@ -322,8 +335,6 @@ class Product extends Model
                     ->first();
     }
 
-    // In App\Models\Product
-
 /**
  * Get available sizes with stock
  */
@@ -407,5 +418,63 @@ public function getBestDiscountAttribute()
 public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+    /**
+     * Get the discounted price
+     */
+    public function getDiscountedPriceAttribute()
+    {
+        if (!$this->isDiscountActive()) {
+            return $this->price;
+        }
+        
+        if ($this->discount_type === 'percentage') {
+            return $this->price - ($this->price * ($this->discount_value / 100));
+        }
+        
+        if ($this->discount_type === 'fixed') {
+            return max(0, $this->price - $this->discount_value);
+        }
+        
+        return $this->price;
+    }
+    
+    /**
+     * Check if discount is currently active
+     */
+    public function isDiscountActive()
+    {
+        if (!$this->has_discount || !$this->discount_type) {
+            return false;
+        }
+        
+        $now = Carbon::now();
+        
+        if ($this->discount_start && $now->lt($this->discount_start)) {
+            return false;
+        }
+        
+        if ($this->discount_end && $now->gt($this->discount_end)) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Get discount percentage (if any)
+     */
+    public function getDiscountPercentageAttribute()
+    {
+        if ($this->discount_type === 'percentage' && $this->isDiscountActive()) {
+            return $this->discount_value;
+        }
+        
+        if ($this->discount_type === 'fixed' && $this->isDiscountActive()) {
+            return round(($this->discount_value / $this->price) * 100, 1);
+        }
+        
+        return 0;
     }
 }

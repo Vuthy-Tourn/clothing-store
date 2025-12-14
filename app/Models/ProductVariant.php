@@ -22,7 +22,12 @@ class ProductVariant extends Model
         'stock_alert',
         'weight',
         'dimensions',
-        'is_active'
+        'is_active',
+         // DISCOUNT FIELDS
+        'discount_type',
+        'discount_value',
+        'discount_start',
+        'discount_end',
     ];
 
     protected $casts = [
@@ -32,7 +37,10 @@ class ProductVariant extends Model
         'stock' => 'integer',
         'stock_alert' => 'integer',
         'weight' => 'decimal:2',
-        'is_active' => 'boolean'
+        'is_active' => 'boolean',
+        'discount_start' => 'datetime',
+        'discount_end' => 'datetime',
+        'discount_value' => 'decimal:2'
     ];
 
     public function product()

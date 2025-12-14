@@ -24,7 +24,8 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-Wave text-sm font-medium">Pending</p>
-                    <p class="text-2xl font-bold text-yellow-600 mt-1">{{ $orders->where('status', 'pending')->count() }}</p>
+                    <p class="text-2xl font-bold text-yellow-600 mt-1">{{ $orders->where('status', 'pending')->count() }}
+                    </p>
                 </div>
                 <div class="w-12 h-12 rounded-lg flex items-center justify-center">
                     <i class="fas fa-clock text-yellow-600 text-xl"></i>
@@ -36,7 +37,8 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-Wave text-sm font-medium">Paid/Completed</p>
-                    <p class="text-2xl font-bold text-green-600 mt-1">{{ $orders->whereIn('status', ['completed', 'paid'])->count() }}</p>
+                    <p class="text-2xl font-bold text-green-600 mt-1">
+                        {{ $orders->whereIn('status', ['completed', 'paid'])->count() }}</p>
                 </div>
                 <div class="w-12 h-12 rounded-lg flex items-center justify-center">
                     <i class="fas fa-check-circle text-green-600 text-xl"></i>
@@ -78,7 +80,8 @@
                 </thead>
                 <tbody class="divide-y divide-Silk">
                     @forelse ($orders as $index => $order)
-                        <tr class="hover:bg-gray-100 transition-colors" data-aos="fade-in" data-aos-delay="{{ $index * 50 }}">
+                        <tr class="hover:bg-gray-100 transition-colors" data-aos="fade-in"
+                            data-aos-delay="{{ $index * 50 }}">
                             <td class="py-4 px-6 text-Wave font-medium">{{ $index + 1 }}</td>
                             <td class="py-4 px-6">
                                 <span class="font-mono font-semibold text-Ocean">{{ $order->order_id }}</span>
@@ -90,17 +93,27 @@
                                 </div>
                             </td>
                             <td class="py-4 px-6">
-                                <span class="font-semibold text-Ocean">₹{{ number_format($order->total_amount, 2) }}</span>
+                                <span class="font-semibold text-Ocean">${{ number_format($order->total_amount, 2) }}</span>
                             </td>
                             <td class="py-4 px-6">
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium 
-                                    {{ $order->status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                                       ($order->status === 'completed' || $order->status === 'paid' ? 'bg-green-100 text-green-700' :
-                                       ($order->status === 'cancelled' ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600')) }}">
-                                    <span class="w-2 h-2 rounded-full 
-                                        {{ $order->status === 'pending' ? 'bg-yellow-500' :
-                                           ($order->status === 'completed' || $order->status === 'paid' ? 'bg-green-500' :
-                                           ($order->status === 'cancelled' ? 'bg-red-500' : 'bg-gray-500')) }} mr-2"></span>
+                                <span
+                                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium 
+                                    {{ $order->status === 'pending'
+                                        ? 'bg-yellow-100 text-yellow-700'
+                                        : ($order->status === 'completed' || $order->status === 'paid'
+                                            ? 'bg-green-100 text-green-700'
+                                            : ($order->status === 'cancelled'
+                                                ? 'bg-red-100 text-red-600'
+                                                : 'bg-gray-100 text-gray-600')) }}">
+                                    <span
+                                        class="w-2 h-2 rounded-full 
+                                        {{ $order->status === 'pending'
+                                            ? 'bg-yellow-500'
+                                            : ($order->status === 'completed' || $order->status === 'paid'
+                                                ? 'bg-green-500'
+                                                : ($order->status === 'cancelled'
+                                                    ? 'bg-red-500'
+                                                    : 'bg-gray-500')) }} mr-2"></span>
                                     {{ ucfirst($order->status) }}
                                 </span>
                             </td>
@@ -110,7 +123,7 @@
                             </td>
                             <td class="py-4 px-6 text-right">
                                 <a href="{{ route('admin.orders.invoice', ['order' => $order->id]) }}"
-                                   class="bg-Ocean text-Pearl hover:bg-Ocean/90 px-4 py-2 rounded-lg text-sm font-medium inline-flex items-center transition-colors">
+                                    class="bg-Ocean text-Pearl hover:bg-Ocean/90 px-4 py-2 rounded-lg text-sm font-medium inline-flex items-center transition-colors">
                                     <i class="fas fa-file-invoice mr-2"></i> Invoice
                                 </a>
                             </td>
@@ -130,21 +143,21 @@
             </table>
         </div>
 
-        @if($orders->count() > 0)
-        <div class="p-4 border-t border-Silk bg-gray-200">
-            <div class="flex items-center justify-between text-sm text-Wave">
-                <span>Showing {{ $orders->count() }} orders</span>
-                <div class="flex items-center space-x-4">
-                    <button class="hover:text-Ocean transition-colors flex items-center">
-                        <i class="fas fa-chevron-left mr-1"></i> Previous
-                    </button>
-                    <span>Page 1 of 1</span>
-                    <button class="hover:text-Ocean transition-colors flex items-center">
-                        Next <i class="fas fa-chevron-right ml-1"></i>
-                    </button>
+        @if ($orders->count() > 0)
+            <div class="p-4 border-t border-Silk bg-gray-200">
+                <div class="flex items-center justify-between text-sm text-Wave">
+                    <span>Showing {{ $orders->count() }} orders</span>
+                    <div class="flex items-center space-x-4">
+                        <button class="hover:text-Ocean transition-colors flex items-center">
+                            <i class="fas fa-chevron-left mr-1"></i> Previous
+                        </button>
+                        <span>Page 1 of 1</span>
+                        <button class="hover:text-Ocean transition-colors flex items-center">
+                            Next <i class="fas fa-chevron-right ml-1"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
         @endif
     </div>
 @endsection

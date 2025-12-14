@@ -98,7 +98,7 @@ function animateValue(element, start, end, duration, prefix = "", suffix = "") {
         const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic
         const value = Math.floor(easeProgress * (end - start) + start);
 
-        if (prefix.includes("₹")) {
+        if (prefix.includes("$")) {
             element.textContent = prefix + value.toLocaleString("en-IN");
         } else {
             element.textContent = prefix + value.toLocaleString() + suffix;
@@ -122,7 +122,7 @@ async function loadDashboardStats() {
 
         // Animate stat cards
         const stats = [
-            { id: "revenueCount", value: data.total_revenue || 0, prefix: "₹" },
+            { id: "revenueCount", value: data.total_revenue || 0, prefix: "$" },
             { id: "ordersCount", value: data.active_orders || 0 },
             { id: "productsCount", value: data.total_products || 0 },
             { id: "customersCount", value: data.total_customers || 0 },
@@ -275,7 +275,7 @@ async function initSalesChart() {
                         cornerRadius: 8,
                         callbacks: {
                             label: function (context) {
-                                return `₹${context.parsed.y.toLocaleString(
+                                return `$${context.parsed.y.toLocaleString(
                                     "en-IN"
                                 )}`;
                             },
@@ -297,13 +297,13 @@ async function initSalesChart() {
                             callback: function (value) {
                                 if (value >= 100000)
                                     return (
-                                        "₹" + (value / 100000).toFixed(1) + "L"
+                                        "$" + (value / 100000).toFixed(1) + "L"
                                     );
                                 if (value >= 1000)
                                     return (
-                                        "₹" + (value / 1000).toFixed(0) + "K"
+                                        "$" + (value / 1000).toFixed(0) + "K"
                                     );
-                                return "₹" + value;
+                                return "$" + value;
                             },
                             color: creativePalette.dark,
                             font: { size: 12, weight: "500" },
@@ -643,7 +643,7 @@ async function initRevenueComparisonChart() {
                         },
                         ticks: {
                             callback: function (value) {
-                                return "₹" + value.toLocaleString();
+                                return "$" + value.toLocaleString();
                             },
                             color: creativePalette.dark,
                             font: { size: 12, weight: "500" },
@@ -718,7 +718,7 @@ async function loadRecentOrders() {
                 </td>
                 <td class="py-4 px-4">
                     <span class="font-bold text-gray-900">
-                        ₹${parseFloat(order.total_amount || 0).toLocaleString(
+                        $${parseFloat(order.total_amount || 0).toLocaleString(
                             "en-IN"
                         )}
                     </span>
@@ -829,7 +829,7 @@ async function loadPerformanceMetrics() {
                 valueId: "avgOrderValue",
                 barId: "avgOrderBar",
                 value: metrics.avg_order_value || 0,
-                prefix: "₹",
+                prefix: "$",
                 maxValue: metrics.max_order_value || 50000,
             },
             {

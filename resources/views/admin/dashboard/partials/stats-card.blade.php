@@ -5,7 +5,7 @@
         <div class="flex items-start justify-between mb-4">
             <div class="flex-1">
                 <p class="text-gray-600 text-sm font-medium mb-1">Total Revenue</p>
-                <h3 class="text-3xl font-bold text-gray-900" id="revenueCount">₹0</h3>
+                <h3 class="text-3xl font-bold text-gray-900" id="revenueCount">$0</h3>
                 <div class="flex items-center gap-2 mt-2">
                     <span class="text-xs font-medium text-green-700 bg-green-100 px-2 py-1 rounded">
                         <i class="fas fa-arrow-up mr-1"></i>
