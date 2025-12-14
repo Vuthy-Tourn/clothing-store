@@ -1,4 +1,5 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     function handleDiscountTypeChange(selectElement) {
         // Find the closest parent container
@@ -98,6 +99,7 @@
                     document.getElementById('editName').value = product.name;
                     document.getElementById('editCategoryId').value = product.category_id;
                     document.getElementById('editBrand').value = product.brand;
+                    document.getElementById('editMaterial').value = product.material;
                     document.getElementById('editDescription').value = product.description;
                     document.getElementById('editStatus').value = product.status;
                     document.getElementById('editIsFeatured').checked = product.is_featured;

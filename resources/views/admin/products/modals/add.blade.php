@@ -16,7 +16,8 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-900 mb-2">Product Name   <span class="ml-1 text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-900 mb-2">Product Name <span
+                            class="ml-1 text-red-500">*</span></label>
                     <input type="text" name="name" value="{{ old('name') }}" required
                         class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Enter product name">
@@ -26,7 +27,8 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-900 mb-2">Category   <span class="ml-1 text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-900 mb-2">Category <span
+                            class="ml-1 text-red-500">*</span></label>
                     <select name="category_id" required
                         class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         <option value="">Select category</option>
@@ -40,7 +42,12 @@
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
-
+                <div>
+                    <label class="block text-sm font-medium text-gray-900 mb-2">Material</label>
+                    <input type="text" name="material" value="{{ old('material') }}"
+                        class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3"
+                         placeholder="Enter material name">
+                </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-900 mb-2">Brand</label>
                     <input type="text" name="brand" value="{{ old('brand') }}"
@@ -50,7 +57,8 @@
             </div>
 
             <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-900 mb-2">Description   <span class="ml-1 text-red-500">*</span></label>
+                <label class="block text-sm font-medium text-gray-900 mb-2">Description <span
+                        class="ml-1 text-red-500">*</span></label>
                 <textarea name="description" rows="4" required
                     class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
                     placeholder="Enter detailed product description">{{ old('description') }}</textarea>
@@ -122,7 +130,8 @@
                     <div class="variant-row border border-gray-200 rounded-lg p-4 bg-gray-50">
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-3">
                             <div>
-                                <label class="block text-sm font-medium text-gray-900 mb-1">Size   <span class="ml-1 text-red-500">*</span></label>
+                                <label class="block text-sm font-medium text-gray-900 mb-1">Size <span
+                                        class="ml-1 text-red-500">*</span></label>
                                 <select name="variants[0][size]" required
                                     class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-3 py-2 text-sm">
                                     <option value="">Select Size</option>
@@ -132,7 +141,8 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-900 mb-1">Color   <span class="ml-1 text-red-500">*</span></label>
+                                <label class="block text-sm font-medium text-gray-900 mb-1">Color <span
+                                        class="ml-1 text-red-500">*</span></label>
                                 <input type="text" name="variants[0][color]" required
                                     class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-3 py-2 text-sm"
                                     placeholder="e.g., Red, Black">
@@ -152,13 +162,15 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-3">
                             <div>
-                                <label class="block text-sm font-medium text-gray-900 mb-1">Price ($)   <span class="ml-1 text-red-500">*</span></label>
+                                <label class="block text-sm font-medium text-gray-900 mb-1">Price ($) <span
+                                        class="ml-1 text-red-500">*</span></label>
                                 <input type="number" step="0.01" name="variants[0][price]" required
                                     class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-3 py-2 text-sm"
                                     placeholder="0.00">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-900 mb-1">Stock   <span class="ml-1 text-red-500">*</span></label>
+                                <label class="block text-sm font-medium text-gray-900 mb-1">Stock <span
+                                        class="ml-1 text-red-500">*</span></label>
                                 <input type="number" name="variants[0][stock]" min="0" required
                                     class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-3 py-2 text-sm"
                                     placeholder="0">
@@ -320,7 +332,8 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Primary Image -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-900 mb-2">Primary Image   <span class="ml-1 text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-900 mb-2">Primary Image <span
+                                class="ml-1 text-red-500">*</span></label>
                         <div
                             class="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center hover:border-gray-300">
                             <input type="file" name="images[0][image]" accept="image/*" required
@@ -349,7 +362,8 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-900 mb-2">Status   <span class="ml-1 text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-900 mb-2">Status <span
+                            class="ml-1 text-red-500">*</span></label>
                     <select name="status" required
                         class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>

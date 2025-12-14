@@ -16,43 +16,89 @@ use Carbon\Carbon;
 
 class ProductController extends Controller
 {
-    public function index(Request $request)
-    {
-        $query = Product::with(['category', 'variants', 'images' => function($query) {
-            $query->orderBy('is_primary', 'desc')->orderBy('sort_order');
-        }]);
-        
-        // Search functionality
-        if ($request->has('search') && !empty($request->search)) {
-            $searchTerm = $request->search;
-            $query->where(function($q) use ($searchTerm) {
-                $q->where('name', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('sku', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('brand', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('short_description', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('description', 'like', '%' . $searchTerm . '%')
-                  ->orWhereHas('category', function($q) use ($searchTerm) {
-                      $q->where('name', 'like', '%' . $searchTerm . '%');
-                  })
-                  ->orWhereHas('variants', function($q) use ($searchTerm) {
-                      $q->where('color', 'like', '%' . $searchTerm . '%')
-                        ->orWhere('size', 'like', '%' . $searchTerm . '%');
-                  });
-            });
-            
-            // Store search term in session for stats
-            session(['search_term' => $searchTerm]);
-        } else {
-            // Clear search term from session
-            session()->forget('search_term');
-        }
-        
-        $products = $query->orderBy('created_at', 'desc')->get();
-        $categories = Category::orderBy('name')->get();
-
-        return view('admin.products.index', compact('products', 'categories'));
+public function index(Request $request)
+{
+    $query = Product::with(['category', 'variants', 'images' => function($query) {
+        $query->orderBy('is_primary', 'desc')->orderBy('sort_order');
+    }]);
+    
+    // Get all categories for the filter dropdown
+    $categories = Category::orderBy('name')->get();
+    
+    // Search functionality
+    if ($request->has('search') && !empty($request->search)) {
+        $searchTerm = $request->search;
+        $query->where(function($q) use ($searchTerm) {
+            $q->where('name', 'like', '%' . $searchTerm . '%')
+              ->orWhere('brand', 'like', '%' . $searchTerm . '%')
+              ->orWhere('material', 'like', '%' . $searchTerm . '%')
+              ->orWhere('description', 'like', '%' . $searchTerm . '%')
+              ->orWhereHas('category', function($q) use ($searchTerm) {
+                  $q->where('name', 'like', '%' . $searchTerm . '%');
+              })
+              ->orWhereHas('variants', function($q) use ($searchTerm) {
+                  $q->where('color', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('size', 'like', '%' . $searchTerm . '%');
+              });
+        });
     }
     
+    // Add filters
+    if ($request->has('category') && !empty($request->category)) {
+        $query->where('category_id', $request->category);
+    }
+    
+    if ($request->has('status') && !empty($request->status)) {
+        $query->where('status', $request->status);
+    }
+    
+    if ($request->has('stock_status') && !empty($request->stock_status)) {
+        if ($request->stock_status === 'in_stock') {
+            $query->whereHas('variants', function($q) {
+                $q->where('stock', '>', 0);
+            });
+        } elseif ($request->stock_status === 'out_of_stock') {
+            $query->whereHas('variants', function($q) {
+                $q->where('stock', '<=', 0);
+            });
+        }
+    }
+    
+    // Get filtered products
+    $filteredProducts = $query->orderBy('created_at', 'desc')->get();
+    
+    // Get total counts (unfiltered) for stats comparison
+    $totalProducts = Product::count();
+    $totalActiveProducts = Product::where('status', 'active')->count();
+    
+    // Calculate filtered counts for AJAX updates
+    $filteredCount = $filteredProducts->count();
+    $filteredActiveCount = $filteredProducts->where('status', 'active')->count();
+    $filteredInStockCount = $filteredProducts->filter(function($product) {
+        return $product->variants->sum('stock') > 0;
+    })->count();
+
+    // Handle AJAX requests
+    if ($request->ajax()) {
+        return response()->json([
+            'success' => true,
+            'html' => view('admin.products.partials.table', ['products' => $filteredProducts])->render(),
+            'stats' => [
+                'total' => $filteredCount,
+                'active' => $filteredActiveCount,
+                'in_stock' => $filteredInStockCount,
+                'categories' => $categories->count()
+            ],
+            'count' => $filteredCount
+        ]);
+    }
+
+    // For initial page load, use filtered products if filters are applied
+    $products = $filteredProducts;
+
+    return view('admin.products.index', compact('products', 'categories', 'totalProducts', 'totalActiveProducts'));
+}
+        
     public function search(Request $request)
     {
         $searchTerm = $request->get('q', '');
@@ -117,6 +163,7 @@ class ProductController extends Controller
         ]);
     }
 
+
     // Helper method for status badges
     private function getStatusBadge($status)
     {
@@ -144,8 +191,8 @@ class ProductController extends Controller
                 'description' => 'nullable|string',
                 'status' => 'required|in:active,inactive,draft',
                 'sku' => 'nullable|string|unique:products,sku',
+                'material' => 'nullable|string|max:100',
                 'brand' => 'nullable|string|max:100',
-                'short_description' => 'nullable|string|max:500',
                 'is_featured' => 'boolean',
                 'is_new' => 'boolean',
                 
@@ -178,9 +225,9 @@ class ProductController extends Controller
                 'slug' => $slug,
                 'sku' => $sku,
                 'category_id' => $validated['category_id'],
-                'short_description' => $validated['short_description'] ?? null,
                 'description' => $validated['description'],
                 'brand' => $validated['brand'] ?? null,
+                'material' => $validated['material'] ?? null,
                 'status' => $validated['status'],
                 'is_featured' => $request->boolean('is_featured', false),
                 'is_new' => $request->boolean('is_new', false),
@@ -352,6 +399,7 @@ class ProductController extends Controller
                 'short_description' => $product->short_description ?? '',
                 'description' => $product->description,
                 'brand' => $product->brand ?? '',
+                'material' => $product->material ?? '',
                 'status' => $product->status,
                 'is_featured' => $product->is_featured,
                 'is_new' => $product->is_new,
@@ -429,6 +477,7 @@ class ProductController extends Controller
             'short_description'  => 'nullable|string|max:500',
             'description'        => 'nullable|string',
             'brand'              => 'nullable|string|max:100',
+            'material'              => 'nullable|string|max:100',
             'status'             => 'required|in:active,inactive,draft',
             'is_featured'        => 'boolean',
             'is_new'             => 'boolean',
@@ -482,6 +531,7 @@ class ProductController extends Controller
                 'category_id'       => $request->category_id,
                 'description'       => $request->description,
                 'brand'             => $request->brand,
+                'material'             => $request->material,
                 'status'            => $request->status,
                 'is_featured'       => $request->boolean('is_featured'),
                 'is_new'            => $request->boolean('is_new'),
@@ -795,9 +845,9 @@ class ProductController extends Controller
                     'slug'              => Str::slug($row['name']),
                     'sku'               => $sku,
                     'category_id'       => $row['category_id'] ?? null,
-                    'short_description' => $row['short_description'] ?? null,
                     'description'       => $row['description'] ?? null,
                     'brand'             => $row['brand'] ?? null,
+                    'material'             => $row['material'] ?? null,
                     'status'            => $row['status'] ?? 'active',
                     'is_featured'       => isset($row['is_featured']) ? (bool)$row['is_featured'] : false,
                     'is_new'            => isset($row['is_new']) ? (bool)$row['is_new'] : false,

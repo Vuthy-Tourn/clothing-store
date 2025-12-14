@@ -1,5 +1,6 @@
 <!-- Edit Product Modal -->
-<div id="editProductModal" class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+<div id="editProductModal"
+    class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
     <div class="bg-white w-full max-w-5xl rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
             <h2 class="text-xl font-bold text-gray-900 flex items-center">
@@ -19,13 +20,15 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-900 mb-2">Product Name   <span class="ml-1 text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-900 mb-2">Product Name<span
+                            class="ml-1 text-red-500">*</span></label>
                     <input type="text" name="name" id="editName" required
                         class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-900 mb-2">Category   <span class="ml-1 text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-900 mb-2">Category<span
+                            class="ml-1 text-red-500">*</span></label>
                     <select name="category_id" id="editCategoryId" required
                         class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3">
                         <option value="">Select category</option>
@@ -36,6 +39,11 @@
                 </div>
 
                 <div>
+                    <label class="block text-sm font-medium text-gray-900 mb-2">Material</label>
+                    <input type="text" name="material" id="editMaterial"
+                        class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3">
+                </div>
+                <div>
                     <label class="block text-sm font-medium text-gray-900 mb-2">Brand</label>
                     <input type="text" name="brand" id="editBrand"
                         class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3">
@@ -43,7 +51,8 @@
             </div>
 
             <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-900 mb-2">Description   <span class="ml-1 text-red-500">*</span></label>
+                <label class="block text-sm font-medium text-gray-900 mb-2">Description <span
+                        class="ml-1 text-red-500">*</span></label>
                 <textarea name="description" id="editDescription" rows="4" required
                     class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3 resize-none"></textarea>
             </div>
@@ -53,7 +62,7 @@
                 <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                     <i class="fas fa-tag mr-2 text-blue-600"></i> Product Discount Settings
                 </h3>
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-4">
                         <div>
@@ -69,7 +78,9 @@
                         <div class="discount-value-field" style="display: none;">
                             <label class="block text-sm font-medium text-gray-900 mb-2">Discount Value</label>
                             <div class="relative">
-                                <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 discount-prefix">%</div>
+                                <div
+                                    class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 discount-prefix">
+                                    %</div>
                                 <input type="number" step="0.01" name="discount_value" id="editDiscountValue"
                                     class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg pl-10 pr-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                     placeholder="e.g., 10">
@@ -140,7 +151,8 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-900 mb-2">Status   <span class="ml-1 text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-900 mb-2">Status <span
+                            class="ml-1 text-red-500">*</span></label>
                     <select name="status" id="editStatus" required
                         class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3">
                         <option value="active">Active</option>
