@@ -46,7 +46,7 @@
                     <label class="block text-sm font-medium text-gray-900 mb-2">Material</label>
                     <input type="text" name="material" value="{{ old('material') }}"
                         class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3"
-                         placeholder="Enter material name">
+                        placeholder="Enter material name">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-900 mb-2">Brand</label>
@@ -77,7 +77,8 @@
                             <select name="discount_type"
                                 class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 discount-type-select">
                                 <option value="">No Discount</option>
-                                <option value="percentage" {{ old('discount_type') == 'percentage' ? 'selected' : '' }}>
+                                <option value="percentage"
+                                    {{ old('discount_type') == 'percentage' ? 'selected' : '' }}>
                                     Percentage (%)
                                 </option>
                                 <option value="fixed" {{ old('discount_type') == 'fixed' ? 'selected' : '' }}>Fixed
@@ -332,25 +333,70 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Primary Image -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-900 mb-2">Primary Image <span
-                                class="ml-1 text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-900 mb-2">
+                            Primary Image <span class="ml-1 text-red-500">*</span>
+                        </label>
                         <div
-                            class="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center hover:border-gray-300">
+                            class="primary-upload-area border-2 border-dashed border-gray-200 rounded-lg p-4 text-center hover:border-gray-300 transition-colors duration-200 relative">
                             <input type="file" name="images[0][image]" accept="image/*" required
-                                class="w-full text-gray-900">
+                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                onchange="ProductManager.handlePrimaryImageUpload(this)">
+                            <div class="upload-content">
+                                <div
+                                    class="mx-auto w-12 h-12 mb-3 rounded-full bg-gray-100 flex items-center justify-center">
+                                    <i class="fas fa-cloud-upload-alt text-gray-400 text-lg"></i>
+                                </div>
+                                <p class="text-sm font-medium text-gray-700 mb-1">Click to upload primary image</p>
+                                <p class="text-gray-500 text-sm">PNG, JPG, GIF, WebP up to 5MB</p>
+                            </div>
+
+                            <!-- Preview Container -->
+                            <div id="primary-file-preview" class="hidden mt-3">
+                                <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                                    <div class="w-12 h-12 rounded overflow-hidden bg-gray-200">
+                                        <img id="primary-preview-image" class="w-full h-full object-cover"
+                                            src="" alt="Primary image preview">
+                                    </div>
+                                    <div class="flex-1 min-w-0 text-left">
+                                        <p id="primary-file-name" class="text-sm font-medium text-gray-900 truncate">
+                                        </p>
+                                        <p id="primary-file-size" class="text-xs text-gray-500"></p>
+                                    </div>
+                                    <button type="button" onclick="clearPrimaryFileInput()"
+                                        class="text-gray-400 hover:text-red-500">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
                             <input type="hidden" name="images[0][is_primary]" value="1">
-                            <p class="text-gray-500 text-sm mt-2">PNG, JPG up to 2MB</p>
                         </div>
                     </div>
 
                     <!-- Additional Images -->
                     <div>
                         <div class="flex items-center justify-between mb-2">
-                            <label class="block text-sm font-medium text-gray-900">Additional Images</label>
-                            <button type="button" onclick="addImageRow()"
-                                class="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
-                                <i class="fas fa-plus mr-1"></i> Add Image
-                            </button>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-900">Additional Images</label>
+                                <p class="text-xs text-gray-500">Up to 5 additional images</p>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <span class="text-sm text-gray-600">
+                                    <span id="imageCount">0</span>/5 added
+                                </span>
+                                <button type="button" onclick="addImageRow()"
+                                    class="text-blue-600 text-sm font-medium flex items-center px-3 py-1.5 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
+                                    <i class="fas fa-plus mr-1.5"></i> Add Image
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="mb-4">
+                            <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div id="imageProgress"
+                                    class="h-full bg-blue-500 rounded-full transition-all duration-300"
+                                    style="width: 0%"></div>
+                            </div>
                         </div>
 
                         <div id="additionalImagesContainer" class="space-y-4">

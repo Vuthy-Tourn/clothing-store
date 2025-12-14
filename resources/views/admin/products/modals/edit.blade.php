@@ -142,6 +142,7 @@
                             </button>
                         </div>
 
+                        
                         <div id="newImagesContainer" class="space-y-4">
                             <!-- New image rows will be added here -->
                         </div>

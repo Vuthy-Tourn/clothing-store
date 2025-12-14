@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -117,7 +118,6 @@ public function index(Request $request)
             }])
             ->where(function($q) use ($searchTerm) {
                 $q->where('name', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('sku', 'like', '%' . $searchTerm . '%')
                   ->orWhere('brand', 'like', '%' . $searchTerm . '%')
                   ->orWhere('description', 'like', '%' . $searchTerm . '%')
                   ->orWhereHas('category', function($q) use ($searchTerm) {
@@ -141,7 +141,6 @@ public function index(Request $request)
                 return [
                     'id' => $product->id,
                     'name' => $product->name,
-                    'sku' => $product->sku,
                     'price' => $primaryVariant ? $primaryVariant->price : 0,
                     'sale_price' => $primaryVariant ? $primaryVariant->sale_price : null,
                     'category' => $product->category ? $product->category->name : 'Uncategorized',
@@ -190,7 +189,6 @@ public function index(Request $request)
                 'category_id' => 'nullable|exists:categories,id',
                 'description' => 'nullable|string',
                 'status' => 'required|in:active,inactive,draft',
-                'sku' => 'nullable|string|unique:products,sku',
                 'material' => 'nullable|string|max:100',
                 'brand' => 'nullable|string|max:100',
                 'is_featured' => 'boolean',
@@ -223,7 +221,6 @@ public function index(Request $request)
             $productData = [
                 'name' => $validated['name'],
                 'slug' => $slug,
-                'sku' => $sku,
                 'category_id' => $validated['category_id'],
                 'description' => $validated['description'],
                 'brand' => $validated['brand'] ?? null,
@@ -276,7 +273,6 @@ public function index(Request $request)
                         'stock' => $variantData['stock'] ?? 0,
                         'stock_alert' => $variantData['stock_alert'] ?? 10,
                         'weight' => $variantData['weight'] ?? null,
-                        'dimensions' => $variantData['dimensions'] ?? null,
                         'is_active' => isset($variantData['is_active']) ? (bool)$variantData['is_active'] : true,
                     ];
                     
@@ -394,7 +390,6 @@ public function index(Request $request)
             'data' => [
                 'id' => $product->id,
                 'name' => $product->name,
-                'sku' => $product->sku,
                 'category_id' => $product->category_id,
                 'short_description' => $product->short_description ?? '',
                 'description' => $product->description,
@@ -424,7 +419,6 @@ public function index(Request $request)
                         'stock' => $variant->stock,
                         'stock_alert' => $variant->stock_alert,
                         'weight' => $variant->weight ?? '',
-                        'dimensions' => $variant->dimensions ?? '',
                         'is_active' => $variant->is_active,
                         
                         // Variant discount fields with safe formatting
@@ -456,189 +450,153 @@ public function index(Request $request)
     }
 }
 
-    public function update(Request $request, $id)
-    {
-        $product = Product::with(['variants', 'images'])->findOrFail($id);
+   public function update(Request $request, $id)
+{
+    $product = Product::with(['variants', 'images'])->findOrFail($id);
 
-        // ADD DEBUGGING
-        Log::info('=== UPDATE REQUEST START ===');
-        Log::info('Product ID: ' . $id);
-        Log::info('Request Data: ', $request->all());
-        Log::info('Files in request: ', array_keys($request->allFiles()));
+    // ADD DEBUGGING
+    Log::info('=== UPDATE REQUEST START ===');
+    Log::info('Product ID: ' . $id);
+    Log::info('Is AJAX: ' . ($request->ajax() ? 'YES' : 'NO'));
+    Log::info('Wants JSON: ' . ($request->wantsJson() ? 'YES' : 'NO'));
+    Log::info('X-Requested-With: ' . ($request->header('X-Requested-With') ?? 'NOT SET'));
+    
+    // Check if it's an AJAX request
+    $isAjax = $request->ajax() || $request->wantsJson() || $request->header('X-Requested-With') == 'XMLHttpRequest';
+    Log::info('Is AJAX request: ' . ($isAjax ? 'YES' : 'NO'));
+
+    // UPDATED VALIDATION WITH DISCOUNT FIELDS
+    $validator = Validator::make($request->all(), [
+        'name'               => 'required|string|max:255',
+        'category_id'        => 'nullable|exists:categories,id',
+        'description'        => 'nullable|string',
+        'brand'              => 'nullable|string|max:100',
+        'material'           => 'nullable|string|max:100',
+        'status'             => 'required|in:active,inactive,draft',
+        'is_featured'        => 'boolean',
+        'is_new'             => 'boolean',
         
-        // Log deleted_images_json specifically
-        Log::info('Deleted Images JSON: ' . ($request->deleted_images_json ?? 'NOT SET'));
-
-        // UPDATED VALIDATION WITH DISCOUNT FIELDS
-        $request->validate([
-            'name'               => 'required|string|max:255',
-            'sku'                => 'nullable|unique:products,sku,' . $id,
-            'category_id'        => 'nullable|exists:categories,id',
-            'short_description'  => 'nullable|string|max:500',
-            'description'        => 'nullable|string',
-            'brand'              => 'nullable|string|max:100',
-            'material'              => 'nullable|string|max:100',
-            'status'             => 'required|in:active,inactive,draft',
-            'is_featured'        => 'boolean',
-            'is_new'             => 'boolean',
-            
-            // Product discount fields
-            'discount_type'      => 'nullable|in:percentage,fixed',
-            'discount_value'     => 'nullable|numeric|min:0',
-            'discount_start'     => 'nullable|date',
-            'discount_end'       => 'nullable|date|after_or_equal:discount_start',
-            
-            'variants'                     => 'required|array|min:1',
-            'variants.*.id'                => 'nullable|exists:product_variants,id',
-            'variants.*.size'              => 'required|in:XS,S,M,L,XL,XXL,XXXL,FREE',
-            'variants.*.color'             => 'required|string|max:50',
-            'variants.*.color_code'        => 'nullable|string|max:7',
-            'variants.*.price'             => 'required|numeric|min:0',
-            'variants.*.sale_price'        => 'nullable|numeric|min:0',
-            'variants.*.cost_price'        => 'nullable|numeric|min:0',
-            'variants.*.stock'             => 'required|integer|min:0',
-            'variants.*.stock_alert'       => 'nullable|integer|min:0',
-            'variants.*.weight'            => 'nullable|numeric|min:0',
-            'variants.*.dimensions'        => 'nullable|string|max:50',
-            'variants.*.is_active'         => 'boolean',
-            
-            // Variant discount fields
-            'variants.*.discount_type'     => 'nullable|in:percentage,fixed',
-            'variants.*.discount_value'    => 'nullable|numeric|min:0',
-            'variants.*.discount_start'    => 'nullable|date',
-            'variants.*.discount_end'      => 'nullable|date|after_or_equal:variants.*.discount_start',
-            'variants.*.has_discount'      => 'boolean',
-            
-            'deleted_variants'             => 'nullable|string',
-            
-            'primary_image'                => 'nullable|exists:product_images,id',
-            
-            'new_images'                   => 'nullable|array',
-            'new_images.*.image'           => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'new_images.*.alt_text'        => 'nullable|string|max:255',
-            'new_images.*.sort_order'      => 'nullable|integer|min:0',
-            
-            'deleted_images_json'          => 'nullable|string',
-        ]);
-
-        DB::beginTransaction();
+        // Product discount fields
+        'discount_type'      => 'nullable|in:percentage,fixed',
+        'discount_value'     => 'nullable|numeric|min:0',
+        'discount_start'     => 'nullable|date',
+        'discount_end'       => 'nullable|date|after_or_equal:discount_start',
         
-        try {
-            // Prepare product update data
-            $productUpdateData = [
-                'name'              => $request->name,
-                'slug'              => Str::slug($request->name),
-                'category_id'       => $request->category_id,
-                'description'       => $request->description,
-                'brand'             => $request->brand,
-                'material'             => $request->material,
-                'status'            => $request->status,
-                'is_featured'       => $request->boolean('is_featured'),
-                'is_new'            => $request->boolean('is_new'),
-            ];
+        'variants'                     => 'required|array|min:1',
+        'variants.*.id'                => 'nullable|exists:product_variants,id',
+        'variants.*.size'              => 'required|in:XS,S,M,L,XL,XXL,XXXL,FREE',
+        'variants.*.color'             => 'required|string|max:50',
+        'variants.*.color_code'        => 'nullable|string|max:7',
+        'variants.*.price'             => 'required|numeric|min:0',
+        'variants.*.sale_price'        => 'nullable|numeric|min:0',
+        'variants.*.cost_price'        => 'nullable|numeric|min:0',
+        'variants.*.stock'             => 'required|integer|min:0',
+        'variants.*.stock_alert'       => 'nullable|integer|min:0',
+        'variants.*.weight'            => 'nullable|numeric|min:0',
+        'variants.*.is_active'         => 'boolean',
+        
+        // Variant discount fields
+        'variants.*.discount_type'     => 'nullable|in:percentage,fixed',
+        'variants.*.discount_value'    => 'nullable|numeric|min:0',
+        'variants.*.discount_start'    => 'nullable|date',
+        'variants.*.discount_end'      => 'nullable|date|after_or_equal:variants.*.discount_start',
+        'variants.*.has_discount'      => 'boolean',
+        
+        'deleted_variants'             => 'nullable|string',
+        
+        'primary_image'                => 'nullable|exists:product_images,id',
+        
+        'new_images'                   => 'nullable|array',
+        'new_images.*.image'           => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'new_images.*.alt_text'        => 'nullable|string|max:255',
+        'new_images.*.sort_order'      => 'nullable|integer|min:0',
+        
+        'deleted_images_json'          => 'nullable|string',
+    ]);
+
+    // If AJAX request and validation fails, return JSON errors
+    if ($validator->fails()) {
+        Log::info('Validation failed');
+        if ($isAjax) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+        return redirect()->back()->withErrors($validator)->withInput();
+    }
+
+    $validated = $validator->validated();
+
+    DB::beginTransaction();
+    
+    try {
+        // Prepare product update data
+        $productUpdateData = [
+            'name'              => $validated['name'],
+            'slug'              => Str::slug($validated['name']),
+            'category_id'       => $validated['category_id'] ?? null,
+            'description'       => $validated['description'] ?? null,
+            'brand'             => $validated['brand'] ?? null,
+            'material'          => $validated['material'] ?? null,
+            'status'            => $validated['status'],
+            'is_featured'       => $request->boolean('is_featured'),
+            'is_new'            => $request->boolean('is_new'),
+        ];
+        
+        // Handle product discount fields
+        if (!empty($validated['discount_type'])) {
+            $productUpdateData['discount_type'] = $validated['discount_type'];
+            $productUpdateData['discount_value'] = $validated['discount_value'];
+            $productUpdateData['has_discount'] = true;
             
-            // Handle product discount fields
-            if ($request->filled('discount_type')) {
-                $productUpdateData['discount_type'] = $request->discount_type;
-                $productUpdateData['discount_value'] = $request->discount_value;
-                $productUpdateData['has_discount'] = true;
-                
-                if ($request->filled('discount_start')) {
-                    $productUpdateData['discount_start'] = Carbon::parse($request->discount_start);
-                } else {
-                    $productUpdateData['discount_start'] = null;
-                }
-                
-                if ($request->filled('discount_end')) {
-                    $productUpdateData['discount_end'] = Carbon::parse($request->discount_end);
-                } else {
-                    $productUpdateData['discount_end'] = null;
-                }
+            if (!empty($validated['discount_start'])) {
+                $productUpdateData['discount_start'] = Carbon::parse($validated['discount_start']);
             } else {
-                $productUpdateData['discount_type'] = null;
-                $productUpdateData['discount_value'] = null;
-                $productUpdateData['has_discount'] = false;
                 $productUpdateData['discount_start'] = null;
+            }
+            
+            if (!empty($validated['discount_end'])) {
+                $productUpdateData['discount_end'] = Carbon::parse($validated['discount_end']);
+            } else {
                 $productUpdateData['discount_end'] = null;
             }
+        } else {
+            $productUpdateData['discount_type'] = null;
+            $productUpdateData['discount_value'] = null;
+            $productUpdateData['has_discount'] = false;
+            $productUpdateData['discount_start'] = null;
+            $productUpdateData['discount_end'] = null;
+        }
 
-            // Update product
-            $product->update($productUpdateData);
+        // Update product
+        $product->update($productUpdateData);
 
-            Log::info('Product basic info updated');
+        Log::info('Product basic info updated');
 
-            // Handle deleted variants
-            if ($request->filled('deleted_variants')) {
-                $deletedVariantIds = json_decode($request->deleted_variants, true);
-                Log::info('Deleted variants array: ' . json_encode($deletedVariantIds));
-                if (is_array($deletedVariantIds) && count($deletedVariantIds) > 0) {
-                    ProductVariant::where('product_id', $product->id)
-                        ->whereIn('id', $deletedVariantIds)
-                        ->delete();
-                    Log::info('Deleted variants: ' . json_encode($deletedVariantIds));
-                }
+        // Handle deleted variants
+        if (!empty($validated['deleted_variants'])) {
+            $deletedVariantIds = json_decode($validated['deleted_variants'], true);
+            Log::info('Deleted variants array: ' . json_encode($deletedVariantIds));
+            if (is_array($deletedVariantIds) && count($deletedVariantIds) > 0) {
+                ProductVariant::where('product_id', $product->id)
+                    ->whereIn('id', $deletedVariantIds)
+                    ->delete();
+                Log::info('Deleted variants: ' . json_encode($deletedVariantIds));
             }
+        }
 
-            $updatedVariantIds = [];
-            
-            // Process variants
-            foreach ($request->variants as $variantData) {
-                if (isset($variantData['id']) && !empty($variantData['id'])) {
-                    // Update existing variant
-                    $variant = ProductVariant::find($variantData['id']);
-                    if ($variant && $variant->product_id == $product->id) {
-                        // Prepare variant update data
-                        $variantUpdateData = [
-                            'size'        => $variantData['size'],
-                            'color'       => $variantData['color'],
-                            'color_code'  => $variantData['color_code'] ?? null,
-                            'price'       => $variantData['price'],
-                            'sale_price'  => $variantData['sale_price'] ?? null,
-                            'cost_price'  => $variantData['cost_price'] ?? null,
-                            'stock'       => $variantData['stock'],
-                            'stock_alert' => $variantData['stock_alert'] ?? 10,
-                            'weight'      => $variantData['weight'] ?? null,
-                            'is_active'   => $variantData['is_active'] ?? true,
-                        ];
-                        
-                        // Handle variant discount fields
-                        if (isset($variantData['discount_type']) && $variantData['discount_type']) {
-                            $variantUpdateData['discount_type'] = $variantData['discount_type'];
-                            $variantUpdateData['discount_value'] = $variantData['discount_value'] ?? 0;
-                            $variantUpdateData['has_discount'] = isset($variantData['has_discount']) ? (bool)$variantData['has_discount'] : false;
-                            
-                            if (isset($variantData['discount_start']) && $variantData['discount_start']) {
-                                $variantUpdateData['discount_start'] = Carbon::parse($variantData['discount_start']);
-                            } else {
-                                $variantUpdateData['discount_start'] = null;
-                            }
-                            
-                            if (isset($variantData['discount_end']) && $variantData['discount_end']) {
-                                $variantUpdateData['discount_end'] = Carbon::parse($variantData['discount_end']);
-                            } else {
-                                $variantUpdateData['discount_end'] = null;
-                            }
-                        } else {
-                            $variantUpdateData['discount_type'] = null;
-                            $variantUpdateData['discount_value'] = null;
-                            $variantUpdateData['has_discount'] = false;
-                            $variantUpdateData['discount_start'] = null;
-                            $variantUpdateData['discount_end'] = null;
-                        }
-                        
-                        $variant->update($variantUpdateData);
-                        $updatedVariantIds[] = $variant->id;
-                    }
-                } else {
-                    // Create new variant
-                    $variantSku = $variantData['sku'] ?? $product->sku . '-' . 
-                        strtoupper(substr($variantData['size'], 0, 1)) . '-' . 
-                        strtoupper(substr($variantData['color'], 0, 3));
-                    
-                    // Prepare new variant data
-                    $newVariantData = [
-                        'product_id'  => $product->id,
-                        'sku'         => $variantSku,
+        $updatedVariantIds = [];
+        
+        // Process variants
+        foreach ($validated['variants'] as $variantData) {
+            if (isset($variantData['id']) && !empty($variantData['id'])) {
+                // Update existing variant
+                $variant = ProductVariant::find($variantData['id']);
+                if ($variant && $variant->product_id == $product->id) {
+                    // Prepare variant update data
+                    $variantUpdateData = [
                         'size'        => $variantData['size'],
                         'color'       => $variantData['color'],
                         'color_code'  => $variantData['color_code'] ?? null,
@@ -648,137 +606,197 @@ public function index(Request $request)
                         'stock'       => $variantData['stock'],
                         'stock_alert' => $variantData['stock_alert'] ?? 10,
                         'weight'      => $variantData['weight'] ?? null,
-                        'dimensions'  => $variantData['dimensions'] ?? null,
                         'is_active'   => $variantData['is_active'] ?? true,
                     ];
                     
-                    // Handle new variant discount fields
+                    // Handle variant discount fields
                     if (isset($variantData['discount_type']) && $variantData['discount_type']) {
-                        $newVariantData['discount_type'] = $variantData['discount_type'];
-                        $newVariantData['discount_value'] = $variantData['discount_value'] ?? 0;
-                        $newVariantData['has_discount'] = isset($variantData['has_discount']) ? (bool)$variantData['has_discount'] : false;
+                        $variantUpdateData['discount_type'] = $variantData['discount_type'];
+                        $variantUpdateData['discount_value'] = $variantData['discount_value'] ?? 0;
+                        $variantUpdateData['has_discount'] = isset($variantData['has_discount']) ? (bool)$variantData['has_discount'] : false;
                         
                         if (isset($variantData['discount_start']) && $variantData['discount_start']) {
-                            $newVariantData['discount_start'] = Carbon::parse($variantData['discount_start']);
+                            $variantUpdateData['discount_start'] = Carbon::parse($variantData['discount_start']);
+                        } else {
+                            $variantUpdateData['discount_start'] = null;
                         }
                         
                         if (isset($variantData['discount_end']) && $variantData['discount_end']) {
-                            $newVariantData['discount_end'] = Carbon::parse($variantData['discount_end']);
-                        }
-                    }
-                    
-                    $newVariant = ProductVariant::create($newVariantData);
-                    $updatedVariantIds[] = $newVariant->id;
-                }
-            }
-            
-            // Delete variants not in request
-            $currentVariantIds = $product->variants->pluck('id')->toArray();
-            $variantsToDelete = array_diff($currentVariantIds, $updatedVariantIds);
-            if (!empty($variantsToDelete)) {
-                ProductVariant::where('product_id', $product->id)
-                    ->whereIn('id', $variantsToDelete)
-                    ->delete();
-            }
-
-            // Handle primary image
-            if ($request->primary_image) {
-                ProductImage::where('product_id', $product->id)
-                    ->update(['is_primary' => false]);
-                    
-                ProductImage::where('id', $request->primary_image)
-                    ->update(['is_primary' => true]);
-                Log::info('Updated primary image to ID: ' . $request->primary_image);
-            }
-
-            // Add new images - WITH DEBUGGING
-            if ($request->has('new_images') && is_array($request->new_images)) {
-                Log::info('Processing new_images array. Count: ' . count($request->new_images));
-                
-                foreach ($request->new_images as $index => $imageData) {
-                    Log::info("Processing new image at index {$index}");
-                    
-                    // Check if image exists and is valid
-                    if (isset($imageData['image']) && $imageData['image']->isValid()) {
-                        $imagePath = $imageData['image']->store('products/images', 'public');
-                        
-                        ProductImage::create([
-                            'product_id' => $product->id,
-                            'image_path' => $imagePath,
-                            'alt_text'   => $imageData['alt_text'] ?? null,
-                            'is_primary' => false,
-                            'sort_order' => $imageData['sort_order'] ?? $index,
-                        ]);
-                        Log::info("New image uploaded: {$imagePath}");
-                    } else {
-                        Log::warning("Image at index {$index} is invalid or missing");
-                    }
-                }
-            } else {
-                Log::info('No new_images in request');
-            }
-
-            // Handle deleted images from JSON - IMPROVED DEBUGGING
-            Log::info('Checking deleted_images_json field...');
-            if ($request->filled('deleted_images_json')) {
-                $deletedImages = json_decode($request->deleted_images_json, true);
-                Log::info('Raw deleted_images_json: ' . $request->deleted_images_json);
-                Log::info('Parsed deleted images: ' . json_encode($deletedImages));
-                Log::info('Is array? ' . (is_array($deletedImages) ? 'YES' : 'NO'));
-                Log::info('Array count: ' . (is_array($deletedImages) ? count($deletedImages) : '0'));
-                
-                if (is_array($deletedImages) && count($deletedImages) > 0) {
-                    Log::info('Starting to delete ' . count($deletedImages) . ' images');
-                    
-                    foreach ($deletedImages as $imageId) {
-                        Log::info("Processing image ID: {$imageId}");
-                        $image = ProductImage::find($imageId);
-                        
-                        if ($image) {
-                            Log::info("Found image: ID={$image->id}, Product ID={$image->product_id}, Path={$image->image_path}");
-                            
-                            if ($image->product_id == $product->id) {
-                                // Check if this is not a placeholder and file exists
-                                if ($image->image_path !== 'products/placeholder.jpg' && 
-                                    Storage::disk('public')->exists($image->image_path)) {
-                                    Storage::disk('public')->delete($image->image_path);
-                                    Log::info("Deleted image file: {$image->image_path}");
-                                }
-                                
-                                // Delete from database
-                                $image->delete();
-                                Log::info('Deleted image record ID: ' . $imageId);
-                            } else {
-                                Log::warning("Image ID {$imageId} doesn't belong to product (belongs to product {$image->product_id})");
-                            }
+                            $variantUpdateData['discount_end'] = Carbon::parse($variantData['discount_end']);
                         } else {
-                            Log::warning("Image ID {$imageId} not found in database");
+                            $variantUpdateData['discount_end'] = null;
                         }
+                    } else {
+                        $variantUpdateData['discount_type'] = null;
+                        $variantUpdateData['discount_value'] = null;
+                        $variantUpdateData['has_discount'] = false;
+                        $variantUpdateData['discount_start'] = null;
+                        $variantUpdateData['discount_end'] = null;
                     }
-                    Log::info('Finished deleting images');
-                } else {
-                    Log::info('No valid images to delete (empty array or not array)');
+                    
+                    $variant->update($variantUpdateData);
+                    $updatedVariantIds[] = $variant->id;
                 }
             } else {
-                Log::info('No deleted_images_json field in request');
+                // Create new variant
+                $variantSku = $variantData['sku'] ?? $product->sku . '-' . 
+                    strtoupper(substr($variantData['size'], 0, 1)) . '-' . 
+                    strtoupper(substr($variantData['color'], 0, 3));
+                
+                // Prepare new variant data
+                $newVariantData = [
+                    'product_id'  => $product->id,
+                    'sku'         => $variantSku,
+                    'size'        => $variantData['size'],
+                    'color'       => $variantData['color'],
+                    'color_code'  => $variantData['color_code'] ?? null,
+                    'price'       => $variantData['price'],
+                    'sale_price'  => $variantData['sale_price'] ?? null,
+                    'cost_price'  => $variantData['cost_price'] ?? null,
+                    'stock'       => $variantData['stock'],
+                    'stock_alert' => $variantData['stock_alert'] ?? 10,
+                    'weight'      => $variantData['weight'] ?? null,
+                    'is_active'   => $variantData['is_active'] ?? true,
+                ];
+                
+                // Handle new variant discount fields
+                if (isset($variantData['discount_type']) && $variantData['discount_type']) {
+                    $newVariantData['discount_type'] = $variantData['discount_type'];
+                    $newVariantData['discount_value'] = $variantData['discount_value'] ?? 0;
+                    $newVariantData['has_discount'] = isset($variantData['has_discount']) ? (bool)$variantData['has_discount'] : false;
+                    
+                    if (isset($variantData['discount_start']) && $variantData['discount_start']) {
+                        $newVariantData['discount_start'] = Carbon::parse($variantData['discount_start']);
+                    }
+                    
+                    if (isset($variantData['discount_end']) && $variantData['discount_end']) {
+                        $newVariantData['discount_end'] = Carbon::parse($variantData['discount_end']);
+                    }
+                }
+                
+                $newVariant = ProductVariant::create($newVariantData);
+                $updatedVariantIds[] = $newVariant->id;
             }
-
-            // Log remaining images for verification
-            $remainingImages = ProductImage::where('product_id', $product->id)->count();
-            Log::info('Remaining images after update: ' . $remainingImages);
-
-            DB::commit();
-            Log::info('=== PRODUCT UPDATE SUCCESSFUL ===');
-            
-            return redirect()->route('admin.products.index')->with('success', 'Product updated successfully!');
-            
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Product update error: ' . $e->getMessage());
-            Log::error('Error trace: ' . $e->getTraceAsString());
-            return redirect()->back()->with('error', 'Failed to update product: ' . $e->getMessage());
         }
+        
+        // Delete variants not in request
+        $currentVariantIds = $product->variants->pluck('id')->toArray();
+        $variantsToDelete = array_diff($currentVariantIds, $updatedVariantIds);
+        if (!empty($variantsToDelete)) {
+            ProductVariant::where('product_id', $product->id)
+                ->whereIn('id', $variantsToDelete)
+                ->delete();
+        }
+
+        // Handle primary image
+        if (!empty($validated['primary_image'])) {
+            ProductImage::where('product_id', $product->id)
+                ->update(['is_primary' => false]);
+                
+            ProductImage::where('id', $validated['primary_image'])
+                ->update(['is_primary' => true]);
+            Log::info('Updated primary image to ID: ' . $validated['primary_image']);
+        }
+
+        // Add new images
+        if ($request->has('new_images') && is_array($request->new_images)) {
+            Log::info('Processing new_images array. Count: ' . count($request->new_images));
+            
+            foreach ($request->new_images as $index => $imageData) {
+                Log::info("Processing new image at index {$index}");
+                
+                // Check if image exists and is valid
+                if (isset($imageData['image']) && $imageData['image']->isValid()) {
+                    $imagePath = $imageData['image']->store('products/images', 'public');
+                    
+                    ProductImage::create([
+                        'product_id' => $product->id,
+                        'image_path' => $imagePath,
+                        'alt_text'   => $imageData['alt_text'] ?? null,
+                        'is_primary' => false,
+                        'sort_order' => $imageData['sort_order'] ?? $index,
+                    ]);
+                    Log::info("New image uploaded: {$imagePath}");
+                } else {
+                    Log::warning("Image at index {$index} is invalid or missing");
+                }
+            }
+        } else {
+            Log::info('No new_images in request');
+        }
+
+        // Handle deleted images from JSON
+        Log::info('Checking deleted_images_json field...');
+        if (!empty($validated['deleted_images_json'])) {
+            $deletedImages = json_decode($validated['deleted_images_json'], true);
+            Log::info('Parsed deleted images: ' . json_encode($deletedImages));
+            
+            if (is_array($deletedImages) && count($deletedImages) > 0) {
+                Log::info('Starting to delete ' . count($deletedImages) . ' images');
+                
+                foreach ($deletedImages as $imageId) {
+                    Log::info("Processing image ID: {$imageId}");
+                    $image = ProductImage::find($imageId);
+                    
+                    if ($image && $image->product_id == $product->id) {
+                        // Check if this is not a placeholder and file exists
+                        if ($image->image_path !== 'products/placeholder.jpg' && 
+                            Storage::disk('public')->exists($image->image_path)) {
+                            Storage::disk('public')->delete($image->image_path);
+                            Log::info("Deleted image file: {$image->image_path}");
+                        }
+                        
+                        // Delete from database
+                        $image->delete();
+                        Log::info('Deleted image record ID: ' . $imageId);
+                    }
+                }
+                Log::info('Finished deleting images');
+            } else {
+                Log::info('No valid images to delete');
+            }
+        } else {
+            Log::info('No deleted_images_json field in request');
+        }
+
+        // Log remaining images for verification
+        $remainingImages = ProductImage::where('product_id', $product->id)->count();
+        Log::info('Remaining images after update: ' . $remainingImages);
+
+        DB::commit();
+        Log::info('=== PRODUCT UPDATE SUCCESSFUL ===');
+        
+        // RETURN JSON FOR AJAX REQUESTS
+        if ($isAjax) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Product updated successfully!',
+                'data' => [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'status' => $product->status,
+                ]
+            ]);
+        }
+        
+        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully!');
+        
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Product update error: ' . $e->getMessage());
+        Log::error('Error trace: ' . $e->getTraceAsString());
+        
+        // RETURN JSON FOR AJAX REQUESTS ON ERROR TOO
+        if ($isAjax) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update product: ' . $e->getMessage()
+            ], 500);
+        }
+        
+        return redirect()->back()->with('error', 'Failed to update product: ' . $e->getMessage());
     }
+}
 
     public function destroy($id)
     {
@@ -843,7 +861,6 @@ public function index(Request $request)
                 $productData = [
                     'name'              => $row['name'],
                     'slug'              => Str::slug($row['name']),
-                    'sku'               => $sku,
                     'category_id'       => $row['category_id'] ?? null,
                     'description'       => $row['description'] ?? null,
                     'brand'             => $row['brand'] ?? null,

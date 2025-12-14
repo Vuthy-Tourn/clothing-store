@@ -65,11 +65,6 @@ class Product extends Model
                 }
             }
             
-            // Generate SKU if not provided
-            if (empty($product->sku)) {
-                $product->sku = 'PROD-' . strtoupper(Str::random(8));
-            }
-            
             // Set default values
             if (empty($product->rating_cache)) $product->rating_cache = 0.00;
             if (empty($product->review_count)) $product->review_count = 0;
@@ -152,7 +147,6 @@ class Product extends Model
     public function scopeSearch($query, $search)
     {
         return $query->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('sku', 'like', '%' . $search . '%')
                     ->orWhere('description', 'like', '%' . $search . '%');
     }
 
