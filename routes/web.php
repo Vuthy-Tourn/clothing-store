@@ -190,3 +190,17 @@ Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name(
 
 // Dynamic Category Route (must be last)
 Route::get('/{slug}', [CategoryPageController::class, 'show'])->name('category.show');
+Route::post('/carousels/update-order', [CarouselController::class, 'updateOrder'])->name('admin.carousels.update-order');
+Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('admin.categories.edit');
+Route::post('/categories/update-order', [CategoryController::class, 'updateOrder'])->name('admin.categories.update-order');
+// Order details
+Route::get('/orders/{id}/details', [OrderController::class, 'details'])->name('admin.orders.details');
+
+// Order actions
+Route::post('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('admin.orders.update-status');
+Route::post('/orders/{id}/send-tracking', [OrderController::class, 'sendTracking'])->name('admin.orders.send-tracking');
+Route::post('/orders/{id}/add-note', [OrderController::class, 'addNote'])->name('admin.orders.add-note');
+Route::post('/orders/{id}/cancel', [OrderController::class, 'cancel'])->name('admin.orders.cancel');
+
+// Export
+Route::post('/orders/export', [OrderController::class, 'export'])->name('admin.orders.export');

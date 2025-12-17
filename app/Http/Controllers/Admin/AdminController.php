@@ -484,3 +484,4 @@ public function salesChart(Request $request)
     }
 }
 }
+

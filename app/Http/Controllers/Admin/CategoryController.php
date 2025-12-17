@@ -74,4 +74,22 @@ class CategoryController extends Controller
 
         return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully.');
     }
+
+    // In your CategoryController
+public function edit($id)
+{
+    $category = Category::with('parent')->findOrFail($id);
+    return response()->json($category);
+}
+
+public function updateOrder(Request $request)
+{
+    $order = $request->input('order');
+    
+    foreach ($order as $index => $id) {
+        Category::where('id', $id)->update(['sort_order' => $index]);
+    }
+    
+    return response()->json(['success' => true]);
+}
 }

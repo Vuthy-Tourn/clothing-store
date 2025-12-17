@@ -97,4 +97,15 @@ class CarouselController extends Controller
         $carousel->delete();
         return redirect()->route('admin.carousels.index')->with('success', 'Carousel deleted successfully.');
     }
+
+    public function updateOrder(Request $request)
+{
+    $order = $request->input('order');
+    
+    foreach ($order as $index => $id) {
+        Carousel::where('id', $id)->update(['sort_order' => $index]);
+    }
+    
+    return response()->json(['success' => true]);
+}
 }

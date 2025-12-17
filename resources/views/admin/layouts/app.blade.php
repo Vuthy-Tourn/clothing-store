@@ -156,6 +156,7 @@
 
     @stack('scripts')
 
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script>
         // Initialize AOS
         document.addEventListener('DOMContentLoaded', function() {
