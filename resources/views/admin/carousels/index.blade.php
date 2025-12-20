@@ -225,7 +225,7 @@
                     <!-- Left Column -->
                     <div class="space-y-6">
                         <div>
-                            <label class="block text-gray-900 font-semibold mb-3 flex items-center">
+                            <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                 <i class="fas fa-heading mr-2 text-gray-700"></i>
                                 Banner Title *
                             </label>
@@ -238,7 +238,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-gray-900 font-semibold mb-3 flex items-center">
+                            <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                 <i class="fas fa-align-left mr-2 text-gray-700"></i>
                                 Description *
                             </label>
@@ -251,7 +251,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-gray-900 font-semibold mb-3 flex items-center">
+                            <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                 <i class="fas fa-sort-numeric-up mr-2 text-gray-700"></i>
                                 Display Order
                             </label>
@@ -268,7 +268,7 @@
                     <!-- Right Column -->
                     <div class="space-y-6">
                         <div>
-                            <label class="block text-gray-900 font-semibold mb-3 flex items-center">
+                            <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                 <i class="fas fa-mouse-pointer mr-2 text-gray-700"></i>
                                 Button Text *
                             </label>
@@ -281,7 +281,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-gray-900 font-semibold mb-3 flex items-center">
+                            <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                 <i class="fas fa-link mr-2 text-gray-700"></i>
                                 Button Link *
                             </label>
@@ -294,7 +294,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-gray-900 font-semibold mb-3 flex items-center">
+                            <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                 <i class="fas fa-toggle-on mr-2 text-gray-700"></i>
                                 Status
                             </label>
@@ -319,7 +319,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-gray-900 font-semibold mb-3 flex items-center">
+                            <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                 <i class="fas fa-image mr-2 text-gray-700"></i>
                                 Banner Image *
                             </label>
@@ -328,7 +328,7 @@
                                     id="imageInput"
                                     class="hidden" onchange="previewImage(this, 'addImagePreview')">
                                 <label for="imageInput" 
-                                    class="block border-4 border-dashed border-gray-200 hover:border-gray-900 rounded-2xl p-12 text-center cursor-pointer transition-all duration-200 group/upload">
+                                    class="border-4 border-dashed border-gray-200 hover:border-gray-900 rounded-2xl p-12 text-center cursor-pointer transition-all duration-200 group/upload">
                                     <div class="w-16 h-16 rounded-full bg-gray-100 group-hover/upload:bg-gray-900 flex items-center justify-center mx-auto mb-4 transition-all duration-200">
                                         <i class="fas fa-cloud-upload-alt text-gray-700 group-hover/upload:text-white text-2xl transition-all duration-200"></i>
                                     </div>
@@ -401,7 +401,7 @@
                     <!-- Left Column -->
                     <div class="space-y-6">
                         <div>
-                            <label class="block text-gray-900 font-semibold mb-3 flex items-center">
+                            <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                 <i class="fas fa-heading mr-2 text-gray-700"></i>
                                 Banner Title *
                             </label>
@@ -410,7 +410,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-gray-900 font-semibold mb-3 flex items-center">
+                            <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                 <i class="fas fa-align-left mr-2 text-gray-700"></i>
                                 Description *
                             </label>
@@ -419,7 +419,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-gray-900 font-semibold mb-3 flex items-center">
+                            <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                 <i class="fas fa-sort-numeric-up mr-2 text-gray-700"></i>
                                 Display Order
                             </label>
@@ -432,7 +432,7 @@
                     <!-- Right Column -->
                     <div class="space-y-6">
                         <div>
-                            <label class="block text-gray-900 font-semibold mb-3 flex items-center">
+                            <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                 <i class="fas fa-mouse-pointer mr-2 text-gray-700"></i>
                                 Button Text *
                             </label>
@@ -441,7 +441,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-gray-900 font-semibold mb-3 flex items-center">
+                            <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                 <i class="fas fa-link mr-2 text-gray-700"></i>
                                 Button Link *
                             </label>
@@ -450,7 +450,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-gray-900 font-semibold mb-3 flex items-center">
+                            <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                 <i class="fas fa-toggle-on mr-2 text-gray-700"></i>
                                 Status
                             </label>
@@ -475,7 +475,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-gray-900 font-semibold mb-3 flex items-center">
+                            <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                 <i class="fas fa-image mr-2 text-gray-700"></i>
                                 Banner Image
                             </label>
@@ -494,7 +494,7 @@
                                     <input type="file" name="image" accept="image/*" id="editImageInput"
                                         class="hidden" onchange="previewImage(this, 'editImagePreview')">
                                     <label for="editImageInput" 
-                                        class="block border-2 border-dashed border-gray-200 hover:border-gray-900 rounded-xl p-6 text-center cursor-pointer transition-all duration-200 group/change">
+                                        class="border-2 border-dashed border-gray-200 hover:border-gray-900 rounded-xl p-6 text-center cursor-pointer transition-all duration-200 group/change">
                                         <div class="w-12 h-12 rounded-full bg-gray-100 group-hover/change:bg-gray-900 flex items-center justify-center mx-auto mb-3 transition-all duration-200">
                                             <i class="fas fa-sync-alt text-gray-700 group-hover/change:text-white transition-all duration-200"></i>
                                         </div>

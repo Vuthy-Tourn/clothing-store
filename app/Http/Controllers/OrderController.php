@@ -2,295 +2,402 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CartItem;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\Order;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class OrderController extends Controller
 {
     /**
-     * Display a listing of the orders for the authenticated user.
+     * Display a listing of the orders.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $user = Auth::user();
-
-        // Fetch orders for the authenticated user with their items and addresses
-        $orders = Order::with(['items.variant.product.images', 'shippingAddress', 'billingAddress'])
-            ->where('user_id', $user->id)
-            ->latest()
-            ->paginate(10);
-
-        return view('orders.index', compact('orders'));
-    }
-
-    /**
-     * Display the specified order.
-     */
-    public function show($orderNumber)
-    {
-        // Only fetch the order if it belongs to the logged-in user
-        $order = Order::with(['items.variant.product.images', 'shippingAddress', 'billingAddress', 'user'])
-            ->where('user_id', Auth::id())
-            ->where('order_number', $orderNumber)
-            ->firstOrFail();
-
-        // Check if this is a success redirect from Stripe
-        if (request()->has('success')) {
-            // Update order status if it's still pending
-            if ($order->order_status === 'pending') {
-                $order->update([
-                    'order_status' => 'confirmed',
-                    'payment_status' => 'paid',
-                    'payment_date' => now(),
-                ]);
-
-                // Deduct stock from variants
-                foreach ($order->items as $item) {
-                    if ($item->variant) {
-                        $item->variant->decrement('stock', $item->quantity);
-                    }
-                }
-
-                // Clear cart
-                CartItem::where('user_id', Auth::id())->delete();
-                
-                // Flash success message
-                session()->flash('success', 'Payment successful! Your order has been confirmed.');
-            }
-        }
-
-        return view('orders.show', compact('order'));
-    }
-
-    /**
-     * Download invoice for the specified order.
-     */
-    public function downloadInvoice($orderNumber)
-    {
-        $order = Order::with(['items.variant.product', 'shippingAddress', 'billingAddress', 'user'])
-            ->where('order_number', $orderNumber)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
-
-        $pdf = Pdf::loadView('orders.invoice', compact('order'));
-        return $pdf->download('Invoice_' . $order->order_number . '.pdf');
-    }
-
-    /**
-     * Cancel an order (if allowed).
-     */
-    public function cancel($orderNumber)
-    {
-        $order = Order::where('order_number', $orderNumber)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
-
-        // Only allow cancellation if order is pending or confirmed
-        if (!in_array($order->order_status, ['pending', 'confirmed'])) {
-            return redirect()->back()
-                ->with('error', 'This order cannot be cancelled at this stage.');
-        }
-
-        // Update order status
-        $order->update([
-            'order_status' => 'cancelled',
-            'payment_status' => 'refunded', // Assuming refund for cancelled orders
-        ]);
-
-        // Restore stock to variants
-        foreach ($order->items as $item) {
-            if ($item->variant) {
-                $item->variant->increment('stock', $item->quantity);
-            }
-        }
-
-        return redirect()->route('orders.show', $orderNumber)
-            ->with('success', 'Order has been cancelled successfully.');
-    }
-
-    /**
-     * Track an order.
-     */
-    public function track($orderNumber)
-    {
-        $order = Order::with(['items.variant.product', 'shippingAddress'])
-            ->where('order_number', $orderNumber)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
-
-        return view('orders.track', compact('order'));
-    }
-
-    /**
-     * Reorder items from a previous order.
-     */
-    public function reorder($orderNumber)
-    {
-        $order = Order::with('items.variant')
-            ->where('order_number', $orderNumber)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
-
-        $addedCount = 0;
-
-        foreach ($order->items as $item) {
-            if ($item->variant) {
-                // Check if variant is still available and in stock
-                if ($item->variant->is_active && $item->variant->stock > 0) {
-                    // Check if item already exists in cart
-                    $cartItem = CartItem::where('user_id', Auth::id())
-                        ->where('product_variant_id', $item->product_variant_id)
-                        ->first();
-
-                    if ($cartItem) {
-                        // Update quantity, but don't exceed available stock
-                        $maxQuantity = min($cartItem->quantity + $item->quantity, $item->variant->stock);
-                        $cartItem->update(['quantity' => $maxQuantity]);
-                    } else {
-                        // Add new item to cart, but don't exceed available stock
-                        $quantity = min($item->quantity, $item->variant->stock);
-                        CartItem::create([
-                            'user_id' => Auth::id(),
-                            'product_variant_id' => $item->product_variant_id,
-                            'quantity' => $quantity,
-                        ]);
-                    }
-                    $addedCount++;
-                }
-            }
-        }
-
-        if ($addedCount > 0) {
-            return redirect()->route('cart')
-                ->with('success', $addedCount . ' item(s) have been added to your cart.');
-        } else {
-            return redirect()->route('orders.show', $orderNumber)
-                ->with('error', 'Unable to add items to cart. They may be out of stock or no longer available.');
-        }
-    }
-
-    /**
-     * Show order history with filters.
-     */
-    public function history(Request $request)
-    {
-        $user = Auth::user();
+        $query = Order::with(['user'])
+            ->latest();
         
-        $query = Order::with(['items.variant.product', 'shippingAddress'])
-            ->where('user_id', $user->id);
-
-        // Apply filters
+        // Search
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('order_number', 'like', "%{$search}%")
+                  ->orWhereHas('user', function($q) use ($search) {
+                      $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                  });
+            });
+        }
+        
+        // Status filter
         if ($request->filled('status')) {
             $query->where('order_status', $request->status);
         }
-
-        if ($request->filled('from_date')) {
-            $query->whereDate('created_at', '>=', $request->from_date);
+        
+        // Payment status filter
+        if ($request->filled('payment_status')) {
+            $query->where('payment_status', $request->payment_status);
         }
-
-        if ($request->filled('to_date')) {
-            $query->whereDate('created_at', '<=', $request->to_date);
+        
+        // Date filter
+        if ($request->filled('date_range')) {
+            $now = now();
+            
+            switch($request->date_range) {
+                case 'today':
+                    $query->whereDate('created_at', $now->toDateString());
+                    break;
+                case 'yesterday':
+                    $query->whereDate('created_at', $now->subDay()->toDateString());
+                    break;
+                case 'week':
+                    $query->where('created_at', '>=', $now->subWeek());
+                    break;
+                case 'month':
+                    $query->where('created_at', '>=', $now->subMonth());
+                    break;
+                case 'year':
+                    $query->where('created_at', '>=', $now->subYear());
+                    break;
+            }
         }
-
-        $orders = $query->latest()->paginate(15);
-
-        // Calculate order statistics
-        $totalOrders = Order::where('user_id', $user->id)->count();
-        $totalSpent = Order::where('user_id', $user->id)
-            ->where('payment_status', 'paid')
-            ->sum('total_amount');
-        $pendingOrders = Order::where('user_id', $user->id)
-            ->whereIn('order_status', ['pending', 'confirmed', 'processing'])
-            ->count();
-
-        return view('orders.history', compact('orders', 'totalOrders', 'totalSpent', 'pendingOrders'));
+        
+        // Paginate
+        $orders = $query->paginate($request->get('per_page', 15))
+            ->appends($request->except('page'));
+        
+        return view('admin.orders.index', compact('orders'));
     }
 
     /**
-     * Get order status timeline.
+     * Get order details for modal.
      */
-    public function statusTimeline($orderNumber)
+    public function getOrderDetails($id)
     {
-        $order = Order::where('order_number', $orderNumber)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
-
-        $timeline = [];
-
-        // Order placed
-        $timeline[] = [
-            'status' => 'Order Placed',
-            'date' => $order->created_at,
-            'description' => 'Your order has been placed successfully.',
-            'icon' => 'fas fa-shopping-cart',
-            'completed' => true,
-        ];
-
-        // Order confirmed
-        if ($order->order_status !== 'pending') {
-            $timeline[] = [
-                'status' => 'Order Confirmed',
-                'date' => $order->created_at,
-                'description' => 'Your order has been confirmed and payment processed.',
-                'icon' => 'fas fa-check-circle',
-                'completed' => true,
-            ];
+        try {
+            $order = Order::with([
+                'user', 
+                'shippingAddress', 
+                'billingAddress',
+                'items.variant.product'
+            ])->findOrFail($id);
+            
+            $html = view('admin.orders.partials.details', compact('order'))->render();
+            
+            return response()->json([
+                'success' => true,
+                'html' => $html,
+                'order_number' => $order->order_number
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to load order details'
+            ], 404);
         }
+    }
 
-        // Processing
-        if (in_array($order->order_status, ['processing', 'shipped', 'delivered'])) {
-            $timeline[] = [
-                'status' => 'Processing',
-                'date' => $order->updated_at,
-                'description' => 'Your order is being processed for shipping.',
-                'icon' => 'fas fa-cog',
-                'completed' => true,
-            ];
+    /**
+     * Update order status.
+     */
+    public function update(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'order_status' => 'required|in:pending,confirmed,processing,shipped,delivered,cancelled,refunded',
+                'admin_notes' => 'nullable|string',
+            ]);
+            
+            $order = Order::findOrFail($id);
+            
+            // Store old status for comparison
+            $oldStatus = $order->order_status;
+            
+            // Update order
+            $order->update([
+                'order_status' => $request->order_status,
+                'admin_notes' => $request->admin_notes,
+            ]);
+            
+            // If order is delivered, set delivered_at
+            if ($request->order_status === 'delivered' && !$order->delivered_at) {
+                $order->update(['delivered_at' => now()]);
+            }
+            
+            // Handle stock management
+            if ($request->order_status === 'cancelled' && $oldStatus !== 'cancelled') {
+                // Restore stock to variants
+                foreach ($order->items as $item) {
+                    if ($item->variant) {
+                        $item->variant->increment('stock', $item->quantity);
+                    }
+                }
+            }
+            
+            // If uncancelling a cancelled order, deduct stock
+            if ($oldStatus === 'cancelled' && $request->order_status !== 'cancelled') {
+                foreach ($order->items as $item) {
+                    if ($item->variant && $item->variant->stock >= $item->quantity) {
+                        $item->variant->decrement('stock', $item->quantity);
+                    }
+                }
+            }
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Order status updated successfully.',
+                'order_status' => $order->order_status
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to update order status'
+            ], 500);
         }
+    }
 
-        // Shipped
-        if (in_array($order->order_status, ['shipped', 'delivered'])) {
-            $timeline[] = [
-                'status' => 'Shipped',
-                'date' => $order->updated_at,
-                'description' => $order->tracking_number 
-                    ? "Your order has been shipped. Tracking: {$order->tracking_number}"
-                    : 'Your order has been shipped.',
-                'icon' => 'fas fa-shipping-fast',
-                'completed' => true,
+    /**
+     * Update payment status.
+     */
+    public function updatePayment(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'payment_status' => 'required|in:pending,paid,failed,refunded',
+                'payment_id' => 'nullable|string|max:100',
+                'payment_date' => 'nullable|date',
+            ]);
+            
+            $order = Order::findOrFail($id);
+            
+            $updateData = [
+                'payment_status' => $request->payment_status,
             ];
+            
+            if ($request->filled('payment_id')) {
+                $updateData['payment_id'] = $request->payment_id;
+            }
+            
+            if ($request->filled('payment_date')) {
+                $updateData['payment_date'] = $request->payment_date;
+            } elseif ($request->payment_status === 'paid' && !$order->payment_date) {
+                $updateData['payment_date'] = now();
+            }
+            
+            $order->update($updateData);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Payment status updated successfully.',
+                'payment_status' => $order->payment_status
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to update payment status'
+            ], 500);
         }
+    }
 
-        // Delivered
-        if ($order->order_status === 'delivered') {
-            $timeline[] = [
-                'status' => 'Delivered',
-                'date' => $order->delivered_at,
-                'description' => 'Your order has been delivered successfully.',
-                'icon' => 'fas fa-home',
-                'completed' => true,
+    /**
+     * Update tracking information.
+     */
+    public function updateTracking(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'tracking_number' => 'required|string|max:100',
+                'shipping_method' => 'nullable|string|max:50',
+                'estimated_delivery' => 'nullable|date',
+            ]);
+            
+            $order = Order::findOrFail($id);
+            
+            $updateData = [
+                'tracking_number' => $request->tracking_number,
             ];
+            
+            if ($request->filled('shipping_method')) {
+                $updateData['shipping_method'] = $request->shipping_method;
+            }
+            
+            if ($request->filled('estimated_delivery')) {
+                $updateData['estimated_delivery'] = $request->estimated_delivery;
+            }
+            
+            // Auto update status to shipped if not already
+            if ($order->order_status !== 'shipped' && $order->order_status !== 'delivered') {
+                $updateData['order_status'] = 'shipped';
+            }
+            
+            $order->update($updateData);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Tracking information updated successfully.',
+                'tracking_number' => $order->tracking_number
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to add tracking information'
+            ], 500);
         }
+    }
 
-        // Current status
-        $currentStatus = [
-            'pending' => 'Order Placed',
-            'confirmed' => 'Order Confirmed',
-            'processing' => 'Processing',
-            'shipped' => 'Shipped',
-            'delivered' => 'Delivered',
-            'cancelled' => 'Cancelled',
-            'refunded' => 'Refunded',
-        ];
+    /**
+     * Delete order.
+     */
+    public function destroy($id)
+    {
+        try {
+            $order = Order::findOrFail($id);
+            $orderNumber = $order->order_number;
+            
+            // Restore stock if order was not cancelled
+            if ($order->order_status !== 'cancelled') {
+                foreach ($order->items as $item) {
+                    if ($item->variant) {
+                        $item->variant->increment('stock', $item->quantity);
+                    }
+                }
+            }
+            
+            $order->delete();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Order ' . $orderNumber . ' deleted successfully.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to delete order'
+            ], 500);
+        }
+    }
 
-        return response()->json([
-            'timeline' => $timeline,
-            'current_status' => $currentStatus[$order->order_status] ?? $order->order_status,
-            'estimated_delivery' => $order->estimated_delivery,
-            'tracking_number' => $order->tracking_number,
+    /**
+     * Generate invoice PDF.
+     */
+    public function invoice($id)
+    {
+        try {
+            $order = Order::with([
+                'user', 
+                'shippingAddress', 
+                'billingAddress',
+                'items.variant.product'
+            ])->findOrFail($id);
+            
+            $pdf = Pdf::loadView('admin.orders.invoice', compact('order'));
+            
+            return $pdf->download('Invoice_' . $order->order_number . '.pdf');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to generate invoice.');
+        }
+    }
+
+   
+    /**
+     * Export orders.
+     */
+    public function export(Request $request)
+    {
+        $request->validate([
+            'format' => 'required|in:csv,pdf',
+            'from_date' => 'required|date',
+            'to_date' => 'required|date|after_or_equal:from_date',
         ]);
+        
+        $orders = Order::whereBetween('created_at', [
+                $request->from_date . ' 00:00:00',
+                $request->to_date . ' 23:59:59'
+            ])
+            ->with(['user', 'shippingAddress', 'items'])
+            ->latest()
+            ->get();
+        
+        if ($orders->isEmpty()) {
+            return back()->with('error', 'No orders found in the selected date range.');
+        }
+        
+        if ($request->format === 'csv') {
+            return $this->exportToCsv($orders, $request->from_date, $request->to_date);
+        } else {
+            return $this->exportToPdf($orders, $request->from_date, $request->to_date);
+        }
+    }
+    
+    private function exportToCsv($orders, $fromDate, $toDate)
+    {
+        $filename = 'orders_export_' . $fromDate . '_to_' . $toDate . '.csv';
+        
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+        
+        $callback = function() use ($orders) {
+            $file = fopen('php://output', 'w');
+            
+            // Add BOM for UTF-8
+            fwrite($file, "\xEF\xBB\xBF");
+            
+            // Add headers
+            fputcsv($file, [
+                'Order Number',
+                'Customer Name',
+                'Customer Email',
+                'Total Amount',
+                'Order Status',
+                'Payment Status',
+                'Payment Method',
+                'Order Date',
+                'Items Count',
+                'Shipping City',
+                'Shipping Country',
+                'Tracking Number'
+            ]);
+            
+            // Add data
+            foreach ($orders as $order) {
+                fputcsv($file, [
+                    $order->order_number,
+                    $order->user->name ?? 'Guest',
+                    $order->user->email ?? 'N/A',
+                    '$' . number_format($order->total_amount, 2),
+                    ucfirst($order->order_status),
+                    ucfirst($order->payment_status),
+                    $order->payment_method ?? 'N/A',
+                    $order->created_at->format('Y-m-d H:i:s'),
+                    $order->items->count(),
+                    $order->shippingAddress->city ?? 'N/A',
+                    $order->shippingAddress->country ?? 'N/A',
+                    $order->tracking_number ?? 'N/A'
+                ]);
+            }
+            
+            fclose($file);
+        };
+        
+        return response()->stream($callback, 200, $headers);
+    }
+    
+    private function exportToPdf($orders, $fromDate, $toDate)
+    {
+        $data = [
+            'orders' => $orders,
+            'fromDate' => $fromDate,
+            'toDate' => $toDate,
+            'totalAmount' => $orders->sum('total_amount'),
+            'orderCount' => $orders->count()
+        ];
+        
+        $pdf = Pdf::loadView('admin.orders.export-pdf', $data);
+        
+        $filename = 'orders_export_' . $fromDate . '_to_' . $toDate . '.pdf';
+        
+        return $pdf->download($filename);
     }
 }

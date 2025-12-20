@@ -4,94 +4,111 @@
     <div class="mb-8" data-aos="fade-down">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
             <div>
-                <h1 class="text-3xl font-bold text-Ocean mb-2">Order Management</h1>
-                <p class="text-Wave">Track and manage customer orders in real-time</p>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Order Management</h1>
+                <p class="text-gray-600">Track and manage customer orders in real-time</p>
             </div>
             <div class="flex items-center gap-4 mt-4 md:mt-0">
-                <button onclick="exportOrders()" 
-                        class="bg-Ocean text-Pearl hover:bg-Ocean/90 px-5 py-3 rounded-xl font-medium transition-all duration-200 flex items-center group">
-                    <i class="fas fa-download mr-2 group-hover:rotate-180 transition-transform duration-300"></i> Export Orders
+                <button onclick="showExportModal()"
+                    class="bg-blue-600 text-white hover:bg-blue-700 px-5 py-3 rounded-xl font-medium transition-all duration-300 flex items-center group shadow-md hover:shadow-lg">
+                    <i class="fas fa-download mr-2 group-hover:rotate-180 transition-transform duration-500"></i>
+                    <span class="group-hover:scale-105 transition-transform duration-300">Export Orders</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Order Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8" data-aos="fade-up">
-        <div class="bg-white border border-Silk rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        @php
+            $totalOrders = \App\Models\Order::count();
+            $totalRevenue = \App\Models\Order::where('payment_status', 'paid')->sum('total_amount');
+            $avgOrderValue = $totalOrders > 0 ? $totalRevenue / $totalOrders : 0;
+            $pendingOrders = \App\Models\Order::where('order_status', 'pending')->count();
+        @endphp
+
+        <div class="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 p-6 rounded-xl shadow-sm transform hover:-translate-y-1 transition-transform duration-300"
+            data-aos="fade-up" data-aos-delay="100">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-Wave text-sm font-medium mb-1">Total Orders</p>
-                    <h3 class="text-2xl font-bold text-Ocean">{{ $orders->count() }}</h3>
-                    <p class="text-Wave text-xs mt-1">All time orders</p>
+                    <p class="text-blue-600 text-sm font-medium">Total Orders</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-1">{{ $totalOrders }}</p>
+                    <p class="text-blue-500 text-xs mt-2 flex items-center">
+                        <i class="fas fa-shopping-bag mr-1"></i> All time orders
+                    </p>
                 </div>
-                <div class="w-12 h-12 rounded-lg bg-Ocean/10 flex items-center justify-center">
-                    <i class="fas fa-shopping-bag text-Ocean text-xl"></i>
+                <div class="w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center">
+                    <i class="fas fa-shopping-bag text-white text-xl"></i>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white border border-Silk rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <div class="bg-gradient-to-r from-green-50 to-green-100 border border-green-200 p-6 rounded-xl shadow-sm transform hover:-translate-y-1 transition-transform duration-300"
+            data-aos="fade-up" data-aos-delay="150">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-Wave text-sm font-medium mb-1">Total Revenue</p>
-                    <h3 class="text-2xl font-bold text-green-600">
-                        ${{ number_format($orders->whereIn('payment_status', ['paid'])->sum('total_amount'), 2) }}
-                    </h3>
-                    <p class="text-Wave text-xs mt-1">From completed orders</p>
+                    <p class="text-green-600 text-sm font-medium">Total Revenue</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-1">${{ number_format($totalRevenue, 2) }}</p>
+                    <p class="text-green-500 text-xs mt-2 flex items-center">
+                        <i class="fas fa-dollar-sign mr-1"></i> From completed orders
+                    </p>
                 </div>
-                <div class="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center">
-                    <i class="fas fa-dollar-sign text-green-600 text-xl"></i>
+                <div class="w-12 h-12 rounded-lg bg-green-500 flex items-center justify-center">
+                    <i class="fas fa-dollar-sign text-white text-xl"></i>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white border border-Silk rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <div class="bg-gradient-to-r from-purple-50 to-purple-100 border border-purple-200 p-6 rounded-xl shadow-sm transform hover:-translate-y-1 transition-transform duration-300"
+            data-aos="fade-up" data-aos-delay="200">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-Wave text-sm font-medium mb-1">Avg. Order Value</p>
-                    <h3 class="text-2xl font-bold text-purple-600">
-                        ${{ $orders->count() > 0 ? number_format($orders->avg('total_amount'), 2) : '0.00' }}
-                    </h3>
-                    <p class="text-Wave text-xs mt-1">Average order size</p>
+                    <p class="text-purple-600 text-sm font-medium">Avg. Order Value</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-1">${{ number_format($avgOrderValue, 2) }}</p>
+                    <p class="text-purple-500 text-xs mt-2 flex items-center">
+                        <i class="fas fa-chart-line mr-1"></i> Average order size
+                    </p>
                 </div>
-                <div class="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center">
-                    <i class="fas fa-chart-line text-purple-600 text-xl"></i>
+                <div class="w-12 h-12 rounded-lg bg-purple-500 flex items-center justify-center">
+                    <i class="fas fa-chart-line text-white text-xl"></i>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white border border-Silk rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <div class="bg-gradient-to-r from-yellow-50 to-yellow-100 border border-yellow-200 p-6 rounded-xl shadow-sm transform hover:-translate-y-1 transition-transform duration-300"
+            data-aos="fade-up" data-aos-delay="250">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-Wave text-sm font-medium mb-1">Pending Orders</p>
-                    <h3 class="text-2xl font-bold text-yellow-600">{{ $orders->where('order_status', 'pending')->count() }}</h3>
-                    <p class="text-Wave text-xs mt-1">Needs attention</p>
+                    <p class="text-yellow-600 text-sm font-medium">Pending Orders</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-1">{{ $pendingOrders }}</p>
+                    <p class="text-yellow-500 text-xs mt-2 flex items-center">
+                        <i class="fas fa-clock mr-1"></i> Needs attention
+                    </p>
                 </div>
-                <div class="w-12 h-12 rounded-lg bg-yellow-100 flex items-center justify-center">
-                    <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                <div class="w-12 h-12 rounded-lg bg-yellow-500 flex items-center justify-center">
+                    <i class="fas fa-clock text-white text-xl"></i>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Orders Table with Filters -->
-    <div class="bg-white border border-Silk rounded-2xl overflow-hidden shadow-sm" data-aos="fade-up" data-aos-delay="150">
-        <!-- Search and Filters Header -->
-        <div class="p-6 border-b border-Lace">
+    <!-- Orders Table -->
+    <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm" data-aos="fade-up"
+        data-aos-delay="150">
+        <!-- Filters -->
+        <div class="p-6 border-b border-gray-100 bg-gray-50">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
                 <!-- Search -->
                 <div class="relative">
-                    <input type="text" id="orderSearch" placeholder="Search orders by ID, customer..." 
-                           class="pl-10 pr-4 py-3 border border-Silk rounded-xl focus:outline-none focus:ring-2 focus:ring-Ocean focus:border-Ocean transition-all duration-200 w-full"
-                           onkeyup="filterOrders()">
-                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-Wave"></i>
+                    <input type="text" id="orderSearch" placeholder="Search by order number, customer name or email..."
+                        onkeyup="filterOrders()"
+                        class="pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 w-full">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                 </div>
-                
+
                 <!-- Status Filter -->
                 <div>
                     <select id="statusFilter" onchange="filterOrders()"
-                            class="w-full border border-Silk rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-Ocean focus:border-Ocean transition-all duration-200 appearance-none bg-white">
+                        class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white">
                         <option value="">All Status</option>
                         <option value="pending">Pending</option>
                         <option value="confirmed">Confirmed</option>
@@ -102,11 +119,11 @@
                         <option value="refunded">Refunded</option>
                     </select>
                 </div>
-                
-                <!-- Payment Status Filter -->
+
+                <!-- Payment Filter -->
                 <div>
                     <select id="paymentFilter" onchange="filterOrders()"
-                            class="w-full border border-Silk rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-Ocean focus:border-Ocean transition-all duration-200 appearance-none bg-white">
+                        class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white">
                         <option value="">All Payment Status</option>
                         <option value="pending">Payment Pending</option>
                         <option value="paid">Paid</option>
@@ -114,11 +131,11 @@
                         <option value="refunded">Refunded</option>
                     </select>
                 </div>
-                
+
                 <!-- Date Filter -->
                 <div>
                     <select id="dateFilter" onchange="filterOrders()"
-                            class="w-full border border-Silk rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-Ocean focus:border-Ocean transition-all duration-200 appearance-none bg-white">
+                        class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white">
                         <option value="">All Time</option>
                         <option value="today">Today</option>
                         <option value="yesterday">Yesterday</option>
@@ -128,183 +145,157 @@
                     </select>
                 </div>
             </div>
-            
-            <!-- Filter Results Info -->
-            <div id="filterResults" class="mt-4 hidden">
-                <div class="flex items-center justify-between bg-Lace/50 rounded-xl p-4">
-                    <div class="flex items-center">
-                        <i class="fas fa-filter text-Ocean mr-3"></i>
-                        <span class="text-Wave text-sm">
-                            Showing <span id="filteredCount" class="font-semibold text-Ocean"></span> of 
-                            <span class="font-semibold text-Ocean">{{ $orders->count() }}</span> orders
-                        </span>
-                    </div>
-                    <button onclick="clearFilters()" 
-                            class="text-sm text-Wave hover:text-Ocean font-medium flex items-center transition-colors duration-200">
-                        <i class="fas fa-times mr-1"></i> Clear Filters
-                    </button>
-                </div>
+
+            <div class="mt-4 flex justify-end">
+                <button onclick="clearFilters()"
+                    class="text-gray-600 hover:text-gray-800 font-medium transition-colors duration-200 flex items-center">
+                    <i class="fas fa-times mr-2"></i> Clear All Filters
+                </button>
             </div>
         </div>
 
-        <!-- Table Header -->
-        <div class="flex items-center justify-between p-6 border-b border-Lace">
-            <div>
-                <h2 class="text-xl font-bold text-Ocean">Recent Orders</h2>
-                <p class="text-Wave text-sm mt-1" id="tableInfo">Latest customer orders</p>
-            </div>
-            <div class="flex items-center gap-2 text-sm text-Wave">
-                <i class="fas fa-info-circle mr-1"></i>
-                Click on order for details
-            </div>
-        </div>
-
-        <!-- Orders Table -->
+        <!-- Table -->
         <div class="overflow-x-auto">
-            <table class="w-full" id="ordersTable">
-                <thead class="bg-Lace">
+            <table class="w-full min-w-full">
+                <thead class="bg-gray-50">
                     <tr>
-                        <th class="py-4 px-6 text-left text-Ocean font-semibold text-sm cursor-pointer" onclick="sortTable('order_number')">
-                            Order ID <i class="fas fa-sort ml-1"></i>
-                        </th>
-                        <th class="py-4 px-6 text-left text-Ocean font-semibold text-sm cursor-pointer" onclick="sortTable('customer')">
-                            Customer <i class="fas fa-sort ml-1"></i>
-                        </th>
-                        <th class="py-4 px-6 text-left text-Ocean font-semibold text-sm cursor-pointer" onclick="sortTable('items')">
-                            Items <i class="fas fa-sort ml-1"></i>
-                        </th>
-                        <th class="py-4 px-6 text-left text-Ocean font-semibold text-sm cursor-pointer" onclick="sortTable('amount')">
-                            Amount <i class="fas fa-sort ml-1"></i>
-                        </th>
-                        <th class="py-4 px-6 text-left text-Ocean font-semibold text-sm">Status</th>
-                        <th class="py-4 px-6 text-left text-Ocean font-semibold text-sm">Payment</th>
-                        <th class="py-4 px-6 text-left text-Ocean font-semibold text-sm cursor-pointer" onclick="sortTable('date')">
-                            Date <i class="fas fa-sort ml-1"></i>
-                        </th>
-                        <th class="py-4 px-6 text-left text-Ocean font-semibold text-sm">Actions</th>
+                        <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">Order ID</th>
+                        <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">Customer</th>
+                        <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">Amount</th>
+                        <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">Status</th>
+                        <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">Payment</th>
+                        <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">Date</th>
+                        <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-Lace" id="ordersTableBody">
+                <tbody class="divide-y divide-gray-100" id="ordersTableBody">
                     @forelse ($orders as $order)
-                        <tr class="hover:bg-Lace/50 transition-colors duration-200 order-row" 
-                            data-order-id="{{ $order->order_number }}"
-                            data-customer="{{ strtolower($order->user->name ?? 'guest') }}"
-                            data-items="{{ $order->items_count ?? 0 }}"
-                            data-amount="{{ $order->total_amount }}"
-                            data-status="{{ $order->order_status }}"
-                            data-payment="{{ $order->payment_status }}"
-                            data-date="{{ $order->created_at->timestamp }}"
-                            data-aos="fade-in" data-aos-delay="{{ $loop->index * 50 }}">
+                        <tr class="hover:bg-gray-50 transition-colors duration-200 order-row"
+                            data-order-id="{{ $order->id }}" data-order-number="{{ $order->order_number }}"
+                            data-customer="{{ strtolower($order->user->name ?? 'Guest') }}"
+                            data-customer-email="{{ strtolower($order->user->email ?? '') }}"
+                            data-status="{{ $order->order_status }}" data-payment="{{ $order->payment_status }}"
+                            data-date="{{ $order->created_at->format('Y-m-d') }}"
+                            data-timestamp="{{ $order->created_at->timestamp }}">
                             <td class="py-4 px-6">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-lg bg-Ocean/10 flex items-center justify-center">
-                                        <i class="fas fa-receipt text-Ocean"></i>
+                                    <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                                        <i class="fas fa-receipt text-blue-600"></i>
                                     </div>
                                     <div>
-                                        <span class="font-mono font-bold text-Ocean block">{{ $order->order_number }}</span>
-                                        <span class="text-Wave text-xs">{{ $order->created_at->format('M d, Y') }}</span>
+                                        <span
+                                            class="font-mono font-bold text-gray-800 block">{{ $order->order_number }}</span>
+                                        <span
+                                            class="text-gray-500 text-xs">{{ $order->created_at->format('M d, Y') }}</span>
                                     </div>
                                 </div>
                             </td>
                             <td class="py-4 px-6">
                                 <div>
-                                    <p class="font-semibold text-Ocean">{{ $order->user->name ?? 'Guest' }}</p>
-                                    <p class="text-Wave text-sm">{{ $order->user->email ?? 'No email' }}</p>
-                                    @if($order->shippingAddress)
-                                    <p class="text-Wave text-xs mt-1 truncate max-w-xs">{{ $order->shippingAddress->city ?? '' }}, {{ $order->shippingAddress->country ?? '' }}</p>
-                                    @endif
-                                </div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="flex items-center">
-                                    <span class="font-semibold text-Ocean">{{ $order->items_count ?? 0 }} items</span>
+                                    <p class="font-semibold text-gray-800">{{ $order->user->name ?? 'Guest' }}</p>
+                                    <p class="text-gray-500 text-sm">{{ $order->user->email ?? 'No email' }}</p>
                                 </div>
                             </td>
                             <td class="py-4 px-6">
                                 <div>
-                                    <span class="font-bold text-Ocean text-lg">${{ number_format($order->total_amount, 2) }}</span>
-                                    <div class="text-Wave text-xs mt-1">
-                                        <span class="mr-2">Sub: ${{ number_format($order->subtotal, 2) }}</span>
-                                        @if($order->discount_amount > 0)
-                                        <span class="text-green-600">Disc: -${{ number_format($order->discount_amount, 2) }}</span>
-                                        @endif
-                                    </div>
+                                    <span
+                                        class="font-bold text-gray-800 text-lg">${{ number_format($order->total_amount, 2) }}</span>
                                 </div>
                             </td>
                             <td class="py-4 px-6">
-                                <div class="flex flex-col gap-2">
-                                    <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold 
-                                        {{ $order->order_status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
-                                           ($order->order_status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
-                                           ($order->order_status === 'processing' ? 'bg-purple-100 text-purple-800' :
-                                           ($order->order_status === 'shipped' ? 'bg-indigo-100 text-indigo-800' :
-                                           ($order->order_status === 'delivered' ? 'bg-green-100 text-green-800' :
-                                           ($order->order_status === 'cancelled' ? 'bg-red-100 text-red-800' :
-                                           'bg-gray-100 text-gray-800'))))) }}">
-                                        <i class="fas fa-circle text-[6px] mr-1.5 {{ 
-                                            $order->order_status === 'pending' ? 'animate-pulse' : '' }}"></i>
-                                        {{ ucfirst($order->order_status) }}
-                                    </span>
-                                    @if($order->tracking_number)
-                                    <span class="text-Wave text-xs">Track: {{ $order->tracking_number }}</span>
-                                    @endif
-                                </div>
+                                <span
+                                    class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold 
+                                {{ $order->order_status === 'pending'
+                                    ? 'bg-yellow-100 text-yellow-800'
+                                    : ($order->order_status === 'confirmed'
+                                        ? 'bg-blue-100 text-blue-800'
+                                        : ($order->order_status === 'processing'
+                                            ? 'bg-purple-100 text-purple-800'
+                                            : ($order->order_status === 'shipped'
+                                                ? 'bg-indigo-100 text-indigo-800'
+                                                : ($order->order_status === 'delivered'
+                                                    ? 'bg-green-100 text-green-800'
+                                                    : ($order->order_status === 'cancelled'
+                                                        ? 'bg-red-100 text-red-800'
+                                                        : 'bg-gray-100 text-gray-800'))))) }}">
+                                    {{ ucfirst($order->order_status) }}
+                                </span>
                             </td>
                             <td class="py-4 px-6">
-                                <div class="flex flex-col gap-2">
-                                    <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold 
-                                        {{ $order->payment_status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
-                                           ($order->payment_status === 'paid' ? 'bg-green-100 text-green-800' :
-                                           ($order->payment_status === 'failed' ? 'bg-red-100 text-red-800' :
-                                           ($order->payment_status === 'refunded' ? 'bg-gray-100 text-gray-800' :
-                                           'bg-gray-100 text-gray-800'))) }}">
-                                        <i class="fas fa-circle text-[6px] mr-1.5"></i>
-                                        {{ ucfirst($order->payment_status) }}
-                                    </span>
-                                    @if($order->payment_method)
-                                    <span class="text-Wave text-xs">{{ ucfirst($order->payment_method) }}</span>
-                                    @endif
-                                </div>
+                                <span
+                                    class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold 
+                                {{ $order->payment_status === 'pending'
+                                    ? 'bg-yellow-100 text-yellow-800'
+                                    : ($order->payment_status === 'paid'
+                                        ? 'bg-green-100 text-green-800'
+                                        : ($order->payment_status === 'failed'
+                                            ? 'bg-red-100 text-red-800'
+                                            : 'bg-gray-100 text-gray-800')) }}">
+                                    {{ ucfirst($order->payment_status) }}
+                                </span>
                             </td>
                             <td class="py-4 px-6">
-                                <div class="text-Wave text-sm">
+                                <div class="text-gray-600 text-sm">
                                     <div>{{ $order->created_at->format('d M Y') }}</div>
                                     <div class="text-xs">{{ $order->created_at->format('h:i A') }}</div>
-                                    @if($order->estimated_delivery)
-                                    <div class="text-xs mt-1">
-                                        <i class="fas fa-truck mr-1"></i>Est: {{ \Carbon\Carbon::parse($order->estimated_delivery)->format('M d') }}
-                                    </div>
-                                    @endif
                                 </div>
                             </td>
                             <td class="py-4 px-6">
                                 <div class="flex items-center gap-2">
                                     <button onclick="viewOrderDetails({{ $order->id }})"
-                                        class="w-10 h-10 rounded-lg bg-Ocean text-Pearl hover:bg-Ocean/90 flex items-center justify-center transition-all duration-200 group"
+                                        class="w-10 h-10 rounded-lg bg-blue-600 text-white hover:bg-blue-700 flex items-center justify-center transition-all duration-300 group"
                                         title="View Details">
                                         <i class="fas fa-eye group-hover:scale-110 transition-transform duration-300"></i>
                                     </button>
-                                    <a href="{{ route('admin.orders.invoice', ['order' => $order->id]) }}"
-                                        class="w-10 h-10 rounded-lg bg-white border border-Silk text-Wave hover:bg-Lace hover:text-Ocean flex items-center justify-center transition-all duration-200 group"
-                                        title="Invoice" target="_blank">
-                                        <i class="fas fa-file-invoice group-hover:rotate-12 transition-transform duration-300"></i>
+                                    <a href="{{ route('admin.orders.invoice', $order->id) }}" target="_blank"
+                                        class="w-10 h-10 rounded-lg bg-white border border-gray-300 text-gray-600 hover:bg-gray-50 hover:text-blue-600 flex items-center justify-center transition-all duration-300 group"
+                                        title="Download Invoice">
+                                        <i
+                                            class="fas fa-file-invoice group-hover:rotate-12 transition-transform duration-300"></i>
                                     </a>
-                                    <button onclick="showOrderActions({{ $order->id }}, '{{ $order->order_number }}')"
-                                        class="w-10 h-10 rounded-lg bg-white border border-Silk text-Wave hover:bg-Lace hover:text-Ocean flex items-center justify-center transition-all duration-200 group"
-                                        title="More Actions">
-                                        <i class="fas fa-ellipsis-h group-hover:rotate-90 transition-transform duration-300"></i>
-                                    </button>
+                                    <div class="relative">
+                                        <button onclick="toggleActionsMenu({{ $order->id }})"
+                                            class="w-10 h-10 rounded-lg bg-white border border-gray-300 text-gray-600 hover:bg-gray-50 hover:text-blue-600 flex items-center justify-center transition-all duration-300 group"
+                                            title="More Actions">
+                                            <i
+                                                class="fas fa-ellipsis-h group-hover:rotate-90 transition-transform duration-300"></i>
+                                        </button>
+                                        <div id="actionsMenu-{{ $order->id }}"
+                                            class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg z-50 hidden">
+                                            <div class="py-2">
+                                                <button onclick="updateStatus({{ $order->id }})"
+                                                    class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200 flex items-center">
+                                                    <i class="fas fa-sync-alt mr-3 text-gray-400"></i> Update Status
+                                                </button>
+                                                <button onclick="updatePayment({{ $order->id }})"
+                                                    class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200 flex items-center">
+                                                    <i class="fas fa-credit-card mr-3 text-gray-400"></i> Update Payment
+                                                </button>
+                                                <button onclick="addTracking({{ $order->id }})"
+                                                    class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200 flex items-center">
+                                                    <i class="fas fa-truck mr-3 text-gray-400"></i> Add Tracking
+                                                </button>
+                                                <div class="border-t border-gray-100 my-2"></div>
+                                                <button
+                                                    onclick="deleteOrder({{ $order->id }}, '{{ $order->order_number }}')"
+                                                    class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200 flex items-center">
+                                                    <i class="fas fa-trash-alt mr-3"></i> Delete Order
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
                     @empty
                         <tr id="noOrdersRow">
-                            <td colspan="8" class="py-16 text-center">
-                                <div class="w-24 h-24 rounded-full bg-Lace flex items-center justify-center mx-auto mb-6 border-4 border-Silk">
-                                    <i class="fas fa-shopping-bag text-Ocean text-3xl"></i>
+                            <td colspan="7" class="py-12 text-center">
+                                <div
+                                    class="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-6">
+                                    <i class="fas fa-shopping-bag text-gray-400 text-3xl"></i>
                                 </div>
-                                <h3 class="text-2xl font-bold text-Ocean mb-3">No Orders Yet</h3>
-                                <p class="text-Wave mb-6 max-w-md mx-auto">Orders will appear here when customers make purchases from your store</p>
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">No Orders Found</h3>
+                                <p class="text-gray-500">Start by adding some products to your store</p>
                             </td>
                         </tr>
                     @endforelse
@@ -312,214 +303,387 @@
             </table>
         </div>
 
-        <!-- Enhanced Pagination -->
-        {{-- @if ($orders->hasPages())
-        <div class="p-6 border-t border-Lace bg-Lace/50">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <!-- Page Info -->
-                <div class="text-sm text-Wave">
-                    Showing <span class="font-semibold text-Ocean">{{ $orders->firstItem() ?? 0 }}</span> to 
-                    <span class="font-semibold text-Ocean">{{ $orders->lastItem() ?? 0 }}</span> of 
-                    <span class="font-semibold text-Ocean">{{ $orders->total() }}</span> results
-                </div>
-                
-                <!-- Pagination Controls -->
-                <div class="flex items-center gap-2">
-                    <!-- Previous Button -->
-                    @if ($orders->onFirstPage())
-                        <span class="px-4 py-2 bg-white border border-Silk text-Wave rounded-lg font-medium text-sm cursor-not-allowed opacity-50 flex items-center">
-                            <i class="fas fa-chevron-left mr-2"></i> Previous
-                        </span>
-                    @else
-                        <a href="{{ $orders->previousPageUrl() }}" 
-                           class="px-4 py-2 bg-white border border-Silk text-Wave hover:text-Ocean hover:border-Ocean rounded-lg font-medium text-sm transition-all duration-200 flex items-center group">
-                            <i class="fas fa-chevron-left mr-2 group-hover:-translate-x-1 transition-transform duration-200"></i> Previous
-                        </a>
-                    @endif
-                    
-                    <!-- Page Numbers -->
-                    <div class="flex items-center gap-1">
-                        <!-- First Page -->
-                        @if ($orders->currentPage() > 3)
-                            <a href="{{ $orders->url(1) }}" 
-                               class="w-10 h-10 bg-white border border-Silk text-Wave hover:text-Ocean rounded-lg flex items-center justify-center font-medium hover:bg-Lace transition-all duration-200"
-                               title="First Page">
-                                1
+        <!-- Pagination -->
+        @if ($orders->hasPages())
+            <div class="p-6 border-t border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-gray-600">
+                        Showing {{ $orders->firstItem() }} to {{ $orders->lastItem() }} of {{ $orders->total() }} results
+                    </div>
+                    <div class="flex items-center gap-2">
+                        @if ($orders->onFirstPage())
+                            <span
+                                class="px-4 py-2 bg-gray-100 text-gray-400 rounded-lg font-medium text-sm cursor-not-allowed">
+                                Previous
+                            </span>
+                        @else
+                            <a href="{{ $orders->previousPageUrl() }}"
+                                class="px-4 py-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg font-medium text-sm transition-colors duration-200">
+                                Previous
                             </a>
-                            @if ($orders->currentPage() > 4)
-                                <span class="w-10 h-10 flex items-center justify-center text-Wave">...</span>
-                            @endif
                         @endif
-                        
-                        <!-- Middle Pages -->
-                        @foreach ($orders->getUrlRange(max(1, $orders->currentPage() - 2), min($orders->lastPage(), $orders->currentPage() + 2)) as $page => $url)
-                            @if($page == $orders->currentPage())
-                                <span class="w-10 h-10 bg-Ocean text-Pearl rounded-lg flex items-center justify-center font-semibold shadow-sm">
-                                    {{ $page }}
-                                </span>
-                            @else
-                                <a href="{{ $url }}" 
-                                   class="w-10 h-10 bg-white border border-Silk text-Wave hover:text-Ocean rounded-lg flex items-center justify-center font-medium hover:bg-Lace transition-all duration-200">
-                                    {{ $page }}
-                                </a>
-                            @endif
-                        @endforeach
-                        
-                        <!-- Last Page -->
-                        @if ($orders->currentPage() < $orders->lastPage() - 2)
-                            @if ($orders->currentPage() < $orders->lastPage() - 3)
-                                <span class="w-10 h-10 flex items-center justify-center text-Wave">...</span>
-                            @endif
-                            <a href="{{ $orders->url($orders->lastPage()) }}" 
-                               class="w-10 h-10 bg-white border border-Silk text-Wave hover:text-Ocean rounded-lg flex items-center justify-center font-medium hover:bg-Lace transition-all duration-200"
-                               title="Last Page">
-                                {{ $orders->lastPage() }}
+
+                        <div class="flex items-center gap-1">
+                            @foreach ($orders->getUrlRange(1, $orders->lastPage()) as $page => $url)
+                                @if ($page == $orders->currentPage())
+                                    <span
+                                        class="w-10 h-10 bg-blue-600 text-white rounded-lg flex items-center justify-center font-semibold">
+                                        {{ $page }}
+                                    </span>
+                                @else
+                                    <a href="{{ $url }}"
+                                        class="w-10 h-10 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg flex items-center justify-center font-medium transition-colors duration-200">
+                                        {{ $page }}
+                                    </a>
+                                @endif
+                            @endforeach
+                        </div>
+
+                        @if ($orders->hasMorePages())
+                            <a href="{{ $orders->nextPageUrl() }}"
+                                class="px-4 py-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg font-medium text-sm transition-colors duration-200">
+                                Next
                             </a>
+                        @else
+                            <span
+                                class="px-4 py-2 bg-gray-100 text-gray-400 rounded-lg font-medium text-sm cursor-not-allowed">
+                                Next
+                            </span>
                         @endif
                     </div>
-                    
-                    <!-- Next Button -->
-                    @if ($orders->hasMorePages())
-                        <a href="{{ $orders->nextPageUrl() }}" 
-                           class="px-4 py-2 bg-white border border-Silk text-Wave hover:text-Ocean hover:border-Ocean rounded-lg font-medium text-sm transition-all duration-200 flex items-center group">
-                            Next <i class="fas fa-chevron-right ml-2 group-hover:translate-x-1 transition-transform duration-200"></i>
-                        </a>
-                    @else
-                        <span class="px-4 py-2 bg-white border border-Silk text-Wave rounded-lg font-medium text-sm cursor-not-allowed opacity-50 flex items-center">
-                            Next <i class="fas fa-chevron-right ml-2"></i>
-                        </span>
-                    @endif
                 </div>
-                
-                <!-- Results Per Page -->
-                <div class="flex items-center gap-2 text-sm text-Wave">
-                    <span>Show:</span>
-                    <select onchange="changePerPage(this.value)" 
-                            class="border border-Silk rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-Ocean focus:border-Ocean bg-white">
-                        <option value="10" {{ $orders->perPage() == 10 ? 'selected' : '' }}>10</option>
-                        <option value="25" {{ $orders->perPage() == 25 ? 'selected' : '' }}>25</option>
-                        <option value="50" {{ $orders->perPage() == 50 ? 'selected' : '' }}>50</option>
-                        <option value="100" {{ $orders->perPage() == 100 ? 'selected' : '' }}>100</option>
-                    </select>
-                    <span>per page</span>
+            </div>
+        @endif
+    </div>
+
+    <!-- Order Details Modal -->
+    <div id="orderDetailsModal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden animate-slideIn">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                            <i class="fas fa-receipt text-blue-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h2 id="modalTitle" class="text-xl font-bold text-gray-800">Order Details</h2>
+                            <p id="modalSubtitle" class="text-gray-600 text-sm"></p>
+                        </div>
+                    </div>
+                    <button onclick="closeModal('orderDetailsModal')"
+                        class="w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors duration-200">
+                        <i class="fas fa-times text-gray-500 text-lg"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="p-6 overflow-y-auto max-h-[60vh]" id="modalContent">
+                <!-- Content loaded via AJAX -->
+                <div class="text-center py-12">
+                    <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-spinner fa-spin text-gray-400 text-2xl"></i>
+                    </div>
+                    <p class="text-gray-600">Loading order details...</p>
+                </div>
+            </div>
+            <div class="p-6 border-t border-gray-200 bg-gray-50">
+                <div class="flex items-center justify-end gap-3">
+                    <button onclick="closeModal('orderDetailsModal')"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg font-medium transition-colors duration-200">
+                        Close
+                    </button>
+                    <button onclick="printOrder()"
+                        class="px-4 py-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg font-medium transition-colors duration-200">
+                        <i class="fas fa-print mr-2"></i> Print
+                    </button>
                 </div>
             </div>
         </div>
-        @endif --}}
     </div>
 
-    <!-- Order Details Modal (Keep from previous) -->
-    <div id="orderDetailsModal" class="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center z-50 hidden p-4">
-        <!-- Modal content remains the same as before -->
+    <!-- Status Update Modal -->
+    <div id="statusModal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-md animate-slideIn">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-gray-800">Update Order Status</h3>
+                    <button onclick="closeModal('statusModal')"
+                        class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center">
+                        <i class="fas fa-times text-gray-500"></i>
+                    </button>
+                </div>
+            </div>
+            <form id="statusForm" onsubmit="submitStatusUpdate(event)">
+                <input type="hidden" id="statusOrderId">
+                @csrf
+                @method('PUT')
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Select Status</label>
+                            <select name="order_status" id="newStatus"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="pending">Pending</option>
+                                <option value="confirmed">Confirmed</option>
+                                <option value="processing">Processing</option>
+                                <option value="shipped">Shipped</option>
+                                <option value="delivered">Delivered</option>
+                                <option value="cancelled">Cancelled</option>
+                                <option value="refunded">Refunded</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Notes (Optional)</label>
+                            <textarea name="admin_notes" id="statusNotes" rows="3"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Add any notes about this status change..."></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 border-t border-gray-200 bg-gray-50 flex justify-end gap-3">
+                    <button type="button" onclick="closeModal('statusModal')"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg font-medium">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg font-medium">
+                        Update Status
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <!-- Order Actions Modal (Keep from previous) -->
-    <div id="orderActionsModal" class="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center z-50 hidden p-4">
-        <!-- Modal content remains the same as before -->
+    <!-- Payment Update Modal -->
+    <div id="paymentModal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-md animate-slideIn">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-gray-800">Update Payment Status</h3>
+                    <button onclick="closeModal('paymentModal')"
+                        class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center">
+                        <i class="fas fa-times text-gray-500"></i>
+                    </button>
+                </div>
+            </div>
+            <form id="paymentForm" onsubmit="submitPaymentUpdate(event)">
+                <input type="hidden" id="paymentOrderId">
+                @csrf
+                @method('PUT')
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Payment Status</label>
+                            <select name="payment_status" id="paymentStatus"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="pending">Pending</option>
+                                <option value="paid">Paid</option>
+                                <option value="failed">Failed</option>
+                                <option value="refunded">Refunded</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Payment ID/Reference</label>
+                            <input type="text" name="payment_id"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Transaction ID or reference">
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 border-t border-gray-200 bg-gray-50 flex justify-end gap-3">
+                    <button type="button" onclick="closeModal('paymentModal')"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg font-medium">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg font-medium">
+                        Update Payment
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <style>
-        /* Custom Animations */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-2px); }
-            75% { transform: translateX(2px); }
-        }
-        
-        .group-hover\:shake:hover i {
-            animation: shake 0.5s ease-in-out;
-        }
-        
-        /* Hide scrollbar */
-        .overflow-y-auto::-webkit-scrollbar {
-            display: none;
-        }
-        
-        .overflow-y-auto {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        
-        /* Sort indicator */
-        .sort-asc i.fa-sort::before {
-            content: "\f0de";
-        }
-        
-        .sort-desc i.fa-sort::before {
-            content: "\f0dd";
-        }
-        
-        /* Smooth transitions */
-        * {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-    </style>
+    <!-- Tracking Modal -->
+    <div id="trackingModal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-md animate-slideIn">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-gray-800">Add Tracking Information</h3>
+                    <button onclick="closeModal('trackingModal')"
+                        class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center">
+                        <i class="fas fa-times text-gray-500"></i>
+                    </button>
+                </div>
+            </div>
+            <form id="trackingForm" onsubmit="submitTrackingInfo(event)">
+                <input type="hidden" id="trackingOrderId">
+                @csrf
+                @method('PUT')
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tracking Number*</label>
+                            <input type="text" name="tracking_number" required
+                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter tracking number">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Courier/Shipping Method</label>
+                            <input type="text" name="shipping_method"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="e.g., UPS, FedEx, DHL">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Estimated Delivery Date</label>
+                            <input type="date" name="estimated_delivery"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 border-t border-gray-200 bg-gray-50 flex justify-end gap-3">
+                    <button type="button" onclick="closeModal('trackingModal')"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg font-medium">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg font-medium">
+                        Save Tracking
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    @push('scripts')
+    <!-- Export Modal -->
+    <div id="exportModal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-md animate-slideIn">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-lg font-bold text-gray-800">Export Orders</h3>
+            </div>
+            <form id="exportForm" action="{{ route('admin.orders.export') }}" method="POST">
+                @csrf
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Export Format</label>
+                            <div class="grid grid-cols-3 gap-3">
+                                <label class="relative cursor-pointer">
+                                    <input type="radio" name="format" value="csv" checked class="sr-only peer">
+                                    <div
+                                        class="p-3 border-2 border-gray-200 rounded-lg text-center peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-200">
+                                        <i class="fas fa-file-csv text-green-600 text-lg mb-1"></i>
+                                        <p class="font-medium text-sm">CSV</p>
+                                        <p class="text-gray-500 text-xs">Excel compatible</p>
+                                    </div>
+                                </label>
+                                <label class="relative cursor-pointer">
+                                    <input type="radio" name="format" value="pdf" class="sr-only peer">
+                                    <div
+                                        class="p-3 border-2 border-gray-200 rounded-lg text-center peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-200">
+                                        <i class="fas fa-file-pdf text-red-600 text-lg mb-1"></i>
+                                        <p class="font-medium text-sm">PDF</p>
+                                        <p class="text-gray-500 text-xs">Printable format</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">Date Range</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <input type="date" name="from_date" required
+                                    value="{{ \Carbon\Carbon::now()->subMonth()->format('Y-m-d') }}"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                                <input type="date" name="to_date" required
+                                    value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 border-t border-gray-200 bg-gray-50 flex justify-end gap-3">
+                    <button type="button" onclick="closeModal('exportModal')"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg font-medium">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg font-medium">
+                        Export
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+@endsection
+
+@push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Real-time filtering functionality
+        // Real-time filtering
+        // Real-time filtering
         function filterOrders() {
             const searchTerm = document.getElementById('orderSearch').value.toLowerCase();
             const statusFilter = document.getElementById('statusFilter').value;
             const paymentFilter = document.getElementById('paymentFilter').value;
             const dateFilter = document.getElementById('dateFilter').value;
-            
+
             const rows = document.querySelectorAll('.order-row');
             let visibleCount = 0;
-            
+
             rows.forEach(row => {
-                const orderId = row.getAttribute('data-order-id').toLowerCase();
                 const customer = row.getAttribute('data-customer');
+                const customerEmail = row.getAttribute('data-customer-email');
+                const orderNumber = row.getAttribute('data-order-number').toLowerCase();
                 const status = row.getAttribute('data-status');
                 const payment = row.getAttribute('data-payment');
-                const date = parseInt(row.getAttribute('data-date'));
-                
-                // Check search term
-                const matchesSearch = !searchTerm || 
-                    orderId.includes(searchTerm) || 
-                    customer.includes(searchTerm);
-                
-                // Check status filter
+                const date = row.getAttribute('data-date');
+
+                const matchesSearch = !searchTerm ||
+                    customer.includes(searchTerm) ||
+                    customerEmail.includes(searchTerm) ||
+                    orderNumber.includes(searchTerm);
+
                 const matchesStatus = !statusFilter || status === statusFilter;
-                
-                // Check payment filter
                 const matchesPayment = !paymentFilter || payment === paymentFilter;
-                
-                // Check date filter
+
                 let matchesDate = true;
                 if (dateFilter) {
                     const now = new Date();
-                    const rowDate = new Date(date * 1000);
-                    
-                    switch(dateFilter) {
+                    const rowDate = new Date(date);
+
+                    switch (dateFilter) {
                         case 'today':
-                            matchesDate = rowDate.toDateString() === now.toDateString();
+                            const today = new Date().toISOString().split('T')[0];
+                            matchesDate = date === today;
                             break;
                         case 'yesterday':
-                            const yesterday = new Date(now);
-                            yesterday.setDate(now.getDate() - 1);
-                            matchesDate = rowDate.toDateString() === yesterday.toDateString();
+                            const yesterday = new Date();
+                            yesterday.setDate(yesterday.getDate() - 1);
+                            matchesDate = date === yesterday.toISOString().split('T')[0];
                             break;
                         case 'week':
-                            const weekAgo = new Date(now);
-                            weekAgo.setDate(now.getDate() - 7);
+                            const weekAgo = new Date();
+                            weekAgo.setDate(weekAgo.getDate() - 7);
                             matchesDate = rowDate >= weekAgo;
                             break;
                         case 'month':
-                            const monthAgo = new Date(now);
-                            monthAgo.setMonth(now.getMonth() - 1);
+                            const monthAgo = new Date();
+                            monthAgo.setMonth(monthAgo.getMonth() - 1);
                             matchesDate = rowDate >= monthAgo;
                             break;
                         case 'year':
-                            const yearAgo = new Date(now);
-                            yearAgo.setFullYear(now.getFullYear() - 1);
+                            const yearAgo = new Date();
+                            yearAgo.setFullYear(yearAgo.getFullYear() - 1);
                             matchesDate = rowDate >= yearAgo;
                             break;
                     }
                 }
-                
-                // Show/hide row based on all filters
+
                 if (matchesSearch && matchesStatus && matchesPayment && matchesDate) {
                     row.style.display = '';
                     visibleCount++;
@@ -527,54 +691,53 @@
                     row.style.display = 'none';
                 }
             });
-            
-            // Update filter results info
-            const filterResults = document.getElementById('filterResults');
-            const tableInfo = document.getElementById('tableInfo');
-            
-            if (searchTerm || statusFilter || paymentFilter || dateFilter) {
-                filterResults.classList.remove('hidden');
-                document.getElementById('filteredCount').textContent = visibleCount;
-                
-                // Build filter description
-                let description = '';
-                if (searchTerm) description += `Search: "${searchTerm}" `;
-                if (statusFilter) description += `Status: ${statusFilter} `;
-                if (paymentFilter) description += `Payment: ${paymentFilter} `;
-                if (dateFilter) description += `Date: ${dateFilter}`;
-                
-                tableInfo.textContent = description.trim() || 'Filtered results';
-            } else {
-                filterResults.classList.add('hidden');
-                tableInfo.textContent = 'Latest customer orders';
-            }
-            
-            // Show/hide no results message
+
+            // Handle no results message
             const noOrdersRow = document.getElementById('noOrdersRow');
-            if (visibleCount === 0 && rows.length > 0) {
-                if (!noOrdersRow) {
-                    const tbody = document.getElementById('ordersTableBody');
-                    tbody.innerHTML = `
-                        <tr id="noOrdersRow">
-                            <td colspan="8" class="py-16 text-center">
-                                <div class="w-24 h-24 rounded-full bg-Lace flex items-center justify-center mx-auto mb-6 border-4 border-Silk">
-                                    <i class="fas fa-search text-Ocean text-3xl"></i>
-                                </div>
-                                <h3 class="text-2xl font-bold text-Ocean mb-3">No Orders Found</h3>
-                                <p class="text-Wave mb-4">No orders match your current filters</p>
-                                <button onclick="clearFilters()" 
-                                        class="bg-Ocean text-Pearl hover:bg-Ocean/90 px-6 py-3 rounded-lg font-medium transition-all duration-200">
-                                    Clear Filters
-                                </button>
-                            </td>
-                        </tr>
-                    `;
+            const tableBody = document.getElementById('ordersTableBody');
+
+            // Remove any existing filter message
+            const existingFilterMessage = document.getElementById('filterNoOrders');
+            if (existingFilterMessage) {
+                existingFilterMessage.remove();
+            }
+
+            // If no rows are visible, show appropriate message
+            if (visibleCount === 0) {
+                // Check if there are actual orders (not just filtered out)
+                if (rows.length > 0) {
+                    // Create filter no results message
+                    const filterMessage = document.createElement('tr');
+                    filterMessage.id = 'filterNoOrders';
+                    filterMessage.innerHTML = `
+                <td colspan="7" class="py-12 text-center">
+                    <div class="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-search text-gray-400 text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-700 mb-3">No Orders Match Your Filters</h3>
+                    <p class="text-gray-500 mb-4">Try adjusting your search or filters</p>
+                    <button onclick="clearFilters()" 
+                            class="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg font-medium transition-colors duration-200">
+                        Clear All Filters
+                    </button>
+                </td>
+            `;
+                    tableBody.appendChild(filterMessage);
                 }
-            } else if (noOrdersRow && rows.length > 0) {
-                noOrdersRow.remove();
+                // Always hide the original "no orders" row when filtering
+                if (noOrdersRow) {
+                    noOrdersRow.style.display = 'none';
+                }
+            } else {
+                // Show the original "no orders" row only if there are truly no orders
+                if (noOrdersRow && rows.length === 0) {
+                    noOrdersRow.style.display = '';
+                } else if (noOrdersRow) {
+                    noOrdersRow.style.display = 'none';
+                }
             }
         }
-        
+
         function clearFilters() {
             document.getElementById('orderSearch').value = '';
             document.getElementById('statusFilter').value = '';
@@ -582,332 +745,444 @@
             document.getElementById('dateFilter').value = '';
             filterOrders();
         }
-        
-        // Sorting functionality
-        let currentSort = { column: null, direction: 'asc' };
-        
-        function sortTable(column) {
-            const rows = Array.from(document.querySelectorAll('.order-row'));
-            if (rows.length === 0) return;
-            
-            // Update sort indicator
-            const headers = document.querySelectorAll('th[onclick*="sortTable"]');
-            headers.forEach(header => {
-                header.classList.remove('sort-asc', 'sort-desc');
-                const icon = header.querySelector('i');
-                if (icon) icon.className = 'fas fa-sort ml-1';
-            });
-            
-            const currentHeader = document.querySelector(`th[onclick="sortTable('${column}')"]`);
-            
-            // Toggle direction if clicking same column
-            if (currentSort.column === column) {
-                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
-            } else {
-                currentSort.column = column;
-                currentSort.direction = 'asc';
-            }
-            
-            // Update header styling
-            currentHeader.classList.add(currentSort.direction === 'asc' ? 'sort-asc' : 'sort-desc');
-            
-            // Sort rows
-            rows.sort((a, b) => {
-                let aValue, bValue;
-                
-                switch(column) {
-                    case 'order_number':
-                        aValue = a.getAttribute('data-order-id');
-                        bValue = b.getAttribute('data-order-id');
-                        break;
-                    case 'customer':
-                        aValue = a.getAttribute('data-customer');
-                        bValue = b.getAttribute('data-customer');
-                        break;
-                    case 'items':
-                        aValue = parseInt(a.getAttribute('data-items'));
-                        bValue = parseInt(b.getAttribute('data-items'));
-                        break;
-                    case 'amount':
-                        aValue = parseFloat(a.getAttribute('data-amount'));
-                        bValue = parseFloat(b.getAttribute('data-amount'));
-                        break;
-                    case 'date':
-                        aValue = parseInt(a.getAttribute('data-date'));
-                        bValue = parseInt(b.getAttribute('data-date'));
-                        break;
-                    default:
-                        return 0;
-                }
-                
-                // Compare values
-                let comparison = 0;
-                if (typeof aValue === 'string') {
-                    comparison = aValue.localeCompare(bValue);
-                } else {
-                    comparison = aValue - bValue;
-                }
-                
-                return currentSort.direction === 'asc' ? comparison : -comparison;
-            });
-            
-            // Reorder rows in table
-            const tbody = document.getElementById('ordersTableBody');
-            rows.forEach(row => tbody.appendChild(row));
-        }
-        
-        // Change results per page
-        function changePerPage(value) {
-            const url = new URL(window.location.href);
-            url.searchParams.set('per_page', value);
-            url.searchParams.set('page', '1'); // Reset to first page
-            window.location.href = url.toString();
-        }
-        
-        // Enhanced export functionality with file download
-        function exportOrders() {
-            Swal.fire({
-                title: 'Export Orders',
-                html: `<div class="text-left">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-16 h-16 rounded-xl bg-Ocean/10 flex items-center justify-center">
-                            <i class="fas fa-file-export text-Ocean text-2xl"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-Ocean text-lg">Export Order Data</h4>
-                            <p class="text-Wave text-sm">Download filtered orders in your preferred format</p>
-                        </div>
-                    </div>
-                    <div class="space-y-6">
-                        <div>
-                            <label class="block text-Wave text-sm font-medium mb-3">Export Format</label>
-                            <div class="grid grid-cols-3 gap-3">
-                                <label class="relative cursor-pointer">
-                                    <input type="radio" name="exportFormat" value="csv" checked class="sr-only peer">
-                                    <div class="p-4 border-2 border-Silk rounded-xl text-center peer-checked:border-Ocean peer-checked:bg-Ocean/5 transition-all duration-200 hover:bg-Lace">
-                                        <i class="fas fa-file-csv text-green-600 text-xl mb-2"></i>
-                                        <p class="font-medium text-Ocean">CSV</p>
-                                        <p class="text-Wave text-xs">Excel compatible</p>
-                                    </div>
-                                </label>
-                                <label class="relative cursor-pointer">
-                                    <input type="radio" name="exportFormat" value="excel" class="sr-only peer">
-                                    <div class="p-4 border-2 border-Silk rounded-xl text-center peer-checked:border-Ocean peer-checked:bg-Ocean/5 transition-all duration-200 hover:bg-Lace">
-                                        <i class="fas fa-file-excel text-green-700 text-xl mb-2"></i>
-                                        <p class="font-medium text-Ocean">Excel</p>
-                                        <p class="text-Wave text-xs">.xlsx format</p>
-                                    </div>
-                                </label>
-                                <label class="relative cursor-pointer">
-                                    <input type="radio" name="exportFormat" value="pdf" class="sr-only peer">
-                                    <div class="p-4 border-2 border-Silk rounded-xl text-center peer-checked:border-Ocean peer-checked:bg-Ocean/5 transition-all duration-200 hover:bg-Lace">
-                                        <i class="fas fa-file-pdf text-red-600 text-xl mb-2"></i>
-                                        <p class="font-medium text-Ocean">PDF</p>
-                                        <p class="text-Wave text-xs">Printable format</p>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-Wave text-sm font-medium mb-2">From Date</label>
-                                <input type="date" id="exportFrom" class="w-full border border-Silk rounded-lg px-4 py-3 focus:border-Ocean focus:ring-Ocean">
-                            </div>
-                            <div>
-                                <label class="block text-Wave text-sm font-medium mb-2">To Date</label>
-                                <input type="date" id="exportTo" class="w-full border border-Silk rounded-lg px-4 py-3 focus:border-Ocean focus:ring-Ocean">
-                            </div>
-                        </div>
-                        
-                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                            <div class="flex items-start">
-                                <i class="fas fa-info-circle text-blue-600 mr-3 mt-0.5"></i>
-                                <div>
-                                    <p class="text-blue-800 text-sm font-medium mb-1">Export includes:</p>
-                                    <ul class="text-blue-700 text-sm space-y-1">
-                                        <li>• Order details and customer information</li>
-                                        <li>• Product items and quantities</li>
-                                        <li>• Payment and shipping details</li>
-                                        <li>• Current filter settings</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>`,
-                showCancelButton: true,
-                confirmButtonColor: '#0066cc',
-                cancelButtonColor: '#94a3b8',
-                confirmButtonText: 'Download Export',
-                cancelButtonText: 'Cancel',
-                reverseButtons: true,
-                width: '600px',
-                customClass: {
-                    popup: 'rounded-2xl',
-                    confirmButton: 'px-6 py-3 rounded-lg font-semibold',
-                    cancelButton: 'px-6 py-3 rounded-lg font-semibold'
-                },
-                didOpen: () => {
-                    // Set default dates
-                    const today = new Date().toISOString().split('T')[0];
-                    const lastMonth = new Date();
-                    lastMonth.setMonth(lastMonth.getMonth() - 1);
-                    const lastMonthStr = lastMonth.toISOString().split('T')[0];
-                    
-                    document.getElementById('exportFrom').value = lastMonthStr;
-                    document.getElementById('exportTo').value = today;
-                    
-                    // Initialize radio button styling
-                    document.querySelectorAll('input[name="exportFormat"]').forEach(radio => {
-                        radio.addEventListener('change', function() {
-                            document.querySelectorAll('label.relative > div').forEach(div => {
-                                div.classList.remove('peer-checked:border-Ocean', 'peer-checked:bg-Ocean/5');
-                            });
-                            this.nextElementSibling.classList.add('peer-checked:border-Ocean', 'peer-checked:bg-Ocean/5');
-                        });
-                        if (radio.checked) {
-                            radio.nextElementSibling.classList.add('peer-checked:border-Ocean', 'peer-checked:bg-Ocean/5');
-                        }
-                    });
-                },
-                preConfirm: () => {
-                    const format = document.querySelector('input[name="exportFormat"]:checked').value;
-                    const from = document.getElementById('exportFrom').value;
-                    const to = document.getElementById('exportTo').value;
-                    
-                    if (!from || !to) {
-                        Swal.showValidationMessage('Please select both date ranges');
-                        return false;
-                    }
-                    
-                    return new Promise((resolve) => {
-                        // Show loading state
-                        Swal.showLoading();
-                        
-                        // Simulate API call with progress
-                        let progress = 0;
-                        const progressInterval = setInterval(() => {
-                            progress += 20;
-                            Swal.update({
-                                html: `<div class="text-center">
-                                    <div class="w-16 h-16 rounded-full bg-Ocean/10 flex items-center justify-center mx-auto mb-6">
-                                        <i class="fas fa-spinner fa-spin text-Ocean text-2xl"></i>
-                                    </div>
-                                    <h4 class="font-semibold text-Ocean mb-2">Preparing Export</h4>
-                                    <p class="text-Wave text-sm mb-4">Gathering order data and generating file...</p>
-                                    <div class="w-full bg-Lace rounded-full h-2">
-                                        <div class="bg-Ocean h-2 rounded-full transition-all duration-300" style="width: ${progress}%"></div>
-                                    </div>
-                                    <p class="text-Wave text-xs mt-2">${progress}% complete</p>
-                                </div>`
-                            });
-                            
-                            if (progress >= 100) {
-                                clearInterval(progressInterval);
-                                setTimeout(() => {
-                                    resolve({ format, from, to });
-                                }, 500);
-                            }
-                        }, 300);
-                    });
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Create and trigger download
-                    const filename = `orders_export_${result.value.from}_to_${result.value.to}.${result.value.format}`;
-                    const blob = new Blob(['Simulated export data'], { type: 'text/plain' });
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = filename;
-                    document.body.appendChild(a);
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                    document.body.removeChild(a);
-                    
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Export Downloaded!',
-                        html: `<div class="text-center">
-                            <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
-                                <i class="fas fa-check text-green-600 text-2xl"></i>
-                            </div>
-                            <p class="text-Wave mb-4">Your export file has been downloaded as:</p>
-                            <div class="bg-Lace rounded-xl p-4 mb-4">
-                                <code class="text-Ocean font-mono text-sm">${filename}</code>
-                            </div>
-                            <div class="text-sm text-Wave">
-                                <p><i class="fas fa-info-circle mr-2"></i>Check your browser's downloads folder</p>
-                            </div>
-                        </div>`,
-                        confirmButtonColor: '#0066cc',
-                        confirmButtonText: 'Open Folder',
-                        showCancelButton: true,
-                        cancelButtonText: 'Close',
-                        reverseButtons: true,
-                        customClass: {
-                            popup: 'rounded-2xl'
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // In a real app, this would open the downloads folder
-                            // For now, we'll just show a message
-                            Swal.fire({
-                                icon: 'info',
-                                title: 'Downloads Folder',
-                                text: 'Please check your browser\'s downloads folder for the exported file.',
-                                confirmButtonColor: '#0066cc',
-                                timer: 2000,
-                                timerProgressBar: true
-                            });
-                        }
-                    });
-                }
-            });
-        }
-        
-        // View order details function (keep from previous)
-        function viewOrderDetails(orderId) {
-            // Implementation from previous code
-        }
-        
-        // Order actions function (keep from previous)
-        function showOrderActions(orderId, orderNumber) {
-            // Implementation from previous code
-        }
-        
-        // Initialize filter results on page load
+
+        // Initialize filters on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Set initial values from URL parameters if they exist
-            const urlParams = new URLSearchParams(window.location.search);
-            
-            if (urlParams.has('status')) {
-                document.getElementById('statusFilter').value = urlParams.get('status');
-            }
-            
-            if (urlParams.has('payment_status')) {
-                document.getElementById('paymentFilter').value = urlParams.get('payment_status');
-            }
-            
-            if (urlParams.has('date_range')) {
-                document.getElementById('dateFilter').value = urlParams.get('date_range');
-            }
-            
-            if (urlParams.has('search')) {
-                document.getElementById('orderSearch').value = urlParams.get('search');
-            }
-            
-            // Apply initial filters
-            filterOrders();
-            
-            // Add real-time search with debounce
+            filterOrders(); // Apply any existing filters from page load
+
+            // Add debounce to search input for better performance
             let searchTimeout;
-            document.getElementById('orderSearch').addEventListener('input', function() {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(filterOrders, 300);
+            const searchInput = document.getElementById('orderSearch');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(filterOrders, 300);
+                });
+            }
+
+            // Also add event listeners to filters
+            const filters = ['statusFilter', 'paymentFilter', 'dateFilter'];
+            filters.forEach(filterId => {
+                const filterElement = document.getElementById(filterId);
+                if (filterElement) {
+                    filterElement.addEventListener('change', filterOrders);
+                }
             });
         });
+
+        function clearFilters() {
+            document.getElementById('orderSearch').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('paymentFilter').value = '';
+            document.getElementById('dateFilter').value = '';
+            filterOrders();
+        }
+
+        // View Order Details with AJAX
+        async function viewOrderDetails(orderId) {
+            const modal = document.getElementById('orderDetailsModal');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+
+            try {
+                const response = await fetch(`/admin/orders/${orderId}/details`);
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to load order details');
+                }
+
+                document.getElementById('modalContent').innerHTML = data.html;
+                document.getElementById('modalTitle').textContent = `Order ${data.order_number}`;
+                document.getElementById('modalSubtitle').textContent = `Order Details`;
+
+            } catch (error) {
+                document.getElementById('modalContent').innerHTML = `
+                <div class="text-center py-12">
+                    <div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Failed to Load Order</h3>
+                    <p class="text-gray-600 mb-4">${error.message || 'An error occurred'}</p>
+                    <button onclick="viewOrderDetails(${orderId})"
+                            class="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg font-medium">
+                        Try Again
+                    </button>
+                </div>
+            `;
+            }
+        }
+
+        // Toggle Actions Menu
+        function toggleActionsMenu(orderId) {
+            const menuId = `actionsMenu-${orderId}`;
+            const menu = document.getElementById(menuId);
+
+            // Close all other menus
+            document.querySelectorAll('[id^="actionsMenu-"]').forEach(otherMenu => {
+                if (otherMenu.id !== menuId) {
+                    otherMenu.classList.add('hidden');
+                }
+            });
+
+            menu.classList.toggle('hidden');
+
+            // Close menu when clicking outside
+            setTimeout(() => {
+                const closeMenuHandler = (e) => {
+                    if (!menu.contains(e.target) && !e.target.closest(
+                            `[onclick="toggleActionsMenu(${orderId})"]`)) {
+                        menu.classList.add('hidden');
+                        document.removeEventListener('click', closeMenuHandler);
+                    }
+                };
+                document.addEventListener('click', closeMenuHandler);
+            }, 0);
+        }
+
+        // Update Status
+        function updateStatus(orderId) {
+            document.getElementById('statusOrderId').value = orderId;
+            document.getElementById('statusModal').classList.remove('hidden');
+        }
+
+        async function submitStatusUpdate(event) {
+            event.preventDefault();
+            const orderId = document.getElementById('statusOrderId').value;
+            const form = event.target;
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(`/admin/orders/${orderId}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content'),
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(data.error);
+                }
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Status Updated',
+                    text: data.message,
+                    confirmButtonColor: '#2563eb',
+                    timer: 2000
+                });
+
+                // Update UI
+                const row = document.querySelector(`tr[data-order-id="${orderId}"]`);
+                if (row) {
+                    const statusBadge = row.querySelector('span.inline-flex');
+                    if (statusBadge) {
+                        const newStatus = formData.get('order_status');
+                        const statusColors = {
+                            pending: 'bg-yellow-100 text-yellow-800',
+                            confirmed: 'bg-blue-100 text-blue-800',
+                            processing: 'bg-purple-100 text-purple-800',
+                            shipped: 'bg-indigo-100 text-indigo-800',
+                            delivered: 'bg-green-100 text-green-800',
+                            cancelled: 'bg-red-100 text-red-800',
+                            refunded: 'bg-gray-100 text-gray-800'
+                        };
+
+                        statusBadge.className =
+                            `inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${statusColors[newStatus]}`;
+                        statusBadge.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+
+                        // Update data attribute
+                        row.setAttribute('data-status', newStatus);
+                    }
+                }
+
+                closeModal('statusModal');
+                form.reset();
+
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Update Failed',
+                    text: error.message || 'Failed to update order status',
+                    confirmButtonColor: '#dc2626'
+                });
+            }
+        }
+
+        // Update Payment
+        function updatePayment(orderId) {
+            document.getElementById('paymentOrderId').value = orderId;
+            document.getElementById('paymentModal').classList.remove('hidden');
+        }
+
+        async function submitPaymentUpdate(event) {
+            event.preventDefault();
+            const orderId = document.getElementById('paymentOrderId').value;
+            const form = event.target;
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(`/admin/orders/${orderId}/payment`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content'),
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(data.error);
+                }
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Payment Updated',
+                    text: data.message,
+                    confirmButtonColor: '#2563eb',
+                    timer: 2000
+                });
+
+                // Update UI
+                const row = document.querySelector(`tr[data-order-id="${orderId}"]`);
+                if (row) {
+                    const paymentBadges = row.querySelectorAll('span.inline-flex');
+                    const paymentBadge = paymentBadges[1] || paymentBadges[0];
+
+                    if (paymentBadge) {
+                        const newPayment = formData.get('payment_status');
+                        const paymentColors = {
+                            pending: 'bg-yellow-100 text-yellow-800',
+                            paid: 'bg-green-100 text-green-800',
+                            failed: 'bg-red-100 text-red-800',
+                            refunded: 'bg-gray-100 text-gray-800'
+                        };
+
+                        paymentBadge.className =
+                            `inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${paymentColors[newPayment]}`;
+                        paymentBadge.textContent = newPayment.charAt(0).toUpperCase() + newPayment.slice(1);
+
+                        // Update data attribute
+                        row.setAttribute('data-payment', newPayment);
+                    }
+                }
+
+                closeModal('paymentModal');
+                form.reset();
+
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Update Failed',
+                    text: error.message || 'Failed to update payment status',
+                    confirmButtonColor: '#dc2626'
+                });
+            }
+        }
+
+        // Add Tracking
+        function addTracking(orderId) {
+            document.getElementById('trackingOrderId').value = orderId;
+            document.getElementById('trackingModal').classList.remove('hidden');
+        }
+
+        async function submitTrackingInfo(event) {
+            event.preventDefault();
+            const orderId = document.getElementById('trackingOrderId').value;
+            const form = event.target;
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(`/admin/orders/${orderId}/tracking`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content'),
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(data.error);
+                }
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Tracking Added',
+                    text: data.message,
+                    confirmButtonColor: '#2563eb',
+                    timer: 2000
+                });
+
+                closeModal('trackingModal');
+                form.reset();
+
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Update Failed',
+                    text: error.message || 'Failed to add tracking information',
+                    confirmButtonColor: '#dc2626'
+                });
+            }
+        }
+
+        // Delete Order
+        function deleteOrder(orderId, orderNumber) {
+            Swal.fire({
+                title: 'Delete Order?',
+                html: `Are you sure you want to delete order <strong>${orderNumber}</strong>?<br>This action cannot be undone.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Delete Order',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Create form data
+                    const formData = new FormData();
+                    formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute(
+                        'content'));
+                    formData.append('_method', 'DELETE');
+
+                    // Make API call to delete
+                    fetch(`/admin/orders/${orderId}`, {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Remove row from table
+                                const row = document.querySelector(`tr[data-order-id="${orderId}"]`);
+                                if (row) {
+                                    row.remove();
+                                }
+
+                                Swal.fire('Deleted!', data.message, 'success');
+                            } else {
+                                throw new Error(data.error);
+                            }
+                        })
+                        .catch(error => {
+                            Swal.fire('Error!', error.message || 'Failed to delete order.', 'error');
+                        });
+                }
+            });
+        }
+
+        // Export functions
+        function showExportModal() {
+            document.getElementById('exportModal').classList.remove('hidden');
+        }
+
+        // Modal functions
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Print order
+        function printOrder() {
+            const modalContent = document.getElementById('modalContent').innerHTML;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Order Details</title>
+                <style>
+                    body { font-family: Arial, sans-serif; padding: 20px; }
+                    .header { text-align: center; margin-bottom: 30px; }
+                    .section { margin-bottom: 20px; }
+                    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                    th { background-color: #f5f5f5; }
+                    .total { font-weight: bold; font-size: 1.2em; }
+                </style>
+            </head>
+            <body>
+                ${modalContent}
+            </body>
+            </html>
+        `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        // Initialize event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Close modals on escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeModal('orderDetailsModal');
+                    closeModal('statusModal');
+                    closeModal('paymentModal');
+                    closeModal('trackingModal');
+                    closeModal('exportModal');
+                }
+            });
+
+            // Close modals on background click
+            document.querySelectorAll('[id$="Modal"]').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeModal(this.id);
+                    }
+                });
+            });
+
+            // Initialize radio buttons in export modal
+            document.querySelectorAll('input[name="format"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    document.querySelectorAll('label.relative > div').forEach(div => {
+                        div.classList.remove('peer-checked:border-blue-500',
+                            'peer-checked:bg-blue-50');
+                    });
+                    if (this.nextElementSibling) {
+                        this.nextElementSibling.classList.add('peer-checked:border-blue-500',
+                            'peer-checked:bg-blue-50');
+                    }
+                });
+                if (radio.checked && radio.nextElementSibling) {
+                    radio.nextElementSibling.classList.add('peer-checked:border-blue-500',
+                        'peer-checked:bg-blue-50');
+                }
+            });
+        });
+
+        // Add CSS for animations
+        const style = document.createElement('style');
+        style.textContent = `
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-slideIn {
+            animation: slideIn 0.3s ease-out;
+        }
+    `;
+        document.head.appendChild(style);
     </script>
-    @endpush
-@endsection
+@endpush

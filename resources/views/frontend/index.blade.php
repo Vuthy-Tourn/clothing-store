@@ -5,7 +5,7 @@
     <section class="relative overflow-hidden h-screen min-h-[700px]">
         @foreach ($carousels as $index => $carousel)
             <div class="hero-slide absolute inset-0 opacity-0 transition-all duration-1000 ease-out {{ $loop->first ? 'active opacity-100 z-10' : 'z-0' }}"
-                style="background-image: url('{{ asset($carousel->image_path) }}'); background-size: cover; background-position: center;">
+                style="background-image: url('{{ asset('storage/'.$carousel->image_path) }}'); background-size: cover; background-position: center;">
 
                 <!-- Gradient Overlay -->
                 <div class="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-transparent"></div>

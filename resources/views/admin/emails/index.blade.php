@@ -2,67 +2,112 @@
 
 @section('content')
     <div class="mb-8" data-aos="fade-down">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2 fashion-font">Email Subscribers</h1>
-        <p class="text-gray-600 text-lg">Send updates, offers, or news to all opted-in users</p>
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Email Subscribers</h1>
+                <p class="text-gray-600 text-lg">Send updates, offers, or news to all opted-in users</p>
+            </div>
+            <button onclick="showTestEmailModal()"
+                class="bg-purple-600 text-white hover:bg-purple-700 px-4 py-2 rounded-lg font-medium transition-colors flex items-center">
+                <i class="fas fa-envelope mr-2"></i> Send Test Email
+            </button>
+        </div>
     </div>
 
     <!-- Stats Overview -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white border border-gray-200 p-6 rounded-xl shadow-sm" data-aos="fade-up" data-aos-delay="100">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 p-6 rounded-xl shadow-sm transform hover:-translate-y-1 transition-transform duration-300"
+            data-aos="fade-up" data-aos-delay="100">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-500 text-sm font-medium">Total Subscribers</p>
-                    <p class="text-2xl font-bold text-gray-900 mt-1">{{ $subscribers->count() }}</p>
+                    <p class="text-blue-600 text-sm font-medium">Total Subscribers</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-1" id="total-subscribers">{{ $subscribers->count() }}</p>
+                    <p class="text-blue-500 text-xs mt-2 flex items-center">
+                        <i class="fas fa-users mr-1"></i> All time subscribers
+                    </p>
                 </div>
-                <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
-                    <i class="fas fa-users text-gray-700 text-xl"></i>
+                <div class="w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center">
+                    <i class="fas fa-users text-white text-xl"></i>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white border border-gray-200 p-6 rounded-xl shadow-sm" data-aos="fade-up" data-aos-delay="150">
+        <div class="bg-gradient-to-r from-green-50 to-green-100 border border-green-200 p-6 rounded-xl shadow-sm transform hover:-translate-y-1 transition-transform duration-300"
+            data-aos="fade-up" data-aos-delay="150">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-500 text-sm font-medium">Active Campaigns</p>
-                    <p class="text-2xl font-bold text-gray-900 mt-1">12</p>
+                    <p class="text-green-600 text-sm font-medium">Active Now</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-1">{{ $totalActive }}</p>
+                    <p class="text-green-500 text-xs mt-2 flex items-center">
+                        <i class="fas fa-check-circle mr-1"></i> Currently subscribed
+                    </p>
                 </div>
-                <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
-                    <i class="fas fa-chart-line text-gray-700 text-xl"></i>
+                <div class="w-12 h-12 rounded-lg bg-green-500 flex items-center justify-center">
+                    <i class="fas fa-user-check text-white text-xl"></i>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white border border-gray-200 p-6 rounded-xl shadow-sm" data-aos="fade-up" data-aos-delay="200">
+        <div class="bg-gradient-to-r from-purple-50 to-purple-100 border border-purple-200 p-6 rounded-xl shadow-sm transform hover:-translate-y-1 transition-transform duration-300"
+            data-aos="fade-up" data-aos-delay="200">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-500 text-sm font-medium">Open Rate</p>
-                    <p class="text-2xl font-bold text-gray-900 mt-1">68%</p>
+                    <p class="text-purple-600 text-sm font-medium">Inactive</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-1">{{ $totalInactive }}</p>
+                    <p class="text-purple-500 text-xs mt-2 flex items-center">
+                        <i class="fas fa-user-times mr-1"></i> Unsubscribed
+                    </p>
                 </div>
-                <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
-                    <i class="fas fa-envelope-open text-gray-700 text-xl"></i>
+                <div class="w-12 h-12 rounded-lg bg-purple-500 flex items-center justify-center">
+                    <i class="fas fa-user-slash text-white text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-orange-50 to-orange-100 border border-orange-200 p-6 rounded-xl shadow-sm transform hover:-translate-y-1 transition-transform duration-300"
+            data-aos="fade-up" data-aos-delay="250">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-orange-600 text-sm font-medium">30-Day Growth</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-1">+{{ $last30DaysGrowth }}</p>
+                    <p class="text-orange-500 text-xs mt-2 flex items-center">
+                        <i class="fas fa-chart-line mr-1"></i> New subscribers
+                    </p>
+                </div>
+                <div class="w-12 h-12 rounded-lg bg-orange-500 flex items-center justify-center">
+                    <i class="fas fa-chart-bar text-white text-xl"></i>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Send Newsletter Section -->
-    <div class="bg-white border border-gray-200 rounded-xl shadow-sm mb-8" data-aos="fade-up" data-aos-delay="250">
-        <div class="p-6 border-b border-gray-200">
-            <h2 class="text-xl font-bold text-gray-900 fashion-font flex items-center">
-                <i class="fas fa-paper-plane mr-2 text-gray-700"></i> Send Newsletter
+    <div class="bg-white border border-gray-200 rounded-xl shadow-lg mb-8 overflow-hidden" data-aos="fade-up"
+        data-aos-delay="300">
+        <div class="bg-gradient-to-r from-gray-900 to-gray-800 p-6">
+            <h2 class="text-xl font-bold text-white flex items-center">
+                <i class="fas fa-paper-plane mr-3 text-blue-300"></i> Compose Newsletter
             </h2>
+            <p class="text-gray-300 text-sm mt-1">Send engaging content to your subscribers</p>
         </div>
 
-        <form action="{{ route('admin.emails.send') }}" method="POST" class="p-6">
+        <form id="newsletter-form" class="p-6">
             @csrf
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="space-y-4">
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="space-y-6">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Email Subject</label>
-                        <input type="text" name="subject" value="{{ old('subject') }}" required
-                            class="w-full border border-gray-300 bg-white text-gray-900 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-colors"
-                            placeholder="Enter email subject...">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                            <i class="fas fa-heading mr-2 text-gray-500"></i> Email Subject
+                            <span class="text-red-500 ml-1">*</span>
+                        </label>
+                        <input type="text" name="subject" id="subject" required
+                            class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400"
+                            placeholder="Enter compelling subject line...">
+                        <div class="flex justify-between mt-2">
+                            <span class="text-xs text-gray-500">Keep it under 60 characters</span>
+                            <span id="subject-counter" class="text-xs font-medium">0/60</span>
+                        </div>
                         @error('subject')
                             <p class="text-red-500 text-sm mt-1 flex items-center">
                                 <i class="fas fa-exclamation-circle mr-1"></i> {{ $message }}
@@ -71,115 +116,1095 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Preview Text</label>
-                        <input type="text" name="preview_text" value="{{ old('preview_text') }}"
-                            class="w-full border border-gray-300 bg-white text-gray-900 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-colors"
-                            placeholder="Brief preview text...">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                            <i class="fas fa-eye mr-2 text-gray-500"></i> Preview Text
+                        </label>
+                        <input type="text" name="preview_text" id="preview_text"
+                            class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400"
+                            placeholder="Brief preview text for inbox...">
+                        <div class="flex justify-between mt-2">
+                            <span class="text-xs text-gray-500">Appears in email preview</span>
+                            <span id="preview-counter" class="text-xs font-medium">0/120</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                        <h4 class="font-medium text-blue-800 mb-2 flex items-center">
+                            <i class="fas fa-info-circle mr-2"></i> Sending Tips
+                        </h4>
+                        <ul class="text-sm text-blue-700 space-y-1">
+                            <li class="flex items-center">
+                                <i class="fas fa-check-circle mr-2 text-xs"></i> Best send time: 10 AM - 2 PM
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check-circle mr-2 text-xs"></i> Personalize subject lines
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check-circle mr-2 text-xs"></i> Always test before sending
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
-                <div class="space-y-4">
+                <div class="space-y-6">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Email Message</label>
-                        <textarea name="message" rows="5" required
-                            class="w-full border border-gray-300 bg-white text-gray-900 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-colors resize-none"
-                            placeholder="Write your newsletter content...">{{ old('message') }}</textarea>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-sm font-semibold text-gray-700 flex items-center">
+                                <i class="fas fa-edit mr-2 text-gray-500"></i> Email Content
+                                <span class="text-red-500 ml-1">*</span>
+                            </label>
+                            <div class="flex space-x-2">
+                                {{-- <button type="button" onclick="insertToken('{{first_name}}')" 
+                                        class="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded">
+                                    First Name
+                                </button>
+                                <button type="button" onclick="insertToken('{{last_name}}')"
+                                        class="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded">
+                                    Last Name
+                                </button> --}}
+                            </div>
+                        </div>
+                        <textarea name="message" id="message" rows="8" required
+                            class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400 resize-none"
+                            placeholder="Write your engaging newsletter content..."></textarea>
+                        <div class="flex justify-between mt-2">
+                            <span class="text-xs text-gray-500">Plain text or HTML supported</span>
+                            <span id="message-counter" class="text-xs font-medium">0/5000</span>
+                        </div>
                         @error('message')
                             <p class="text-red-500 text-sm mt-1 flex items-center">
                                 <i class="fas fa-exclamation-circle mr-1"></i> {{ $message }}
                             </p>
                         @enderror
                     </div>
+
+                    <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-medium text-gray-800">Recipients</h4>
+                            <span class="text-sm text-gray-600 font-medium">
+                                <i class="fas fa-users mr-1"></i>
+                                <span id="recipient-count">{{ $totalActive }}</span> subscribers
+                            </span>
+                        </div>
+                        <p class="text-sm text-gray-600">This newsletter will be sent to all active subscribers.</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="flex justify-end mt-6 pt-6 border-t border-gray-200">
-                <button type="submit"
-                        class="bg-gray-900 text-white hover:bg-gray-800 px-8 py-3 rounded-lg font-medium transition-colors flex items-center">
-                    <i class="fas fa-paper-plane mr-2"></i> Send to All Subscribers
-                </button>
+            <div class="flex justify-between items-center mt-8 pt-8 border-t border-gray-200">
+                <div>
+                    <button type="button" onclick="previewEmail()"
+                        class="bg-gray-200 text-gray-800 hover:bg-gray-300 px-6 py-3 rounded-xl font-medium transition-colors flex items-center">
+                        <i class="fas fa-eye mr-2"></i> Preview Email
+                    </button>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button type="button" onclick="clearForm()"
+                        class="text-gray-600 hover:text-gray-900 hover:bg-gray-100 px-6 py-3 rounded-xl font-medium transition-colors">
+                        Clear
+                    </button>
+                    <button type="submit" id="send-btn"
+                        class="bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 px-8 py-3 rounded-xl font-medium transition-all transform hover:scale-105 flex items-center shadow-lg">
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        <span>Send Newsletter</span>
+                        <span id="sending-text" class="hidden ml-2">Sending...</span>
+                    </button>
+                </div>
             </div>
         </form>
     </div>
 
     <!-- Subscribers List -->
-    <div class="bg-white border border-gray-200 rounded-xl shadow-sm" data-aos="fade-up" data-aos-delay="300">
-        <div class="p-6 border-b border-gray-200 flex items-center justify-between">
-            <h2 class="text-xl font-bold text-gray-900 fashion-font flex items-center">
-                <i class="fas fa-users mr-2 text-gray-700"></i> Subscribers List
-                <span class="ml-2 bg-gray-900 text-white text-sm px-2 py-1 rounded-full">{{ $subscribers->count() }}</span>
-            </h2>
-            
+    <div class="bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden" data-aos="fade-up"
+        data-aos-delay="350">
+        <div class="bg-gradient-to-r from-gray-50 to-white p-6 border-b border-gray-200 flex items-center justify-between">
+            <div class="flex items-center">
+                <div
+                    class="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center mr-4">
+                    <i class="fas fa-users text-white text-xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900">Subscribers List</h2>
+                    <p class="text-gray-600">Manage your newsletter subscribers</p>
+                </div>
+            </div>
+
             <div class="flex items-center space-x-3">
-                <button class="bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center">
-                    <i class="fas fa-download mr-2"></i> Export
+                <div class="relative">
+                    <input type="text" id="search-subscribers"
+                        class="border border-gray-300 rounded-lg px-4 py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-64"
+                        placeholder="Search subscribers...">
+                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                </div>
+                <button onclick="exportSubscribers()"
+                    class="bg-green-100 text-green-700 hover:bg-green-200 px-4 py-2.5 rounded-lg font-medium transition-colors flex items-center">
+                    <i class="fas fa-file-export mr-2"></i> Export
+                </button>
+                <button onclick="showAddSubscriberModal()"
+                    class="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2.5 rounded-lg font-medium transition-colors flex items-center">
+                    <i class="fas fa-plus mr-2"></i> Add Subscriber
                 </button>
             </div>
         </div>
 
-        <div class="divide-y divide-gray-200">
-            @forelse ($subscribers as $email)
-            <div class="p-6 flex items-center justify-between hover:bg-gray-50 transition-colors group" 
-                 data-aos="fade-in" data-aos-delay="{{ $loop->index * 50 }}">
-                <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-gray-200 transition-colors">
-                        <i class="fas fa-envelope text-gray-700"></i>
+        @if ($subscribers->count() > 0)
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="select-all" class="rounded text-blue-600">
+                                    <span class="ml-2">Email</span>
+                                </label>
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Status
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Subscribed Date
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                User
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200" id="subscribers-table">
+                        @foreach ($subscribers as $subscriber)
+                            <tr class="hover:bg-gray-50 transition-colors"
+                                data-email="{{ strtolower($subscriber->email) }}" data-id="{{ $subscriber->id }}">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" class="subscriber-checkbox rounded text-blue-600"
+                                            value="{{ $subscriber->id }}">
+                                        <div class="ml-4">
+                                            <div class="flex items-center">
+                                                <div
+                                                    class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold mr-3">
+                                                    {{ strtoupper(substr($subscriber->email, 0, 1)) }}
+                                                </div>
+                                                <div>
+                                                    <p class="font-semibold text-gray-900">{{ $subscriber->email }}</p>
+                                                    @if ($subscriber->user_id)
+                                                        <p class="text-gray-500 text-sm">User ID:
+                                                            {{ $subscriber->user_id }}</p>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span
+                                        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        <i class="fas fa-check-circle mr-1"></i> Active
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">
+                                        {{ $subscriber->subscribed_at->format('M j, Y') }}
+                                    </div>
+                                    <div class="text-sm text-gray-500">
+                                        {{ $subscriber->subscribed_at->format('g:i A') }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if ($subscriber->user)
+                                        <div class="flex items-center">
+                                            <div class="ml-3">
+                                                <p class="text-sm font-medium text-gray-900">{{ $subscriber->user->name }}
+                                                </p>
+                                                <p class="text-sm text-gray-500">{{ $subscriber->user->email }}</p>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <span class="text-gray-400 text-sm">Guest</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <div class="flex items-center space-x-2">
+                                        <button onclick="sendTestToSubscriber('{{ $subscriber->email }}')"
+                                            class="text-blue-600 hover:text-blue-900 p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                                            title="Send test email">
+                                            <i class="fas fa-envelope"></i>
+                                        </button>
+                                        <button onclick="showSubscriberInfo('{{ $subscriber->id }}')"
+                                            class="text-gray-600 hover:text-gray-900 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                                            title="View details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button
+                                            onclick="confirmRemoveSubscriber('{{ $subscriber->id }}', '{{ $subscriber->email }}')"
+                                            class="text-red-600 hover:text-red-900 p-2 hover:bg-red-50 rounded-lg transition-colors"
+                                            title="Remove subscriber">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <button onclick="deleteSelectedSubscribers()"
+                            class="text-red-600 hover:text-red-800 text-sm font-medium flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                            id="delete-selected-btn" disabled>
+                            <i class="fas fa-trash mr-2"></i> Remove Selected
+                        </button>
+                        <span class="text-sm text-gray-600" id="selected-count">0 selected</span>
                     </div>
-                    <div>
-                        <p class="font-semibold text-gray-900">{{ $email->email }}</p>
-                        <div class="flex items-center space-x-4 mt-1">
-                            <span class="text-gray-500 text-sm flex items-center">
-                                <i class="fas fa-calendar mr-1 text-xs"></i>
-                                Subscribed {{ $email->created_at->diffForHumans() }}
-                            </span>
-                            <span class="text-gray-500 text-sm flex items-center">
-                                <i class="fas fa-clock mr-1 text-xs"></i>
-                                {{ $email->created_at->format('M j, Y') }}
-                            </span>
+                    <div class="flex items-center space-x-6">
+                        <div class="text-sm text-gray-600">
+                            Showing <span class="font-semibold">{{ $subscribers->count() }}</span> active subscribers
                         </div>
                     </div>
                 </div>
-                
-                <div class="flex items-center space-x-2">
-                    <button class="bg-gray-100 text-gray-700 hover:bg-gray-200 w-10 h-10 rounded-lg flex items-center justify-center transition-colors">
-                        <i class="fas fa-envelope-open-text"></i>
-                    </button>
-                    <form action="{{ route('admin.emails.destroy', $email) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" 
-                                class="bg-red-100 text-red-600 hover:bg-red-200 w-10 h-10 rounded-lg flex items-center justify-center transition-colors"
-                                onclick="return confirm('Are you sure you want to remove this subscriber?')">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </form>
-                </div>
             </div>
-            @empty
+        @else
             <div class="p-12 text-center">
                 <div class="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
                     <i class="fas fa-envelope-open text-gray-400 text-2xl"></i>
                 </div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2">No Subscribers Yet</h3>
+                <h3 class="text-lg font-bold text-gray-900 mb-2">No Active Subscribers</h3>
                 <p class="text-gray-600 mb-4">Subscribers will appear here when they sign up for your newsletter</p>
-                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 max-w-md mx-auto">
-                    <p class="text-gray-500 text-sm">Share your newsletter signup link to start building your audience</p>
-                </div>
+                <button onclick="showAddSubscriberModal()"
+                    class="bg-blue-600 text-white hover:bg-blue-700 px-6 py-3 rounded-lg font-medium transition-colors flex items-center mx-auto">
+                    <i class="fas fa-plus mr-2"></i> Add Your First Subscriber
+                </button>
             </div>
-            @endforelse
-        </div>
-
-        @if($subscribers->count() > 0)
-        <div class="p-4 border-t border-gray-200 bg-gray-50">
-            <div class="flex items-center justify-between text-sm text-gray-500">
-                <span>Showing {{ $subscribers->count() }} subscribers</span>
-                <div class="flex items-center space-x-4">
-                    <button class="hover:text-gray-900 transition-colors">Previous</button>
-                    <span>Page 1 of 1</span>
-                    <button class="hover:text-gray-900 transition-colors">Next</button>
-                </div>
-            </div>
-        </div>
         @endif
     </div>
 @endsection
+
+@push('styles')
+    <style>
+        .counter-exceeded {
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        .character-limit {
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 0 1px #ef4444 !important;
+        }
+
+        .token-btn {
+            transition: all 0.2s ease;
+        }
+
+        .token-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+@endpush
+
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // Initialize character counters
+        document.addEventListener('DOMContentLoaded', function() {
+            // Subject counter
+            const subjectField = document.getElementById('subject');
+            const subjectCounter = document.getElementById('subject-counter');
+            if (subjectField && subjectCounter) {
+                subjectField.addEventListener('input', function() {
+                    updateCounter(this, subjectCounter, 60);
+                });
+                updateCounter(subjectField, subjectCounter, 60);
+            }
+
+            // Preview counter
+            const previewField = document.getElementById('preview_text');
+            const previewCounter = document.getElementById('preview-counter');
+            if (previewField && previewCounter) {
+                previewField.addEventListener('input', function() {
+                    updateCounter(this, previewCounter, 120);
+                });
+                updateCounter(previewField, previewCounter, 120);
+            }
+
+            // Message counter
+            const messageField = document.getElementById('message');
+            const messageCounter = document.getElementById('message-counter');
+            if (messageField && messageCounter) {
+                messageField.addEventListener('input', function() {
+                    updateCounter(this, messageCounter, 5000);
+                });
+                updateCounter(messageField, messageCounter, 5000);
+            }
+
+            // Bulk selection
+            const selectAll = document.getElementById('select-all');
+            if (selectAll) {
+                selectAll.addEventListener('change', function() {
+                    const checkboxes = document.querySelectorAll('.subscriber-checkbox');
+                    checkboxes.forEach(checkbox => {
+                        checkbox.checked = this.checked;
+                    });
+                    updateSelectedCount();
+                });
+            }
+
+            // Individual checkbox selection
+            document.querySelectorAll('.subscriber-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', updateSelectedCount);
+            });
+
+            // Search functionality
+            const searchField = document.getElementById('search-subscribers');
+            if (searchField) {
+                searchField.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    const rows = document.querySelectorAll('#subscribers-table tr');
+
+                    rows.forEach(row => {
+                        const email = row.getAttribute('data-email');
+                        const text = row.textContent.toLowerCase();
+
+                        if (text.includes(searchTerm) || email.includes(searchTerm)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+            }
+        });
+
+        function updateCounter(field, counterElement, maxLength) {
+            const count = field.value.length;
+            counterElement.textContent = count + '/' + maxLength;
+
+            if (count > maxLength) {
+                counterElement.classList.add('counter-exceeded');
+                field.classList.add('character-limit');
+            } else {
+                counterElement.classList.remove('counter-exceeded');
+                field.classList.remove('character-limit');
+            }
+        }
+
+        function updateSelectedCount() {
+            const selectedCheckboxes = document.querySelectorAll('.subscriber-checkbox:checked');
+            const selectedCount = document.getElementById('selected-count');
+            const deleteBtn = document.getElementById('delete-selected-btn');
+            const selectAll = document.getElementById('select-all');
+
+            const count = selectedCheckboxes.length;
+            selectedCount.textContent = count + ' selected';
+            deleteBtn.disabled = count === 0;
+
+            if (selectAll) {
+                const totalCheckboxes = document.querySelectorAll('.subscriber-checkbox').length;
+                selectAll.checked = count === totalCheckboxes;
+                selectAll.indeterminate = count > 0 && count < totalCheckboxes;
+            }
+        }
+
+        // Insert token into message field
+        function insertToken(token) {
+            const messageField = document.getElementById('message');
+            if (messageField) {
+                const start = messageField.selectionStart;
+                const end = messageField.selectionEnd;
+                const text = messageField.value;
+                messageField.value = text.substring(0, start) + token + text.substring(end);
+                messageField.focus();
+                messageField.setSelectionRange(start + token.length, start + token.length);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Token Inserted',
+                    text: `Added ${token} to your message`,
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            }
+        }
+
+        // Preview email
+        function previewEmail() {
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            const previewText = document.getElementById('preview_text').value;
+
+            if (!subject || !message) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Missing Content',
+                    text: 'Please fill in subject and message fields',
+                    confirmButtonColor: '#3b82f6'
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Email Preview',
+                html: `
+                <div style="text-align: left; max-height: 60vh; overflow-y: auto; font-family: sans-serif;">
+                    <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <h3 style="margin: 0 0 10px 0; color: #1e293b;">Subject: ${subject}</h3>
+                        ${previewText ? `<p style="color: #64748b; font-style: italic; margin: 0;">Preview: ${previewText}</p>` : ''}
+                    </div>
+                    <div style="background: white; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; white-space: pre-wrap;">
+                        ${message.replace(/\n/g, '<br>')}
+                    </div>
+                </div>
+            `,
+                width: 700,
+                showCancelButton: true,
+                confirmButtonText: 'Looks Good',
+                cancelButtonText: 'Edit',
+                confirmButtonColor: '#10b981'
+            });
+        }
+
+        // Clear form
+        function clearForm() {
+            Swal.fire({
+                title: 'Clear Form?',
+                text: 'This will clear all entered content',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Yes, clear it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('subject').value = '';
+                    document.getElementById('preview_text').value = '';
+                    document.getElementById('message').value = '';
+
+                    // Reset counters
+                    updateCounter(document.getElementById('subject'), document.getElementById('subject-counter'),
+                        60);
+                    updateCounter(document.getElementById('preview_text'), document.getElementById(
+                        'preview-counter'), 120);
+                    updateCounter(document.getElementById('message'), document.getElementById('message-counter'),
+                        5000);
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Form Cleared!',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                }
+            });
+        }
+
+        // Send newsletter
+        document.getElementById('newsletter-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const subject = formData.get('subject');
+            const message = formData.get('message');
+            const previewText = formData.get('preview_text');
+            const sendBtn = document.getElementById('send-btn');
+            const sendingText = document.getElementById('sending-text');
+            const recipientCount = document.getElementById('recipient-count').textContent;
+
+            if (!subject || !message) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: 'Subject and message are required',
+                    confirmButtonColor: '#3b82f6'
+                });
+                return;
+            }
+
+            // Confirm sending
+            const result = await Swal.fire({
+                title: 'Send Newsletter?',
+                html: `This will send the newsletter to <strong>${recipientCount}</strong> active subscribers.`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3b82f6',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Yes, Send Now!',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            });
+
+            if (!result.isConfirmed) return;
+
+            // Show loading state
+            sendBtn.disabled = true;
+            sendBtn.classList.remove('hover:scale-105');
+            sendingText.classList.remove('hidden');
+
+            try {
+                const response = await fetch('{{ route('emails.send') }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        subject: subject,
+                        message: message,
+                        preview_text: previewText
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Newsletter Sent!',
+                        html: `Successfully sent to <strong>${data.count}</strong> subscribers.`,
+                        confirmButtonColor: '#10b981'
+                    });
+
+                    // Clear form on success
+                    this.reset();
+                    updateCounter(document.getElementById('subject'), document.getElementById(
+                        'subject-counter'), 60);
+                    updateCounter(document.getElementById('preview_text'), document.getElementById(
+                        'preview-counter'), 120);
+                    updateCounter(document.getElementById('message'), document.getElementById(
+                        'message-counter'), 5000);
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Sending Failed',
+                    text: error.message || 'Failed to send newsletter. Please try again.',
+                    confirmButtonColor: '#ef4444'
+                });
+            } finally {
+                // Reset button state
+                sendBtn.disabled = false;
+                sendBtn.classList.add('hover:scale-105');
+                sendingText.classList.add('hidden');
+            }
+        });
+
+        // Send test email modal
+        function showTestEmailModal() {
+            Swal.fire({
+                title: 'Send Test Email',
+                html: `
+                <div class="text-left space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Test Email Address</label>
+                        <input type="email" id="test-email" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2"
+                               placeholder="test@example.com"
+                               value="{{ auth()->user()->email ?? '' }}">
+                    </div>
+                    <div class="text-sm text-gray-500">
+                        <p>This will send a test email with the content from the form above.</p>
+                    </div>
+                </div>
+            `,
+                showCancelButton: true,
+                confirmButtonText: 'Send Test',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#3b82f6',
+                preConfirm: () => {
+                    const email = document.getElementById('test-email').value;
+
+                    if (!email) {
+                        Swal.showValidationMessage('Please enter an email address');
+                        return false;
+                    }
+
+                    if (!/^\S+@\S+\.\S+$/.test(email)) {
+                        Swal.showValidationMessage('Please enter a valid email address');
+                        return false;
+                    }
+
+                    return {
+                        email: email
+                    };
+                }
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const {
+                        email
+                    } = result.value;
+                    const subject = document.getElementById('subject').value || 'Test Newsletter';
+                    const message = document.getElementById('message').value || 'This is a test email.';
+                    const previewText = document.getElementById('preview_text').value || '';
+
+                    if (!message) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'No Content',
+                            text: 'Please enter some content in the message field first',
+                            confirmButtonColor: '#3b82f6'
+                        });
+                        return;
+                    }
+
+                    Swal.fire({
+                        title: 'Sending Test Email...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    try {
+                        const response = await fetch('{{ route('emails.test') }}', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                email: email,
+                                subject: subject,
+                                message: message,
+                                preview_text: previewText
+                            })
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Test Email Sent!',
+                                text: `Test email sent to ${email}`,
+                                confirmButtonColor: '#10b981'
+                            });
+                        } else {
+                            throw new Error(data.message);
+                        }
+                    } catch (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Failed to Send',
+                            text: error.message || 'Could not send test email',
+                            confirmButtonColor: '#ef4444'
+                        });
+                    }
+                }
+            });
+        }
+
+        // Send test to specific subscriber
+        function sendTestToSubscriber(email) {
+            const subject = document.getElementById('subject').value || 'Test Email';
+            const message = document.getElementById('message').value || 'This is a test email.';
+
+            if (!message) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No Content',
+                    text: 'Please enter some content in the message field first',
+                    confirmButtonColor: '#3b82f6'
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Send Test Email?',
+                html: `Send test to <strong>${email}</strong>?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3b82f6',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Send Test',
+                cancelButtonText: 'Cancel'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        const response = await fetch('{{ route('emails.test') }}', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                email: email,
+                                subject: subject + ' [TEST]',
+                                message: message,
+                                preview_text: document.getElementById('preview_text').value ||
+                                    ''
+                            })
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Test Sent!',
+                                text: `Test email sent to ${email}`,
+                                confirmButtonColor: '#10b981'
+                            });
+                        } else {
+                            throw new Error(data.message);
+                        }
+                    } catch (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Failed to Send',
+                            text: error.message || 'Could not send test email',
+                            confirmButtonColor: '#ef4444'
+                        });
+                    }
+                }
+            });
+        }
+
+        // Export subscribers
+        async function exportSubscribers() {
+            const result = await Swal.fire({
+                title: 'Export Format',
+                text: 'Choose export format',
+                icon: 'question',
+                showCancelButton: true,
+                showDenyButton: true,
+                confirmButtonText: 'CSV',
+                denyButtonText: 'Excel',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#10b981',
+                denyButtonColor: '#3b82f6'
+            });
+
+            if (result.isConfirmed || result.isDenied) {
+                const format = result.isConfirmed ? 'csv' : 'xlsx';
+
+                Swal.fire({
+                    title: 'Exporting...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                // Trigger download
+                window.location.href = `{{ route('emails.export') }}?format=${format}`;
+
+                // Close loading after delay
+                setTimeout(() => {
+                    Swal.close();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Export Complete',
+                        text: 'Subscribers exported successfully',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        toast: true,
+                        position: 'top-end'
+                    });
+                }, 1000);
+            }
+        }
+
+        // Remove subscriber with confirmation
+        async function confirmRemoveSubscriber(id, email) {
+            const result = await Swal.fire({
+                title: 'Remove Subscriber?',
+                html: `Are you sure you want to remove <strong>${email}</strong> from the newsletter?<br><br><small class="text-gray-500">They will be marked as unsubscribed.</small>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Yes, remove!',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(`/admin/emails/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        // Remove row from table
+                        const row = document.querySelector(`tr[data-id="${id}"]`);
+                        if (row) {
+                            row.remove();
+                        }
+
+                        // Update counters
+                        const activeCount = parseInt(document.getElementById('recipient-count').textContent);
+                        document.getElementById('recipient-count').textContent = activeCount - 1;
+                        document.querySelectorAll('[id*="subscribers"]').forEach(el => {
+                            if (el.textContent.includes(activeCount)) {
+                                el.textContent = el.textContent.replace(activeCount, activeCount - 1);
+                            }
+                        });
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Subscriber Removed!',
+                            text: `${email} has been unsubscribed`,
+                            confirmButtonColor: '#10b981',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        throw new Error(data.message);
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed to Remove',
+                        text: error.message || 'Could not remove subscriber',
+                        confirmButtonColor: '#ef4444'
+                    });
+                }
+            }
+        }
+
+        // Delete selected subscribers
+        async function deleteSelectedSubscribers() {
+            const selectedIds = Array.from(document.querySelectorAll('.subscriber-checkbox:checked'))
+                .map(cb => cb.value);
+
+            if (selectedIds.length === 0) return;
+
+            const result = await Swal.fire({
+                title: 'Remove Selected Subscribers?',
+                html: `Remove <strong>${selectedIds.length}</strong> subscriber${selectedIds.length > 1 ? 's' : ''}?<br><br><small class="text-gray-500">They will be marked as unsubscribed.</small>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Yes, remove!',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch('{{ route('emails.bulk-delete') }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            ids: selectedIds
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        // Remove rows from table
+                        selectedIds.forEach(id => {
+                            const row = document.querySelector(`tr[data-id="${id}"]`);
+                            if (row) row.remove();
+                        });
+
+                        // Update counters
+                        const activeCount = parseInt(document.getElementById('recipient-count').textContent);
+                        const newCount = activeCount - selectedIds.length;
+                        document.getElementById('recipient-count').textContent = newCount;
+
+                        // Reset selection
+                        document.getElementById('select-all').checked = false;
+                        document.getElementById('delete-selected-btn').disabled = true;
+                        document.getElementById('selected-count').textContent = '0 selected';
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Subscribers Removed!',
+                            html: `Successfully removed ${selectedIds.length} subscriber${selectedIds.length > 1 ? 's' : ''}`,
+                            confirmButtonColor: '#10b981',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed to Remove',
+                        text: 'Could not remove selected subscribers',
+                        confirmButtonColor: '#ef4444'
+                    });
+                }
+            }
+        }
+
+        // Add subscriber modal
+        function showAddSubscriberModal() {
+            Swal.fire({
+                title: 'Add Subscriber',
+                html: `
+                <div class="text-left space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
+                        <input type="email" id="new-email" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2"
+                               placeholder="subscriber@example.com"
+                               required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Name (Optional)</label>
+                        <input type="text" id="new-name" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2"
+                               placeholder="John Doe">
+                    </div>
+                    <div class="bg-blue-50 p-3 rounded-lg">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" id="send-welcome" class="mr-2" checked>
+                            <span class="text-sm text-blue-800">Send welcome email</span>
+                        </label>
+                    </div>
+                </div>
+            `,
+                showCancelButton: true,
+                confirmButtonText: 'Add Subscriber',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#3b82f6',
+                preConfirm: () => {
+                    const email = document.getElementById('new-email').value;
+                    const name = document.getElementById('new-name').value;
+                    const sendWelcome = document.getElementById('send-welcome').checked;
+
+                    if (!email) {
+                        Swal.showValidationMessage('Please enter an email address');
+                        return false;
+                    }
+
+                    if (!/^\S+@\S+\.\S+$/.test(email)) {
+                        Swal.showValidationMessage('Please enter a valid email address');
+                        return false;
+                    }
+
+                    return {
+                        email,
+                        name,
+                        send_welcome: sendWelcome
+                    };
+                }
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const {
+                        email,
+                        name,
+                        send_welcome
+                    } = result.value;
+
+                    try {
+                        const response = await fetch('{{ route('emails.subscribe') }}', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                email: email,
+                                name: name,
+                                send_welcome: send_welcome
+                            })
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Subscriber Added!',
+                                html: `${email} has been added to your newsletter`,
+                                confirmButtonColor: '#10b981'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            throw new Error(data.message);
+                        }
+                    } catch (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Failed to Add',
+                            text: error.message || 'Could not add subscriber',
+                            confirmButtonColor: '#ef4444'
+                        });
+                    }
+                }
+            });
+        }
+
+        // Show subscriber info
+        function showSubscriberInfo(id) {
+            const row = document.querySelector(`tr[data-id="${id}"]`);
+            if (!row) return;
+
+            const email = row.querySelector('.font-semibold').textContent;
+            const status = row.querySelector('.bg-green-100').textContent.trim();
+            const date = row.querySelector('td:nth-child(3) .text-gray-900').textContent;
+            const time = row.querySelector('td:nth-child(3) .text-gray-500').textContent;
+            const user = row.querySelector('td:nth-child(4)').textContent.trim();
+
+            Swal.fire({
+                title: 'Subscriber Details',
+                html: `
+                <div class="text-left space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold">
+                            ${email.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg">${email}</h3>
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                                ${status}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <p class="text-sm text-gray-500">Subscribed</p>
+                            <p class="font-medium">${date}</p>
+                            <p class="text-sm text-gray-500">${time}</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <p class="text-sm text-gray-500">User</p>
+                            <p class="font-medium">${user}</p>
+                        </div>
+                    </div>
+                    <div class="bg-blue-50 p-3 rounded-lg">
+                        <p class="text-sm font-medium text-blue-800 mb-2">Quick Actions</p>
+                        <div class="flex space-x-2">
+                            <button onclick="sendTestToSubscriber('${email}')" class="text-sm bg-blue-600 text-white hover:bg-blue-700 px-3 py-1 rounded">Send Test</button>
+                            <button onclick="confirmRemoveSubscriber('${id}', '${email}')" class="text-sm bg-red-600 text-white hover:bg-red-700 px-3 py-1 rounded">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            `,
+                confirmButtonText: 'Close',
+                confirmButtonColor: '#3b82f6'
+            });
+        }
+    </script>
+@endpush

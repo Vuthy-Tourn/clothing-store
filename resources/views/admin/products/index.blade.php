@@ -1,67 +1,102 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <!-- Page Header -->
+    <!-- Page Header with Action Button -->
     <div class="mb-8" data-aos="fade-down">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Product Management</h1>
-        <p class="text-gray-600 text-base">Manage your fashion store's product catalog</p>
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Product Management</h1>
+                <p class="text-gray-600 text-base">Manage your fashion store's product catalog</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="ProductModal.openAdd()"
+                    class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-3 rounded-xl font-medium transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    <i class="fas fa-plus"></i>
+                    Add Product
+                </button>
+
+                <!-- Optional: Add more header actions -->
+                <button onclick="showImportModal()"
+                    class="inline-flex items-center gap-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-3 rounded-xl font-medium transition-all duration-300">
+                    <i class="fas fa-upload"></i>
+                    Import
+                </button>
+            </div>
+        </div>
     </div>
 
-    <!-- Stats Overview -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="card p-6" data-aos="fade-up" data-aos-delay="100">
+    <!-- Stats Overview with Gradient Design -->
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+        @php
+            $totalProducts = $products->count();
+            $activeProducts = $products->where('status', 'active')->count();
+            $inactiveProducts = $products->where('status', '!=', 'active')->count();
+            $categoriesCount = $categories->count();
+            $totalStock = $products->sum('stock');
+            $lowStockCount = $products->where('stock', '<=', 10)->count();
+        @endphp
+
+        <div class="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 p-6 rounded-xl shadow-sm transform hover:-translate-y-1 transition-transform duration-300"
+            data-aos="fade-up" data-aos-delay="100">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-500 text-sm font-medium">Total Products</p>
-                    <p class="text-2xl font-bold text-gray-900 mt-1 product-stat" id="totalProducts">
-                        {{ $products->count() }}
+                    <p class="text-blue-600 text-sm font-medium">Total Products</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-1">{{ $totalProducts }}</p>
+                    <p class="text-blue-500 text-xs mt-2 flex items-center">
+                        <i class="fas fa-box mr-1"></i> All products
                     </p>
                 </div>
-                <div class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center">
-                    <i class="fas fa-box text-blue-600 text-xl"></i>
+                <div class="w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center">
+                    <i class="fas fa-box text-white text-xl"></i>
                 </div>
             </div>
         </div>
 
-        <div class="card p-6" data-aos="fade-up" data-aos-delay="150">
+        <div class="bg-gradient-to-r from-green-50 to-green-100 border border-green-200 p-6 rounded-xl shadow-sm transform hover:-translate-y-1 transition-transform duration-300"
+            data-aos="fade-up" data-aos-delay="150">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-500 text-sm font-medium">Active Products</p>
-                    <p class="text-2xl font-bold text-green-600 mt-1 product-stat" id="activeProducts">
-                        {{ $products->where('status', 'active')->count() }}
+                    <p class="text-green-600 text-sm font-medium">Active Products</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-1">{{ $activeProducts }}</p>
+                    <p class="text-green-500 text-xs mt-2 flex items-center">
+                        <i class="fas fa-check-circle mr-1"></i>
+                        {{ number_format(($activeProducts / $totalProducts) * 100, 0) }}% active
                     </p>
                 </div>
-                <div class="w-12 h-12 rounded-lg bg-green-50 flex items-center justify-center">
-                    <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                <div class="w-12 h-12 rounded-lg bg-green-500 flex items-center justify-center">
+                    <i class="fas fa-check-circle text-white text-xl"></i>
                 </div>
             </div>
         </div>
 
-        <div class="card p-6" data-aos="fade-up" data-aos-delay="200">
+        <div class="bg-gradient-to-r from-purple-50 to-purple-100 border border-purple-200 p-6 rounded-xl shadow-sm transform hover:-translate-y-1 transition-transform duration-300"
+            data-aos="fade-up" data-aos-delay="200">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-500 text-sm font-medium">Categories</p>
-                    <p class="text-2xl font-bold text-purple-600 mt-1 product-stat" id="categoriesCount">
-                        {{ $categories->count() }}
+                    <p class="text-purple-600 text-sm font-medium">Categories</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-1">{{ $categoriesCount }}</p>
+                    <p class="text-purple-500 text-xs mt-2 flex items-center">
+                        <i class="fas fa-tags mr-1"></i> Product categories
                     </p>
                 </div>
-                <div class="w-12 h-12 rounded-lg bg-purple-50 flex items-center justify-center">
-                    <i class="fas fa-tags text-purple-600 text-xl"></i>
+                <div class="w-12 h-12 rounded-lg bg-purple-500 flex items-center justify-center">
+                    <i class="fas fa-tags text-white text-xl"></i>
                 </div>
             </div>
         </div>
 
-        <div class="card p-6" data-aos="fade-up" data-aos-delay="250">
+        <div class="bg-gradient-to-r from-orange-50 to-orange-100 border border-orange-200 p-6 rounded-xl shadow-sm transform hover:-translate-y-1 transition-transform duration-300"
+            data-aos="fade-up" data-aos-delay="250">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-500 text-sm font-medium">Actions</p>
-                    <button onclick="ProductModal.openAdd()"
-                        class="btn-primary mt-2 px-4 py-2 rounded-lg text-sm font-medium">
-                        Add Product
-                    </button>
+                    <p class="text-orange-600 text-sm font-medium">Low Stock</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-1">{{ $lowStockCount }}</p>
+                    <p class="text-orange-500 text-xs mt-2 flex items-center">
+                        <i class="fas fa-exclamation-triangle mr-1"></i> Needs restocking
+                    </p>
                 </div>
-                <div class="w-12 h-12 rounded-lg bg-orange-50 flex items-center justify-center">
-                    <i class="fas fa-plus text-orange-600 text-xl"></i>
+                <div class="w-12 h-12 rounded-lg bg-orange-500 flex items-center justify-center">
+                    <i class="fas fa-exclamation-triangle text-white text-xl"></i>
                 </div>
             </div>
         </div>

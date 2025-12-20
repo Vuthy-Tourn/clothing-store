@@ -117,9 +117,18 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('admin.products.edit');
 
     // Emails
-    Route::get('/emails', [EmailController::class, 'index'])->name('admin.emails.index');
-    Route::post('/emails/send', [EmailController::class, 'send'])->name('admin.emails.send');
-    Route::delete('/emails/{email}', [EmailController::class, 'destroy'])->name('admin.emails.destroy');
+    // Route::get('/emails', [EmailController::class, 'index'])->name('admin.emails.index');
+    // Route::post('/emails/send', [EmailController::class, 'send'])->name('admin.emails.send');
+    // Route::delete('/emails/{email}', [EmailController::class, 'destroy'])->name('admin.emails.destroy');
+     Route::get('/emails', [EmailController::class, 'index'])->name('admin.emails.index');
+    Route::post('/emails/send', [EmailController::class, 'send'])->name('emails.send');
+    Route::post('/emails/test', [EmailController::class, 'sendTest'])->name('emails.test');
+    Route::post('/emails/subscribe', [EmailController::class, 'addSubscriber'])->name('emails.subscribe');
+    Route::delete('/emails/{email}', [EmailController::class, 'destroy'])->name('emails.destroy');
+    Route::post('/emails/bulk-delete', [EmailController::class, 'bulkDelete'])->name('emails.bulk-delete');
+    Route::get('/emails/export', [EmailController::class, 'export'])->name('emails.export');
+    Route::post('/emails/{email}/reactivate', [EmailController::class, 'reactivate'])->name('emails.reactivate');
+    Route::get('/emails/statistics', [EmailController::class, 'getStatistics'])->name('emails.statistics');
 
     // Orders
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
@@ -204,3 +213,15 @@ Route::post('/orders/{id}/cancel', [OrderController::class, 'cancel'])->name('ad
 
 // Export
 Route::post('/orders/export', [OrderController::class, 'export'])->name('admin.orders.export');
+
+// Order Management Routes
+Route::prefix('admin/orders')->name('admin.orders.')->group(function () {
+    Route::get('/', [OrderController::class, 'index'])->name('index');
+    Route::get('/{id}/details', [OrderController::class, 'getOrderDetails'])->name('details');
+    Route::put('/{id}', [OrderController::class, 'update'])->name('update');
+    Route::put('/{id}/payment', [OrderController::class, 'updatePayment'])->name('update.payment');
+    Route::put('/{id}/tracking', [OrderController::class, 'updateTracking'])->name('update.tracking');
+    Route::delete('/{id}', [OrderController::class, 'destroy'])->name('destroy');
+    Route::get('/{id}/invoice', [OrderController::class, 'invoice'])->name('invoice');
+    Route::post('/export', [OrderController::class, 'export'])->name('export');
+});
