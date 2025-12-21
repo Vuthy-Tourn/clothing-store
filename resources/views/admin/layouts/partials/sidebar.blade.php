@@ -69,14 +69,13 @@
                 </div>
             </a>
 
-            <a href="{{ route('admin.new-arrivals.index') }}"
-                class="nav-item group flex items-center space-x-4 py-3.5 px-4 rounded-xl relative overflow-hidden transition-all duration-300 {{ request()->routeIs('admin.new-arrivals.*') ? 'bg-gradient-to-r from-Ocean/10 to-Ocean/5 text-Ocean shadow-md' : 'text-gray-700 hover:bg-gray-50/80 hover:shadow-sm hover:translate-x-1' }}">
+            <a href="{{ route('admin.users.index') }}"
+                class="nav-item group flex items-center space-x-4 py-3.5 px-4 rounded-xl relative overflow-hidden transition-all duration-300 {{ request()->routeIs('admin.users.*') ? 'bg-gradient-to-r from-Ocean/10 to-Ocean/5 text-Ocean shadow-md' : 'text-gray-700 hover:bg-gray-50/80 hover:shadow-sm hover:translate-x-1' }}">
                 <div class="w-8 flex justify-center">
                     <i
-                        class="fas fa-gem text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.new-arrivals.*') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
+                        class="fas fa-user text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.users.*') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
                 </div>
-                <span class="font-medium tracking-wide">{{ request()->routeIs('admin.new-arrivals.*') ? '• ' : '' }}New
-                    Arrivals</span>
+                <span class="font-medium tracking-wide">{{ request()->routeIs('admin.users.*') ? '• ' : '' }}Users</span>
                 <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                 </div>

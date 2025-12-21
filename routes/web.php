@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\EmailController;
 use App\Http\Controllers\Admin\AdminOrderController;
+use App\Http\Controllers\Admin\UserController;
 
 // ==================== PUBLIC ROUTES ====================
 
@@ -254,6 +255,22 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     // Route::delete('/addresses/{id}/delete', [ProfileController::class, 'deleteAddress'])->name('addresses.delete');
     // Route::post('/addresses/{id}/set-default', [ProfileController::class, 'setDefaultAddress'])->name('addresses.set-default');
     });
+
+    // User Management Routes
+Route::prefix('users')->name('users.')->group(function () {
+    Route::get('/', [UserController::class, 'index'])->name('index');
+    Route::get('/create', [UserController::class, 'create'])->name('create');
+    Route::post('/', [UserController::class, 'store'])->name('store');
+    Route::get('/{user}', [UserController::class, 'show'])->name('show');
+    Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
+    Route::get('/{user}/edit-form', [UserController::class, 'editForm'])->name('edit-form'); // Add this
+    Route::put('/{user}', [UserController::class, 'update'])->name('update');
+    Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
+    
+    // AJAX Routes
+    Route::post('/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('toggle-status');
+    Route::post('/bulk-action', [UserController::class, 'bulkAction'])->name('bulk-action');
+});
     
 });
 
