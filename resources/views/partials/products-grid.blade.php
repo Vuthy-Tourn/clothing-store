@@ -260,7 +260,7 @@
 
 {{-- Quick View Modal --}}
 <div id="quickViewModal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4">
-    <div class="bg-white w-full max-w-6xl rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto">
+    <div class="bg-white w-full max-w-6xl rounded-xl shadow-lg max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
             <h2 class="text-xl font-bold text-gray-900">Quick View</h2>
             <button onclick="closeQuickView()" class="text-gray-400 hover:text-gray-600 text-2xl font-bold">

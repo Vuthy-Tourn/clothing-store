@@ -80,10 +80,12 @@ class User extends Authenticatable
     /**
      * Get the default shipping address.
      */
-    public function defaultAddress()
-    {
-        return $this->belongsTo(UserAddress::class, 'default_address_id');
-    }
+   public function defaultAddress()
+{
+    return $this->hasOne(UserAddress::class)
+                ->where('is_default', true);
+}
+
 
     /**
      * Get the cart items for the user.

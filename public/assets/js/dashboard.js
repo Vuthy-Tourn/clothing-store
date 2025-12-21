@@ -180,7 +180,7 @@ async function loadDashboardStats() {
         });
 
         // Update growth indicators
-        updateGrowthIndicator("revenueGrowth", data.revenue_growth || 0);
+        updateGrowthIndicator("revenueGrowth", data.revenue_growth || 0, " vs last month");
 
         // Update other indicators
         updateIndicator("ordersToday", data.orders_today || 0, " today");
@@ -202,18 +202,20 @@ async function loadDashboardStats() {
     }
 }
 
-// Update growth indicator with color coding
-function updateGrowthIndicator(elementId, value) {
+// Update growth indicator with color coding + suffix support
+function updateGrowthIndicator(elementId, value, suffix = "") {
     const element = document.getElementById(elementId);
     if (!element) return;
 
     const absValue = Math.abs(value);
     const isPositive = value >= 0;
-    element.textContent = `${isPositive ? "+" : "-"}${absValue.toFixed(1)}%`;
+
+    element.textContent = `${isPositive ? "+" : "-"}${absValue.toFixed(1)}${suffix}`;
 
     const container = element.closest("span");
     if (container) {
         const icon = container.querySelector("i");
+
         container.className = `text-xs font-medium px-2 py-1 rounded flex items-center gap-1 ${
             isPositive
                 ? "text-green-800 bg-green-100"
@@ -227,6 +229,7 @@ function updateGrowthIndicator(elementId, value) {
         }
     }
 }
+
 
 // Update indicator text
 function updateIndicator(elementId, value, suffix = "") {

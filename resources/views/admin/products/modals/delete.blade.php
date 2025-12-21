@@ -1,6 +1,6 @@
 <!-- Delete Modal -->
 <div id="deleteModal" class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
-    <div class="bg-white w-full max-w-md rounded-xl shadow-2xl">
+    <div class="bg-white w-full max-w-md rounded-xl shadow-lg">
         <div class="p-6 text-center">
             <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>

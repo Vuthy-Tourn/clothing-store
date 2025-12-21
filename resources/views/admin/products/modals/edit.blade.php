@@ -1,7 +1,7 @@
 <!-- Edit Product Modal -->
 <div id="editProductModal"
     class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
-    <div class="bg-white w-full max-w-5xl rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto">
+    <div class="bg-white w-full max-w-5xl rounded-xl shadow-lg max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
             <h2 class="text-xl font-bold text-gray-900 flex items-center">
                 <i class="fas fa-edit mr-2 text-blue-600"></i> Edit Product
@@ -27,15 +27,40 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-900 mb-2">Category<span
+                    <label class="block text-sm font-medium text-gray-900 mb-2">Category <span
                             class="ml-1 text-red-500">*</span></label>
                     <select name="category_id" id="editCategoryId" required
-                        class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3">
+                        class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         <option value="">Select category</option>
-                        @foreach ($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+
+                        @php
+                            $groupedCategories = $categories->groupBy('gender');
+                            $selectedCategoryId = old('category_id', isset($product) ? $product->category_id : '');
+                        @endphp
+
+                        @foreach (['men' => 'Men\'s', 'women' => 'Women\'s', 'kids' => 'Kids', 'unisex' => 'Unisex'] as $gender => $label)
+                            @if ($groupedCategories->has($gender))
+                                <optgroup label="{{ $label }} Clothing">
+                                    @foreach ($groupedCategories[$gender] as $cat)
+                                        <option value="{{ $cat->id }}"
+                                            {{ $selectedCategoryId == $cat->id ? 'selected' : '' }}>
+                                            {{ $cat->name }}
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+                            @endif
+                        @endforeach
+
+                        <!-- Main categories (no gender) -->
+                        @foreach ($categories->whereNull('gender') as $cat)
+                            <option value="{{ $cat->id }}" {{ $selectedCategoryId == $cat->id ? 'selected' : '' }}>
+                                {{ $cat->name }}
+                            </option>
                         @endforeach
                     </select>
+                    @error('category_id')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
@@ -142,7 +167,7 @@
                             </button>
                         </div>
 
-                        
+
                         <div id="newImagesContainer" class="space-y-4">
                             <!-- New image rows will be added here -->
                         </div>

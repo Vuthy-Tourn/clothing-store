@@ -6,8 +6,15 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\OtpController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\ProductDisplayController;
 use App\Http\Controllers\CategoryPageController;
+use App\Http\Controllers\EmailSubscriptionController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CarouselController;
 use App\Http\Controllers\Admin\FeaturedProductController;
@@ -16,111 +23,251 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\EmailController;
 use App\Http\Controllers\Admin\AdminOrderController;
-use App\Http\Controllers\EmailSubscriptionController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Auth\ForgotPasswordController;
-use App\Http\Controllers\Auth\ResetPasswordController;
+
+// ==================== PUBLIC ROUTES ====================
 
 // Homepage
-Route::get('/', [HomeController::class, 'index']);
-
-// Auth Routes
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
-Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [RegisterController::class, 'register']);
-Route::get('/verify-otp', [OtpController::class, 'showVerificationForm'])->name('otp.verify.form');
-Route::post('/verify-otp', [OtpController::class, 'verify'])->name('otp.verify');
-Route::get('/otp/resend', [OtpController::class, 'resend'])
-    ->middleware('throttle:2,1')
-    ->name('otp.resend');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Contact Us Page
 Route::get('/contact', function () {
-    return view('frontend.contact'); 
+    return view('frontend.contact');
 })->name('contact');
-
-// Logout
-Route::post('/logout', function () {
-    Auth::logout();
-    request()->session()->invalidate();
-    request()->session()->regenerateToken();
-    return redirect('/');
-})->name('logout');
 
 // Product Routes
 Route::get('/products', [ProductDisplayController::class, 'index'])->name('products.all');
 Route::get('/product/{slug}', [ProductDisplayController::class, 'view'])->name('product.view');
 
-// Admin Routes
-Route::prefix('admin')->middleware('admin')->group(function () {
+// Email Subscriptions (Public)
+Route::post('/subscribe-email', [EmailSubscriptionController::class, 'store'])->name('email.subscribe');
+
+// Cart Routes (Public)
+Route::get('/cart', [CartController::class, 'view'])->name('cart');
+Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+
+// ==================== AUTHENTICATION ROUTES ====================
+
+// Guest Routes
+Route::middleware('guest')->group(function () {
+    // Login Routes
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login']);
+    
+    // Registration Routes
+    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [RegisterController::class, 'register']);
+    
+    // OTP Verification Routes
+    Route::get('/verify-otp', [OtpController::class, 'showVerificationForm'])->name('otp.verify.form');
+    Route::post('/verify-otp', [OtpController::class, 'verify'])->name('otp.verify');
+    Route::get('/otp/resend', [OtpController::class, 'resend'])
+        ->middleware('throttle:2,1')
+        ->name('otp.resend');
+    
+    // Password Reset Routes
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
+});
+
+// ==================== AUTHENTICATED USER ROUTES ====================
+
+Route::middleware(['auth'])->group(function () {
+    // Logout
+    Route::post('/logout', function () {
+        Auth::logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+        return redirect('/');
+    })->name('logout');
+    
+    // Cart Add (Authenticated only)
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    
+    // Checkout Routes
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::post('/checkout/verify', [CheckoutController::class, 'verify'])->name('checkout.verify');
+    Route::get('/thank-you/{orderId}', [CheckoutController::class, 'thankYou'])->name('checkout.thankyou');
+    
+    // Order History & Invoices
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{orderNumber}', [OrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders/{orderId}/invoice', [OrderController::class, 'downloadInvoice'])->name('orders.invoice');
+    Route::get('/order/invoice/{orderId}', [CheckoutController::class, 'downloadInvoice'])
+        ->name('order.invoice.download');
+    
+    // Profile Routes
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'show'])->name('show');
+        Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
+        Route::post('/update', [ProfileController::class, 'update'])->name('update');
+    });
+    
+    // Email Subscription Management
+    Route::post('/subscribe', [EmailSubscriptionController::class, 'store'])->name('emails.subscribe');
+    Route::delete('/unsubscribe', [EmailSubscriptionController::class, 'destroy'])->name('emails.unsubscribe');
+    
+    // Clear Order Success Session
+    Route::post('/clear-order-success', function() {
+        session()->forget('show_order_success');
+        return response()->json(['success' => true]);
+    })->name('clear.order.success');
+});
+
+// ==================== ADMIN ROUTES ====================
+
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    
     // Dashboard
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::get('/admin/products/search', [ProductController::class, 'search'])->name('admin.products.search');
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     
-    // API Endpoints for Dashboard
-    Route::get('/api/sidebar-stats', [AdminController::class, 'sidebarStats']);
-    Route::get('/api/dashboard-stats', [AdminController::class, 'dashboardStats']);
-    // Route::get('/api/recent-activity', [AdminController::class, 'recentActivity']);
-    Route::get('/api/top-products', [AdminController::class, 'topProducts']);
-    Route::get('/api/sales-chart', [AdminController::class, 'salesChart']);
-
-    // Dashboard API Endpoints
-    Route::get('/dashboard-stats', [AdminController::class, 'dashboardStats'])->name('admin.dashboard.stats');
-    Route::get('/sales-chart', [AdminController::class, 'salesChart'])->name('admin.sales.chart');
-    Route::get('/recent-activity', [AdminController::class, 'recentActivity'])->name('admin.recent.activity');
-    Route::get('/top-products', [AdminController::class, 'topProducts'])->name('admin.top.products');
-    Route::get('/sidebar-stats', [AdminController::class, 'sidebarStats'])->name('admin.sidebar.stats');
+    // ========== DASHBOARD API ENDPOINTS ==========
+    Route::prefix('api')->group(function () {
+        Route::get('/sidebar-stats', [AdminController::class, 'sidebarStats'])->name('api.sidebar-stats');
+        Route::get('/dashboard-stats', [AdminController::class, 'dashboardStats'])->name('api.dashboard-stats');
+        Route::get('/top-products', [AdminController::class, 'topProducts'])->name('api.top-products');
+        Route::get('/sales-chart', [AdminController::class, 'salesChart'])->name('api.sales-chart');
+        Route::get('/recent-activity', [AdminController::class, 'recentActivity'])->name('api.recent-activity');
+        Route::get('/order-status-distribution', [AdminController::class, 'orderStatusDistribution'])->name('api.order-status-distribution');
+        Route::get('/performance-metrics', [AdminController::class, 'performanceMetrics'])->name('api.performance-metrics');
+        Route::get('/category-sales', [AdminController::class, 'categorySales'])->name('api.category-sales');
+        Route::get('/low-stock-alerts', [AdminController::class, 'lowStockAlerts'])->name('api.low-stock-alerts');
+        Route::get('/revenue-comparison', [AdminController::class, 'revenueComparison'])->name('api.revenue-comparison');
+    });
     
-    // Additional Chart Endpoints
-    Route::get('/order-status-distribution', [AdminController::class, 'orderStatusDistribution'])->name('admin.order.status');
-    Route::get('/performance-metrics', [AdminController::class, 'performanceMetrics'])->name('admin.performance.metrics');
-    Route::get('/category-sales', [AdminController::class, 'categorySales'])->name('admin.category.sales');
-    Route::get('/low-stock-alerts', [AdminController::class, 'lowStockAlerts'])->name('admin.low.stock');
-    Route::get('/revenue-comparison', [AdminController::class, 'revenueComparison'])->name('admin.revenue.comparison');
-
-    // Carousel Routes
-    Route::get('/carousels', [CarouselController::class, 'index'])->name('admin.carousels.index');
-    Route::get('/carousels/create', [CarouselController::class, 'create'])->name('admin.carousels.create');
-    Route::post('/carousels', [CarouselController::class, 'store'])->name('admin.carousels.store');
-    Route::get('/carousels/{carousel}/edit', [CarouselController::class, 'edit'])->name('admin.carousels.edit');
-    Route::put('/carousels/{carousel}', [CarouselController::class, 'update'])->name('admin.carousels.update');
-    Route::delete('/carousels/{carousel}', [CarouselController::class, 'destroy'])->name('admin.carousels.destroy');
-
-    // Featured Product Routes
-    Route::get('/featured-product', [FeaturedProductController::class, 'index'])->name('admin.featured.index');
-    Route::post('/featured-product', [FeaturedProductController::class, 'store'])->name('admin.featured.store');
-    Route::put('/featured-product/{id}', [FeaturedProductController::class, 'update'])->name('admin.featured.update');
-    Route::delete('/featured-product/{id}', [FeaturedProductController::class, 'destroy'])->name('admin.featured.destroy');
-
+    // Dashboard API Endpoints (non-prefixed)
+    Route::get('/dashboard-stats', [AdminController::class, 'dashboardStats'])->name('dashboard.stats');
+    Route::get('/sales-chart', [AdminController::class, 'salesChart'])->name('sales.chart');
+    Route::get('/recent-activity', [AdminController::class, 'recentActivity'])->name('recent.activity');
+    Route::get('/top-products', [AdminController::class, 'topProducts'])->name('top.products');
+    Route::get('/sidebar-stats', [AdminController::class, 'sidebarStats'])->name('sidebar.stats');
+    Route::get('/order-status-distribution', [AdminController::class, 'orderStatusDistribution'])->name('order.status');
+    Route::get('/performance-metrics', [AdminController::class, 'performanceMetrics'])->name('performance.metrics');
+    Route::get('/category-sales', [AdminController::class, 'categorySales'])->name('category.sales');
+    Route::get('/low-stock-alerts', [AdminController::class, 'lowStockAlerts'])->name('low.stock');
+    Route::get('/revenue-comparison', [AdminController::class, 'revenueComparison'])->name('revenue.comparison');
+    
+    // ========== CONTENT MANAGEMENT ==========
+    
+    // Carousels
+    Route::prefix('carousels')->name('carousels.')->group(function () {
+        Route::get('/', [CarouselController::class, 'index'])->name('index');
+        Route::get('/create', [CarouselController::class, 'create'])->name('create');
+        Route::post('/', [CarouselController::class, 'store'])->name('store');
+        Route::get('/{carousel}/edit', [CarouselController::class, 'edit'])->name('edit');
+        Route::put('/{carousel}', [CarouselController::class, 'update'])->name('update');
+        Route::delete('/{carousel}', [CarouselController::class, 'destroy'])->name('destroy');
+        Route::post('/update-order', [CarouselController::class, 'updateOrder'])->name('update-order');
+    });
+    
+    // Featured Products
+    Route::prefix('featured-product')->name('featured.')->group(function () {
+        Route::get('/', [FeaturedProductController::class, 'index'])->name('index');
+        Route::post('/', [FeaturedProductController::class, 'store'])->name('store');
+        Route::put('/{id}', [FeaturedProductController::class, 'update'])->name('update');
+        Route::delete('/{id}', [FeaturedProductController::class, 'destroy'])->name('destroy');
+    });
+    
     // New Arrivals
-    Route::get('/new-arrivals', [NewArrivalController::class, 'index'])->name('admin.new-arrivals.index');
-    Route::post('/new-arrivals', [NewArrivalController::class, 'store'])->name('admin.new-arrivals.store');
-    Route::put('/new-arrivals/{id}', [NewArrivalController::class, 'update'])->name('admin.new-arrivals.update');
-    Route::delete('/new-arrivals/{id}', [NewArrivalController::class, 'destroy'])->name('admin.new-arrivals.destroy');
-
+    Route::prefix('new-arrivals')->name('new-arrivals.')->group(function () {
+        Route::get('/', [NewArrivalController::class, 'index'])->name('index');
+        Route::post('/', [NewArrivalController::class, 'store'])->name('store');
+        Route::put('/{id}', [NewArrivalController::class, 'update'])->name('update');
+        Route::delete('/{id}', [NewArrivalController::class, 'destroy'])->name('destroy');
+    });
+    
+    // ========== CATALOG MANAGEMENT ==========
+    
     // Categories
-    Route::get('/categories', [CategoryController::class, 'index'])->name('admin.categories.index');
-    Route::post('/categories', [CategoryController::class, 'store'])->name('admin.categories.store');
-    Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('admin.categories.update');
-    Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('admin.categories.destroy');
-
+    Route::prefix('categories')->name('categories.')->group(function () {
+        Route::get('/', [CategoryController::class, 'index'])->name('index');
+        Route::post('/', [CategoryController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [CategoryController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [CategoryController::class, 'update'])->name('update');
+        Route::delete('/{id}', [CategoryController::class, 'destroy'])->name('destroy');
+        Route::post('/update-order', [CategoryController::class, 'updateOrder'])->name('update-order');
+    });
+    
     // Products
-    Route::get('/products', [ProductController::class, 'index'])->name('admin.products.index');
-    Route::post('/products', [ProductController::class, 'store'])->name('admin.products.store');
-    Route::put('/products/{id}', [ProductController::class, 'update'])->name('admin.products.update');
-    Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('admin.products.destroy');
-    Route::post('/products/import', [ProductController::class, 'import'])->name('admin.products.import');
-    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('admin.products.edit');
+    Route::prefix('products')->name('products.')->group(function () {
+        Route::get('/', [ProductController::class, 'index'])->name('index');
+        Route::get('/search', [ProductController::class, 'search'])->name('search');
+        Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit');
+        Route::post('/', [ProductController::class, 'store'])->name('store');
+        Route::put('/{id}', [ProductController::class, 'update'])->name('update');
+        Route::delete('/{id}', [ProductController::class, 'destroy'])->name('destroy');
+        Route::post('/import', [ProductController::class, 'import'])->name('import');
+    });
+    
+    // ========== CUSTOMER MANAGEMENT ==========
+    
+    // Orders
+    Route::prefix('orders')->name('orders.')->group(function () {
+        Route::get('/', [AdminOrderController::class, 'index'])->name('index');
+        Route::get('/{order}/invoice', [AdminOrderController::class, 'downloadInvoice'])->name('invoice');
+        Route::get('/{id}/details', [OrderController::class, 'getOrderDetails'])->name('details');
+        Route::put('/{id}', [OrderController::class, 'update'])->name('update');
+        Route::put('/{id}/payment', [OrderController::class, 'updatePayment'])->name('update.payment');
+        Route::put('/{id}/tracking', [OrderController::class, 'updateTracking'])->name('update.tracking');
+        Route::delete('/{id}', [OrderController::class, 'destroy'])->name('destroy');
+        Route::post('/export', [OrderController::class, 'export'])->name('export');
+        
+        // Order actions
+        Route::post('/{id}/update-status', [OrderController::class, 'updateStatus'])->name('update-status');
+        Route::post('/{id}/send-tracking', [OrderController::class, 'sendTracking'])->name('send-tracking');
+        Route::post('/{id}/add-note', [OrderController::class, 'addNote'])->name('add-note');
+        Route::post('/{id}/cancel', [OrderController::class, 'cancel'])->name('cancel');
+    });
+    
+    // Email Subscribers
+    Route::prefix('emails')->name('emails.')->group(function () {
+        Route::get('/', [EmailController::class, 'index'])->name('index');
+        Route::post('/send', [EmailController::class, 'send'])->name('send');
+        Route::post('/test', [EmailController::class, 'sendTest'])->name('test');
+        Route::post('/subscribe', [EmailController::class, 'addSubscriber'])->name('subscribe');
+        Route::delete('/{email}', [EmailController::class, 'destroy'])->name('destroy');
+        Route::post('/bulk-delete', [EmailController::class, 'bulkDelete'])->name('bulk-delete');
+        Route::get('/export', [EmailController::class, 'export'])->name('export');
+        Route::post('/{email}/reactivate', [EmailController::class, 'reactivate'])->name('reactivate');
+        Route::get('/statistics', [EmailController::class, 'getStatistics'])->name('statistics');
+    });
+    
+    // ========== ADMIN PROFILE MANAGEMENT ==========
+    
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\ProfileController::class, 'show'])->name('show');
+        Route::get('/edit', [App\Http\Controllers\Admin\ProfileController::class, 'edit'])->name('edit');
+        Route::put('/update', [App\Http\Controllers\Admin\ProfileController::class, 'update'])->name('update');
+        Route::post('/password', [App\Http\Controllers\Admin\ProfileController::class, 'updatePassword'])->name('password.update');
+        Route::get('/security', [App\Http\Controllers\Admin\ProfileController::class, 'security'])->name('security');
+        Route::post('/security', [App\Http\Controllers\Admin\ProfileController::class, 'updateSecurity'])->name('security.update');
+        Route::get('/activity', [App\Http\Controllers\Admin\ProfileController::class, 'activity'])->name('activity');
+        Route::get('/export', [App\Http\Controllers\Admin\ProfileController::class, 'exportData'])->name('export');
+        Route::post('/newsletter/toggle', [App\Http\Controllers\Admin\ProfileController::class, 'toggleNewsletter'])->name('toggle-newsletter');
 
-    // Emails
-    // Route::get('/emails', [EmailController::class, 'index'])->name('admin.emails.index');
-    // Route::post('/emails/send', [EmailController::class, 'send'])->name('admin.emails.send');
-    // Route::delete('/emails/{email}', [EmailController::class, 'destroy'])->name('admin.emails.destroy');
-     Route::get('/emails', [EmailController::class, 'index'])->name('admin.emails.index');
+        // Address routes
+    // Route::post('/addresses/save', [ProfileController::class, 'saveAddress'])->name('addresses.save');
+    // Route::put('/addresses/{id}/update', [ProfileController::class, 'updateAddress'])->name('addresses.update');
+    // Route::delete('/addresses/{id}/delete', [ProfileController::class, 'deleteAddress'])->name('addresses.delete');
+    // Route::post('/addresses/{id}/set-default', [ProfileController::class, 'setDefaultAddress'])->name('addresses.set-default');
+    });
+    
+});
+
+// ==================== TEST ROUTES ====================
+
+// Test Product Form (temporary)
+Route::get('/test-product', function() {
+    return view('test-product-form');
+});
+
+// ==================== DYNAMIC CATEGORY ROUTE ====================
+// Must be last route to avoid conflict with other routes
+Route::get('/{slug}', [CategoryPageController::class, 'show'])->name('category.show');
+
     Route::post('/emails/send', [EmailController::class, 'send'])->name('emails.send');
     Route::post('/emails/test', [EmailController::class, 'sendTest'])->name('emails.test');
     Route::post('/emails/subscribe', [EmailController::class, 'addSubscriber'])->name('emails.subscribe');
@@ -130,98 +277,4 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::post('/emails/{email}/reactivate', [EmailController::class, 'reactivate'])->name('emails.reactivate');
     Route::get('/emails/statistics', [EmailController::class, 'getStatistics'])->name('emails.statistics');
 
-    // Orders
-    Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
-});
-
-Route::get('/admin/orders/{order}/invoice', [AdminOrderController::class, 'downloadInvoice'])
-    ->middleware(['auth', 'admin'])
-    ->name('admin.orders.invoice');
-
-    // routes/web.php (temporary)
-Route::get('/test-product', function() {
-    return view('test-product-form');
-});
-
-// Email Subscriptions
-Route::post('/subscribe-email', [EmailSubscriptionController::class, 'store'])->name('email.subscribe');
-Route::delete('/unsubscribe', [EmailSubscriptionController::class, 'destroy'])->name('emails.unsubscribe')->middleware('auth');
-
-// Cart Routes
-Route::get('/cart', [CartController::class, 'view'])->name('cart');
-Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
-Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
-
-Route::middleware(['auth'])->group(function () {
-    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-    Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
-});
-
-// Checkout Routes
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout')->middleware('auth');
-Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
-Route::post('/checkout/verify', [CheckoutController::class, 'verify'])->name('checkout.verify');
-Route::get('/thank-you/{orderId}', [CheckoutController::class, 'thankYou'])->name('checkout.thankyou');
-
-Route::post('/clear-order-success', function() {
-    session()->forget('show_order_success');
-    return response()->json(['success' => true]);
-})->name('clear.order.success');
-
-Route::middleware(['auth'])->group(function () {
-    Route::post('/subscribe', [EmailSubscriptionController::class, 'store'])->name('emails.subscribe');
-});
-
-// Invoice Downloads
-Route::get('/order/invoice/{orderId}', [CheckoutController::class, 'downloadInvoice'])
-    ->name('order.invoice.download')
-    ->middleware('auth');
-
-// Order History
-Route::middleware(['auth'])->group(function () {
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{orderNumber}', [OrderController::class, 'show'])->name('orders.show');
-    Route::get('/orders/{orderId}/invoice', [OrderController::class, 'downloadInvoice'])->name('orders.invoice');
-});
-
-// Profile Routes
-Route::middleware(['auth'])->group(function () {
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-});
-
-// Password Reset Routes
-Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
-Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
-Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
-Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
-
-// Dynamic Category Route (must be last)
-Route::get('/{slug}', [CategoryPageController::class, 'show'])->name('category.show');
-Route::post('/carousels/update-order', [CarouselController::class, 'updateOrder'])->name('admin.carousels.update-order');
-Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('admin.categories.edit');
-Route::post('/categories/update-order', [CategoryController::class, 'updateOrder'])->name('admin.categories.update-order');
-// Order details
-Route::get('/orders/{id}/details', [OrderController::class, 'details'])->name('admin.orders.details');
-
-// Order actions
-Route::post('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('admin.orders.update-status');
-Route::post('/orders/{id}/send-tracking', [OrderController::class, 'sendTracking'])->name('admin.orders.send-tracking');
-Route::post('/orders/{id}/add-note', [OrderController::class, 'addNote'])->name('admin.orders.add-note');
-Route::post('/orders/{id}/cancel', [OrderController::class, 'cancel'])->name('admin.orders.cancel');
-
-// Export
-Route::post('/orders/export', [OrderController::class, 'export'])->name('admin.orders.export');
-
-// Order Management Routes
-Route::prefix('admin/orders')->name('admin.orders.')->group(function () {
-    Route::get('/', [OrderController::class, 'index'])->name('index');
-    Route::get('/{id}/details', [OrderController::class, 'getOrderDetails'])->name('details');
-    Route::put('/{id}', [OrderController::class, 'update'])->name('update');
-    Route::put('/{id}/payment', [OrderController::class, 'updatePayment'])->name('update.payment');
-    Route::put('/{id}/tracking', [OrderController::class, 'updateTracking'])->name('update.tracking');
-    Route::delete('/{id}', [OrderController::class, 'destroy'])->name('destroy');
-    Route::get('/{id}/invoice', [OrderController::class, 'invoice'])->name('invoice');
-    Route::post('/export', [OrderController::class, 'export'])->name('export');
-});
+    

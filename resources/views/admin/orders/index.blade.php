@@ -304,13 +304,20 @@
         </div>
 
         <!-- Pagination -->
-        @if ($orders->hasPages())
+        <!-- Pagination -->
+        @if ($orders instanceof \Illuminate\Pagination\LengthAwarePaginator && $orders->hasPages())
             <div class="p-6 border-t border-gray-100">
                 <div class="flex items-center justify-between">
                     <div class="text-sm text-gray-600">
-                        Showing {{ $orders->firstItem() }} to {{ $orders->lastItem() }} of {{ $orders->total() }} results
+                        @if ($orders->total() > 0)
+                            Showing {{ $orders->firstItem() }} to {{ $orders->lastItem() }} of {{ $orders->total() }}
+                            results
+                        @else
+                            No results found
+                        @endif
                     </div>
                     <div class="flex items-center gap-2">
+                        {{-- Previous Button --}}
                         @if ($orders->onFirstPage())
                             <span
                                 class="px-4 py-2 bg-gray-100 text-gray-400 rounded-lg font-medium text-sm cursor-not-allowed">
@@ -323,15 +330,45 @@
                             </a>
                         @endif
 
+                        {{-- Page Numbers --}}
                         <div class="flex items-center gap-1">
-                            @foreach ($orders->getUrlRange(1, $orders->lastPage()) as $page => $url)
-                                @if ($page == $orders->currentPage())
+                            @php
+                                $current = $orders->currentPage();
+                                $last = $orders->lastPage();
+                                $pages = [];
+
+                                // Always show first page
+                                if ($current > 2) {
+                                    $pages[] = 1;
+                                    if ($current > 3) {
+                                        $pages[] = '...';
+                                    }
+                                }
+
+                                // Show pages around current
+                                for ($i = max(1, $current - 1); $i <= min($last, $current + 1); $i++) {
+                                    $pages[] = $i;
+                                }
+
+                                // Always show last page
+                                if ($current < $last - 1) {
+                                    if ($current < $last - 2) {
+                                        $pages[] = '...';
+                                    }
+                                    $pages[] = $last;
+                                }
+                            @endphp
+
+                            @foreach ($pages as $page)
+                                @if ($page === '...')
+                                    <span class="px-2 text-gray-400">...</span>
+                                @elseif ($page == $orders->currentPage())
                                     <span
                                         class="w-10 h-10 bg-blue-600 text-white rounded-lg flex items-center justify-center font-semibold">
                                         {{ $page }}
                                     </span>
                                 @else
-                                    <a href="{{ $url }}"
+                                    <a href="{{ $orders->url($page) }}"
                                         class="w-10 h-10 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg flex items-center justify-center font-medium transition-colors duration-200">
                                         {{ $page }}
                                     </a>
@@ -339,6 +376,7 @@
                             @endforeach
                         </div>
 
+                        {{-- Next Button --}}
                         @if ($orders->hasMorePages())
                             <a href="{{ $orders->nextPageUrl() }}"
                                 class="px-4 py-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg font-medium text-sm transition-colors duration-200">
