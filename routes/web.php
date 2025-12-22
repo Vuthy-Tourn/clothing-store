@@ -270,6 +270,7 @@ Route::prefix('users')->name('users.')->group(function () {
     // AJAX Routes
     Route::post('/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('toggle-status');
     Route::post('/bulk-action', [UserController::class, 'bulkAction'])->name('bulk-action');
+
 });
     
 });

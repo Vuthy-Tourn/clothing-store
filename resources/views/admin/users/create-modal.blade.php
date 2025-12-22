@@ -115,6 +115,117 @@
             </div>
         </div>
 
+        <!-- Address Information -->
+        <div class="md:col-span-2">
+            <h4 class="text-sm font-semibold text-gray-700 mb-3">Primary Address (Optional)</h4>
+        </div>
+
+        <!-- Address Type -->
+        <div>
+            <label for="create_address_type" class="block text-sm font-medium text-gray-700 mb-2">Address Type</label>
+            <div class="relative">
+                <i class="fas fa-home absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <select id="create_address_type" name="address_type"
+                        class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300">
+                    <option value="shipping" {{ old('address_type') == 'shipping' ? 'selected' : 'selected' }}>Shipping</option>
+                    <option value="billing" {{ old('address_type') == 'billing' ? 'selected' : '' }}>Billing</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Address Name -->
+        <div>
+            <label for="create_address_name" class="block text-sm font-medium text-gray-700 mb-2">Address Name</label>
+            <div class="relative">
+                <i class="fas fa-tag absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <input type="text" id="create_address_name" name="address_name" value="{{ old('address_name', 'Primary Address') }}"
+                       class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300"
+                       placeholder="e.g., Home, Office">
+            </div>
+        </div>
+
+        <!-- Address Line 1 -->
+        <div class="md:col-span-2">
+            <label for="create_address_line1" class="block text-sm font-medium text-gray-700 mb-2">Address Line 1</label>
+            <div class="relative">
+                <i class="fas fa-map-marker-alt absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <input type="text" id="create_address_line1" name="address_line1" value="{{ old('address_line1') }}"
+                       class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300"
+                       placeholder="Street address, P.O. box">
+            </div>
+        </div>
+
+        <!-- Address Line 2 -->
+        <div class="md:col-span-2">
+            <label for="create_address_line2" class="block text-sm font-medium text-gray-700 mb-2">Address Line 2</label>
+            <div class="relative">
+                <i class="fas fa-map-marker-alt absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <input type="text" id="create_address_line2" name="address_line2" value="{{ old('address_line2') }}"
+                       class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300"
+                       placeholder="Apartment, suite, unit, building, floor, etc.">
+            </div>
+        </div>
+
+        <!-- City -->
+        <div>
+            <label for="create_city" class="block text-sm font-medium text-gray-700 mb-2">City</label>
+            <div class="relative">
+                <i class="fas fa-city absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <input type="text" id="create_city" name="city" value="{{ old('city') }}"
+                       class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300">
+            </div>
+        </div>
+
+        <!-- State -->
+        <div>
+            <label for="create_state" class="block text-sm font-medium text-gray-700 mb-2">State/Province</label>
+            <div class="relative">
+                <i class="fas fa-map absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <input type="text" id="create_state" name="state" value="{{ old('state') }}"
+                       class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300">
+            </div>
+        </div>
+
+        <!-- ZIP Code -->
+        <div>
+            <label for="create_zip_code" class="block text-sm font-medium text-gray-700 mb-2">ZIP/Postal Code</label>
+            <div class="relative">
+                <i class="fas fa-mail-bulk absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <input type="text" id="create_zip_code" name="zip_code" value="{{ old('zip_code') }}"
+                       class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300">
+            </div>
+        </div>
+
+        <!-- Country -->
+        <div>
+            <label for="create_country" class="block text-sm font-medium text-gray-700 mb-2">Country</label>
+            <div class="relative">
+                <i class="fas fa-globe absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <select id="create_country" name="country"
+                        class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300">
+                    <option value="United States" {{ old('country') == 'United States' ? 'selected' : 'selected' }}>United States</option>
+                    <option value="Canada" {{ old('country') == 'Canada' ? 'selected' : '' }}>Canada</option>
+                    <option value="United Kingdom" {{ old('country') == 'United Kingdom' ? 'selected' : '' }}>United Kingdom</option>
+                    <option value="Australia" {{ old('country') == 'Australia' ? 'selected' : '' }}>Australia</option>
+                    <option value="Germany" {{ old('country') == 'Germany' ? 'selected' : '' }}>Germany</option>
+                    <option value="France" {{ old('country') == 'France' ? 'selected' : '' }}>France</option>
+                    <option value="Japan" {{ old('country') == 'Japan' ? 'selected' : '' }}>Japan</option>
+                    <!-- Add more countries as needed -->
+                </select>
+            </div>
+        </div>
+
+        <!-- Make Default Address -->
+        <div class="md:col-span-2">
+            <div class="flex items-center">
+                <input type="checkbox" id="create_is_default_address" name="is_default_address" value="1"
+                       class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500" checked>
+                <label for="create_is_default_address" class="ml-2 text-sm font-medium text-gray-700">
+                    Set as default address
+                </label>
+            </div>
+        </div>
+
         <!-- Profile Picture -->
         <div class="md:col-span-2">
             <label class="block text-sm font-medium text-gray-700 mb-2">Profile Picture</label>
