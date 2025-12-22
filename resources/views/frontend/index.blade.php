@@ -1,50 +1,97 @@
 @extends('layouts.front')
 
 @section('content')
-    <!-- Hero Section -->
+    <!-- Hero Section with Swiper -->
     <section class="relative overflow-hidden h-screen min-h-[700px]">
-        @foreach ($carousels as $index => $carousel)
-            <div class="hero-slide absolute inset-0 opacity-0 transition-all duration-1000 ease-out {{ $loop->first ? 'active opacity-100 z-10' : 'z-0' }}"
-                style="background-image: url('{{ asset('storage/' . $carousel->image_path) }}'); background-size: cover; background-position: center;">
+        <div class="swiper hero-swiper h-full">
+            <div class="swiper-wrapper">
+                @foreach ($carousels as $index => $carousel)
+                    <div class="swiper-slide">
+                        <div class="relative h-full w-full"
+                            style="background-image: url('{{ asset('storage/' . $carousel->image_path) }}'); background-size: cover; background-position: center;">
 
-                <!-- Gradient Overlay -->
-                <div class="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-transparent"></div>
+                            <!-- Dynamic Gradient Overlay -->
+                            <div class="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-transparent"></div>
 
-                <!-- Content -->
-                <div class="relative z-10 flex items-center h-full">
-                    <div class="max-w-7xl mx-auto px-6 lg:px-8 w-full">
-                        <div class="max-w-2xl ml-auto text-right">
-                            <span class="text-white/80 text-sm font-medium tracking-wider mb-4 block">NEW COLLECTION</span>
-                            <h1 class="font-bold text-5xl md:text-6xl lg:text-7xl text-white mb-6 leading-tight">
-                                {{ $carousel->title }}
-                            </h1>
-                            <p class="text-xl text-white/80 mb-8 leading-relaxed font-light">
-                                {{ $carousel->description }}
-                            </p>
-                            @if ($carousel->button_text && $carousel->button_link)
-                                <a href="{{ $carousel->button_link }}"
-                                    class="inline-flex items-center border-2 border-white text-white px-8 py-4 hover:bg-white hover:text-gray-900 transition-all duration-500 text-lg font-medium"
-                                    {{ Str::startsWith($carousel->button_link, ['http://', 'https://']) ? 'target=_blank rel=noopener' : '' }}>
-                                    {{ $carousel->button_text }}
-                                    <i
-                                        class="fas fa-arrow-right ml-3 text-sm transition-transform duration-300 group-hover:translate-x-1"></i>
-                                </a>
-                            @endif
+                            <!-- Animated Background Pattern -->
+                            <div class="absolute inset-0 opacity-5">
+                                <div class="absolute inset-0"
+                                    style="background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.1) 35px, rgba(255,255,255,.1) 70px);">
+                                </div>
+                            </div>
+
+                            <!-- Content Container -->
+                            <div class="relative z-10 flex items-center h-full">
+                                <div class="max-w-7xl mx-auto px-6 lg:px-8 w-full">
+                                    <div
+                                        class="max-w-3xl {{ $index % 2 == 0 ? 'ml-auto text-right' : 'mr-auto text-left' }}">
+                                        <!-- Badge -->
+                                        <div class="mb-6 animate-fade-in-down">
+                                            <span
+                                                class="inline-block bg-white/10 backdrop-blur-sm border border-white/30 text-white text-xs font-semibold tracking-widest px-6 py-2 rounded-full uppercase">
+                                                New Collection
+                                            </span>
+                                        </div>
+
+                                        <!-- Title -->
+                                        <h1
+                                            class="font-bold text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white mb-6 leading-none tracking-tight animate-fade-in-up">
+                                            {{ $carousel->title }}
+                                        </h1>
+
+                                        <!-- Description -->
+                                        <p
+                                            class="text-lg md:text-xl lg:text-2xl text-white/90 mb-10 leading-relaxed font-light max-w-2xl {{ $index % 2 == 0 ? 'ml-auto' : 'mr-auto' }} animate-fade-in-up animation-delay-200">
+                                            {{ $carousel->description }}
+                                        </p>
+
+                                        <!-- CTA Button -->
+                                        @if ($carousel->button_text && $carousel->button_link)
+                                            <div class="animate-fade-in-up animation-delay-400">
+                                                <a href="{{ $carousel->button_link }}"
+                                                    class="group inline-flex items-center bg-white text-gray-900 px-10 py-5 hover:bg-gray-900 hover:text-white transition-all duration-500 text-base md:text-lg font-semibold shadow-2xl hover:shadow-white/20 transform hover:scale-105"
+                                                    {{ Str::startsWith($carousel->button_link, ['http://', 'https://']) ? 'target=_blank rel=noopener' : '' }}>
+                                                    <span>{{ $carousel->button_text }}</span>
+                                                    <i
+                                                        class="fas fa-arrow-right ml-3 text-sm transition-transform duration-300 group-hover:translate-x-2"></i>
+                                                </a>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Slide Number Indicator -->
+                            <div class="absolute top-8 left-8 z-20 text-white/60 font-light text-sm tracking-widest">
+                                <span class="text-2xl font-bold text-white">0{{ $index + 1 }}</span> /
+                                0{{ count($carousels) }}
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
             </div>
-        @endforeach
 
-        <!-- Dots Navigation -->
-        <div class="absolute bottom-8 right-8 z-20 flex flex-col space-y-3">
-            @foreach ($carousels as $index => $carousel)
-                <button
-                    class="carousel-dot w-3 h-3 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300 {{ $loop->first ? 'bg-white' : '' }}"
-                    data-slide="{{ $index }}"></button>
-            @endforeach
+            <!-- Navigation Arrows -->
+            <div
+                class="swiper-button-prev !w-16 !h-16 !bg-white/10 backdrop-blur-md !text-white rounded-full hover:!bg-white hover:!text-gray-900 !transition-all !duration-300 after:!text-xl !left-8">
+            </div>
+            <div
+                class="swiper-button-next !w-16 !h-16 !bg-white/10 backdrop-blur-md !text-white rounded-full hover:!bg-white hover:!text-gray-900 !transition-all !duration-300 after:!text-xl !right-8">
+            </div>
+
+            <!-- Custom Pagination -->
+            <div class="swiper-pagination !bottom-8 !right-8 !left-auto !w-auto flex flex-col gap-3"></div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 animate-bounce">
+            <div class="flex flex-col items-center text-white/70">
+                <span class="text-xs tracking-widest mb-2 uppercase">Scroll</span>
+                <i class="fas fa-chevron-down text-sm"></i>
+            </div>
         </div>
     </section>
+
     <br>
 
     {{-- Feature --}}
@@ -158,18 +205,39 @@
                 @forelse ($arrivals as $arrival)
                     <div
                         class="product-card w-72 bg-white rounded-xl overflow-hidden transition-all duration-300 cursor-pointer group">
-                        <a href="{{ route('product.view', $arrival->id) }}" class="block">
+                        <a href="{{ route('product.view', $arrival->slug) }}" class="block">
                             <!-- Image Container -->
                             <div class="relative h-80 overflow-hidden">
                                 <!-- Product Image -->
-                                <img src="{{ asset($arrival->image) }}" alt="{{ $arrival->name }}"
-                                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                    loading="lazy">
+                                @if ($arrival->images->count() > 0)
+                                    <img src="{{ asset('storage/' . $arrival->images->first()->image_path) }}"
+                                        alt="{{ $arrival->images->first()->alt_text ?? $arrival->name }}"
+                                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                        loading="lazy">
+                                @else
+                                    <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                                        <span class="text-gray-400">No Image</span>
+                                    </div>
+                                @endif
 
                                 <!-- Price Badge -->
                                 <div
                                     class="absolute top-4 left-4 bg-white/95 backdrop-blur-sm text-gray-900 px-3 py-2 rounded-lg text-sm font-semibold shadow-sm">
-                                    ${{ number_format($arrival->sizes->min('price'), 2) }}
+                                    @if ($arrival->variants->count() > 0)
+                                        @php
+                                            $minPrice = $arrival->variants->min('price');
+                                            $minSalePrice = $arrival->variants
+                                                ->whereNotNull('sale_price')
+                                                ->min('sale_price');
+                                            $displayPrice = $minSalePrice ? min($minPrice, $minSalePrice) : $minPrice;
+                                        @endphp
+                                        ${{ number_format($displayPrice, 2) }}
+                                        @if ($minSalePrice && $minSalePrice < $minPrice)
+                                            <span class="text-xs text-red-500 ml-1">SALE</span>
+                                        @endif
+                                    @else
+                                        $0.00
+                                    @endif
                                 </div>
 
                                 <!-- Quick Action Overlay -->
@@ -184,13 +252,31 @@
 
                             <!-- Product Info -->
                             <div class="p-5">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-1">{{ $arrival->name }}</h3>
-                                <p class="text-gray-600 text-sm leading-relaxed line-clamp-2">{{ $arrival->description }}
-                                </p>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-1">{{ $arrival->name }}
+                                </h3>
+                                <p class="text-gray-600 text-sm leading-relaxed line-clamp-2">
+                                    {{ $arrival->short_description ?? $arrival->description }}</p>
+
+                                <!-- Rating -->
+                                @if ($arrival->rating_cache > 0)
+                                    <div class="flex items-center mt-2">
+                                        <div class="flex text-yellow-400">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                @if ($i <= floor($arrival->rating_cache))
+                                                    <i class="fas fa-star text-sm"></i>
+                                                @elseif($i - 0.5 <= $arrival->rating_cache)
+                                                    <i class="fas fa-star-half-alt text-sm"></i>
+                                                @else
+                                                    <i class="far fa-star text-sm"></i>
+                                                @endif
+                                            @endfor
+                                        </div>
+                                        <span class="text-gray-500 text-xs ml-2">({{ $arrival->review_count }})</span>
+                                    </div>
+                                @endif
                             </div>
                         </a>
                     </div>
-
                 @empty
                     <div class="col-span-full text-center py-12">
                         <div class="text-gray-400 mb-4">
@@ -218,71 +304,102 @@
             </div>
             <div class="about-content">
                 <h2 style="font-weight: 900;">About Outfit 818 </h2>
-                <p>At Outfit 818, we believe fashion is more than just clothing — it’s confidence, creativity, and comfort.
+                <p>At Outfit 818, we believe fashion is more than just clothing — it's confidence, creativity, and comfort.
                     Our mission is to blend timeless designs with modern trends to create something truly unique for every
                     individual.</p>
-                <blockquote>“Dress well. Feel unstoppable.”</blockquote>
+                <blockquote>"Dress well. Feel unstoppable."</blockquote>
             </div>
         </div>
     </section>
 
     <!-- PRODUCT OF THE DAY -->
-    @php
-        $featured = \App\Models\FeaturedProduct::where('is_active', true)->latest()->first();
-    @endphp
-
     @if ($featured)
-        <section class="relative py-20 overflow-hidden">
+        <section class="relative py-20 overflow-hidden bg-gray-50">
             <div class="relative z-10" data-aos="zoom-in-up">
                 <div class="max-w-7xl mx-auto px-4 md:px-8">
                     <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
                         <!-- Text Content -->
-                        <div class="flex-1 text-white space-y-6">
+                        <div class="flex-1 space-y-6">
                             <div
                                 class="inline-block bg-[#ffb601] text-white px-6 py-2 rounded-full text-sm font-bold shadow-xl">
                                 Product of the Day
                             </div>
 
                             <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold text-gray-900 leading-tight">
-                                {{ $featured->title }}
+                                {{ $featured->name }}
                             </h1>
-                            {{-- 
-                            <p class="text-2xl md:text-3xl text-[#ffb601] italic font-light">
-                                "{{ $featured->tagline }}"
-                            </p> --}}
 
                             <p class="text-gray-600 text-lg md:text-xl leading-relaxed max-w-2xl">
-                                {{ $featured->description }}
+                                {{ $featured->short_description ?? Str::limit($featured->description, 200) }}
                             </p>
 
                             <div class="flex flex-wrap items-center gap-4 pt-4">
-                                <span class="text-4xl md:text-5xl font-bold text-[#ffb601]">
-                                    ${{ number_format($featured->discounted_price) }}
-                                </span>
-                                <span class="text-2xl md:text-3xl text-gray-400 line-through font-medium">
-                                    ${{ number_format($featured->original_price) }}
-                                </span>
-                                <span class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
-                                    -{{ round(100 - ($featured->discounted_price / $featured->original_price) * 100) }}%
-                                    OFF
-                                </span>
+                                @if ($featured->variants->count() > 0)
+                                    @php
+                                        $minPrice = $featured->variants->min('price');
+                                        $minSalePrice = $featured->variants
+                                            ->whereNotNull('sale_price')
+                                            ->min('sale_price');
+                                        $displayPrice = $minSalePrice ? min($minPrice, $minSalePrice) : $minPrice;
+                                        $originalPrice = $minPrice;
+                                    @endphp
+
+                                    <span class="text-4xl md:text-5xl font-bold text-[#ffb601]">
+                                        ${{ number_format($displayPrice, 2) }}
+                                    </span>
+
+                                    @if ($minSalePrice && $minSalePrice < $originalPrice)
+                                        <span class="text-2xl md:text-3xl text-gray-400 line-through font-medium">
+                                            ${{ number_format($originalPrice, 2) }}
+                                        </span>
+                                        <span
+                                            class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+                                            -{{ round((($originalPrice - $displayPrice) / $originalPrice) * 100) }}% OFF
+                                        </span>
+                                    @endif
+                                @endif
                             </div>
 
-                            @if ($featured->button_text && $featured->button_link)
-                                <div class="pt-4">
-                                    <a href="{{ $featured->button_link }}"
-                                        class="inline-block font-medium border border-gray-300 hover:bg-gray-900 hover:text-white text-gray-900 px-6 py-2 rounded-full text-lg transition-all duration-300 transform hover:scale-105">
-                                        {{ $featured->button_text }} →
-                                    </a>
+                            <!-- Rating -->
+                            @if ($featured->rating_cache > 0)
+                                <div class="flex items-center">
+                                    <div class="flex text-yellow-400">
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            @if ($i <= floor($featured->rating_cache))
+                                                <i class="fas fa-star"></i>
+                                            @elseif($i - 0.5 <= $featured->rating_cache)
+                                                <i class="fas fa-star-half-alt"></i>
+                                            @else
+                                                <i class="far fa-star"></i>
+                                            @endif
+                                        @endfor
+                                    </div>
+                                    <span class="text-gray-600 ml-2">{{ number_format($featured->rating_cache, 1) }}
+                                        ({{ $featured->review_count }} reviews)</span>
                                 </div>
                             @endif
+
+                            <div class="pt-4">
+                                <a href="{{ route('product.view', $featured->id) }}"
+                                    class="inline-block font-medium border-2 border-gray-900 bg-gray-900 text-white px-8 py-3 rounded-full text-lg hover:bg-white hover:text-gray-900 transition-all duration-300 transform hover:scale-105">
+                                    Shop Now →
+                                </a>
+                            </div>
                         </div>
 
                         <!-- Product Image -->
                         <div class="flex-1 w-full max-w-lg">
                             <div class="relative">
-                                <img src="{{ asset($featured->image_path) }}" alt="{{ $featured->title }}"
-                                    class="relative w-full rounded-3xl shadow-lg transform hover:scale-105 transition-transform duration-500 border-4 border-white/10">
+                                @if ($featured->images->count() > 0)
+                                    <img src="{{ asset('storage/' . $featured->images->first()->image_path) }}"
+                                        alt="{{ $featured->images->first()->alt_text ?? $featured->name }}"
+                                        class="relative w-full rounded-3xl shadow-lg transform hover:scale-105 transition-transform duration-500 border-4 border-white/10">
+                                @else
+                                    <div
+                                        class="relative w-full h-96 bg-gray-200 rounded-3xl flex items-center justify-center">
+                                        <span class="text-gray-400 text-lg">No Image Available</span>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -290,7 +407,6 @@
             </div>
         </section>
     @endif
-
 
     <!-- EMAIL OPT-IN SECTION -->
     <section class="email-optin-full" data-aos="fade-up" id="emails">
@@ -362,3 +478,209 @@
         <div id="subscribe-message" class="text-sm mt-3"></div>
     </section>
 @endsection
+
+
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const swiper = new Swiper('.hero-swiper', {
+            // Swiper Configuration
+            effect: 'fade',
+            fadeEffect: {
+                crossFade: true
+            },
+            speed: 1200,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+            loop: true,
+            grabCursor: true,
+            watchSlidesProgress: true,
+
+            // Navigation
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+
+            // Pagination
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+                renderBullet: function(index, className) {
+                    return '<span class="' + className +
+                        ' !w-3 !h-3 !bg-white/50 hover:!bg-white !rounded-full !transition-all !duration-300 !mx-0"></span>';
+                },
+            },
+
+            // Keyboard Control
+            keyboard: {
+                enabled: true,
+                onlyInViewport: true,
+            },
+
+            // Mouse Wheel
+            mousewheel: {
+                forceToAxis: true,
+                sensitivity: 1,
+                releaseOnEdges: true,
+            },
+
+            // Parallax Effect
+            parallax: true,
+
+            // Events
+            on: {
+                init: function() {
+                    // Add entrance animations
+                    this.slides.forEach(slide => {
+                        const content = slide.querySelector('.max-w-3xl');
+                        if (content) {
+                            content.style.opacity = '0';
+                            content.style.transform = 'translateY(30px)';
+                        }
+                    });
+
+                    // Animate first slide
+                    const firstSlide = this.slides[this.activeIndex];
+                    const firstContent = firstSlide.querySelector('.max-w-3xl');
+                    if (firstContent) {
+                        setTimeout(() => {
+                            firstContent.style.transition = 'all 1s ease-out';
+                            firstContent.style.opacity = '1';
+                            firstContent.style.transform = 'translateY(0)';
+                        }, 300);
+                    }
+                },
+                slideChangeTransitionStart: function() {
+                    // Hide content on slide change
+                    this.slides.forEach(slide => {
+                        const content = slide.querySelector('.max-w-3xl');
+                        if (content) {
+                            content.style.opacity = '0';
+                            content.style.transform = 'translateY(30px)';
+                        }
+                    });
+                },
+                slideChangeTransitionEnd: function() {
+                    // Show content on new slide
+                    const activeSlide = this.slides[this.activeIndex];
+                    const activeContent = activeSlide.querySelector('.max-w-3xl');
+                    if (activeContent) {
+                        activeContent.style.transition = 'all 1s ease-out';
+                        activeContent.style.opacity = '1';
+                        activeContent.style.transform = 'translateY(0)';
+                    }
+                }
+            }
+        });
+
+        // Pause autoplay on hover
+        const swiperContainer = document.querySelector('.hero-swiper');
+        swiperContainer.addEventListener('mouseenter', () => {
+            swiper.autoplay.stop();
+        });
+        swiperContainer.addEventListener('mouseleave', () => {
+            swiper.autoplay.start();
+        });
+    });
+</script>
+
+<style>
+    /* Custom Animations */
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in-down {
+        animation: fadeInDown 1s ease-out forwards;
+    }
+
+    .animate-fade-in-up {
+        animation: fadeInUp 1s ease-out forwards;
+    }
+
+    .animation-delay-200 {
+        animation-delay: 0.2s;
+        opacity: 0;
+    }
+
+    .animation-delay-400 {
+        animation-delay: 0.4s;
+        opacity: 0;
+    }
+
+    /* Swiper Custom Styles */
+    .swiper-pagination-bullet-active {
+        background: white !important;
+        height: 2rem !important;
+    }
+
+    .swiper-button-prev:after,
+    .swiper-button-next:after {
+        font-weight: 900;
+    }
+
+    /* Loading State */
+    .swiper-slide img {
+        object-fit: cover;
+    }
+
+    /* Smooth Transitions */
+    .hero-swiper {
+        will-change: transform;
+    }
+
+    .swiper-slide {
+        will-change: opacity;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+
+        .swiper-button-prev,
+        .swiper-button-next {
+            width: 3rem !important;
+            height: 3rem !important;
+        }
+
+        .swiper-button-prev {
+            left: 1rem !important;
+        }
+
+        .swiper-button-next {
+            right: 1rem !important;
+        }
+
+        .swiper-pagination {
+            bottom: 1.5rem !important;
+            right: 1.5rem !important;
+        }
+    }
+</style>
