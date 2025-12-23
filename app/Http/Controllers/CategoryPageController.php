@@ -24,13 +24,128 @@ class CategoryPageController extends Controller
         ->where('category_id', $category->id)
         ->where('status', 'active'); // Only show active products
 
+        // Apply all filters
+        $query = $this->applyFilters($query, $request);
+
+        // Get products with sorting
+        $products = $query->get();
+
+        // Apply sorting
+        $products = $this->applySorting($products, $request);
+
+        // Manual pagination
+        $paginator = $this->paginateProducts($products, $request);
+
+        // Get available filters for sidebar
+        $availableSizes = $this->getAvailableSizes($category->id);
+        $availableColors = $this->getAvailableColors($category->id);
+        $availableBrands = $this->getAvailableBrands($category->id);
+        $priceRange = $this->getPriceRange($category->id);
+
+        return view('frontend.category-page', [
+            'category' => $category,
+            'categories' => $categories,
+            'products' => $paginator,
+            'availableSizes' => $availableSizes,
+            'availableColors' => $availableColors,
+            'availableBrands' => $availableBrands,
+            'priceRange' => $priceRange,
+            'filters' => $request->all()
+        ]);
+    }
+
+    public function showByGender(Request $request, $gender)
+    {
+        // Map URL gender to database gender values
+        $genderMap = [
+            'men' => 'men',
+            'women' => 'women',
+            'kids' => 'unisex'
+        ];
+        
+        $dbGender = $genderMap[$gender] ?? $gender;
+        
+        // Get ALL active categories (for navbar)
+        $allCategories = Category::where('status', 'active')
+            ->orderBy('sort_order', 'asc')
+            ->get();
+        
+        // Get categories for this gender
+        $genderCategories = $allCategories->where('gender', $dbGender);
+        
+        if ($genderCategories->isEmpty()) {
+            // Create a dummy category for display
+            $category = (object) [
+                'name' => ucfirst($gender) . ' Collection',
+                'slug' => $gender,
+                'gender' => $dbGender,
+                'id' => null
+            ];
+        } else {
+            $category = $genderCategories->first();
+        }
+        
+        // Build query for ALL products of this gender (across all categories)
+        $categoryIds = $genderCategories->pluck('id')->toArray();
+        
+        $query = Product::with(['category', 'variants', 'images' => function($query) {
+            $query->where('is_primary', true)->orWhere('sort_order', 0)->limit(1);
+        }])
+        ->whereIn('category_id', $categoryIds)
+        ->where('status', 'active'); // Only show active products
+
+        // Apply all filters
+        $query = $this->applyFilters($query, $request);
+
+        // Filter by category (for gender pages)
+        if ($request->filled('category')) {
+            $categorySlug = $request->category;
+            $specificCategory = Category::where('slug', $categorySlug)->first();
+            if ($specificCategory) {
+                $query->where('category_id', $specificCategory->id);
+            }
+        }
+
+        // Get products with sorting
+        $products = $query->get();
+
+        // Apply sorting
+        $products = $this->applySorting($products, $request);
+
+        // Manual pagination
+        $paginator = $this->paginateProducts($products, $request);
+
+        // Get available filters for sidebar
+        $availableSizes = $this->getAvailableSizesForGender($categoryIds);
+        $availableColors = $this->getAvailableColorsForGender($categoryIds);
+        $availableBrands = $this->getAvailableBrands(null, $categoryIds);
+        $priceRange = $this->getPriceRangeForGender($categoryIds);
+
+        return view('frontend.category-page', [
+            'gender' => $gender,
+            'genderCategories' => $genderCategories,
+            'category' => $category,
+            'categories' => $allCategories,
+            'products' => $paginator,
+            'availableSizes' => $availableSizes,
+            'availableColors' => $availableColors,
+            'availableBrands' => $availableBrands,
+            'priceRange' => $priceRange,
+            'filters' => $request->all()
+        ]);
+    }
+
+    /**
+     * Apply all filters to the query
+     */
+    private function applyFilters($query, $request)
+    {
         // Search functionality
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('name', 'like', '%' . $search . '%')
                   ->orWhere('description', 'like', '%' . $search . '%')
-                  ->orWhere('short_description', 'like', '%' . $search . '%')
                   ->orWhere('brand', 'like', '%' . $search . '%');
             });
         }
@@ -47,98 +162,128 @@ class CategoryPageController extends Controller
             });
         }
 
-        // Filter by size
+        // Filter by size (multiple sizes)
         if ($request->filled('size')) {
-            $query->whereHas('variants', function($q) use ($request) {
-                $q->where('size', $request->size)
-                  ->where('stock', '>', 0); // Only show sizes that are in stock
-            });
-        }
-
-        // Filter by color
-        if ($request->filled('color')) {
-            $query->whereHas('variants', function($q) use ($request) {
-                $q->where('color', 'like', '%' . $request->color . '%')
+            $sizes = is_array($request->size) ? $request->size : [$request->size];
+            $query->whereHas('variants', function($q) use ($sizes) {
+                $q->whereIn('size', $sizes)
                   ->where('stock', '>', 0);
             });
         }
 
+        // Filter by color (multiple colors)
+        if ($request->filled('color')) {
+            $colors = is_array($request->color) ? $request->color : [$request->color];
+            $query->whereHas('variants', function($q) use ($colors) {
+                $q->where(function($subQuery) use ($colors) {
+                    foreach ($colors as $color) {
+                        $subQuery->orWhere('color', 'like', '%' . $color . '%');
+                    }
+                })->where('stock', '>', 0);
+            });
+        }
+
+        // Filter by brand (multiple brands)
+        if ($request->filled('brand')) {
+            $brands = is_array($request->brand) ? $request->brand : [$request->brand];
+            $query->whereIn('brand', $brands);
+        }
+
+        // Filter by featured
+        if ($request->filled('featured') && $request->featured == '1') {
+            $query->where('is_featured', true);
+        }
+
+        // Filter by new arrivals
+        if ($request->filled('new_arrival') && $request->new_arrival == '1') {
+            $query->where('is_new', true);
+        }
+
         // Filter by availability
-        if ($request->filled('availability')) {
-            if ($request->availability === 'in_stock') {
-                $query->whereHas('variants', function($q) {
-                    $q->where('stock', '>', 0);
-                });
-            } elseif ($request->availability === 'out_of_stock') {
-                $query->whereHas('variants', function($q) {
-                    $q->where('stock', '<=', 0);
-                });
+        if ($request->filled('status')) {
+            switch ($request->status) {
+                case 'in_stock':
+                    $query->whereHas('variants', function($q) {
+                        $q->where('stock', '>', 0);
+                    });
+                    break;
+                case 'low_stock':
+                    $query->whereHas('variants', function($q) {
+                        $q->where('stock', '>', 0)
+                          ->where('stock', '<=', 10); // Low stock threshold
+                    });
+                    break;
+                case 'out_of_stock':
+                    $query->whereHas('variants', function($q) {
+                        $q->where('stock', '<=', 0);
+                    });
+                    break;
             }
         }
 
-        // Get products with sorting
-        $products = $query->get();
+        return $query;
+    }
 
-        // Apply sorting
+    /**
+     * Apply sorting to products
+     */
+    private function applySorting($products, $request)
+    {
         if ($request->filled('sort')) {
             switch ($request->sort) {
                 case 'price_low_high':
-                    $products = $products->sortBy(function($product) {
+                    return $products->sortBy(function($product) {
                         return $product->variants->min('price') ?? PHP_INT_MAX;
                     });
-                    break;
                     
                 case 'price_high_low':
-                    $products = $products->sortByDesc(function($product) {
+                    return $products->sortByDesc(function($product) {
                         return $product->variants->max('price') ?? 0;
                     });
-                    break;
                     
                 case 'newest':
-                    $products = $products->sortByDesc('created_at');
-                    break;
+                    return $products->sortByDesc('created_at');
                     
                 case 'oldest':
-                    $products = $products->sortBy('created_at');
-                    break;
+                    return $products->sortBy('created_at');
                     
                 case 'name_asc':
-                    $products = $products->sortBy('name');
-                    break;
+                    return $products->sortBy('name');
                     
                 case 'name_desc':
-                    $products = $products->sortByDesc('name');
-                    break;
+                    return $products->sortByDesc('name');
                     
                 case 'featured':
-                    $products = $products->sortByDesc('is_featured');
-                    break;
+                    return $products->sortByDesc('is_featured');
                     
                 case 'popular':
-                    $products = $products->sortByDesc('view_count');
-                    break;
+                    return $products->sortByDesc('view_count');
                     
                 case 'rating':
-                    $products = $products->sortByDesc('rating_cache');
-                    break;
+                    return $products->sortByDesc('rating_cache');
                     
                 default:
-                    $products = $products->sortByDesc('created_at');
+                    return $products->sortByDesc('created_at');
             }
         } else {
             // Default sorting: featured first, then newest
-            $products = $products->sortByDesc('is_featured')
+            return $products->sortByDesc('is_featured')
                 ->sortByDesc('created_at');
         }
+    }
 
-        // Manual pagination
+    /**
+     * Paginate products
+     */
+    private function paginateProducts($products, $request)
+    {
         $perPage = $request->get('per_page', 12);
         $page = $request->get('page', 1);
         $offset = ($page - 1) * $perPage;
         
         $paginatedProducts = $products->slice($offset, $perPage)->values();
         
-        $paginator = new LengthAwarePaginator(
+        return new LengthAwarePaginator(
             $paginatedProducts,
             $products->count(),
             $perPage,
@@ -148,21 +293,6 @@ class CategoryPageController extends Controller
                 'query' => $request->query()
             ]
         );
-
-        // Get available filters for sidebar
-        $availableSizes = $this->getAvailableSizes($category->id);
-        $availableColors = $this->getAvailableColors($category->id);
-        $priceRange = $this->getPriceRange($category->id);
-
-        return view('frontend.category-page', [
-            'category' => $category,
-            'categories' => $categories,
-            'products' => $paginator,
-            'availableSizes' => $availableSizes,
-            'availableColors' => $availableColors,
-            'priceRange' => $priceRange,
-            'filters' => $request->all()
-        ]);
     }
 
     /**
@@ -255,6 +385,120 @@ class CategoryPageController extends Controller
     }
 
     /**
+     * Get available brands for the category/categories
+     */
+    private function getAvailableBrands($categoryId = null, $categoryIds = [])
+    {
+        $query = Product::where('status', 'active')
+            ->whereHas('variants', function($q) {
+                $q->where('stock', '>', 0);
+            });
+        
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        } elseif (!empty($categoryIds)) {
+            $query->whereIn('category_id', $categoryIds);
+        }
+        
+        return $query->whereNotNull('brand')
+            ->where('brand', '!=', '')
+            ->select('brand')
+            ->distinct()
+            ->orderBy('brand')
+            ->pluck('brand')
+            ->toArray();
+    }
+
+    /**
+     * Get available sizes for multiple categories (gender collection)
+     */
+    private function getAvailableSizesForGender($categoryIds)
+    {
+        return Product::whereIn('category_id', $categoryIds)
+            ->where('status', 'active')
+            ->whereHas('variants', function($q) {
+                $q->where('stock', '>', 0);
+            })
+            ->with(['variants' => function($q) {
+                $q->select('size')
+                  ->where('stock', '>', 0)
+                  ->distinct();
+            }])
+            ->get()
+            ->pluck('variants.*.size')
+            ->flatten()
+            ->unique()
+            ->sort()
+            ->values()
+            ->toArray();
+    }
+
+    /**
+     * Get available colors for multiple categories (gender collection)
+     */
+    private function getAvailableColorsForGender($categoryIds)
+    {
+        return Product::whereIn('category_id', $categoryIds)
+            ->where('status', 'active')
+            ->whereHas('variants', function($q) {
+                $q->where('stock', '>', 0);
+            })
+            ->with(['variants' => function($q) {
+                $q->select('color')
+                  ->where('stock', '>', 0)
+                  ->distinct();
+            }])
+            ->get()
+            ->pluck('variants.*.color')
+            ->flatten()
+            ->unique()
+            ->sort()
+            ->values()
+            ->toArray();
+    }
+
+    /**
+     * Get price range for multiple categories (gender collection)
+     */
+    private function getPriceRangeForGender($categoryIds)
+    {
+        $minPrice = Product::whereIn('category_id', $categoryIds)
+            ->where('status', 'active')
+            ->whereHas('variants', function($q) {
+                $q->where('stock', '>', 0);
+            })
+            ->with(['variants' => function($q) {
+                $q->select('price')
+                  ->where('stock', '>', 0)
+                  ->orderBy('price');
+            }])
+            ->get()
+            ->pluck('variants.*.price')
+            ->flatten()
+            ->min();
+
+        $maxPrice = Product::whereIn('category_id', $categoryIds)
+            ->where('status', 'active')
+            ->whereHas('variants', function($q) {
+                $q->where('stock', '>', 0);
+            })
+            ->with(['variants' => function($q) {
+                $q->select('price')
+                  ->where('stock', '>', 0)
+                  ->orderByDesc('price');
+            }])
+            ->get()
+            ->pluck('variants.*.price')
+            ->flatten()
+            ->max();
+
+        return [
+            'min' => $minPrice ?? 0,
+            'max' => $maxPrice ?? 1000
+        ];
+    }
+
+     /**
      * Quick view product details (for modal)
      */
     public function quickView($id)
@@ -277,7 +521,6 @@ class CategoryPageController extends Controller
                 'name' => $product->name,
                 'slug' => $product->slug,
                 'description' => $product->description,
-                'short_description' => $product->short_description,
                 'brand' => $product->brand,
                 'rating' => $product->rating_cache,
                 'review_count' => $product->review_count,
@@ -335,7 +578,6 @@ class CategoryPageController extends Controller
                 'id' => $product->id,
                 'name' => $product->name,
                 'slug' => $product->slug,
-                'short_description' => $product->short_description,
                 'image' => $product->images->first() ? 
                     asset('storage/' . $product->images->first()->image_path) : 
                     asset('images/placeholder.jpg'),

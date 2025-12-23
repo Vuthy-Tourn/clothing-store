@@ -10,176 +10,196 @@
             <!-- Desktop Navigation -->
             <div class="hidden md:flex items-center space-x-8">
                 <!-- Main Categories with Mega Dropdowns -->
-                <div class="relative group" id="menCategory">
-                    <a href="{{ url('men') }}"
-                        class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10 {{ request()->is('men') || request()->is('men/*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">MEN</a>
-                    <!-- Mega Dropdown -->
-                    <div
-                        class="absolute left-1/2 transform -translate-x-1/3 mt-4 w-screen max-w-6xl bg-white shadow-md rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                        <div class="px-8 py-6 grid grid-cols-4 gap-8">
-                            <div>
-                                <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Clothing
-                                </h3>
-                                <ul class="space-y-3">
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">T-Shirts</a>
-                                    </li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Shirts</a>
-                                    </li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Jeans</a>
-                                    </li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Shorts</a>
-                                    </li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Jackets</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Footwear
-                                </h3>
-                                <ul class="space-y-3">
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Sneakers</a>
-                                    </li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Boots</a>
-                                    </li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Sandals</a>
-                                    </li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Formal
-                                            Shoes</a></li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
-                                    Accessories</h3>
-                                <ul class="space-y-3">
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Bags</a>
-                                    </li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Watches</a>
-                                    </li>
-                                    <li><a href="#"
-                                            class="text-gray-600 hover:text-gray-900 text-sm">Sunglasses</a></li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Belts</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-2">Featured
-                                </h3>
-                                <p class="text-xs text-gray-600 mb-3">Check out our new summer collection</p>
-                                <a href="#"
-                                    class="inline-block bg-gray-900 text-white px-4 py-2 text-xs font-medium rounded hover:bg-gray-800 transition-colors">Shop
-                                    Now</a>
+                <!-- Men Category -->
+                @php
+                    $menCategories = $categories->where('gender', 'men')->sortBy('sort_order');
+                @endphp
+                @if($menCategories->count() > 0)
+                    <div class="relative group" id="menCategory">
+                        <a href="{{ url('men') }}"
+                            class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10 {{ request()->is('men') || request()->is('men/*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">MEN</a>
+                        <!-- Mega Dropdown -->
+                        <div
+                            class="absolute left-1/2 transform -translate-x-1/3 mt-4 w-screen max-w-6xl bg-white shadow-md rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                            <div class="px-8 py-6 grid grid-cols-4 gap-8">
+                                <!-- Clothing Section -->
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Clothing</h3>
+                                    <ul class="space-y-3">
+                                        @foreach($menCategories->whereIn('name', ['Shirts', 'T-Shirts', 'Pants']) as $category)
+                                            <li>
+                                                <a href="{{ url('category/' . $category->slug) }}" 
+                                                   class="text-gray-600 hover:text-gray-900 text-sm">
+                                                    {{ $category->name }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                        <!-- Add more default items if needed -->
+                                        <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Jeans</a></li>
+                                        <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Shorts</a></li>
+                                        <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Jackets</a></li>
+                                    </ul>
+                                </div>
+                                
+                                <!-- Additional categories for Men -->
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">More Collections</h3>
+                                    <ul class="space-y-3">
+                                        @foreach($menCategories->whereNotIn('name', ['Shirts', 'T-Shirts', 'Pants'])->take(5) as $category)
+                                            <li>
+                                                <a href="{{ url('category/' . $category->slug) }}" 
+                                                   class="text-gray-600 hover:text-gray-900 text-sm">
+                                                    {{ $category->name }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                                
+                                <!-- Accessories Section -->
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Accessories</h3>
+                                    <ul class="space-y-3">
+                                        <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Bags</a></li>
+                                        <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Watches</a></li>
+                                        <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Sunglasses</a></li>
+                                        <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Belts</a></li>
+                                    </ul>
+                                </div>
+                                
+                                <!-- Featured Section -->
+                                <div class="bg-blue-50 rounded-lg p-4">
+                                    <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-2">Men's Featured</h3>
+                                    <p class="text-xs text-gray-600 mb-3">Check out our new men's collection</p>
+                                    <a href="{{ url('men') }}"
+                                        class="inline-block bg-gray-900 text-white px-4 py-2 text-xs font-medium rounded hover:bg-gray-800 transition-colors">Shop Now</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endif
 
-                <div class="relative group" id="womenCategory">
-                    <a href="{{ url('women') }}"
-                        class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10 {{ request()->is('women') || request()->is('women/*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">WOMEN</a>
-                    <!-- Mega Dropdown -->
-                    <div
-                        class="absolute left-1/2 transform -translate-x-1/3 mt-4 w-screen max-w-6xl bg-white shadow-md rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                        <div class="px-8 py-6 grid grid-cols-4 gap-8">
-                            <div>
-                                <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Clothing
-                                </h3>
-                                <ul class="space-y-3">
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Dresses</a>
-                                    </li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Tops</a>
-                                    </li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Jeans</a>
-                                    </li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Skirts</a>
-                                    </li>
-                                    <li><a href="#"
-                                            class="text-gray-600 hover:text-gray-900 text-sm">Activewear</a></li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Footwear
-                                </h3>
-                                <ul class="space-y-3">
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Heels</a>
-                                    </li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Flats</a>
-                                    </li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Boots</a>
-                                    </li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Sandals</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
-                                    Accessories</h3>
-                                <ul class="space-y-3">
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Bags</a>
-                                    </li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Jewelry</a>
-                                    </li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Scarves</a>
-                                    </li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Hats</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-2">New
-                                    Arrivals</h3>
-                                <p class="text-xs text-gray-600 mb-3">Discover the latest trends</p>
-                                <a href="#"
-                                    class="inline-block bg-gray-900 text-white px-4 py-2 text-xs font-medium rounded hover:bg-gray-800 transition-colors">Explore</a>
+                <!-- Women Category -->
+                @php
+                    $womenCategories = $categories->where('gender', 'women')->sortBy('sort_order');
+                @endphp
+                @if($womenCategories->count() > 0)
+                    <div class="relative group" id="womenCategory">
+                        <a href="{{ url('women') }}"
+                            class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10 {{ request()->is('women') || request()->is('women/*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">WOMEN</a>
+                        <!-- Mega Dropdown -->
+                        <div
+                            class="absolute left-1/2 transform -translate-x-1/3 mt-4 w-screen max-w-6xl bg-white shadow-md rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                            <div class="px-8 py-6 grid grid-cols-4 gap-8">
+                                <!-- Clothing Section -->
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Clothing</h3>
+                                    <ul class="space-y-3">
+                                        @foreach($womenCategories->whereIn('name', ['Dresses', 'Tops', 'T-Shirts']) as $category)
+                                            <li>
+                                                <a href="{{ url('category/' . $category->slug) }}" 
+                                                   class="text-gray-600 hover:text-gray-900 text-sm">
+                                                    {{ $category->name }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                        <!-- Add more default items if needed -->
+                                        <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Jeans</a></li>
+                                        <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Skirts</a></li>
+                                        <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Activewear</a></li>
+                                    </ul>
+                                </div>
+                                
+                                <!-- Additional categories for Women -->
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">More Collections</h3>
+                                    <ul class="space-y-3">
+                                        @foreach($womenCategories->whereNotIn('name', ['Dresses', 'Tops', 'T-Shirts'])->take(5) as $category)
+                                            <li>
+                                                <a href="{{ url('category/' . $category->slug) }}" 
+                                                   class="text-gray-600 hover:text-gray-900 text-sm">
+                                                    {{ $category->name }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                                
+                                <!-- Accessories Section -->
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Accessories</h3>
+                                    <ul class="space-y-3">
+                                        <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Bags</a></li>
+                                        <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Jewelry</a></li>
+                                        <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Scarves</a></li>
+                                        <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Hats</a></li>
+                                    </ul>
+                                </div>
+                                
+                                <!-- Featured Section -->
+                                <div class="bg-pink-50 rounded-lg p-4">
+                                    <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-2">Women's New Arrivals</h3>
+                                    <p class="text-xs text-gray-600 mb-3">Discover the latest trends for women</p>
+                                    <a href="{{ url('women') }}"
+                                        class="inline-block bg-gray-900 text-white px-4 py-2 text-xs font-medium rounded hover:bg-gray-800 transition-colors">Explore</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endif
 
-                <div class="relative group" id="kidsCategory">
-                    <a href="{{ url('kids') }}"
-                        class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10 {{ request()->is('kids') || request()->is('kids/*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">KIDS</a>
-                    <!-- Mega Dropdown -->
-                    <div
-                        class="absolute left-1/2 transform -translate-x-1/3 mt-4 w-screen max-w-6xl bg-white shadow-md rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                        <div class="px-8 py-6 grid grid-cols-3 gap-8">
-                            <div>
-                                <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Boys</h3>
-                                <ul class="space-y-3">
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">T-Shirts
-                                            & Tops</a></li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Pants &
-                                            Jeans</a></li>
-                                    <li><a href="#"
-                                            class="text-gray-600 hover:text-gray-900 text-sm">Jackets</a></li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Shoes</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Girls
-                                </h3>
-                                <ul class="space-y-3">
-                                    <li><a href="#"
-                                            class="text-gray-600 hover:text-gray-900 text-sm">Dresses</a></li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Tops</a>
-                                    </li>
-                                    <li><a href="#"
-                                            class="text-gray-600 hover:text-gray-900 text-sm">Leggings</a></li>
-                                    <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Shoes</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-2">Back to
-                                    School</h3>
-                                <p class="text-xs text-gray-600 mb-3">Get ready for the new school year</p>
-                                <a href="#"
-                                    class="inline-block bg-gray-900 text-white px-4 py-2 text-xs font-medium rounded hover:bg-gray-800 transition-colors">Shop
-                                    Collection</a>
+                <!-- Kids Category -->
+                @php
+                    $kidsCategories = $categories->where('gender', 'unisex')->sortBy('sort_order');
+                @endphp
+                @if($kidsCategories->count() > 0)
+                    <div class="relative group" id="kidsCategory">
+                        <a href="{{ url('kids') }}"
+                            class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10 {{ request()->is('kids') || request()->is('kids/*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">KIDS</a>
+                        <!-- Mega Dropdown -->
+                        <div
+                            class="absolute left-1/2 transform -translate-x-1/3 mt-4 w-screen max-w-6xl bg-white shadow-md rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                            <div class="px-8 py-6 grid grid-cols-3 gap-8">
+                                <!-- Boys Section -->
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Boys</h3>
+                                    <ul class="space-y-3">
+                                        @foreach($kidsCategories->where('name', 'T-Shirts') as $category)
+                                            <li>
+                                                <a href="{{ url('category/' . $category->slug) }}" 
+                                                   class="text-gray-600 hover:text-gray-900 text-sm">
+                                                    {{ $category->name }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                        <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Pants & Jeans</a></li>
+                                        <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Jackets</a></li>
+                                        <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Shoes</a></li>
+                                    </ul>
+                                </div>
+                                
+                                <!-- Girls Section -->
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Girls</h3>
+                                    <ul class="space-y-3">
+                                        <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Dresses</a></li>
+                                        <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Tops</a></li>
+                                        <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Leggings</a></li>
+                                        <li><a href="#" class="text-gray-600 hover:text-gray-900 text-sm">Shoes</a></li>
+                                    </ul>
+                                </div>
+                                
+                                <!-- Featured Section -->
+                                <div class="bg-purple-50 rounded-lg p-4">
+                                    <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-2">Kids Collection</h3>
+                                    <p class="text-xs text-gray-600 mb-3">Get ready for the new school year</p>
+                                    <a href="{{ url('kids') }}"
+                                        class="inline-block bg-gray-900 text-white px-4 py-2 text-xs font-medium rounded hover:bg-gray-800 transition-colors">Shop Collection</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endif
 
                 @auth
                     <a href="{{ route('orders.index') }}"
@@ -284,25 +304,33 @@
         <!-- Mobile menu -->
         <div id="mobileMenu" class="md:hidden hidden border-t border-gray-200 py-4">
             <div class="px-2 pt-2 space-y-1">
-                <a href="{{ url('men') }}"
-                    class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200 {{ request()->is('men') || request()->is('men/*') ? 'bg-gray-50 text-gray-900 font-semibold' : '' }}">MEN</a>
-                <a href="{{ url('women') }}"
-                    class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200 {{ request()->is('women') || request()->is('women/*') ? 'bg-gray-50 text-gray-900 font-semibold' : '' }}">WOMEN</a>
-                <a href="{{ url('kids') }}"
-                    class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200 {{ request()->is('kids') || request()->is('kids/*') ? 'bg-gray-50 text-gray-900 font-semibold' : '' }}">KIDS</a>
+                @if($menCategories->count() > 0)
+                    <a href="{{ url('men') }}"
+                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200 {{ request()->is('men') || request()->is('men/*') ? 'bg-gray-50 text-gray-900 font-semibold' : '' }}">MEN</a>
+                @endif
+                
+                @if($womenCategories->count() > 0)
+                    <a href="{{ url('women') }}"
+                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200 {{ request()->is('women') || request()->is('women/*') ? 'bg-gray-50 text-gray-900 font-semibold' : '' }}">WOMEN</a>
+                @endif
+                
+                @if($kidsCategories->count() > 0)
+                    <a href="{{ url('kids') }}"
+                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200 {{ request()->is('kids') || request()->is('kids/*') ? 'bg-gray-50 text-gray-900 font-semibold' : '' }}">KIDS</a>
+                @endif
+                
                 @auth
                     @if (auth()->user()->user_type === 'admin')
                         <a href="{{ route('admin.dashboard') }}"
                             class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200 {{ request()->is('kids') || request()->is('kids/*') ? 'bg-gray-50 text-gray-900 font-semibold' : '' }}">ADMIN</a>
                     @endif
                 @endauth
+                
                 @guest
                     <a href="{{ route('register') }}"
-                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200 {{ request()->routeIs('register') ? 'bg-gray-50 text-gray-900 font-semibold' : '' }}">Sign
-                        Up</a>
+                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200 {{ request()->routeIs('register') ? 'bg-gray-50 text-gray-900 font-semibold' : '' }}">Sign Up</a>
                     <a href="{{ route('login') }}"
-                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200 {{ request()->routeIs('login') ? 'bg-gray-50 text-gray-900 font-semibold' : '' }}">Log
-                        In</a>
+                        class="block px-3 py-2 text-gray-700 hover:text-gray-900 font-medium hover:bg-gray-50 rounded transition-colors duration-200 {{ request()->routeIs('login') ? 'bg-gray-50 text-gray-900 font-semibold' : '' }}">Log In</a>
                 @endguest
 
                 @auth
@@ -326,7 +354,6 @@
                             </div>
                         </div>
                     </div>
-
                 @endauth
             </div>
         </div>
@@ -375,8 +402,7 @@
 
             // Close mobile menu when clicking outside
             document.addEventListener('click', function(e) {
-                if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target) && !
-                    mobileMenu.classList.contains('hidden')) {
+                if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target) && !mobileMenu.classList.contains('hidden')) {
                     mobileMenu.classList.add('hidden');
                     mobileMenu.classList.remove('animate-slideDown');
                 }
@@ -386,9 +412,7 @@
         // Enhanced Navbar scroll effect
         const navbar = document.getElementById('mainNavbar');
         let lastScrollY = window.scrollY;
-        const excludedPages = ['/orders', '/admin', '/products', '/product', '/cart', '/checkout', '/thank-you',
-            '/profile'
-        ];
+        const excludedPages = ['/orders', '/admin', '/products', '/product', '/cart', '/checkout', '/thank-you', '/profile'];
 
         function updateNavbarOnScroll() {
             const currentPath = window.location.pathname;
@@ -468,6 +492,14 @@
             /* Active link indicator for main nav */
             .nav-link.text-gray-900.font-semibold {
                 position: relative;
+            }
+            
+            /* Make sure mega dropdowns don't interfere with page content */
+            .relative.group .absolute {
+                pointer-events: none;
+            }
+            .relative.group:hover .absolute {
+                pointer-events: auto;
             }
         `;
         document.head.appendChild(style);

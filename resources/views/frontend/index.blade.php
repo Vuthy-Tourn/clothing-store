@@ -95,7 +95,7 @@
     <br>
 
     {{-- Feature --}}
-    <section class="featured-categories py-20 px-4 sm:px-6 lg:px-8 ">
+    <section class="featured-categories py-20 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
             <!-- Section Header -->
             <div class="text-center mb-16">
@@ -106,85 +106,106 @@
 
             <!-- Categories List -->
             <div class="space-y-16">
-                @forelse ($categories as $index => $category)
-                    <div class="category-item group">
-                        <!-- For even indexes: Image on left, content on right -->
-                        @if ($index % 2 == 0)
-                            <div class="flex flex-col lg:flex-row items-center justify-center gap-8">
-                                <!-- Image -->
-                                <div class="w-full lg:w-1/3">
-                                    <div class="overflow-hidden rounded-2xl">
-                                        <img src="{{ asset($category->image) }}" alt="{{ $category->name }}"
-                                            class="w-full h-64 lg:h-80 object-cover transition-transform duration-700 group-hover:scale-105"
-                                            loading="lazy" data-aos="fade-right">
-                                    </div>
-                                </div>
-
-                                <!-- Content -->
-                                <div class="w-full lg:w-1/2 lg:pl-8">
-                                    <div class="text-center lg:text-left" data-aos="fade-left">
-                                        <h3 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
-                                            {{ $category->name }}</h3>
-                                        <p class="text-gray-600 text-lg mb-6 leading-relaxed">
-                                            Discover our exclusive {{ $category->name }} collection featuring the latest
-                                            trends and timeless pieces.
-                                        </p>
-                                        <a href="{{ url($category->slug) }}"
-                                            class="inline-flex items-center text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-900 transition-all duration-300 pb-1">
-                                            Shop {{ $category->name }}
-                                            <i
-                                                class="fas fa-arrow-right ml-2 text-xs transition-transform duration-300 group-hover:translate-x-1"></i>
-                                        </a>
-                                    </div>
-                                </div>
+                <!-- Men Collection -->
+                <div class="category-item group">
+                    <div class="flex flex-col lg:flex-row items-center justify-center gap-8">
+                        <!-- Image -->
+                        <div class="w-full lg:w-1/3">
+                            <div class="overflow-hidden rounded-2xl">
+                                <img src="https://static.zara.net/assets/public/271d/8f90/93384415b608/d29c5bb69e67/image-web-e23758c2-4305-42d5-bfed-2911b6f732d8-default/image-web-e23758c2-4305-42d5-bfed-2911b6f732d8-default.jpg?ts=1761911121683&w=1888"
+                                    alt="Men Collection"
+                                    class="w-full h-64 lg:h-80 object-cover transition-transform duration-700 group-hover:scale-105"
+                                    loading="lazy" data-aos="fade-right">
                             </div>
-
-                            <!-- For odd indexes: Content on left, image on right -->
-                        @else
-                            <div class="flex flex-col lg:flex-row items-center justify-center gap-8">
-                                <!-- Content -->
-                                <div class="w-full lg:w-1/2 order-2 lg:order-1 lg:pr-8" data-aos="fade-right">
-                                    <div class="text-center lg:text-left">
-                                        <h3 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
-                                            {{ $category->name }}</h3>
-                                        <p class="text-gray-600 text-lg mb-6 leading-relaxed">
-                                            Explore our premium {{ $category->name }} selection with carefully crafted
-                                            pieces for every occasion.
-                                        </p>
-                                        <a href="{{ url($category->slug) }}"
-                                            class="inline-flex items-center text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-900 transition-all duration-300 pb-1">
-                                            Shop {{ $category->name }}
-                                            <i
-                                                class="fas fa-arrow-right ml-2 text-xs transition-transform duration-300 group-hover:translate-x-1"></i>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <!-- Image -->
-                                <div class="w-full lg:w-1/3 order-1 lg:order-2">
-                                    <div class="overflow-hidden rounded-2xl" data-aos="fade-left">
-                                        <img src="{{ asset($category->image) }}" alt="{{ $category->name }}"
-                                            class="w-full h-64 lg:h-80 object-cover transition-transform duration-700 group-hover:scale-105"
-                                            loading="lazy">
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                    </div>
-                @empty
-                    <div class="text-center py-12">
-                        <div class="text-gray-400 mb-4">
-                            <i class="fas fa-folder-open text-6xl"></i>
                         </div>
-                        <p class="text-gray-500 text-lg">No categories available at the moment.</p>
-                        <p class="text-gray-400 text-sm mt-2">Check back soon for new collections</p>
+
+                        <!-- Content -->
+                        <div class="w-full lg:w-1/2 lg:pl-8">
+                            <div class="text-center lg:text-left" data-aos="fade-left">
+                                <h3 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
+                                    Men Collection</h3>
+                                <p class="text-gray-600 text-lg mb-6 leading-relaxed">
+                                    Discover our exclusive Men collection featuring the latest trends and timeless pieces.
+                                </p>
+                                <a href="/men"
+                                    class="inline-flex items-center text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-900 transition-all duration-300 pb-1">
+                                    Shop
+                                    <i
+                                        class="fas fa-arrow-right ml-2 text-xs transition-transform duration-300 group-hover:translate-x-1"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                @endforelse
+                </div>
+
+                <!-- Women Collection -->
+                <div class="category-item group">
+                    <div class="flex flex-col lg:flex-row items-center justify-center gap-8">
+                        <!-- Content -->
+                        <div class="w-full lg:w-1/2 order-2 lg:order-1 lg:pr-8" data-aos="fade-right">
+                            <div class="text-center lg:text-left">
+                                <h3 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
+                                    Women Collection</h3>
+                                <p class="text-gray-600 text-lg mb-6 leading-relaxed">
+                                    Explore our premium Women selection with carefully crafted pieces for every occasion.
+                                </p>
+                                <a href="/women"
+                                    class="inline-flex items-center text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-900 transition-all duration-300 pb-1">
+                                    Shop
+                                    <i
+                                        class="fas fa-arrow-right ml-2 text-xs transition-transform duration-300 group-hover:translate-x-1"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Image -->
+                        <div class="w-full lg:w-1/3 order-1 lg:order-2">
+                            <div class="overflow-hidden rounded-2xl" data-aos="fade-left">
+                                <img src="https://static.zara.net/assets/public/7f8f/31e9/c6f54de7b828/1743439b03be/04813857800-h1/04813857800-h1.jpg?ts=1761899542478&w=1888"
+                                    alt="Women Collection"
+                                    class="w-full h-64 lg:h-80 object-cover transition-transform duration-700 group-hover:scale-105"
+                                    loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kids Collection -->
+                <div class="category-item group">
+                    <div class="flex flex-col lg:flex-row items-center justify-center gap-8">
+                        <!-- Image -->
+                        <div class="w-full lg:w-1/3">
+                            <div class="overflow-hidden rounded-2xl">
+                                <img src="https://static.zara.net/assets/public/b87f/4ffa/d91b42b4b2bc/55726691dfde/image-web-5-204e051f-8609-4829-929b-91db4c71ee24-default/image-web-5-204e051f-8609-4829-929b-91db4c71ee24-default.jpg?ts=1761740019541&w=1888"
+                                    alt="Kids Collection"
+                                    class="w-full h-64 lg:h-80 object-cover transition-transform duration-700 group-hover:scale-105"
+                                    loading="lazy" data-aos="fade-right">
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="w-full lg:w-1/2 lg:pl-8">
+                            <div class="text-center lg:text-left" data-aos="fade-left">
+                                <h3 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
+                                    Kids Collection</h3>
+                                <p class="text-gray-600 text-lg mb-6 leading-relaxed">
+                                    Discover our exclusive Kids collection featuring the latest trends and timeless pieces.
+                                </p>
+                                <a href="/kids"
+                                    class="inline-flex items-center text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-900 transition-all duration-300 pb-1">
+                                    Shop
+                                    <i
+                                        class="fas fa-arrow-right ml-2 text-xs transition-transform duration-300 group-hover:translate-x-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- View All Button -->
             <div class="text-center mt-12">
-                <a href="{{ route('products.all') }}"
+                <a href="/products"
                     class="inline-flex items-center px-8 py-3 border border-gray-300 text-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-900 hover:text-white hover:border-gray-400 transition-all duration-300">
                     View All Products
                     <i class="fas fa-arrow-right ml-2 text-xs"></i>

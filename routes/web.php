@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\EmailController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\GenderCategoryController;
 
 // ==================== PUBLIC ROUTES ====================
 
@@ -46,6 +47,14 @@ Route::post('/subscribe-email', [EmailSubscriptionController::class, 'store'])->
 Route::get('/cart', [CartController::class, 'view'])->name('cart');
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+
+// Gender Collection
+Route::get('/{gender}', [CategoryPageController::class, 'showByGender'])
+    ->where('gender', 'men|women|kids')
+    ->name('gender.collection');
+
+Route::get('/category/{slug}', [CategoryPageController::class, 'show'])
+    ->name('category.show');
 
 // ==================== AUTHENTICATION ROUTES ====================
 
