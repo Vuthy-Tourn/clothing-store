@@ -24,7 +24,6 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\EmailController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\GenderCategoryController;
 
 // ==================== PUBLIC ROUTES ====================
 
@@ -53,9 +52,6 @@ Route::get('/{gender}', [CategoryPageController::class, 'showByGender'])
     ->where('gender', 'men|women|kids')
     ->name('gender.collection');
 
-Route::get('/category/{slug}', [CategoryPageController::class, 'show'])
-    ->name('category.show');
-
 // ==================== AUTHENTICATION ROUTES ====================
 
 // Guest Routes
@@ -82,7 +78,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
 });
 
-// ==================== AUTHENTICATED USER ROUTES ====================
+// ==================== AUTHENTICATED USER ROUTES (BOTH REGULAR USERS AND ADMINS) ====================
 
 Route::middleware(['auth'])->group(function () {
     // Logout
@@ -102,7 +98,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/checkout/verify', [CheckoutController::class, 'verify'])->name('checkout.verify');
     Route::get('/thank-you/{orderId}', [CheckoutController::class, 'thankYou'])->name('checkout.thankyou');
     
-    // Order History & Invoices
+    // Order History & Invoices (for both regular users and admins when accessing /orders)
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{orderNumber}', [OrderController::class, 'show'])->name('orders.show');
     Route::get('/orders/{orderId}/invoice', [OrderController::class, 'downloadInvoice'])->name('orders.invoice');
@@ -125,9 +121,13 @@ Route::middleware(['auth'])->group(function () {
         session()->forget('show_order_success');
         return response()->json(['success' => true]);
     })->name('clear.order.success');
+
+     // Add review route
+    Route::post('/product/{product}/review', [App\Http\Controllers\ProductDisplayController::class, 'submitReview'])
+        ->name('review.submit');
 });
 
-// ==================== ADMIN ROUTES ====================
+// ==================== ADMIN-ONLY ROUTES ====================
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     
@@ -161,6 +161,19 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/revenue-comparison', [AdminController::class, 'revenueComparison'])->name('revenue.comparison');
     
     // ========== CONTENT MANAGEMENT ==========
+
+     // Email Subscribers
+    Route::prefix('emails')->name('emails.')->group(function () {
+        Route::get('/', [EmailController::class, 'index'])->name('index');
+        Route::post('/send', [EmailController::class, 'send'])->name('send');
+        Route::post('/test', [EmailController::class, 'sendTest'])->name('test');
+        Route::post('/subscribe', [EmailController::class, 'addSubscriber'])->name('subscribe');
+        Route::delete('/{email}', [EmailController::class, 'destroy'])->name('destroy');
+        Route::post('/bulk-delete', [EmailController::class, 'bulkDelete'])->name('bulk-delete');
+        Route::get('/export', [EmailController::class, 'export'])->name('export');
+        Route::post('/{email}/reactivate', [EmailController::class, 'reactivate'])->name('reactivate');
+        Route::get('/statistics', [EmailController::class, 'getStatistics'])->name('statistics');
+    });
     
     // Carousels
     Route::prefix('carousels')->name('carousels.')->group(function () {
@@ -212,38 +225,25 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         Route::post('/import', [ProductController::class, 'import'])->name('import');
     });
     
-    // ========== CUSTOMER MANAGEMENT ==========
+    // ========== ADMIN ORDERS MANAGEMENT (Different from frontend orders) ==========
     
-    // Orders
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [AdminOrderController::class, 'index'])->name('index');
         Route::get('/{order}/invoice', [AdminOrderController::class, 'downloadInvoice'])->name('invoice');
-        Route::get('/{id}/details', [OrderController::class, 'getOrderDetails'])->name('details');
-        Route::put('/{id}', [OrderController::class, 'update'])->name('update');
-        Route::put('/{id}/payment', [OrderController::class, 'updatePayment'])->name('update.payment');
-        Route::put('/{id}/tracking', [OrderController::class, 'updateTracking'])->name('update.tracking');
-        Route::delete('/{id}', [OrderController::class, 'destroy'])->name('destroy');
-        Route::post('/export', [OrderController::class, 'export'])->name('export');
+        Route::get('/{id}/details', [AdminOrderController::class, 'getOrderDetails'])->name('details');
+        Route::put('/{id}', [AdminOrderController::class, 'update'])->name('update');
+        Route::put('/{id}/payment', [AdminOrderController::class, 'updatePayment'])->name('update.payment');
+        Route::put('/{id}/tracking', [AdminOrderController::class, 'updateTracking'])->name('update.tracking');
+        Route::delete('/{id}', [AdminOrderController::class, 'destroy'])->name('destroy');
+        Route::post('/export', [AdminOrderController::class, 'export'])->name('export');
         
         // Order actions
-        Route::post('/{id}/update-status', [OrderController::class, 'updateStatus'])->name('update-status');
-        Route::post('/{id}/send-tracking', [OrderController::class, 'sendTracking'])->name('send-tracking');
-        Route::post('/{id}/add-note', [OrderController::class, 'addNote'])->name('add-note');
-        Route::post('/{id}/cancel', [OrderController::class, 'cancel'])->name('cancel');
+        Route::post('/{id}/update-status', [AdminOrderController::class, 'updateStatus'])->name('update-status');
+        Route::post('/{id}/send-tracking', [AdminOrderController::class, 'sendTracking'])->name('send-tracking');
+        Route::post('/{id}/add-note', [AdminOrderController::class, 'addNote'])->name('add-note');
+        Route::post('/{id}/cancel', [AdminOrderController::class, 'cancel'])->name('cancel');
     });
     
-    // Email Subscribers
-    Route::prefix('emails')->name('emails.')->group(function () {
-        Route::get('/', [EmailController::class, 'index'])->name('index');
-        Route::post('/send', [EmailController::class, 'send'])->name('send');
-        Route::post('/test', [EmailController::class, 'sendTest'])->name('test');
-        Route::post('/subscribe', [EmailController::class, 'addSubscriber'])->name('subscribe');
-        Route::delete('/{email}', [EmailController::class, 'destroy'])->name('destroy');
-        Route::post('/bulk-delete', [EmailController::class, 'bulkDelete'])->name('bulk-delete');
-        Route::get('/export', [EmailController::class, 'export'])->name('export');
-        Route::post('/{email}/reactivate', [EmailController::class, 'reactivate'])->name('reactivate');
-        Route::get('/statistics', [EmailController::class, 'getStatistics'])->name('statistics');
-    });
     
     // ========== ADMIN PROFILE MANAGEMENT ==========
     
@@ -257,30 +257,23 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         Route::get('/activity', [App\Http\Controllers\Admin\ProfileController::class, 'activity'])->name('activity');
         Route::get('/export', [App\Http\Controllers\Admin\ProfileController::class, 'exportData'])->name('export');
         Route::post('/newsletter/toggle', [App\Http\Controllers\Admin\ProfileController::class, 'toggleNewsletter'])->name('toggle-newsletter');
-
-        // Address routes
-    // Route::post('/addresses/save', [ProfileController::class, 'saveAddress'])->name('addresses.save');
-    // Route::put('/addresses/{id}/update', [ProfileController::class, 'updateAddress'])->name('addresses.update');
-    // Route::delete('/addresses/{id}/delete', [ProfileController::class, 'deleteAddress'])->name('addresses.delete');
-    // Route::post('/addresses/{id}/set-default', [ProfileController::class, 'setDefaultAddress'])->name('addresses.set-default');
     });
 
     // User Management Routes
-Route::prefix('users')->name('users.')->group(function () {
-    Route::get('/', [UserController::class, 'index'])->name('index');
-    Route::get('/create', [UserController::class, 'create'])->name('create');
-    Route::post('/', [UserController::class, 'store'])->name('store');
-    Route::get('/{user}', [UserController::class, 'show'])->name('show');
-    Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
-    Route::get('/{user}/edit-form', [UserController::class, 'editForm'])->name('edit-form'); // Add this
-    Route::put('/{user}', [UserController::class, 'update'])->name('update');
-    Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
-    
-    // AJAX Routes
-    Route::post('/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('toggle-status');
-    Route::post('/bulk-action', [UserController::class, 'bulkAction'])->name('bulk-action');
-
-});
+    Route::prefix('users')->name('users.')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::get('/create', [UserController::class, 'create'])->name('create');
+        Route::post('/', [UserController::class, 'store'])->name('store');
+        Route::get('/{user}', [UserController::class, 'show'])->name('show');
+        Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
+        Route::get('/{user}/edit-form', [UserController::class, 'editForm'])->name('edit-form');
+        Route::put('/{user}', [UserController::class, 'update'])->name('update');
+        Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
+        
+        // AJAX Routes
+        Route::post('/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('toggle-status');
+        Route::post('/bulk-action', [UserController::class, 'bulkAction'])->name('bulk-action');
+    });
     
 });
 
@@ -291,17 +284,12 @@ Route::get('/test-product', function() {
     return view('test-product-form');
 });
 
-// ==================== DYNAMIC CATEGORY ROUTE ====================
-// Must be last route to avoid conflict with other routes
-Route::get('/{slug}', [CategoryPageController::class, 'show'])->name('category.show');
+// ==================== CATEGORY ROUTES (MOVE TO BOTTOM) ====================
 
-    Route::post('/emails/send', [EmailController::class, 'send'])->name('emails.send');
-    Route::post('/emails/test', [EmailController::class, 'sendTest'])->name('emails.test');
-    Route::post('/emails/subscribe', [EmailController::class, 'addSubscriber'])->name('emails.subscribe');
-    Route::delete('/emails/{email}', [EmailController::class, 'destroy'])->name('emails.destroy');
-    Route::post('/emails/bulk-delete', [EmailController::class, 'bulkDelete'])->name('emails.bulk-delete');
-    Route::get('/emails/export', [EmailController::class, 'export'])->name('emails.export');
-    Route::post('/emails/{email}/reactivate', [EmailController::class, 'reactivate'])->name('emails.reactivate');
-    Route::get('/emails/statistics', [EmailController::class, 'getStatistics'])->name('emails.statistics');
+// Category routes should be at the bottom to avoid conflicts
+Route::get('/category/{slug}', [CategoryPageController::class, 'show'])->name('category.show');
 
-    
+// In your web.php routes file
+Route::post('/products/{product}/review', [ProductDisplayController::class, 'submitReview'])->name('product.review.submit');
+Route::post('/products/{product}/wishlist/toggle', [ProductDisplayController::class, 'toggleWishlist'])->name('product.wishlist.toggle');
+Route::get('/products/{product}/reviews', [ProductDisplayController::class, 'getReviews'])->name('product.reviews');

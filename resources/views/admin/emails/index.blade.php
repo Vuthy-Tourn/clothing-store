@@ -650,7 +650,7 @@
             sendingText.classList.remove('hidden');
 
             try {
-                const response = await fetch('{{ route('emails.send') }}', {
+                const response = await fetch('{{ route('admin.emails.send') }}', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -767,7 +767,7 @@
                     });
 
                     try {
-                        const response = await fetch('{{ route('emails.test') }}', {
+                        const response = await fetch('{{ route('admin.emails.test') }}', {
                             method: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -833,7 +833,7 @@
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
-                        const response = await fetch('{{ route('emails.test') }}', {
+                        const response = await fetch('{{ route('admin.emails.test') }}', {
                             method: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -900,7 +900,7 @@
                 });
 
                 // Trigger download
-                window.location.href = `{{ route('emails.export') }}?format=${format}`;
+                window.location.href = `{{ route('admin.emails.export') }}?format=${format}`;
 
                 // Close loading after delay
                 setTimeout(() => {
@@ -1004,7 +1004,7 @@
 
             if (result.isConfirmed) {
                 try {
-                    const response = await fetch('{{ route('emails.bulk-delete') }}', {
+                    const response = await fetch('{{ route('admin.emails.bulk-delete') }}', {
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',

@@ -663,7 +663,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         // Real-time filtering
-        // Real-time filtering
         function filterOrders() {
             const searchTerm = document.getElementById('orderSearch').value.toLowerCase();
             const statusFilter = document.getElementById('statusFilter').value;

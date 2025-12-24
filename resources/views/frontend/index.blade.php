@@ -71,13 +71,13 @@
                 @endforeach
             </div>
 
-            <!-- Navigation Arrows -->
+            {{-- <!-- Navigation Arrows -->
             <div
                 class="swiper-button-prev !w-16 !h-16 !bg-white/10 backdrop-blur-md !text-white rounded-full hover:!bg-white hover:!text-gray-900 !transition-all !duration-300 after:!text-xl !left-8">
             </div>
             <div
                 class="swiper-button-next !w-16 !h-16 !bg-white/10 backdrop-blur-md !text-white rounded-full hover:!bg-white hover:!text-gray-900 !transition-all !duration-300 after:!text-xl !right-8">
-            </div>
+            </div> --}}
 
             <!-- Custom Pagination -->
             <div class="swiper-pagination !bottom-8 !right-8 !left-auto !w-auto flex flex-col gap-3"></div>
@@ -333,101 +333,182 @@
         </div>
     </section>
 
-    <!-- PRODUCT OF THE DAY -->
-    @if ($featured)
-        <section class="relative py-20 overflow-hidden bg-gray-50">
-            <div class="relative z-10" data-aos="zoom-in-up">
-                <div class="max-w-7xl mx-auto px-4 md:px-8">
-                    <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-                        <!-- Text Content -->
-                        <div class="flex-1 space-y-6">
-                            <div
-                                class="inline-block bg-[#ffb601] text-white px-6 py-2 rounded-full text-sm font-bold shadow-xl">
-                                Product of the Day
-                            </div>
+  @if ($featured)
+<section class="relative py-24 bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+        <!-- Section Header -->
+        <div class="text-center mb-16">
+            <div class="inline-flex items-center gap-2 px-6 py-2 bg-gray-100 rounded-full mb-4">
+                <span class="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></span>
+                <span class="text-sm font-semibold text-gray-700 uppercase tracking-wider">Today's Featured</span>
+            </div>
+            <h2 class="text-3xl font-light text-gray-500">Product of the Day</h2>
+        </div>
 
-                            <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold text-gray-900 leading-tight">
-                                {{ $featured->name }}
-                            </h1>
-
-                            <p class="text-gray-600 text-lg md:text-xl leading-relaxed max-w-2xl">
-                                {{ $featured->short_description ?? Str::limit($featured->description, 200) }}
-                            </p>
-
-                            <div class="flex flex-wrap items-center gap-4 pt-4">
-                                @if ($featured->variants->count() > 0)
-                                    @php
-                                        $minPrice = $featured->variants->min('price');
-                                        $minSalePrice = $featured->variants
-                                            ->whereNotNull('sale_price')
-                                            ->min('sale_price');
-                                        $displayPrice = $minSalePrice ? min($minPrice, $minSalePrice) : $minPrice;
-                                        $originalPrice = $minPrice;
-                                    @endphp
-
-                                    <span class="text-4xl md:text-5xl font-bold text-[#ffb601]">
-                                        ${{ number_format($displayPrice, 2) }}
-                                    </span>
-
-                                    @if ($minSalePrice && $minSalePrice < $originalPrice)
-                                        <span class="text-2xl md:text-3xl text-gray-400 line-through font-medium">
-                                            ${{ number_format($originalPrice, 2) }}
-                                        </span>
-                                        <span
-                                            class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
-                                            -{{ round((($originalPrice - $displayPrice) / $originalPrice) * 100) }}% OFF
-                                        </span>
-                                    @endif
-                                @endif
-                            </div>
-
-                            <!-- Rating -->
-                            @if ($featured->rating_cache > 0)
-                                <div class="flex items-center">
-                                    <div class="flex text-yellow-400">
-                                        @for ($i = 1; $i <= 5; $i++)
-                                            @if ($i <= floor($featured->rating_cache))
-                                                <i class="fas fa-star"></i>
-                                            @elseif($i - 0.5 <= $featured->rating_cache)
-                                                <i class="fas fa-star-half-alt"></i>
-                                            @else
-                                                <i class="far fa-star"></i>
-                                            @endif
-                                        @endfor
-                                    </div>
-                                    <span class="text-gray-600 ml-2">{{ number_format($featured->rating_cache, 1) }}
-                                        ({{ $featured->review_count }} reviews)</span>
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+            <!-- Product Visual -->
+            <div class="relative">
+                <!-- Main Image Frame -->
+                <div class="relative ">
+                    @if ($featured->images->count() > 0)
+                        <div class="relative h-full flex items-center justify-center">
+                            <img 
+                                src="{{ asset('storage/' . $featured->images->first()->image_path) }}" 
+                                alt="{{ $featured->images->first()->alt_text ?? $featured->name }}"
+                                class="max-h-full w-auto object-contain"
+                            />
+                        </div>
+                        
+                        <!-- Color Options -->
+                        <div class="absolute bottom-8 right-20">
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm text-gray-500">Available in:</span>
+                                <div class="flex gap-1">
+                                    <div class="w-6 h-6 rounded-full bg-gray-900 border-2 border-white shadow"></div>
+                                    <div class="w-6 h-6 rounded-full bg-gray-400 border-2 border-white shadow"></div>
+                                    <div class="w-6 h-6 rounded-full bg-amber-600 border-2 border-white shadow"></div>
                                 </div>
-                            @endif
-
-                            <div class="pt-4">
-                                <a href="{{ route('product.view', $featured->id) }}"
-                                    class="inline-block font-medium border-2 border-gray-900 bg-gray-900 text-white px-8 py-3 rounded-full text-lg hover:bg-white hover:text-gray-900 transition-all duration-300 transform hover:scale-105">
-                                    Shop Now →
-                                </a>
                             </div>
                         </div>
-
-                        <!-- Product Image -->
-                        <div class="flex-1 w-full max-w-lg">
-                            <div class="relative">
-                                @if ($featured->images->count() > 0)
-                                    <img src="{{ asset('storage/' . $featured->images->first()->image_path) }}"
-                                        alt="{{ $featured->images->first()->alt_text ?? $featured->name }}"
-                                        class="relative w-full rounded-3xl shadow-lg transform hover:scale-105 transition-transform duration-500 border-4 border-white/10">
-                                @else
-                                    <div
-                                        class="relative w-full h-96 bg-gray-200 rounded-3xl flex items-center justify-center">
-                                        <span class="text-gray-400 text-lg">No Image Available</span>
-                                    </div>
-                                @endif
+                    @else
+                        <div class="h-80 flex items-center justify-center">
+                            <div class="text-center">
+                                <div class="text-gray-300 text-8xl mb-4">
+                                    <i class="fas fa-gem"></i>
+                                </div>
+                                <p class="text-gray-400 text-lg">Premium Product</p>
                             </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Product Details -->
+            <div class="space-y-8">
+                <!-- Product Title -->
+                <div>
+                    <h1 class="text-4xl md:text-5xl font-light text-gray-900 leading-tight tracking-tight">
+                        {{ $featured->name }}
+                    </h1>
+                    <div class="h-px w-20 bg-gray-300 mt-4"></div>
+                </div>
+
+                <!-- Rating -->
+                @if ($featured->rating_cache > 0)
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center">
+                            <div class="flex text-amber-400">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <i class="{{ $i <= $featured->rating_cache ? 'fas' : 'far' }} fa-star"></i>
+                                @endfor
+                            </div>
+                            <span class="ml-3 text-gray-900 font-bold text-lg">
+                                {{ number_format($featured->rating_cache, 1) }}
+                            </span>
+                        </div>
+                        <span class="text-gray-500">•</span>
+                        <span class="text-gray-600">{{ $featured->review_count }} verified reviews</span>
+                    </div>
+                @endif
+
+                <!-- Description -->
+                <div class="space-y-6">
+                    <p class="text-gray-600 text-lg leading-relaxed">
+                        {{ $featured->short_description ?? Str::limit($featured->description, 300) }}
+                    </p>
+                    
+                    <!-- Highlights -->
+                    <div class="space-y-3">
+                        <h4 class="font-medium text-gray-900">Key Features:</h4>
+                        <ul class="space-y-2">
+                            <li class="flex items-center gap-3 text-gray-600">
+                                <i class="fas fa-check text-green-500 text-sm"></i>
+                                <span>Premium quality materials</span>
+                            </li>
+                            <li class="flex items-center gap-3 text-gray-600">
+                                <i class="fas fa-check text-green-500 text-sm"></i>
+                                <span>Extended warranty included</span>
+                            </li>
+                            <li class="flex items-center gap-3 text-gray-600">
+                                <i class="fas fa-check text-green-500 text-sm"></i>
+                                <span>Free personalization available</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Pricing -->
+                @if ($featured->variants->count() > 0)
+                    @php
+                        $minPrice = $featured->variants->min('price');
+                        $minSalePrice = $featured->variants
+                            ->whereNotNull('sale_price')
+                            ->min('sale_price');
+                        $displayPrice = $minSalePrice ? min($minPrice, $minSalePrice) : $minPrice;
+                        $originalPrice = $minPrice;
+                    @endphp
+
+                    <div class="space-y-2">
+                        <div class="flex items-baseline gap-4">
+                            <span class="text-4xl font-light text-gray-900">
+                                ${{ number_format($displayPrice, 2) }}
+                            </span>
+                            
+                            @if ($minSalePrice && $minSalePrice < $originalPrice)
+                                <span class="text-lg text-gray-400 line-through">
+                                    ${{ number_format($originalPrice, 2) }}
+                                </span>
+                                <span class="text-sm font-medium text-amber-600">
+                                    Special price today only
+                                </span>
+                            @endif
+                        </div>
+                        <div class="text-sm text-gray-500">
+                            Price includes all taxes. Financing available.
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Action Buttons -->
+                <div class="space-y-4 pt-4">
+                    <div class="flex gap-4">
+                        <a href="{{ route('product.view', $featured->slug) }}"
+                            class="flex-1 bg-gray-900 text-white px-8 py-4 text-center font-medium text-lg hover:bg-gray-800 transition-colors duration-300">
+                            Purchase Now
+                        </a>
+                        <button class="flex-1 border border-gray-300 text-gray-700 px-8 py-4 font-medium text-lg hover:border-gray-900 transition-colors duration-300">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Additional Info -->
+                <div class="grid grid-cols-2 gap-4 pt-6 border-t">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                            <i class="fas fa-truck text-gray-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <div class="text-sm font-medium text-gray-900">Free Shipping</div>
+                            <div class="text-xs text-gray-500">Worldwide</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                            <i class="fas fa-shield-alt text-gray-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <div class="text-sm font-medium text-gray-900">Secure Payment</div>
+                            <div class="text-xs text-gray-500">SSL Encrypted</div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-    @endif
+        </div>
+    </div>
+</section>
+@endif
 
     <!-- EMAIL OPT-IN SECTION -->
     <section class="email-optin-full" data-aos="fade-up" id="emails">

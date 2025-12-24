@@ -384,7 +384,7 @@ class EmailController extends Controller
             ? ($request->message ?: 'This is a test email')
             : 'This is a sample test email to verify your newsletter system is working correctly.';
 
-        Mail::to($request->email)->send(new NewsletterMail($subject, $message));
+        Mail::to($request->email)->send(new AdminBulkEmail($subject, $message));
 
         return response()->json([
             'success' => true,
@@ -414,7 +414,7 @@ public function subscribe(Request $request)
         ]);
 
         if ($request->send_welcome) {
-            Mail::to($request->email)->send(new NewsletterMail(
+            Mail::to($request->email)->send(new AdminBulkEmail(
                 'Welcome to Our Newsletter!',
                 'Thank you for subscribing to our newsletter.'
             ));

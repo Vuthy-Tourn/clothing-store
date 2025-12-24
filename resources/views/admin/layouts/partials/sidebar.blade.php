@@ -41,7 +41,7 @@
                         class="fas fa-chart-pie text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.dashboard') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
                 </div>
                 <span
-                    class="font-medium tracking-wide">{{ request()->routeIs('admin.dashboard') ? '• ' : '' }}Dashboard</span>
+                    class="font-medium tracking-wide">Dashboard</span>
                 <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                 </div>
@@ -63,7 +63,7 @@
                         class="fas fa-images text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.carousels.*') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
                 </div>
                 <span
-                    class="font-medium tracking-wide">{{ request()->routeIs('admin.carousels.*') ? '• ' : '' }}Carousels</span>
+                    class="font-medium tracking-wide">Carousels</span>
                 <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                 </div>
@@ -75,7 +75,7 @@
                     <i
                         class="fas fa-user text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.users.*') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
                 </div>
-                <span class="font-medium tracking-wide">{{ request()->routeIs('admin.users.*') ? '• ' : '' }}Users</span>
+                <span class="font-medium tracking-wide">Users</span>
                 <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                 </div>
@@ -97,7 +97,7 @@
                         class="fas fa-tags text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.categories.*') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
                 </div>
                 <span
-                    class="font-medium tracking-wide">{{ request()->routeIs('admin.categories.*') ? '• ' : '' }}Categories</span>
+                    class="font-medium tracking-wide">Categories</span>
                 <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                 </div>
@@ -110,7 +110,7 @@
                         class="fas fa-box text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.products.*') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
                 </div>
                 <span
-                    class="font-medium tracking-wide">{{ request()->routeIs('admin.products.*') ? '• ' : '' }}Products</span>
+                    class="font-medium tracking-wide">Products</span>
                 <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                 </div>
@@ -132,7 +132,7 @@
                         class="fas fa-shopping-bag text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.orders.*') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
                 </div>
                 <span
-                    class="font-medium tracking-wide">{{ request()->routeIs('admin.orders.*') ? '• ' : '' }}Orders</span>
+                    class="font-medium tracking-wide">Orders</span>
                 <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                 </div>
@@ -145,7 +145,7 @@
                         class="fas fa-envelope text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.emails.*') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
                 </div>
                 <span
-                    class="font-medium tracking-wide">{{ request()->routeIs('admin.emails.*') ? '• ' : '' }}Subscribers</span>
+                    class="font-medium tracking-wide">Subscribers</span>
                 <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                 </div>

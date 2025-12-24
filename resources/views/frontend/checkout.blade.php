@@ -25,12 +25,17 @@
                             <div class="mb-6">
                                 <div class="flex border-b border-gray-200">
                                     <button type="button"
-                                        class="address-tab flex-1 py-3 px-4 text-center font-medium text-gray-600 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-300 transition-all"
+                                        class="address-tab flex-1 py-3 px-4 text-center font-medium text-gray-600 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-300 transition-all @if ($savedAddresses->count() > 0) active @endif"
                                         data-tab="saved">
                                         <i class="fas fa-bookmark mr-2"></i>Use Saved Address
+                                        @if ($savedAddresses->count() > 0)
+                                            <span class="ml-1 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
+                                                {{ $savedAddresses->count() }}
+                                            </span>
+                                        @endif
                                     </button>
                                     <button type="button"
-                                        class="address-tab flex-1 py-3 px-4 text-center font-medium text-gray-600 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-300 transition-all"
+                                        class="address-tab flex-1 py-3 px-4 text-center font-medium text-gray-600 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-300 transition-all @if ($savedAddresses->count() == 0) active @endif"
                                         data-tab="new">
                                         <i class="fas fa-plus mr-2"></i>Add New Address
                                     </button>
@@ -46,8 +51,9 @@
                                         <div class="space-y-4">
                                             @foreach ($savedAddresses as $address)
                                                 <label class="saved-address-option block cursor-pointer">
-                                                    <input type="radio" name="address_option" value="saved"
-                                                        class="hidden address-option-radio"
+                                                    <!-- Change name to saved_address_radio to avoid conflict -->
+                                                    <input type="radio" name="saved_address_radio"
+                                                        value="{{ $address->id }}" class="hidden address-option-radio"
                                                         data-address-id="{{ $address->id }}">
                                                     <div
                                                         class="border-2 border-gray-200 rounded-xl p-4 hover:border-gray-900 transition-all">
@@ -447,7 +453,10 @@
                                 </div>
                                 <div class="flex justify-between text-gray-600">
                                     <span>Shipping</span>
-                                    <span>${{ number_format($shipping, 2) }}</span>
+                                    <span class="{{ $shipping == 0 ? 'text-green-600 font-semibold' : 'text-gray-900' }}">
+    {{ $shipping == 0 ? 'Free' : '$' . number_format($shipping, 2) }}
+</span>
+
                                 </div>
                                 <div class="flex justify-between text-gray-600">
                                     <span>Tax (8%)</span>
@@ -608,6 +617,170 @@
             const newSection = document.getElementById('new-address-section');
             const addressOptionInput = document.getElementById('address_option');
             const savedAddressIdInput = document.getElementById('saved_address_id');
+            const checkoutForm = document.querySelector('form');
+            const checkoutBtn = document.querySelector('.checkout-btn');
+
+            // Get all form fields in new address section
+            const newAddressFields = document.querySelectorAll(
+                '#new-address-section input, #new-address-section select, #new-address-section textarea'
+            );
+
+            // Define which fields should be required when using new address
+            const requiredFieldIds = ['name', 'email', 'phone', 'city', 'state', 'zip', 'address'];
+
+            // Check which tab should be active initially based on PHP condition
+            const initialActiveTab = document.querySelector('.address-tab.active');
+            const initialTabType = initialActiveTab ? initialActiveTab.getAttribute('data-tab') : 'new';
+
+            // Set initial visibility
+            if (initialTabType === 'saved') {
+                savedSection.classList.remove('hidden');
+                newSection.classList.add('hidden');
+                addressOptionInput.value = 'saved';
+                // Disable new address fields
+                disableNewAddressFields();
+            } else {
+                savedSection.classList.add('hidden');
+                newSection.classList.remove('hidden');
+                addressOptionInput.value = 'new';
+                // Enable new address fields
+                enableNewAddressFields();
+            }
+
+            // Initialize form state based on active tab
+            function initializeFormState() {
+                const activeTab = document.querySelector('.address-tab.active');
+                if (activeTab && activeTab.getAttribute('data-tab') === 'new') {
+                    enableNewAddressFields();
+                } else {
+                    disableNewAddressFields();
+                }
+            }
+
+            function enableNewAddressFields() {
+                newAddressFields.forEach(field => {
+                    const fieldId = field.id;
+                    field.disabled = false;
+
+                    // Set required attribute for specific fields
+                    if (requiredFieldIds.includes(fieldId)) {
+                        field.setAttribute('required', 'required');
+                    } else {
+                        field.removeAttribute('required');
+                    }
+                });
+            }
+
+            function disableNewAddressFields() {
+                newAddressFields.forEach(field => {
+                    const fieldId = field.id;
+                    field.disabled = true;
+                    field.removeAttribute('required');
+                    field.classList.remove('border-red-500'); // Clear any error styling
+
+                    // Clear any error messages
+                    const errorMsg = field.nextElementSibling;
+                    if (errorMsg && errorMsg.classList.contains('text-red-500')) {
+                        errorMsg.remove();
+                    }
+                });
+            }
+
+            // Tab switching
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabType = this.getAttribute('data-tab');
+
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Show/hide sections and handle form state
+                    if (tabType === 'saved') {
+                        savedSection.classList.remove('hidden');
+                        newSection.classList.add('hidden');
+                        addressOptionInput.value = 'saved';
+                        disableNewAddressFields();
+                        clearNewAddressFormErrors();
+                    } else {
+                        savedSection.classList.add('hidden');
+                        newSection.classList.remove('hidden');
+                        addressOptionInput.value = 'new';
+                        enableNewAddressFields();
+                        deselectSavedAddresses();
+                    }
+                });
+            });
+
+            function clearNewAddressFormErrors() {
+                const errorElements = document.querySelectorAll('#new-address-section .text-red-500');
+                errorElements.forEach(el => {
+                    // Only remove error messages that are not part of Laravel validation
+                    if (!el.classList.contains('laravel-error')) {
+                        el.remove();
+                    }
+                });
+
+                requiredFieldIds.forEach(id => {
+                    const field = document.getElementById(id);
+                    if (field) {
+                        field.classList.remove('border-red-500');
+                    }
+                });
+            }
+
+            function deselectSavedAddresses() {
+                const savedAddressOptions = document.querySelectorAll('.saved-address-option');
+                savedAddressOptions.forEach(option => {
+                    const radio = option.querySelector('input[type="radio"]');
+                    if (radio) radio.checked = false;
+
+                    // Reset visual selection
+                    const dot = option.querySelector('.w-3.h-3');
+                    const box = option.querySelector('.border-2');
+                    if (dot) dot.classList.add('scale-0');
+                    if (box) box.classList.remove('border-gray-900', 'bg-gray-50');
+                });
+
+                if (savedAddressIdInput) savedAddressIdInput.value = '';
+            }
+
+            // Saved address selection
+            const savedAddressOptions = document.querySelectorAll('.saved-address-option');
+            savedAddressOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selection from all options
+                    savedAddressOptions.forEach(opt => {
+                        const radio = opt.querySelector('input[type="radio"]');
+                        if (radio) radio.checked = false;
+
+                        // Reset visual selection
+                        const dot = opt.querySelector('.w-3.h-3');
+                        const box = opt.querySelector('.border-2');
+                        if (dot) dot.classList.add('scale-0');
+                        if (box) box.classList.remove('border-gray-900', 'bg-gray-50');
+                    });
+
+                    // Select this option
+                    const radio = this.querySelector('input[type="radio"]');
+                    if (radio) {
+                        radio.checked = true;
+                        if (savedAddressIdInput) savedAddressIdInput.value = radio.getAttribute(
+                            'data-address-id');
+
+                        // Update visual selection
+                        const dot = this.querySelector('.w-3.h-3');
+                        const box = this.querySelector('.border-2');
+                        if (dot) dot.classList.remove('scale-0');
+                        if (box) box.classList.add('border-gray-900', 'bg-gray-50');
+
+                        // Switch to saved address tab if not already there
+                        if (addressOptionInput.value === 'new') {
+                            tabs[0].click();
+                        }
+                    }
+                });
+            });
 
             // Different billing address toggle
             const differentBillingToggle = document.getElementById('different_billing_toggle');
@@ -617,132 +790,79 @@
                 differentBillingToggle.addEventListener('change', function() {
                     if (this.checked) {
                         billingAddressFields.classList.remove('hidden');
-                        // Set required fields if needed
-                        document.querySelectorAll('#billing_address_fields [required]').forEach(field => {
-                            field.required = true;
-                        });
+                        // Only set required if we're using new address form
+                        if (addressOptionInput.value === 'new') {
+                            document.querySelectorAll('#billing_address_fields [name^="billing_"]').forEach(
+                                field => {
+                                    field.required = true;
+                                });
+                        }
                     } else {
                         billingAddressFields.classList.add('hidden');
                         // Remove required from billing fields
-                        document.querySelectorAll('#billing_address_fields [required]').forEach(field => {
-                            field.required = false;
-                        });
+                        document.querySelectorAll('#billing_address_fields [name^="billing_"]').forEach(
+                            field => {
+                                field.required = false;
+                                field.classList.remove('border-red-500');
+                            });
                     }
                 });
             }
-
-            // Initially show new address section by default
-            tabs[1].classList.add('active');
-            newSection.classList.remove('hidden');
-            savedSection.classList.add('hidden');
-
-            tabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const tabType = this.getAttribute('data-tab');
-
-                    // Update active tab
-                    tabs.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-
-                    // Show/hide sections
-                    if (tabType === 'saved') {
-                        savedSection.classList.remove('hidden');
-                        newSection.classList.add('hidden');
-                        addressOptionInput.value = 'saved';
-                    } else {
-                        savedSection.classList.add('hidden');
-                        newSection.classList.remove('hidden');
-                        addressOptionInput.value = 'new';
-                    }
-                });
-            });
-
-            // Saved address selection
-            const savedAddressOptions = document.querySelectorAll('.saved-address-option');
-            savedAddressOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    // Remove selection from all options
-                    savedAddressOptions.forEach(opt => {
-                        opt.querySelector('input').checked = false;
-                    });
-
-                    // Select this option
-                    const radio = this.querySelector('input[type="radio"]');
-                    radio.checked = true;
-                    savedAddressIdInput.value = radio.getAttribute('data-address-id');
-                });
-            });
 
             // Save address toggle functionality
             const saveAddressToggle = document.getElementById('save_address_toggle');
             const addressNameField = document.getElementById('address_name_field');
             const makeDefaultField = document.getElementById('make_default_field');
 
-            saveAddressToggle.addEventListener('change', function() {
-                if (this.checked) {
-                    addressNameField.classList.remove('hidden');
-                    makeDefaultField.classList.remove('hidden');
-                } else {
-                    addressNameField.classList.add('hidden');
-                    makeDefaultField.classList.add('hidden');
-                }
-            });
+            if (saveAddressToggle) {
+                saveAddressToggle.addEventListener('change', function() {
+                    const addressNameInput = document.getElementById('address_name');
 
-            // Payment method selection
-            const paymentMethods = document.querySelectorAll('.payment-method');
-            paymentMethods.forEach(method => {
-                method.addEventListener('click', function() {
-                    // Remove checked state from all methods
-                    paymentMethods.forEach(m => {
-                        const radio = m.querySelector('input[type="radio"]');
-                        radio.checked = false;
-                    });
-
-                    // Set checked state for clicked method
-                    const radio = this.querySelector('input[type="radio"]');
-                    radio.checked = true;
-
-                    // Update visual selection
-                    paymentMethods.forEach(m => {
-                        m.classList.remove('border-gray-900', 'bg-gray-50');
-                    });
-                    this.classList.add('border-gray-900', 'bg-gray-50');
+                    if (this.checked) {
+                        addressNameField.classList.remove('hidden');
+                        makeDefaultField.classList.remove('hidden');
+                        // Make address name required if saving address
+                        if (addressNameInput) addressNameInput.required = true;
+                    } else {
+                        addressNameField.classList.add('hidden');
+                        makeDefaultField.classList.add('hidden');
+                        // Remove required from address name
+                        if (addressNameInput) addressNameInput.required = false;
+                    }
                 });
-            });
-
-            // Set initial state for checked payment method
-            const checkedMethod = document.querySelector('.payment-method input:checked');
-            if (checkedMethod) {
-                checkedMethod.closest('.payment-method').classList.add('border-gray-900', 'bg-gray-50');
             }
 
-            // Form validation before submission
-            const checkoutForm = document.querySelector('form');
-            const checkoutBtn = document.querySelector('.checkout-btn');
+            // Initialize form state on load
+            initializeFormState();
 
+            // Form submission validation
             checkoutForm.addEventListener('submit', function(e) {
-                // Validate address selection
-                const addressOption = addressOptionInput.value;
+                const selectedAddressOption = addressOptionInput.value;
 
-                if (addressOption === 'saved') {
-                    const selectedAddress = savedAddressIdInput.value;
-                    if (!selectedAddress) {
+                if (selectedAddressOption === 'saved') {
+                    // Validate saved address selection
+                    if (!savedAddressIdInput.value) {
                         e.preventDefault();
                         alert('Please select a saved address');
+                        // Switch to saved address tab if not already there
+                        if (!tabs[0].classList.contains('active')) {
+                            tabs[0].click();
+                        }
                         return false;
                     }
                 } else {
                     // Validate new address fields
-                    const requiredFields = ['name', 'email', 'phone', 'city', 'state', 'zip', 'address'];
                     let isValid = true;
+                    const errors = [];
 
-                    requiredFields.forEach(field => {
-                        const input = document.getElementById(field);
-                        if (!input.value.trim()) {
+                    requiredFieldIds.forEach(fieldId => {
+                        const field = document.getElementById(fieldId);
+                        if (field && !field.value.trim()) {
                             isValid = false;
-                            input.classList.add('border-red-500');
-                        } else {
-                            input.classList.remove('border-red-500');
+                            field.classList.add('border-red-500');
+                            errors.push(fieldId);
+                        } else if (field) {
+                            field.classList.remove('border-red-500');
                         }
                     });
 

@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\ProductReview;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 
 class ProductDisplayController extends Controller
 {
@@ -130,14 +133,24 @@ class ProductDisplayController extends Controller
         // Find by slug using route model binding or manual query
         $product = Product::with(['category', 'variants' => function($query) {
             $query->where('is_active', true)
-                  ->orderByRaw("FIELD(size, 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'FREE')");
+                ->orderByRaw("FIELD(size, 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'FREE')");
         }, 'images' => function($query) {
             $query->orderBy('is_primary', 'desc')
-                  ->orderBy('sort_order', 'asc');
+                ->orderBy('sort_order', 'asc');
         }])
         ->where('slug', $slug)
         ->where('status', 'active')
         ->firstOrFail();
+
+        // Check if reviews table exists and load reviews if it does
+        if (Schema::hasTable('product_reviews')) {
+            $product->load(['reviews' => function($query) {
+                $query->where('is_approved', true)
+                    ->with('user:id,name,profile_picture')
+                    ->latest()
+                    ->take(5);
+            }]);
+        }
 
         // Increment view count
         $product->increment('view_count');
@@ -154,7 +167,6 @@ class ProductDisplayController extends Controller
 
         return view('frontend.view-product', compact('product', 'relatedProducts'));
     }
-
     // New arrival products
     public function newArrivals()
     {
@@ -228,4 +240,52 @@ class ProductDisplayController extends Controller
             'searchQuery' => $request->q,
         ]);
     }
+    public function submitReview(Request $request, $slug)
+{
+    $product = Product::where('slug', $slug)->firstOrFail();
+    
+    // Validate the request
+    $validated = $request->validate([
+        'rating' => 'required|integer|min:1|max:5',
+        'title' => 'nullable|string|max:255',
+        'comment' => 'required|string|min:10|max:2000',
+    ]);
+    
+    // Check if user already reviewed
+    $existingReview = ProductReview::where('user_id', Auth::id())
+        ->where('product_id', $product->id)
+        ->first();
+    
+    if ($existingReview) {
+        return redirect()->back()->with('error', 'You have already reviewed this product.');
+    }
+    
+    // Create review
+    $review = ProductReview::create([
+        'product_id' => $product->id,
+        'user_id' => Auth::id(),
+        'rating' => $validated['rating'],
+        'title' => $validated['title'] ?? null,
+        'comment' => $validated['comment'],
+        'is_approved' => true, // Or set to false for admin approval
+    ]);
+    
+    // Update product rating cache
+    $this->updateProductRating($product);
+    
+    return redirect()->back()->with('success', 'Thank you for your review!');
+}
+
+private function updateProductRating(Product $product)
+{
+    $reviews = $product->reviews()->where('is_approved', true);
+    
+    $avgRating = $reviews->avg('rating');
+    $reviewCount = $reviews->count();
+    
+    $product->update([
+        'rating_cache' => round($avgRating, 1),
+        'review_count' => $reviewCount,
+    ]);
+}
 }

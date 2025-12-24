@@ -108,6 +108,11 @@ class Product extends Model
         return $this->hasMany(ProductImage::class);
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(ProductReview::class)->where('is_approved', true);
+    }
+
     public function primaryImage()
     {
         return $this->hasOne(ProductImage::class)->where('is_primary', true);
@@ -469,5 +474,16 @@ public function getRouteKeyName()
         }
         
         return 0;
+    }
+    // Add this method for all reviews (including unapproved)
+    public function allReviews()
+    {
+        return $this->hasMany(ProductReview::class);
+    }
+
+    // Add this method to get pending reviews
+    public function pendingReviews()
+    {
+        return $this->hasMany(ProductReview::class)->where('is_approved', false);
     }
 }

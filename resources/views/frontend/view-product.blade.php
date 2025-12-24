@@ -7,6 +7,67 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .tab-button {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            color: #111827;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #111827;
+            border-radius: 2px;
+        }
+
+        .line-clamp-1 {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+        }
+
+        .line-clamp-2 {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+        }
+
+        .variant-option {
+            transition: all 0.2s ease;
+        }
+
+        .color-option {
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .carousel-img {
+            transition: opacity 0.5s ease;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-50">
@@ -18,10 +79,40 @@
         <div class="max-w-6xl mx-auto px-4 mt-5">
             @if (isset($product))
                 <!-- Single Product View -->
-                <div class=" overflow-hidden">
+                <div class="overflow-hidden">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
                         <!-- Product Images -->
                         <div class="space-y-4">
+                            <!-- Product Badges -->
+                            <div class="flex flex-wrap gap-2">
+                                @if ($product->is_featured)
+                                    <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full">
+                                        <i class="fas fa-star mr-1"></i> Featured
+                                    </span>
+                                @endif
+
+                                @if ($product->is_new)
+                                    <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full">
+                                        <i class="fas fa-bolt mr-1"></i> New Arrival
+                                    </span>
+                                @endif
+
+                                @php
+                                    $hasSale = $product->variants->whereNotNull('sale_price')->count() > 0;
+                                @endphp
+                                @if ($hasSale)
+                                    <span class="bg-red-100 text-red-800 text-xs font-bold px-3 py-1 rounded-full">
+                                        <i class="fas fa-tag mr-1"></i> On Sale
+                                    </span>
+                                @endif
+
+                                @if ($product->rating_cache >= 4)
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full">
+                                        <i class="fas fa-thumbs-up mr-1"></i> Top Rated
+                                    </span>
+                                @endif
+                            </div>
+
                             @php
                                 // Collect images from images relationship
                                 $images = $product->images;
@@ -32,7 +123,6 @@
                                 }
                             @endphp
 
-
                             <!-- Main Image -->
                             @if ($images->isNotEmpty())
                                 <div class="relative rounded-xl overflow-hidden bg-gray-100 aspect-[4/5]"
@@ -41,7 +131,6 @@
                                         <img src="{{ asset('storage/' . $image->image_path) }}"
                                             class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-500 {{ $key === 0 ? 'opacity-100' : 'opacity-0' }}"
                                             alt="{{ $image->alt_text ?? $product->name }}">
-
 
                                         <!-- Navigation -->
                                         @if ($images->count() > 1)
@@ -55,6 +144,14 @@
                                             </button>
                                         @endif
                                     @endforeach
+
+                                    <!-- Image Counter -->
+                                    @if ($images->count() > 1)
+                                        <div
+                                            class="absolute bottom-4 right-4 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                                            <span id="current-slide">1</span> / {{ $images->count() }}
+                                        </div>
+                                    @endif
                                 </div>
                             @endif
 
@@ -71,7 +168,6 @@
                                 </div>
                             @endif
                         </div>
-
 
                         <!-- Product Info -->
                         <div class="py-4">
@@ -109,9 +205,12 @@
                                             'id' => $variant->id,
                                             'size' => $variant->size,
                                             'color' => $variant->color,
+                                            'color_code' => $variant->color_code,
                                             'price' => $variant->price,
                                             'sale_price' => $variant->sale_price,
                                             'stock' => $variant->stock,
+                                            'weight' => $variant->weight,
+                                            'dimensions' => $variant->dimensions,
                                         ];
                                     })
                                     ->values()
@@ -119,17 +218,76 @@
                             @endphp
 
                             <div class="mb-6">
-                                <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ $product->name }}</h1>
-                                <p class="text-gray-500 mb-4">Category: {{ $product->category->name ?? 'N/A' }}</p>
+                                <div class="flex items-start justify-between mb-4">
+                                    <div>
+                                        <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ $product->name }}</h1>
+                                        <p class="text-gray-500">SKU: {{ $product->sku }}</p>
+                                    </div>
+                                    <!-- Share Button -->
+                                    <button onclick="shareProduct()" class="text-gray-400 hover:text-gray-700">
+                                        <i class="fas fa-share-alt text-xl"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Category & Brand -->
+                                <div class="flex items-center gap-4 text-sm text-gray-600 mb-4">
+                                    @if ($product->category)
+                                        <span class="bg-gray-100 px-3 py-1 rounded-full">
+                                            <i class="fas fa-tag mr-1"></i> {{ $product->category->name }}
+                                        </span>
+                                    @endif
+
+                                    @if ($product->brand)
+                                        <span class="bg-gray-100 px-3 py-1 rounded-full">
+                                            <i class="fas fa-trademark mr-1"></i> {{ $product->brand }}
+                                        </span>
+                                    @endif
+                                </div>
+
+                                <!-- Rating -->
+                                @if ($product->rating_cache > 0)
+                                    <div class="flex items-center gap-3 mb-4">
+                                        <div class="flex text-amber-400">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                @if ($i <= floor($product->rating_cache))
+                                                    <i class="fas fa-star"></i>
+                                                @elseif($i - 0.5 <= $product->rating_cache)
+                                                    <i class="fas fa-star-half-alt"></i>
+                                                @else
+                                                    <i class="far fa-star"></i>
+                                                @endif
+                                            @endfor
+                                        </div>
+                                        <span
+                                            class="font-bold text-gray-900">{{ number_format($product->rating_cache, 1) }}</span>
+                                        <span class="text-gray-500">({{ $product->review_count }} reviews)</span>
+                                        <span class="text-gray-400">•</span>
+                                        <span class="text-gray-500">{{ $product->view_count }} views</span>
+                                    </div>
+                                @endif
 
                                 <div class="flex items-center justify-between mb-6">
                                     <div>
                                         @if ($firstVariant)
-                                            <p id="product-price" class="text-2xl font-bold text-gray-900 mb-2">
-                                                ${{ number_format($firstVariant->sale_price ?? $firstVariant->price, 2) }}
-                                            </p>
+                                            <div class="flex items-baseline gap-3 mb-2">
+                                                <p id="product-price" class="text-2xl font-bold text-gray-900">
+                                                    ${{ number_format($firstVariant->sale_price ?? $firstVariant->price, 2) }}
+                                                </p>
+                                                @if ($firstVariant->sale_price)
+                                                    <p class="text-lg text-gray-400 line-through">
+                                                        ${{ number_format($firstVariant->price, 2) }}
+                                                    </p>
+                                                    <span
+                                                        class="bg-red-100 text-red-800 text-sm font-bold px-2 py-1 rounded">
+                                                        Save
+                                                        {{ round((($firstVariant->price - $firstVariant->sale_price) / $firstVariant->price) * 100) }}%
+                                                    </span>
+                                                @endif
+                                            </div>
                                             <p id="stock-available"
-                                                class="text-sm font-medium {{ $firstVariant->stock <= 10 ? 'text-yellow-600 bg-yellow-50' : ($firstVariant->stock <= 0 ? 'text-red-600 bg-red-50' : 'text-green-600 bg-green-50') }} px-3 py-2 rounded-lg">
+                                                class="text-sm font-medium {{ $firstVariant->stock <= 10 ? 'text-yellow-600 bg-yellow-50' : ($firstVariant->stock <= 0 ? 'text-red-600 bg-red-50' : 'text-green-600 bg-green-50') }} px-3 py-2 rounded-lg inline-flex items-center gap-2">
+                                                <i
+                                                    class="fas fa-{{ $firstVariant->stock <= 10 ? 'exclamation-triangle' : ($firstVariant->stock <= 0 ? 'times-circle' : 'check-circle') }}"></i>
                                                 {{ $firstVariant->stock }} items in stock
                                             </p>
                                         @else
@@ -137,7 +295,8 @@
                                                 Select Size
                                             </p>
                                             <p id="stock-available"
-                                                class="text-sm font-medium text-gray-600 bg-gray-50 px-3 py-2 rounded-lg">
+                                                class="text-sm font-medium text-gray-600 bg-gray-50 px-3 py-2 rounded-lg inline-flex items-center gap-2">
+                                                <i class="fas fa-info-circle"></i>
                                                 Please select a size to see stock
                                             </p>
                                         @endif
@@ -152,19 +311,29 @@
                                 <!-- Color Selection -->
                                 @if ($availableColors->count() > 0)
                                     <div>
-                                        <label class="block text-sm font-semibold text-gray-900 mb-3">Select
-                                            Color</label>
+                                        <div class="flex items-center justify-between mb-3">
+                                            <label class="text-sm font-semibold text-gray-900">Select Color</label>
+                                            <span id="selected-color-name"
+                                                class="text-sm text-gray-600">{{ $availableColors->first()->color ?? '' }}</span>
+                                        </div>
                                         <div class="flex flex-wrap gap-3">
                                             @foreach ($availableColors as $colorOption)
                                                 <label class="relative">
                                                     <input type="radio" name="color"
                                                         value="{{ $colorOption->color }}" class="hidden color-radio"
                                                         {{ $loop->first ? 'checked' : '' }}>
-                                                    <div class="color-option border-2 border-gray-200 rounded-lg p-3 cursor-pointer transition-all hover:border-gray-900 {{ $loop->first ? 'border-gray-900' : '' }}"
+                                                    <div class="color-option border-2 border-gray-200 rounded-lg p-3 cursor-pointer transition-all hover:border-gray-900 {{ $loop->first ? 'border-gray-900 ring-2 ring-gray-900 ring-offset-2' : '' }}"
                                                         style="background-color: {{ $colorOption->color_code ?? '#e5e7eb' }}; min-width: 60px; height: 60px;">
                                                         <span class="sr-only">{{ $colorOption->color }}</span>
+                                                        @if ($loop->first)
+                                                            <div
+                                                                class="absolute -top-1 -right-1 w-4 h-4 bg-gray-900 rounded-full flex items-center justify-center">
+                                                                <i class="fas fa-check text-white text-xs"></i>
+                                                            </div>
+                                                        @endif
                                                     </div>
-                                                    <div class="text-xs text-center mt-1">{{ $colorOption->color }}
+                                                    <div class="text-xs text-center mt-1 font-medium">
+                                                        {{ $colorOption->color }}
                                                     </div>
                                                 </label>
                                             @endforeach
@@ -177,29 +346,43 @@
 
                                 <!-- Size Selection -->
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-900 mb-3">Select Size</label>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <label class="text-sm font-semibold text-gray-900">Select Size</label>
+                                        <button type="button" onclick="openSizeGuide()"
+                                            class="text-sm text-gray-600 hover:text-gray-900 flex items-center gap-1">
+                                            <i class="fas fa-ruler"></i> Size Guide
+                                        </button>
+                                    </div>
                                     <div class="grid grid-cols-4 gap-3" id="size-container">
                                         @foreach ($availableSizes as $variant)
                                             <label class="relative">
                                                 <input type="radio" name="variant_id" value="{{ $variant->id }}"
                                                     data-price="{{ $variant->sale_price ?? $variant->price }}"
                                                     data-stock="{{ $variant->stock }}"
-                                                    data-size="{{ $variant->size }}" class="hidden variant-radio"
-                                                    {{ $loop->first ? 'checked' : '' }}>
+                                                    data-size="{{ $variant->size }}"
+                                                    data-weight="{{ $variant->weight }}"
+                                                    data-dimensions="{{ $variant->dimensions }}"
+                                                    class="hidden variant-radio" {{ $loop->first ? 'checked' : '' }}>
                                                 <div
-                                                    class="variant-option border-2 border-gray-200 rounded-lg p-3 text-center cursor-pointer transition-all hover:border-gray-900 {{ $loop->first ? 'border-gray-900 bg-gray-900 text-white' : '' }}">
+                                                    class="variant-option border-2 border-gray-200 rounded-lg p-3 text-center cursor-pointer transition-all hover:border-gray-900 hover:bg-gray-50 {{ $loop->first ? 'border-gray-900 bg-gray-900 text-white hover:bg-gray-900' : '' }}">
                                                     <span class="font-medium">{{ $variant->size }}</span>
                                                     @if ($variant->sale_price && $variant->sale_price < $variant->price)
-                                                        <div class="text-xs text-red-500 mt-1">
-                                                            ${{ number_format($variant->sale_price, 2) }}</div>
+                                                        <div class="text-xs text-red-500 mt-1 font-bold">
+                                                            SAVE
+                                                            ${{ number_format($variant->price - $variant->sale_price, 2) }}
+                                                        </div>
                                                     @endif
+                                                   
                                                 </div>
                                             </label>
                                         @endforeach
                                     </div>
 
                                     @if ($availableSizes->isEmpty())
-                                        <p class="text-red-500 text-sm mt-2">No sizes available for this color</p>
+                                        <p class="text-red-500 text-sm mt-2 flex items-center gap-2">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            No sizes available for this color
+                                        </p>
                                     @endif
                                     @error('variant_id')
                                         <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
@@ -208,7 +391,14 @@
 
                                 <!-- Quantity -->
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-900 mb-3">Quantity</label>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <label class="text-sm font-semibold text-gray-900">Quantity</label>
+                                        <span id="max-stock-label" class="text-sm text-gray-600">
+                                            @if ($firstVariant)
+                                                Max: {{ $firstVariant->stock }}
+                                            @endif
+                                        </span>
+                                    </div>
                                     <div class="flex items-center space-x-3">
                                         <button type="button" onclick="decrementQuantity()"
                                             class="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50">
@@ -224,49 +414,397 @@
                                     </div>
                                 </div>
 
-                                <!-- Buttons -->
+                                <!-- Action Buttons -->
                                 <div class="flex space-x-4 pt-4">
                                     @auth
                                         @if ($availableSizes->isNotEmpty())
                                             <button type="submit" name="action" value="add"
-                                                class="flex-1 bg-gray-900 text-white px-8 py-4 rounded-xl font-semibold hover:bg-gray-800 transition-all hover:scale-105">
+                                                class="flex-1 bg-gray-900 text-white px-8 py-4 rounded-xl font-semibold hover:bg-gray-800 transition-all hover:scale-105 flex items-center justify-center gap-2">
+                                                <i class="fas fa-shopping-cart"></i>
                                                 Add to Cart
                                             </button>
 
                                             <button type="submit" name="action" value="buy_now"
-                                                class="flex-1 text-gray-900 border border-gray-900 px-8 py-4 rounded-xl font-semibold transition-all hover:scale-105">
+                                                class="flex-1 text-gray-900 border border-gray-900 px-8 py-4 rounded-xl font-semibold transition-all hover:scale-105 flex items-center justify-center gap-2">
+                                                <i class="fas fa-bolt"></i>
                                                 Buy Now
                                             </button>
                                         @else
                                             <button type="button" disabled
-                                                class="flex-1 bg-gray-300 text-gray-500 px-8 py-4 rounded-xl font-semibold cursor-not-allowed">
+                                                class="flex-1 bg-gray-300 text-gray-500 px-8 py-4 rounded-xl font-semibold cursor-not-allowed flex items-center justify-center gap-2">
+                                                <i class="fas fa-times-circle"></i>
                                                 Out of Stock
                                             </button>
                                         @endif
                                     @else
                                         <button type="button"
                                             onclick="showWarningToast('Please log in to purchase this item.')"
-                                            class="flex-1 bg-gray-900 text-white px-8 py-4 rounded-xl font-semibold hover:bg-gray-800 transition-all hover:scale-105">
-                                            Add to Cart
-                                        </button>
-                                        <button type="button"
-                                            onclick="showWarningToast('Please log in to purchase this item.')"
-                                            class="flex-1 text-gray-900 border border-gray-900 px-8 py-4 rounded-xl font-semibold transition-all hover:scale-105">
-                                            Buy Now
+                                            class="flex-1 bg-gray-900 text-white px-8 py-4 rounded-xl font-semibold hover:bg-gray-800 transition-all hover:scale-105 flex items-center justify-center gap-2">
+                                            <i class="fas fa-sign-in-alt"></i>
+                                            Login to Purchase
                                         </button>
                                     @endauth
                                 </div>
                             </form>
 
-                            <!-- Description -->
+
+                        </div>
+                    </div>
+                    <!-- Tabs Navigation -->
+                    <div class="mt-8 border-b border-gray-200">
+                        <nav class="flex space-x-8">
+                            <button onclick="switchTab('details')"
+                                class="tab-button py-3 font-medium text-gray-500 hover:text-gray-900 active"
+                                data-tab="details">
+                                <i class="fas fa-info-circle mr-2"></i>Product Details
+                            </button>
+                            <button onclick="switchTab('reviews')"
+                                class="tab-button py-3 font-medium text-gray-500 hover:text-gray-900"
+                                data-tab="reviews">
+                                <i class="fas fa-star mr-2"></i>
+                                Reviews ({{ $product->review_count }})
+                            </button>
+                            <button onclick="switchTab('specifications')"
+                                class="tab-button py-3 font-medium text-gray-500 hover:text-gray-900"
+                                data-tab="specifications">
+                                <i class="fas fa-list-alt mr-2"></i>Specifications
+                            </button>
+                        </nav>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div class="mt-6">
+                        <!-- Details Tab -->
+                        <div id="details-tab" class="tab-content active">
                             @if ($product->description)
-                                <div class="mt-8 pt-6 border-t border-gray-200">
-                                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Product Details</h3>
-                                    <p class="text-gray-600 leading-relaxed whitespace-pre-line">
+                                <div class="space-y-4">
+                                    <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                                        <i class="fas fa-file-alt"></i>
+                                        Product Description
+                                    </h3>
+                                    <div class="text-gray-600 leading-relaxed whitespace-pre-line">
                                         {{ $product->description }}
-                                    </p>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="text-center py-8">
+                                    <i class="fas fa-file-alt text-4xl text-gray-300 mb-3"></i>
+                                    <p class="text-gray-500">No detailed description available.</p>
                                 </div>
                             @endif
+                        </div>
+
+                        <!-- Reviews Tab -->
+                        <div id="reviews-tab" class="tab-content">
+                            <div class="space-y-6">
+                                <!-- Reviews Summary -->
+                                <div class="bg-gray-50 rounded-xl p-6">
+                                    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                                        <div class="text-center md:text-left">
+                                            <div class="text-4xl font-bold text-gray-900 mb-1">
+                                                {{ number_format($product->rating_cache, 1) }}
+                                            </div>
+                                            <div class="flex text-amber-400 justify-center md:justify-start mb-2">
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    @if ($i <= floor($product->rating_cache))
+                                                        <i class="fas fa-star"></i>
+                                                    @elseif($i - 0.5 <= $product->rating_cache)
+                                                        <i class="fas fa-star-half-alt"></i>
+                                                    @else
+                                                        <i class="far fa-star"></i>
+                                                    @endif
+                                                @endfor
+                                            </div>
+                                            <p class="text-gray-600">
+                                                Based on {{ $product->review_count }} reviews
+                                            </p>
+                                        </div>
+
+                                        <!-- Review Stats -->
+                                        <div class="flex-1 max-w-md">
+                                            @php
+                                                $ratingDistribution = [
+                                                    5 => $product->reviews->where('rating', 5)->count(),
+                                                    4 => $product->reviews->where('rating', 4)->count(),
+                                                    3 => $product->reviews->where('rating', 3)->count(),
+                                                    2 => $product->reviews->where('rating', 2)->count(),
+                                                    1 => $product->reviews->where('rating', 1)->count(),
+                                                ];
+                                            @endphp
+
+                                            @foreach ($ratingDistribution as $stars => $count)
+                                                @if ($product->review_count > 0)
+                                                    @php
+                                                        $percentage = ($count / $product->review_count) * 100;
+                                                    @endphp
+                                                    <div class="flex items-center gap-3 mb-2">
+                                                        <div class="flex items-center w-16">
+                                                            <span
+                                                                class="text-sm text-gray-600 w-4">{{ $stars }}</span>
+                                                            <i class="fas fa-star text-amber-400 ml-1"></i>
+                                                        </div>
+                                                        <div
+                                                            class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                                            <div class="h-full bg-amber-400 rounded-full"
+                                                                style="width: {{ $percentage }}%"></div>
+                                                        </div>
+                                                        <span class="text-sm text-gray-600 w-10 text-right">
+                                                            {{ $count }}
+                                                        </span>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Review Submission -->
+                                <div>
+                                    <h4 class="text-lg font-semibold text-gray-900 mb-4">
+                                        Write a Review
+                                    </h4>
+
+                                    @auth
+                                        @php
+                                            $hasReviewed = auth()
+                                                ->user()
+                                                ->reviews()
+                                                ->where('product_id', $product->id)
+                                                ->exists();
+                                        @endphp
+
+                                        @if (!$hasReviewed)
+                                            <form id="reviewForm" action="{{ route('review.submit', $product->slug) }}"
+                                                method="POST" class="bg-gray-50 rounded-xl p-6">
+                                                @csrf
+
+                                                <!-- Star Rating -->
+                                                <div class="mb-6">
+                                                    <label class="block text-sm font-medium text-gray-900 mb-3">Your Rating
+                                                        *</label>
+                                                    <div class="flex items-center space-x-1">
+                                                        @for ($i = 1; $i <= 5; $i++)
+                                                            <button type="button"
+                                                                onclick="setRating({{ $i }})"
+                                                                class="star-btn text-2xl text-gray-300 hover:text-yellow-400 transition-colors">
+                                                                <i class="far fa-star"></i>
+                                                            </button>
+                                                        @endfor
+                                                        <input type="hidden" name="rating" id="rating"
+                                                            value="0" required>
+                                                        <span id="rating-text" class="ml-3 text-sm text-gray-600">Select
+                                                            stars</span>
+                                                    </div>
+                                                    @error('rating')
+                                                        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                                                    @enderror
+                                                </div>
+
+                                                <!-- Review Title -->
+                                                <div class="mb-4">
+                                                    <label for="title"
+                                                        class="block text-sm font-medium text-gray-900 mb-2">
+                                                        Review Title (Optional)
+                                                    </label>
+                                                    <input type="text" name="title" id="title"
+                                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                                                        placeholder="e.g., Amazing quality!">
+                                                    @error('title')
+                                                        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                                                    @enderror
+                                                </div>
+
+                                                <!-- Review Comment -->
+                                                <div class="mb-6">
+                                                    <label for="comment"
+                                                        class="block text-sm font-medium text-gray-900 mb-2">
+                                                        Your Review *
+                                                    </label>
+                                                    <textarea name="comment" id="comment" rows="4" required
+                                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                                                        placeholder="Share your experience with this product..."></textarea>
+                                                    @error('comment')
+                                                        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                                                    @enderror
+                                                </div>
+
+                                                <!-- Submit Button -->
+                                                <button type="submit"
+                                                    class="bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-all flex items-center gap-2">
+                                                    <i class="fas fa-paper-plane"></i>
+                                                    Submit Review
+                                                </button>
+                                            </form>
+                                        @else
+                                            <div class="bg-green-50 border border-green-200 rounded-xl p-6 text-center">
+                                                <i class="fas fa-check-circle text-green-500 text-3xl mb-3"></i>
+                                                <p class="text-green-800 font-medium">You've already reviewed this product!
+                                                </p>
+                                                <p class="text-green-600 text-sm mt-1">Thank you for your feedback.</p>
+                                            </div>
+                                        @endif
+                                    @else
+                                        <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 text-center">
+                                            <i class="fas fa-user-circle text-gray-400 text-3xl mb-3"></i>
+                                            <p class="text-gray-800 font-medium">Please login to leave a review</p>
+                                            <p class="text-gray-600 text-sm mt-1">You need to be logged in to rate
+                                                products.</p>
+                                            <a href="{{ route('login') }}"
+                                                class="inline-block mt-3 text-gray-900 font-medium hover:text-gray-700">
+                                                Login to Review →
+                                            </a>
+                                        </div>
+                                    @endauth
+                                </div>
+
+                                <!-- Customer Reviews List -->
+                                @if (isset($product->reviews) && $product->reviews->count() > 0)
+                                    <div>
+                                        <h4 class="text-lg font-semibold text-gray-900 mb-4">
+                                            Customer Reviews
+                                        </h4>
+
+                                        <div class="space-y-4">
+                                            @foreach ($product->reviews->take(5) as $review)
+                                                <div class="bg-white border border-gray-200 rounded-xl p-6">
+                                                    <div
+                                                        class="flex flex-col sm:flex-row sm:items-center justify-between mb-4">
+                                                        <div class="flex items-center gap-3 mb-2 sm:mb-0">
+                                                            <div class="flex text-amber-400">
+                                                                @for ($i = 1; $i <= 5; $i++)
+                                                                    @if ($i <= $review->rating)
+                                                                        <i class="fas fa-star"></i>
+                                                                    @else
+                                                                        <i class="far fa-star"></i>
+                                                                    @endif
+                                                                @endfor
+                                                            </div>
+                                                            @if ($review->title)
+                                                                <span
+                                                                    class="font-medium text-gray-900">{{ $review->title }}</span>
+                                                            @endif
+                                                        </div>
+                                                        <span class="text-sm text-gray-500">
+                                                            {{ $review->created_at->format('M d, Y') }}
+                                                        </span>
+                                                    </div>
+
+                                                    <p class="text-gray-600 mb-4 leading-relaxed">
+                                                        {{ $review->comment }}
+                                                    </p>
+
+                                                    <div class="flex items-center gap-2">
+                                                        @php
+                                                            $user = $review->user;
+                                                            $hasProfile = false;
+                                                        @endphp
+
+                                                        <img src="{{ $user->avatar_url ?? 'https://ui-avatars.com/api/?name=Anonymous&background=gray&color=fff&size=80' }}"
+                                                            alt="{{ $user->name ?? 'Anonymous' }}"
+                                                            class="w-8 h-8 rounded-full object-cover">
+
+                                                        <span class="text-sm text-gray-700">
+                                                            {{ $review->user->name ?? 'Anonymous' }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+
+                                            @if ($product->review_count > 5)
+                                                <div class="text-center pt-4">
+                                                    <button onclick="showAllReviews()"
+                                                        class="text-gray-900 hover:text-gray-700 font-medium px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                                        Load More Reviews ({{ $product->review_count - 5 }} more)
+                                                    </button>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="text-center py-8">
+                                        <i class="fas fa-star text-4xl text-gray-300 mb-3"></i>
+                                        <p class="text-gray-500">No reviews yet. Be the first to review this product!
+                                        </p>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Specifications Tab -->
+                        <div id="specifications-tab" class="tab-content">
+                            <div class="space-y-6">
+                                <!-- Product Specifications -->
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                                        <i class="fas fa-info-circle"></i>
+                                        Product Specifications
+                                    </h3>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        @if ($firstVariant && $firstVariant->weight)
+                                            <div>
+                                                <h4 class="text-sm font-medium text-gray-700 mb-1">Weight</h4>
+                                                <p class="text-gray-600 text-sm">{{ $firstVariant->weight }} kg</p>
+                                            </div>
+                                        @endif
+
+
+                                        @if ($product->brand)
+                                            <div>
+                                                <h4 class="text-sm font-medium text-gray-700 mb-1">Brand</h4>
+                                                <p class="text-gray-600 text-sm">{{ $product->brand }}</p>
+                                            </div>
+                                        @endif
+
+                                        @if ($product->material)
+                                            <div>
+                                                <h4 class="text-sm font-medium text-gray-700 mb-1">Material</h4>
+                                                <p class="text-gray-600 text-sm">{{ $product->material }}</p>
+                                            </div>
+                                        @endif
+
+                                        @if ($product->sku)
+                                        <div>
+                                            <h4 class="text-sm font-medium text-gray-700 mb-1">SKU</h4>
+                                            <p class="text-gray-600 text-sm">{{ $product->sku }}</p>
+                                        </div>
+                                        @endif
+
+                                        @if ($product->category)
+                                            <div>
+                                                <h4 class="text-sm font-medium text-gray-700 mb-1">Category</h4>
+                                                <p class="text-gray-600 text-sm">{{ $product->category->name }}</p>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <!-- Product Stats -->
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                                        <i class="fas fa-chart-bar"></i>
+                                        Product Statistics
+                                    </h3>
+
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        <div class="bg-gray-50 rounded-lg p-4 text-center">
+                                            <div class="text-xl font-bold text-gray-900">{{ $product->view_count }}
+                                            </div>
+                                            <div class="text-xs text-gray-600">Views</div>
+                                        </div>
+                                        <div class="bg-gray-50 rounded-lg p-4 text-center">
+                                            <div class="text-xl font-bold text-gray-900">{{ $product->review_count }}
+                                            </div>
+                                            <div class="text-xs text-gray-600">Reviews</div>
+                                        </div>
+                                        <div class="bg-gray-50 rounded-lg p-4 text-center">
+                                            <div class="text-xl font-bold text-gray-900">
+                                                {{ $product->is_featured ? 'Yes' : 'No' }}</div>
+                                            <div class="text-xs text-gray-600">Featured Product</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -302,16 +840,24 @@
                                         @php
                                             $minPrice = $arrival->variants->min('price');
                                             $maxPrice = $arrival->variants->max('price');
+                                            $minSalePrice = $arrival->variants
+                                                ->whereNotNull('sale_price')
+                                                ->min('sale_price');
+                                            $displayPrice = $minSalePrice ?: $minPrice;
                                         @endphp
                                         <div
                                             class="absolute top-3 left-3 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-lg shadow-sm">
                                             @if ($minPrice == $maxPrice)
                                                 <span
-                                                    class="font-semibold text-gray-900">${{ number_format($minPrice, 2) }}</span>
+                                                    class="font-semibold text-gray-900">${{ number_format($displayPrice, 2) }}</span>
                                             @else
                                                 <span
-                                                    class="font-semibold text-gray-900">${{ number_format($minPrice, 2) }}
-                                                    - ${{ number_format($maxPrice, 2) }}</span>
+                                                    class="font-semibold text-gray-900">${{ number_format($displayPrice, 2) }}</span>
+                                            @endif
+                                            @if ($minSalePrice)
+                                                <span class="text-xs text-red-500 line-through ml-1">
+                                                    ${{ number_format($minPrice, 2) }}
+                                                </span>
                                             @endif
                                         </div>
 
@@ -329,7 +875,25 @@
                                     <div class="p-4">
                                         <h3 class="font-semibold text-gray-900 mb-1 line-clamp-1">{{ $arrival->name }}
                                         </h3>
-                                        <p class="text-gray-500 text-sm line-clamp-2">{{ $arrival->description }}</p>
+                                        <p class="text-gray-500 text-sm line-clamp-2">
+                                            {{ $arrival->short_description ?? $arrival->description }}</p>
+
+                                        <!-- Rating -->
+                                        @if ($arrival->rating_cache > 0)
+                                            <div class="flex items-center gap-1 mt-2">
+                                                <div class="flex text-amber-400 text-xs">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        @if ($i <= floor($arrival->rating_cache))
+                                                            <i class="fas fa-star"></i>
+                                                        @else
+                                                            <i class="far fa-star"></i>
+                                                        @endif
+                                                    @endfor
+                                                </div>
+                                                <span
+                                                    class="text-xs text-gray-500">({{ $arrival->review_count }})</span>
+                                            </div>
+                                        @endif
                                     </div>
                                 </a>
                             </div>
@@ -345,31 +909,227 @@
                     </div>
                 </div>
             @endif
+
+            <!-- Related Products -->
+            @if (isset($relatedProducts) && $relatedProducts->count() > 0)
+                <div class="mt-16">
+                    <div class="flex items-center justify-between mb-8">
+                        <h2 class="text-3xl font-bold text-gray-900">You May Also Like</h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        @foreach ($relatedProducts as $related)
+                            <div
+                                class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
+                                <a href="{{ route('product.view', $related->slug) }}" class="block">
+                                    <div class="relative overflow-hidden bg-gray-100 aspect-[3/4]">
+                                        @if ($related->images->count() > 0)
+                                            <img src="{{ asset('storage/' . $related->images->first()->image_path) }}"
+                                                alt="{{ $related->name }}"
+                                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                        @endif
+
+                                        @if ($related->is_new)
+                                            <div
+                                                class="absolute top-3 left-3 bg-green-500 text-white px-2 py-1 rounded text-xs font-bold">
+                                                NEW
+                                            </div>
+                                        @endif
+
+                                        @if ($related->is_featured)
+                                            <div
+                                                class="absolute top-3 right-3 bg-amber-500 text-white px-2 py-1 rounded text-xs font-bold">
+                                                FEATURED
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    <div class="p-4">
+                                        <h3 class="font-semibold text-gray-900 mb-2 line-clamp-1">{{ $related->name }}
+                                        </h3>
+                                        <div class="flex items-center justify-between">
+                                            @php
+                                                $minPrice = $related->variants->min('price');
+                                                $minSalePrice = $related->variants
+                                                    ->whereNotNull('sale_price')
+                                                    ->min('sale_price');
+                                                $displayPrice = $minSalePrice ?: $minPrice;
+                                            @endphp
+                                            <span
+                                                class="font-bold text-gray-900">${{ number_format($displayPrice, 2) }}</span>
+                                            @if ($minSalePrice)
+                                                <span
+                                                    class="text-sm text-gray-400 line-through">${{ number_format($minPrice, 2) }}</span>
+                                            @endif
+                                        </div>
+
+                                        <!-- Rating -->
+                                        @if ($related->rating_cache > 0)
+                                            <div class="flex items-center gap-1 mt-2">
+                                                <div class="flex text-amber-400 text-xs">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        @if ($i <= floor($related->rating_cache))
+                                                            <i class="fas fa-star"></i>
+                                                        @else
+                                                            <i class="far fa-star"></i>
+                                                        @endif
+                                                    @endfor
+                                                </div>
+                                                <span
+                                                    class="text-xs text-gray-500">({{ $related->review_count }})</span>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
         </div>
     </main>
-    @php
-        $variantsData = $product->variants
-            ->where('is_active', true)
-            ->where('stock', '>', 0)
-            ->map(function ($variant) {
-                return [
-                    'id' => $variant->id,
-                    'size' => $variant->size,
-                    'color' => $variant->color,
-                    'price' => $variant->price,
-                    'sale_price' => $variant->sale_price,
-                    'stock' => $variant->stock,
-                ];
-            })
-            ->values()
-            ->toArray();
-    @endphp
+
+    <!-- Size Guide Modal -->
+    <div id="sizeGuideModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-900">Size Guide</h3>
+                <button onclick="closeSizeGuide()" class="text-gray-400 hover:text-gray-900">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-600">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3">Size</th>
+                            <th class="px-6 py-3">Chest (in)</th>
+                            <th class="px-6 py-3">Waist (in)</th>
+                            <th class="px-6 py-3">Hip (in)</th>
+                            <th class="px-6 py-3">Fit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-white border-b">
+                            <td class="px-6 py-4 font-medium">XS</td>
+                            <td class="px-6 py-4">32-34</td>
+                            <td class="px-6 py-4">26-28</td>
+                            <td class="px-6 py-4">34-36</td>
+                            <td class="px-6 py-4">Slim</td>
+                        </tr>
+                        <tr class="bg-white border-b">
+                            <td class="px-6 py-4 font-medium">S</td>
+                            <td class="px-6 py-4">35-37</td>
+                            <td class="px-6 py-4">29-31</td>
+                            <td class="px-6 py-4">37-39</td>
+                            <td class="px-6 py-4">Regular</td>
+                        </tr>
+                        <tr class="bg-white border-b">
+                            <td class="px-6 py-4 font-medium">M</td>
+                            <td class="px-6 py-4">38-40</td>
+                            <td class="px-6 py-4">32-34</td>
+                            <td class="px-6 py-4">40-42</td>
+                            <td class="px-6 py-4">Regular</td>
+                        </tr>
+                        <tr class="bg-white border-b">
+                            <td class="px-6 py-4 font-medium">L</td>
+                            <td class="px-6 py-4">41-43</td>
+                            <td class="px-6 py-4">35-37</td>
+                            <td class="px-6 py-4">43-45</td>
+                            <td class="px-6 py-4">Regular</td>
+                        </tr>
+                        <tr class="bg-white">
+                            <td class="px-6 py-4 font-medium">XL</td>
+                            <td class="px-6 py-4">44-46</td>
+                            <td class="px-6 py-4">38-40</td>
+                            <td class="px-6 py-4">46-48</td>
+                            <td class="px-6 py-4">Loose</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                <h4 class="font-medium text-gray-900 mb-2">How to measure:</h4>
+                <ul class="text-sm text-gray-600 space-y-1">
+                    <li><strong>Chest:</strong> Measure around the fullest part of your chest</li>
+                    <li><strong>Waist:</strong> Measure around your natural waistline</li>
+                    <li><strong>Hip:</strong> Measure around the fullest part of your hips</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
     <script>
+        // Tab Switching Functionality
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+
+            // Add active class to clicked tab button
+            event.target.classList.add('active');
+        }
+
+        // Star Rating Functionality
+        let selectedRating = 0;
+
+        function setRating(rating) {
+            selectedRating = rating;
+            document.getElementById('rating').value = rating;
+
+            // Update star display
+            const stars = document.querySelectorAll('.star-btn');
+            stars.forEach((star, index) => {
+                const icon = star.querySelector('i');
+                if (index < rating) {
+                    icon.classList.remove('far', 'fa-star');
+                    icon.classList.add('fas', 'fa-star', 'text-yellow-400');
+                } else {
+                    icon.classList.remove('fas', 'fa-star', 'text-yellow-400');
+                    icon.classList.add('far', 'fa-star');
+                }
+            });
+
+            // Update rating text
+            const ratingText = document.getElementById('rating-text');
+            const texts = ['Select stars', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+            ratingText.textContent = texts[rating];
+        }
+
+        // Form validation
+        document.getElementById('reviewForm')?.addEventListener('submit', function(e) {
+            if (selectedRating === 0) {
+                e.preventDefault();
+                showWarningToast('Please select a rating by clicking the stars.');
+                return false;
+            }
+
+            const comment = document.getElementById('comment').value.trim();
+            if (!comment) {
+                e.preventDefault();
+                showWarningToast('Please write a review comment.');
+                return false;
+            }
+
+            return true;
+        });
+
         // Carousel functionality
         let currentSlide = 0;
         const slides = document.querySelectorAll('.carousel-img');
         const thumbnails = document.querySelectorAll('.thumbnail-btn');
+        const currentSlideElement = document.getElementById('current-slide');
 
         function showSlide(index) {
             slides.forEach((slide, i) => {
@@ -383,6 +1143,11 @@
             });
 
             currentSlide = index;
+
+            // Update slide counter
+            if (currentSlideElement) {
+                currentSlideElement.textContent = index + 1;
+            }
         }
 
         function nextSlide() {
@@ -402,6 +1167,8 @@
             const colorRadios = document.querySelectorAll('.color-radio');
             const priceLabel = document.getElementById('product-price');
             const stockLabel = document.getElementById('stock-available');
+            const selectedColorName = document.getElementById('selected-color-name');
+            const maxStockLabel = document.getElementById('max-stock-label');
             const productForm = document.getElementById('productForm');
 
             // Store all variants data
@@ -414,19 +1181,28 @@
 
                 if (filteredVariants.length === 0) {
                     sizeContainer.innerHTML =
-                        '<p class="text-red-500 text-sm col-span-4">No sizes available for this color</p>';
+                        '<div class="col-span-4 text-center py-8">' +
+                        '<p class="text-gray-500">No sizes available for this color</p>' +
+                        '</div>';
                     // Reset price and stock display
                     priceLabel.textContent = 'Select Size';
-                    stockLabel.textContent = 'Please select a size to see stock';
-                    stockLabel.className = 'text-sm font-medium text-gray-600 bg-gray-50 px-3 py-2 rounded-lg';
+                    stockLabel.innerHTML = '<i class="fas fa-info-circle"></i> Please select a size to see stock';
+                    stockLabel.className =
+                        'text-sm font-medium text-gray-600 bg-gray-50 px-3 py-2 rounded-lg inline-flex items-center gap-2';
+                    maxStockLabel.textContent = '';
                     return;
                 }
 
                 let sizesHTML = '';
                 filteredVariants.forEach((variant, index) => {
                     const price = variant.sale_price || variant.price;
-                    // For single variant, always check it
+                    const originalPrice = variant.price;
+                    const discount = variant.sale_price ? originalPrice - variant.sale_price : 0;
+                    const discountPercent = variant.sale_price ? Math.round((discount / originalPrice) *
+                        100) : 0;
                     const isChecked = filteredVariants.length === 1 || index === 0;
+                    const isLowStock = variant.stock <= 10;
+                    const isOutOfStock = variant.stock <= 0;
 
                     sizesHTML += `
                 <label class="relative">
@@ -434,11 +1210,27 @@
                         data-price="${price}"
                         data-stock="${variant.stock}"
                         data-size="${variant.size}"
+                        data-weight="${variant.weight || ''}"
+                        data-dimensions="${variant.dimensions || ''}"
                         class="hidden variant-radio"
-                        ${isChecked ? 'checked' : ''}>
-                    <div class="variant-option border-2 border-gray-200 rounded-lg p-3 text-center cursor-pointer transition-all hover:border-gray-900 ${isChecked ? 'border-gray-900 bg-gray-900 text-white' : ''}">
-                        <span class="font-medium">${variant.size}</span>
-                        ${variant.sale_price ? `<div class="text-xs text-red-500 mt-1">$${parseFloat(variant.sale_price).toFixed(2)}</div>` : ''}
+                        ${isChecked ? 'checked' : ''}
+                        ${isOutOfStock ? 'disabled' : ''}>
+                    <div class="variant-option border-2 rounded-lg p-3 text-center cursor-pointer transition-all hover:border-gray-900 hover:bg-gray-50
+                        ${isOutOfStock ? 'border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed' : 
+                          'border-gray-200 hover:border-gray-900 hover:bg-gray-50'}
+                        ${isChecked ? (isOutOfStock ? '' : 'border-gray-900 bg-gray-900 text-white hover:bg-gray-900') : ''}">
+                        <span class="font-medium block">${variant.size}</span>
+                        ${variant.sale_price ? 
+                            `<div class="text-xs font-bold mt-1 ${isChecked ? 'text-red-300' : 'text-red-500'}">
+                                                        SAVE $${discount.toFixed(2)}
+                                                    </div>` : ''}
+                        ${isLowStock && !isOutOfStock ? 
+                            `<div class="text-xs ${isChecked ? 'text-yellow-300' : 'text-yellow-600'} mt-1">
+                                                      ` : ''}
+                        ${isOutOfStock ? 
+                            `<div class="text-xs text-gray-400 mt-1">
+                                                        <i class="fas fa-times-circle"></i> Out of Stock
+                                                    </div>` : ''}
                     </div>
                 </label>
             `;
@@ -463,23 +1255,34 @@
 
                 const price = selectedVariant.dataset.price;
                 const stock = selectedVariant.dataset.stock;
+                const weight = selectedVariant.dataset.weight;
+                const dimensions = selectedVariant.dataset.size;
 
                 if (price) {
                     priceLabel.textContent = `$${parseFloat(price).toFixed(2)}`;
                 }
 
                 if (stock) {
-                    stockLabel.textContent = `${stock} items in stock`;
+                    stockLabel.innerHTML =
+                        `<i class="fas fa-${stock <= 10 ? 'exclamation-triangle' : (stock <= 0 ? 'times-circle' : 'check-circle')}"></i> ${stock} items in stock`;
                     if (stock <= 10) {
                         stockLabel.className =
-                            'text-sm font-medium text-yellow-600 bg-yellow-50 px-3 py-2 rounded-lg';
+                            'text-sm font-medium text-yellow-600 bg-yellow-50 px-3 py-2 rounded-lg inline-flex items-center gap-2';
                     } else if (stock <= 0) {
-                        stockLabel.className = 'text-sm font-medium text-red-600 bg-red-50 px-3 py-2 rounded-lg';
+                        stockLabel.className =
+                            'text-sm font-medium text-red-600 bg-red-50 px-3 py-2 rounded-lg inline-flex items-center gap-2';
                     } else {
                         stockLabel.className =
-                        'text-sm font-medium text-green-600 bg-green-50 px-3 py-2 rounded-lg';
+                            'text-sm font-medium text-green-600 bg-green-50 px-3 py-2 rounded-lg inline-flex items-center gap-2';
                     }
+
+                    // Update max stock label
+                    maxStockLabel.textContent = `Max: ${stock}`;
                 }
+
+                // Update quantity max
+                const quantityInput = document.getElementById('quantity');
+                quantityInput.max = stock;
 
                 // Update visual selection
                 updateVariantVisualSelection();
@@ -492,11 +1295,21 @@
 
                 document.querySelectorAll('.variant-option').forEach(opt => {
                     opt.classList.remove('border-gray-900', 'bg-gray-900', 'text-white');
-                    opt.classList.add('border-gray-200', 'text-gray-900');
+                    const parentRadio = opt.closest('label').querySelector('.variant-radio');
+                    if (parentRadio.disabled) {
+                        opt.classList.add('border-gray-100', 'bg-gray-50', 'text-gray-400');
+                    } else if (parseInt(parentRadio.dataset.stock) <= 10) {
+                        opt.classList.add('text-gray-900');
+                    } else {
+                        opt.classList.add('border-gray-200', 'text-gray-900','hover:text-gray-900');
+                    }
                 });
 
-                selectedVariant.closest('label').querySelector('.variant-option').classList.add(
-                    'border-gray-900', 'bg-gray-900', 'text-white');
+                if (!selectedVariant.disabled) {
+                    selectedVariant.closest('label').querySelector('.variant-option').classList.add(
+                        'border-gray-900', 'bg-gray-900', 'text-white'
+                    );
+                }
             }
 
             // Add event listeners to color radios
@@ -504,11 +1317,26 @@
                 radio.addEventListener('change', function() {
                     // Update active state for colors
                     document.querySelectorAll('.color-option').forEach(opt => {
-                        opt.classList.remove('border-gray-900');
-                        opt.classList.add('border-gray-200');
+                        opt.classList.remove('border-gray-900', 'ring-2', 'ring-gray-900',
+                            'ring-offset-2');
+                        opt.querySelector('.absolute')?.remove();
                     });
-                    this.closest('label').querySelector('.color-option').classList.add(
-                        'border-gray-900');
+
+                    const colorOption = this.closest('label').querySelector('.color-option');
+                    colorOption.classList.add('border-gray-900', 'ring-2', 'ring-gray-900',
+                        'ring-offset-2');
+
+                    // Add checkmark
+                    const checkmark = document.createElement('div');
+                    checkmark.className =
+                        'absolute -top-1 -right-1 w-4 h-4 bg-gray-900 rounded-full flex items-center justify-center';
+                    checkmark.innerHTML = '<i class="fas fa-check text-white text-xs"></i>';
+                    colorOption.appendChild(checkmark);
+
+                    // Update selected color name
+                    if (selectedColorName) {
+                        selectedColorName.textContent = this.value;
+                    }
 
                     // Update sizes for selected color
                     updateSizesForColor(this.value);
@@ -532,6 +1360,12 @@
                     return false;
                 }
 
+                if (selectedVariant.disabled) {
+                    e.preventDefault();
+                    showWarningToast('This size is out of stock.');
+                    return false;
+                }
+
                 // Make sure the radio button is properly checked
                 selectedVariant.checked = true;
                 return true;
@@ -548,13 +1382,22 @@
         // Quantity controls
         function incrementQuantity() {
             const quantityInput = document.getElementById('quantity');
-            quantityInput.value = parseInt(quantityInput.value) + 1;
+            const selectedVariant = document.querySelector('.variant-radio:checked');
+            const maxStock = selectedVariant ? parseInt(selectedVariant.dataset.stock) : 1;
+
+            let current = parseInt(quantityInput.value);
+            if (current < maxStock) {
+                quantityInput.value = current + 1;
+            } else {
+                showWarningToast(`Maximum ${maxStock} items available.`);
+            }
         }
 
         function decrementQuantity() {
             const quantityInput = document.getElementById('quantity');
-            if (parseInt(quantityInput.value) > 1) {
-                quantityInput.value = parseInt(quantityInput.value) - 1;
+            let current = parseInt(quantityInput.value);
+            if (current > 1) {
+                quantityInput.value = current - 1;
             }
         }
 
@@ -572,11 +1415,63 @@
             carouselContainer.addEventListener('mouseenter', () => clearInterval(slideInterval));
             carouselContainer.addEventListener('mouseleave', () => slideInterval = setInterval(nextSlide, 5000));
         }
-    </script>
 
-    <script>
+        // Size Guide Modal
+        function openSizeGuide() {
+            document.getElementById('sizeGuideModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSizeGuide() {
+            document.getElementById('sizeGuideModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Share product
+        function shareProduct() {
+            if (navigator.share) {
+                navigator.share({
+                        title: '{{ $product->name }}',
+                        text: 'Check out this product!',
+                        url: window.location.href,
+                    })
+                    .then(() => console.log('Successful share'))
+                    .catch((error) => console.log('Error sharing:', error));
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                navigator.clipboard.writeText(window.location.href)
+                    .then(() => showSuccessToast('Link copied to clipboard!'))
+                    .catch(err => showWarningToast('Failed to copy link: ' + err));
+            }
+        }
+
+        // Show all reviews
+        function showAllReviews() {
+            // Implement your logic to show all reviews
+            alert('This would show all reviews. Implement pagination or modal as needed.');
+        }
+
+        // Toast Functions
+        function showSuccessToast(message) {
+            // Check if toast component exists
+            if (typeof window.showToast === 'function') {
+                window.showToast(message, 'success');
+            } else {
+                alert('Success: ' + message);
+            }
+        }
+
+        function showWarningToast(message) {
+            // Check if toast component exists
+            if (typeof window.showToast === 'function') {
+                window.showToast(message, 'warning');
+            } else {
+                alert('Warning: ' + message);
+            }
+        }
+
+        // URL parameter handling
         document.addEventListener('DOMContentLoaded', () => {
-            // Check URL parameters
             const urlParams = new URLSearchParams(window.location.search);
 
             if (urlParams.get('added') === 'true') {
@@ -601,34 +1496,6 @@
             @endif
         });
     </script>
-
-    <style>
-        .line-clamp-1 {
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 1;
-        }
-
-        .line-clamp-2 {
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-        }
-
-        .variant-option {
-            transition: all 0.2s ease;
-        }
-
-        .color-option {
-            transition: all 0.2s ease;
-        }
-
-        .carousel-img {
-            transition: opacity 0.5s ease;
-        }
-    </style>
 
     @include('partials.footer')
     @stack('styles')

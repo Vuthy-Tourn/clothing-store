@@ -85,6 +85,13 @@ class User extends Authenticatable
     return $this->hasOne(UserAddress::class)
                 ->where('is_default', true);
 }
+/**
+     * Get the reviews written by the user
+     */
+    public function reviews()
+    {
+        return $this->hasMany(ProductReview::class);
+    }
 
 
     /**
@@ -491,5 +498,27 @@ class User extends Authenticatable
             'completed_orders' => $this->orders()->where('order_status', 'delivered')->count(),
             'cancelled_orders' => $this->orders()->where('order_status', 'cancelled')->count(),
         ];
+    }
+
+      /**
+     * Get the user's avatar URL
+     */
+    public function getAvatarUrlAttribute()
+    {
+        if ($this->profile_picture) {
+            return asset('storage/' . $this->profile_picture);
+        }
+        
+        // Fallback to UI Avatars
+        $name = $this->name ?: 'Anonymous';
+        $background = $this->name ? '667eea' : 'gray';
+        
+        return 'https://ui-avatars.com/api/?' . http_build_query([
+            'name' => $name,
+            'background' => $background,
+            'color' => 'fff',
+            'size' => '80',
+            'bold' => 'true'
+        ]);
     }
 }

@@ -37,13 +37,27 @@ class CheckoutController extends Controller
             }
         }
 
-        $shipping = 10.00; // Flat rate shipping
+        $shipping = 0; // Flat rate shipping
         $tax = $subtotal * 0.08; // 8% tax
         $grandTotal = $subtotal + $shipping + $tax;
 
         // Get user's saved addresses
         $user = Auth::user();
-        $savedAddresses = $user->addresses()->shipping()->get();
+        $savedAddresses = $user->addresses()
+    ->shipping()
+    ->orderBy('is_default', 'desc') // Default addresses first
+    ->orderBy('created_at', 'desc') // Then newest first
+    ->get()
+    ->unique(function ($address) {
+        return $address->full_name . '|' . 
+               $address->phone . '|' . 
+               $address->address_line1 . '|' . 
+               $address->city . '|' . 
+               $address->state . '|' . 
+               $address->zip_code . '|' . 
+               $address->country;
+    })
+    ->values();
         $defaultAddress = $user->addresses()->shipping()->where('is_default', true)->first();
         
         return view('frontend.checkout', compact('items', 'subtotal', 'shipping', 'tax', 'grandTotal', 'savedAddresses', 'defaultAddress', 'user'));
