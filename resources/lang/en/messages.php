@@ -244,4 +244,34 @@ return [
     'support_24_7' => '24/7 Support',
     'support_24_7_description' => 'Need help? Contact our support team anytime',
 
+    // Contact Page
+    'contact_us' => 'Contact Us',
+    'get_in_touch' => 'Get in Touch',
+    'contact_subtitle' => 'We\'re here to help you find the perfect outfit. Reach out to us anytime!',
+    
+    // Contact Information
+    'contact_information' => 'Contact Information',
+    'email' => 'Email',
+    'phone' => 'Phone',
+    'address' => 'Address',
+    
+    // Store Hours
+    'store_hours' => 'Store Hours',
+    'monday_friday' => 'Monday - Friday',
+    'saturday' => 'Saturday',
+    'sunday' => 'Sunday',
+    'closed' => 'Closed',
+    
+    // Social Media
+    'connect_with_us' => 'Connect With Us',
+    'social_subtitle' => 'Follow us for the latest fashion trends and exclusive offers!',
+    
+    // Newsletter
+    'stay_updated' => 'Stay Updated',
+    'newsletter_subtitle' => 'Join our newsletter for the latest collections and promotions.',
+    'sign_up_now' => 'Sign Up Now',
+    
+    // Mission
+    'our_mission' => 'Our Mission',
+    'mission_text' => 'At Outfit Store, we believe in empowering everyone to express their unique style through sustainable, high-quality fashion. Join us in redefining what it means to look and feel your best!',
 ];
