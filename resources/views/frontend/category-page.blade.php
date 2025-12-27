@@ -27,13 +27,13 @@
         <div class="relative h-full flex items-center justify-center">
             <div class="text-center px-4 max-w-4xl">
                 <div class="overflow-hidden mb-8">
-                    <h1 class="text-7xl md:text-9xl font-bold text-white tracking-tighter animate-[slideUp_0.8s_ease-out]">
-                        {{ ucfirst($gender) }}
+                    <h1 class="text-7xl md:text-9xl font-bold text-white tracking-tighter animate-[slideUp_0.8s_ease-out] py-5">
+                          {{ __('messages.' . $gender) }}
                     </h1>
                 </div>
                 <div class="flex items-center justify-center gap-4 text-white/80 text-sm tracking-[0.3em] uppercase">
                     <span class="w-12 h-px bg-white/60"></span>
-                    <span>Collection</span>
+                    <span>{{ __('messages.collection') }}</span>
                     <span class="w-12 h-px bg-white/60"></span>
                 </div>
             </div>
@@ -59,12 +59,12 @@
                                 {{-- Search Section --}}
                                 <div class="space-y-4">
                                     <h2 class="text-base font-medium text-gray-900 tracking-wide">
-                                        SEARCH
+                                        {{ __('messages.search') }}
                                     </h2>
 
                                     <div class="relative">
                                         <input type="text" id="searchInput" value="{{ request('search') }}"
-                                            placeholder="Find your style..."
+                                            placeholder="{{ __('messages.search_placeholder') }}"
                                             class="w-full px-0 py-3 bg-transparent border-0 border-b border-gray-300 focus:border-black focus:ring-0 transition-all text-sm placeholder:text-gray-400 rounded-none">
                                         <div class="absolute right-0 top-1/2 -translate-y-1/2">
                                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
@@ -80,7 +80,7 @@
                                 @if (isset($gender) && $genderCategories && $genderCategories->count() > 1)
                                     <div class="space-y-4">
                                         <h2 class="text-base font-medium text-gray-900 tracking-wide">
-                                            CATEGORIES
+                                            {{ __('messages.categories_title') }}
                                         </h2>
 
                                         <div class="space-y-2">
@@ -96,7 +96,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <span class="text-sm text-gray-600">All Categories</span>
+                                                <span
+                                                    class="text-sm text-gray-600">{{ __('messages.all_categories') }}</span>
                                             </label>
                                             @foreach ($genderCategories as $cat)
                                                 <label class="flex items-center gap-3 cursor-pointer py-2">
@@ -121,7 +122,7 @@
                                 {{-- Price Range Filter --}}
                                 <div class="space-y-4">
                                     <h2 class="text-base font-medium text-gray-900 tracking-wide">
-                                        PRICE RANGE
+                                        {{ __('messages.price_range') }}
                                     </h2>
 
                                     <div class="space-y-4">
@@ -169,7 +170,7 @@
                                 @if (!empty($availableSizes))
                                     <div class="space-y-4">
                                         <h2 class="text-base font-medium text-gray-900 tracking-wide">
-                                            SIZE
+                                            {{ __('messages.size_title') }}
                                         </h2>
 
                                         <div class="space-y-2">
@@ -199,7 +200,7 @@
                                 @if (!empty($availableColors))
                                     <div class="space-y-4">
                                         <h2 class="text-base font-medium text-gray-900 tracking-wide">
-                                            COLOR
+                                            {{ __('messages.color_title') }}
                                         </h2>
 
                                         <div class="space-y-2">
@@ -230,7 +231,7 @@
                                 @if (!empty($availableBrands))
                                     <div class="space-y-4">
                                         <h2 class="text-base font-medium text-gray-900 tracking-wide">
-                                            BRAND
+                                            {{ __('messages.brand_title') }}
                                         </h2>
 
                                         <div class="space-y-2">
@@ -260,7 +261,7 @@
                                 {{-- Featured & New Arrivals Filter --}}
                                 <div class="space-y-4">
                                     <h2 class="text-base font-medium text-gray-900 tracking-wide">
-                                        COLLECTION
+                                        {{ __('messages.collection_title') }}
                                     </h2>
 
                                     <div class="space-y-2">
@@ -278,7 +279,7 @@
                                                     </svg>
                                                 </div>
                                             </div>
-                                            <span class="text-sm text-gray-600">Featured</span>
+                                            <span class="text-sm text-gray-600">{{ __('messages.featured') }}</span>
                                         </label>
                                         <label class="flex items-center gap-3 cursor-pointer py-2">
                                             <div class="relative">
@@ -294,7 +295,7 @@
                                                     </svg>
                                                 </div>
                                             </div>
-                                            <span class="text-sm text-gray-600">New Arrivals</span>
+                                            <span class="text-sm text-gray-600">{{ __('messages.new_arrivals') }}</span>
                                         </label>
                                     </div>
                                 </div>
@@ -302,7 +303,7 @@
                                 {{-- Stock Status Filter --}}
                                 <div class="space-y-4">
                                     <h2 class="text-base font-medium text-gray-900 tracking-wide">
-                                        STOCK STATUS
+                                        {{ __('messages.stock_status') }}
                                     </h2>
 
                                     <div class="space-y-2">
@@ -318,7 +319,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <span class="text-sm text-gray-600">All Items</span>
+                                            <span class="text-sm text-gray-600">{{ __('messages.all_items') }}</span>
                                         </label>
                                         <label class="flex items-center gap-3 cursor-pointer py-2">
                                             <div class="relative">
@@ -332,7 +333,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <span class="text-sm text-gray-600">In Stock</span>
+                                            <span class="text-sm text-gray-600">{{ __('messages.in_stock') }}</span>
                                         </label>
                                         <label class="flex items-center gap-3 cursor-pointer py-2">
                                             <div class="relative">
@@ -346,7 +347,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <span class="text-sm text-gray-600">Low Stock</span>
+                                            <span class="text-sm text-gray-600">{{ __('messages.low_stock') }}</span>
                                         </label>
                                         <label class="flex items-center gap-3 cursor-pointer py-2">
                                             <div class="relative">
@@ -360,7 +361,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <span class="text-sm text-gray-600">Out of Stock</span>
+                                            <span class="text-sm text-gray-600">{{ __('messages.out_of_stock') }}</span>
                                         </label>
                                     </div>
                                 </div>
@@ -368,7 +369,7 @@
                                 {{-- Sort Filter --}}
                                 <div class="space-y-4">
                                     <h2 class="text-base font-medium text-gray-900 tracking-wide">
-                                        SORT BY
+                                        {{ __('messages.sort_by') }}
                                     </h2>
 
                                     <div class="space-y-2">
@@ -384,7 +385,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <span class="text-sm text-gray-600">Recommended</span>
+                                            <span class="text-sm text-gray-600">{{ __('messages.recommended') }}</span>
                                         </label>
                                         <label class="flex items-center gap-3 cursor-pointer py-2">
                                             <div class="relative">
@@ -398,7 +399,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <span class="text-sm text-gray-600">Newest</span>
+                                            <span class="text-sm text-gray-600">{{ __('messages.newest') }}</span>
                                         </label>
                                         <label class="flex items-center gap-3 cursor-pointer py-2">
                                             <div class="relative">
@@ -412,7 +413,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <span class="text-sm text-gray-600">Popular</span>
+                                            <span class="text-sm text-gray-600">{{ __('messages.popular') }}</span>
                                         </label>
                                         <label class="flex items-center gap-3 cursor-pointer py-2">
                                             <div class="relative">
@@ -426,7 +427,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <span class="text-sm text-gray-600">Price: Low to High</span>
+                                            <span class="text-sm text-gray-600">{{ __('messages.price_low_high') }}</span>
                                         </label>
                                         <label class="flex items-center gap-3 cursor-pointer py-2">
                                             <div class="relative">
@@ -440,7 +441,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <span class="text-sm text-gray-600">Price: High to Low</span>
+                                            <span class="text-sm text-gray-600">{{ __('messages.price_high_low') }}</span>
                                         </label>
                                         <label class="flex items-center gap-3 cursor-pointer py-2">
                                             <div class="relative">
@@ -454,7 +455,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <span class="text-sm text-gray-600">Highest Rated</span>
+                                            <span class="text-sm text-gray-600">{{ __('messages.highest_rated') }}</span>
                                         </label>
                                     </div>
                                 </div>
@@ -476,7 +477,7 @@
                                     <div class="pt-4">
                                         <button type="button" id="clearFilters"
                                             class="w-full py-2 text-sm font-medium text-gray-600 border border-gray-300 rounded hover:bg-gray-50 transition-colors duration-200">
-                                            Clear All Filters
+                                            {{ __('messages.clear_all_filters') }}
                                         </button>
                                     </div>
                                 @endif
@@ -492,6 +493,7 @@
             </div>
         </div>
     </section>
+
 
     <style>
         /* Custom radio button states */
