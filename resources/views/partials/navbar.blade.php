@@ -432,16 +432,14 @@
                             </div>
                         </div>
                     </div>
-                @else
-                    <!-- Login/Signup for mobile -->
-                    <div class="md:hidden">
-                        <a href="{{ route('login') }}"
-                            class="text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">
-                            {{ __('messages.login') }}
-                        </a>
-                    </div>
                 @endauth
-
+                @guest
+                    <!-- Show icon for guests -->
+                    <a href="{{ route('login') }}"
+                        class="text-gray-700 hover:text-gray-900 transition-colors duration-200 hidden lg:flex p-2">
+                        <i class="fa-regular fa-user text-lg hover:scale-110 transition-transform duration-200"></i>
+                    </a>
+                @endguest
                 <!-- Mobile Menu Button -->
                 <button id="mobileMenuButton"
                     class="md:hidden p-2 text-gray-600 hover:text-gray-900 transition-colors">
@@ -566,7 +564,7 @@
                     <form id="searchForm" class="relative">
                         <input type="text" name="q" id="searchInput"
                             placeholder="{{ __('messages.search_placeholder') }}"
-                            class="w-full px-6 py-4 text-lg bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:ring-opacity-50 transition-all duration-200"
+                            class="w-full px-6 py-4 text-lg bg-gray-50 rounded-xl focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:ring-opacity-50 transition-all duration-200 outline-0"
                             autocomplete="off">
                         <button type="submit"
                             class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white p-3 rounded-lg hover:bg-gray-800 transition-colors">
@@ -812,6 +810,16 @@
             if (e.target === searchModal) {
                 closeSearchModalFunc();
             }
+        });
+
+        // Close when clicking outside
+        searchModal.addEventListener('click', function() {
+            closeSearchModalFunc();
+        });
+
+        // Prevent close when clicking inside modal
+        searchModalContent.addEventListener('click', function(e) {
+            e.stopPropagation();
         });
 
         function openSearchModal() {
