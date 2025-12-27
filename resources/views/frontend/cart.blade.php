@@ -4,8 +4,8 @@
     <div class="max-w-6xl mx-auto px-4">
         <!-- Header -->
         <div class="mb-8">
-            <h1 class="text-4xl font-bold text-gray-900 mb-2">Shopping Cart</h1>
-            <p class="text-gray-600">Review your items and proceed to checkout</p>
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">{{ __('messages.shopping_cart') }}</h1>
+            <p class="text-gray-600">{{ __('messages.review_items_checkout') }}</p>
         </div>
 
         {{-- Check if cart is empty --}}
@@ -41,18 +41,18 @@
                                 <div class="flex-1 min-w-0">
                                     <div class="flex justify-between items-start">
                                         <div>
-                                            <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ $product->name ?? 'Product' }}</h3>
+                                            <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ $product->name ?? __('messages.product') }}</h3>
                                             @if($variant)
-                                                <p class="text-sm text-gray-500 mb-2">SKU: {{ $variant->sku }}</p>
+                                                <p class="text-sm text-gray-500 mb-2">{{ __('messages.sku') }}: {{ $variant->sku }}</p>
                                             @endif
                                             <div class="flex items-center gap-4 text-sm text-gray-600">
                                                 @if($variant)
-                                                    <span class="bg-gray-100 px-3 py-1 rounded-full">Size: {{ $variant->size }}</span>
-                                                    <span class="bg-gray-100 px-3 py-1 rounded-full">Color: {{ $variant->color }}</span>
+                                                    <span class="bg-gray-100 px-3 py-1 rounded-full">{{ __('messages.size') }}: {{ $variant->size }}</span>
+                                                    <span class="bg-gray-100 px-3 py-1 rounded-full">{{ __('messages.color') }}: {{ $variant->color }}</span>
                                                     @if($variant->stock > 0)
-                                                        <span class="font-medium text-green-600">In Stock ({{ $variant->stock }} left)</span>
+                                                        <span class="font-medium text-green-600">{{ __('messages.in_stock') }} ({{ $variant->stock }} {{ __('messages.left') }})</span>
                                                     @else
-                                                        <span class="font-medium text-red-600">Out of Stock</span>
+                                                        <span class="font-medium text-red-600">{{ __('messages.out_of_stock') }}</span>
                                                     @endif
                                                 @endif
                                             </div>
@@ -68,7 +68,7 @@
                                     <!-- Quantity Controls -->
                                     <div class="flex items-center justify-between mt-4">
                                         <div class="flex items-center space-x-3">
-                                            <span class="text-sm font-medium text-gray-700">Quantity:</span>
+                                            <span class="text-sm font-medium text-gray-700">{{ __('messages.quantity') }}:</span>
                                             <div class="flex items-center border border-gray-300 rounded-lg">
                                                 <button type="button" 
                                                         onclick="updateQuantity({{ $item->id }}, -1)"
@@ -87,18 +87,18 @@
                                                 </button>
                                             </div>
                                             @if($variant && $variant->stock > 0)
-                                                <span class="text-sm text-gray-500">Max: {{ $variant->stock }}</span>
+                                                <span class="text-sm text-gray-500">{{ __('messages.max') }}: {{ $variant->stock }}</span>
                                             @endif
                                         </div>
                                         
                                         <!-- Remove Button -->
                                         <button type="button" 
-                                                onclick="showRemoveConfirmation({{ $item->id }}, '{{ addslashes($product->name ?? 'Product') }}')"
+                                                onclick="showRemoveConfirmation({{ $item->id }}, '{{ addslashes($product->name ?? __('messages.product')) }}')"
                                                 class="text-red-500 hover:text-red-700 font-medium text-sm flex items-center gap-2 transition-colors">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                             </svg>
-                                            Remove
+                                            {{ __('messages.remove') }}
                                         </button>
                                     </div>
                                 </div>
@@ -106,7 +106,7 @@
                             
                             <!-- Item Total -->
                             <div class="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
-                                <span class="text-sm text-gray-600">Item total</span>
+                                <span class="text-sm text-gray-600">{{ __('messages.item_total') }}</span>
                                 <span id="item-total-{{ $item->id }}" class="text-xl font-bold text-gray-900">${{ number_format($total, 2) }}</span>
                             </div>
                         </div>
@@ -116,24 +116,24 @@
                 <!-- Order Summary -->
                 <div class="lg:col-span-1">
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-8">
-                        <h2 class="text-xl font-bold text-gray-900 mb-6">Order Summary</h2>
+                        <h2 class="text-xl font-bold text-gray-900 mb-6">{{ __('messages.order_summary') }}</h2>
                         
                         <div class="space-y-4 mb-6">
                             <div class="flex justify-between text-gray-600">
-                                <span>Subtotal ({{ $items->count() }} items)</span>
+                                <span>{{ __('messages.subtotal') }} ({{ $items->count() }} {{ __('messages.items') }})</span>
                                 <span id="subtotal">${{ number_format($subtotal, 2) }}</span>
                             </div>
                             <div class="flex justify-between text-gray-600">
-                                <span>Shipping</span>
-                                <span class="text-green-600">Free</span>
+                                <span>{{ __('messages.shipping') }}</span>
+                                <span class="text-green-600">{{ __('messages.free') }}</span>
                             </div>
                             <div class="flex justify-between text-gray-600">
-                                <span>Tax (8%)</span>
+                                <span>{{ __('messages.tax') }} (8%)</span>
                                 <span id="tax">${{ number_format($subtotal * 0.08, 2) }}</span>
                             </div>
                             <div class="border-t border-gray-200 pt-4">
                                 <div class="flex justify-between text-lg font-bold text-gray-900">
-                                    <span>Total</span>
+                                    <span>{{ __('messages.total') }}</span>
                                     <span id="grand-total">${{ number_format($subtotal + ($subtotal * 0.08), 2) }}</span>
                                 </div>
                             </div>
@@ -145,7 +145,7 @@
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
-                            Proceed to Checkout
+                            {{ __('messages.proceed_to_checkout') }}
                         </a>
 
                         <!-- Continue Shopping -->
@@ -155,7 +155,7 @@
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                                 </svg>
-                                Continue Shopping
+                                {{ __('messages.continue_shopping') }}
                             </a>
                         </div>
 
@@ -166,13 +166,13 @@
                                     <svg class="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                                     </svg>
-                                    <p class="text-xs">Secure Checkout</p>
+                                    <p class="text-xs">{{ __('messages.secure_checkout') }}</p>
                                 </div>
                                 <div class="text-center">
                                     <svg class="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                                     </svg>
-                                    <p class="text-xs">Free Shipping</p>
+                                    <p class="text-xs">{{ __('messages.free_shipping') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -188,14 +188,14 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
                     </div>
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Your cart is empty</h2>
-                    <p class="text-gray-600 mb-8">Looks like you haven't added any items to your cart yet.</p>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ __('messages.your_cart_is_empty') }}</h2>
+                    <p class="text-gray-600 mb-8">{{ __('messages.no_items_in_cart') }}</p>
                     <a href="{{ route('products.all') }}" 
                        class="inline-flex items-center gap-2 bg-gray-900 text-white px-8 py-4 rounded-xl font-semibold hover:bg-gray-800 transition-all duration-300 hover:scale-105">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                         </svg>
-                        Browse Products
+                        {{ __('messages.browse_products') }}
                     </a>
                 </div>
             </div>
@@ -212,19 +212,19 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.35 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
                 </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-2" id="modalTitle">Remove Item</h3>
-            <p class="text-gray-600 mb-6" id="modalMessage">Are you sure you want to remove this item from your cart?</p>
+            <h3 class="text-xl font-bold text-gray-900 mb-2" id="modalTitle">{{ __('messages.remove_item') }}</h3>
+            <p class="text-gray-600 mb-6" id="modalMessage">{{ __('messages.confirm_remove_item') }}</p>
             <div class="flex gap-3 justify-center">
                 <button type="button" 
                         onclick="hideConfirmationModal()"
                         class="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors">
-                    Cancel
+                    {{ __('messages.cancel') }}
                 </button>
                 <button type="button" 
                         onclick="confirmRemove()"
                         class="px-6 py-3 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 transition-colors"
                         id="confirmButton">
-                    Remove
+                    {{ __('messages.remove') }}
                 </button>
             </div>
         </div>
@@ -256,7 +256,7 @@
         const newQuantity = currentQuantity + change;
 
         if (newQuantity < 1) {
-            showRemoveConfirmation(itemId, 'Product');
+            showRemoveConfirmation(itemId, '{{ __("messages.product") }}');
             return;
         }
 
@@ -281,13 +281,13 @@
             // Check if response is JSON
             const contentType = response.headers.get('content-type');
             if (!contentType || !contentType.includes('application/json')) {
-                throw new Error('Server returned non-JSON response');
+                throw new Error('{{ __("messages.server_non_json_response") }}');
             }
 
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message || 'Server error');
+                throw new Error(data.message || '{{ __("messages.server_error") }}');
             }
 
             if (data.success) {
@@ -297,20 +297,20 @@
                 updateCartTotals(data.grand_total);
                 
                 if (typeof showSuccessToast !== 'undefined') {
-                    showSuccessToast('Quantity updated successfully');
+                    showSuccessToast('{{ __("messages.quantity_updated") }}');
                 }
             } else {
-                throw new Error(data.message || 'Failed to update quantity');
+                throw new Error(data.message || '{{ __("messages.failed_update_quantity") }}');
             }
         } catch (error) {
             console.error('Error updating quantity:', error);
             
             // Show appropriate error message
-            let errorMessage = 'Failed to update quantity';
+            let errorMessage = '{{ __("messages.failed_update_quantity") }}';
             if (error.message.includes('Stock not available')) {
-                errorMessage = 'Not enough stock available';
+                errorMessage = '{{ __("messages.not_enough_stock") }}';
             } else if (error.message.includes('non-JSON')) {
-                errorMessage = 'Server error - please try again';
+                errorMessage = '{{ __("messages.server_error_try_again") }}';
             }
             
             if (typeof showErrorToast !== 'undefined') {
@@ -358,8 +358,8 @@
         const modalTitle = document.getElementById('modalTitle');
         const modalMessage = document.getElementById('modalMessage');
         
-        modalTitle.textContent = 'Remove Item';
-        modalMessage.textContent = `Are you sure you want to remove "${productName}" from your cart?`;
+        modalTitle.textContent = '{{ __("messages.remove_item") }}';
+        modalMessage.textContent = `{{ __("messages.confirm_remove_product") }} "${productName}" {{ __("messages.from_cart_question") }}`;
         
         modal.classList.remove('hidden');
         requestAnimationFrame(() => {
@@ -425,10 +425,10 @@
                 }
 
                 if (typeof showSuccessToast !== 'undefined') {
-                    showSuccessToast('Item removed from cart');
+                    showSuccessToast('{{ __("messages.item_removed_from_cart") }}');
                 }
             } else {
-                throw new Error(data.message || 'Failed to remove item');
+                throw new Error(data.message || '{{ __("messages.failed_remove_item") }}');
             }
         } catch (error) {
             console.error('Error removing item:', error);
@@ -440,7 +440,7 @@
             }
             
             if (typeof showErrorToast !== 'undefined') {
-                showErrorToast('Failed to remove item');
+                showErrorToast('{{ __("messages.failed_remove_item") }}');
             }
         } finally {
             hideConfirmationModal();
