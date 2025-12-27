@@ -214,6 +214,7 @@
 
             <!-- Icons Section -->
             <div class="flex items-center space-x-4">
+                  @include('components.language-switcher')
                 @auth
                     <!-- User Dropdown with Profile Picture -->
                     <div class="relative">
@@ -266,6 +267,8 @@
                         </div>
                     </div>
                 @endauth
+
+            
 
                 @guest
                     <!-- Show icon for guests -->

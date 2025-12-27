@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\EmailController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\LanguageController;
 
 // ==================== PUBLIC ROUTES ====================
 
@@ -293,3 +294,7 @@ Route::get('/category/{slug}', [CategoryPageController::class, 'show'])->name('c
 Route::post('/products/{product}/review', [ProductDisplayController::class, 'submitReview'])->name('product.review.submit');
 Route::post('/products/{product}/wishlist/toggle', [ProductDisplayController::class, 'toggleWishlist'])->name('product.wishlist.toggle');
 Route::get('/products/{product}/reviews', [ProductDisplayController::class, 'getReviews'])->name('product.reviews');
+
+// Language routes
+Route::post('/language/set', [LanguageController::class, 'set'])->name('language.set');
+Route::post('/language/ajax', [LanguageController::class, 'ajax'])->name('language.ajax');

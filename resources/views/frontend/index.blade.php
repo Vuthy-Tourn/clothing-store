@@ -29,7 +29,7 @@
                                         <div class="mb-6 animate-fade-in-down">
                                             <span
                                                 class="inline-block bg-white/10 backdrop-blur-sm border border-white/30 text-white text-xs font-semibold tracking-widest px-6 py-2 rounded-full uppercase">
-                                                New Collection
+                                                {{ __('messages.new_arrivals') }}
                                             </span>
                                         </div>
 
@@ -71,14 +71,6 @@
                 @endforeach
             </div>
 
-            {{-- <!-- Navigation Arrows -->
-            <div
-                class="swiper-button-prev !w-16 !h-16 !bg-white/10 backdrop-blur-md !text-white rounded-full hover:!bg-white hover:!text-gray-900 !transition-all !duration-300 after:!text-xl !left-8">
-            </div>
-            <div
-                class="swiper-button-next !w-16 !h-16 !bg-white/10 backdrop-blur-md !text-white rounded-full hover:!bg-white hover:!text-gray-900 !transition-all !duration-300 after:!text-xl !right-8">
-            </div> --}}
-
             <!-- Custom Pagination -->
             <div class="swiper-pagination !bottom-8 !right-8 !left-auto !w-auto flex flex-col gap-3"></div>
         </div>
@@ -86,7 +78,7 @@
         <!-- Scroll Indicator -->
         <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 animate-bounce">
             <div class="flex flex-col items-center text-white/70">
-                <span class="text-xs tracking-widest mb-2 uppercase">Scroll</span>
+                <span class="text-xs tracking-widest mb-2 uppercase">{{ __('messages.scroll') }}</span>
                 <i class="fas fa-chevron-down text-sm"></i>
             </div>
         </div>
@@ -99,9 +91,12 @@
         <div class="max-w-7xl mx-auto">
             <!-- Section Header -->
             <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-2 tracking-tight">Explore Collections</h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Discover our carefully curated categories designed for
-                    every style and occasion</p>
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-2 tracking-tight">
+                    {{ __('messages.explore_collections') }}
+                </h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    {{ __('messages.discover_collections') }}
+                </p>
             </div>
 
             <!-- Categories List -->
@@ -123,13 +118,14 @@
                         <div class="w-full lg:w-1/2 lg:pl-8">
                             <div class="text-center lg:text-left" data-aos="fade-left">
                                 <h3 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
-                                    Men Collection</h3>
+                                    {{ __('messages.men_collection') }}
+                                </h3>
                                 <p class="text-gray-600 text-lg mb-6 leading-relaxed">
-                                    Discover our exclusive Men collection featuring the latest trends and timeless pieces.
+                                    {{ __('messages.men_description') }}
                                 </p>
                                 <a href="/men"
                                     class="inline-flex items-center text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-900 transition-all duration-300 pb-1">
-                                    Shop
+                                    {{ __('messages.shop') }}
                                     <i
                                         class="fas fa-arrow-right ml-2 text-xs transition-transform duration-300 group-hover:translate-x-1"></i>
                                 </a>
@@ -145,13 +141,14 @@
                         <div class="w-full lg:w-1/2 order-2 lg:order-1 lg:pr-8" data-aos="fade-right">
                             <div class="text-center lg:text-left">
                                 <h3 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
-                                    Women Collection</h3>
+                                    {{ __('messages.women_collection') }}
+                                </h3>
                                 <p class="text-gray-600 text-lg mb-6 leading-relaxed">
-                                    Explore our premium Women selection with carefully crafted pieces for every occasion.
+                                    {{ __('messages.women_description') }}
                                 </p>
                                 <a href="/women"
                                     class="inline-flex items-center text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-900 transition-all duration-300 pb-1">
-                                    Shop
+                                    {{ __('messages.shop') }}
                                     <i
                                         class="fas fa-arrow-right ml-2 text-xs transition-transform duration-300 group-hover:translate-x-1"></i>
                                 </a>
@@ -187,13 +184,14 @@
                         <div class="w-full lg:w-1/2 lg:pl-8">
                             <div class="text-center lg:text-left" data-aos="fade-left">
                                 <h3 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
-                                    Kids Collection</h3>
+                                    {{ __('messages.kids_collection') }}
+                                </h3>
                                 <p class="text-gray-600 text-lg mb-6 leading-relaxed">
-                                    Discover our exclusive Kids collection featuring the latest trends and timeless pieces.
+                                    {{ __('messages.kids_description') }}
                                 </p>
                                 <a href="/kids"
                                     class="inline-flex items-center text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-900 transition-all duration-300 pb-1">
-                                    Shop
+                                    {{ __('messages.shop') }}
                                     <i
                                         class="fas fa-arrow-right ml-2 text-xs transition-transform duration-300 group-hover:translate-x-1"></i>
                                 </a>
@@ -207,7 +205,7 @@
             <div class="text-center mt-12">
                 <a href="/products"
                     class="inline-flex items-center px-8 py-3 border border-gray-300 text-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-900 hover:text-white hover:border-gray-400 transition-all duration-300">
-                    View All Products
+                    {{ __('messages.view_all_products') }}
                     <i class="fas fa-arrow-right ml-2 text-xs"></i>
                 </a>
             </div>
@@ -217,7 +215,7 @@
 
     <!-- New Arrivals -->
     <section class="new-arrivals" data-aos="fade-left" id="NewArrivals">
-        <h2 style="font-weight: 900;">New Arrivals</h2>
+        <h2 style="font-weight: 900;">{{ __('messages.new_arrivals_title') }}</h2>
 
         <div class="carousel-wrapper">
             <button class="carousel-btn prev" id="new-arrivals-prev">&#10094;</button>
@@ -237,7 +235,7 @@
                                         loading="lazy">
                                 @else
                                     <div class="w-full h-full bg-gray-200 flex items-center justify-center">
-                                        <span class="text-gray-400">No Image</span>
+                                        <span class="text-gray-400">{{ __('messages.no_image') }}</span>
                                     </div>
                                 @endif
 
@@ -254,7 +252,7 @@
                                         @endphp
                                         ${{ number_format($displayPrice, 2) }}
                                         @if ($minSalePrice && $minSalePrice < $minPrice)
-                                            <span class="text-xs text-red-500 ml-1">SALE</span>
+                                            <span class="text-xs text-red-500 ml-1">{{ __('messages.sale') }}</span>
                                         @endif
                                     @else
                                         $0.00
@@ -266,7 +264,7 @@
                                     class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500 flex items-center justify-center">
                                     <span
                                         class="text-white text-sm tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-4 group-hover:translate-y-0">
-                                        View Details
+                                        {{ __('messages.view_details') }}
                                     </span>
                                 </div>
                             </div>
@@ -307,8 +305,8 @@
                                 </path>
                             </svg>
                         </div>
-                        <p class="text-gray-500 text-lg">No new arrivals yet.</p>
-                        <p class="text-gray-400 text-sm mt-2">Check back soon for new products!</p>
+                        <p class="text-gray-500 text-lg">{{ __('messages.no_new_arrivals') }}</p>
+                        <p class="text-gray-400 text-sm mt-2">{{ __('messages.check_back_soon') }}</p>
                     </div>
                 @endforelse
             </div>
@@ -324,197 +322,197 @@
                 <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" width="200px" height="200px">
             </div>
             <div class="about-content">
-                <h2 style="font-weight: 900;">About Outfit 818 </h2>
-                <p>At Outfit 818, we believe fashion is more than just clothing — it's confidence, creativity, and comfort.
-                    Our mission is to blend timeless designs with modern trends to create something truly unique for every
-                    individual.</p>
-                <blockquote>"Dress well. Feel unstoppable."</blockquote>
+                <h2 style="font-weight: 900;">{{ __('messages.about_brand') }}</h2>
+                <p>{{ __('messages.about_description') }}</p>
+                <blockquote>"{{ __('messages.brand_quote') }}"</blockquote>
             </div>
         </div>
     </section>
 
-  @if ($featured)
-<section class="relative py-24 bg-white">
-    <div class="max-w-6xl mx-auto px-4">
-        <!-- Section Header -->
-        <div class="text-center mb-16">
-            <div class="inline-flex items-center gap-2 px-6 py-2 bg-gray-100 rounded-full mb-4">
-                <span class="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></span>
-                <span class="text-sm font-semibold text-gray-700 uppercase tracking-wider">Today's Featured</span>
+    @if ($featured)
+    <section class="relative py-24 bg-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <!-- Section Header -->
+            <div class="text-center mb-16">
+                <div class="inline-flex items-center gap-2 px-6 py-2 bg-gray-100 rounded-full mb-4">
+                    <span class="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></span>
+                    <span class="text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                        {{ __('messages.todays_featured') }}
+                    </span>
+                </div>
+                <h2 class="text-3xl font-light text-gray-500">{{ __('messages.product_of_the_day') }}</h2>
             </div>
-            <h2 class="text-3xl font-light text-gray-500">Product of the Day</h2>
-        </div>
 
-        <div class="grid lg:grid-cols-2 gap-16 items-center">
-            <!-- Product Visual -->
-            <div class="relative">
-                <!-- Main Image Frame -->
-                <div class="relative ">
-                    @if ($featured->images->count() > 0)
-                        <div class="relative h-full flex items-center justify-center">
-                            <img 
-                                src="{{ asset('storage/' . $featured->images->first()->image_path) }}" 
-                                alt="{{ $featured->images->first()->alt_text ?? $featured->name }}"
-                                class="max-h-full w-auto object-contain"
-                            />
-                        </div>
-                        
-                        <!-- Color Options -->
-                        <div class="absolute bottom-8 right-20">
-                            <div class="flex items-center gap-2">
-                                <span class="text-sm text-gray-500">Available in:</span>
-                                <div class="flex gap-1">
-                                    <div class="w-6 h-6 rounded-full bg-gray-900 border-2 border-white shadow"></div>
-                                    <div class="w-6 h-6 rounded-full bg-gray-400 border-2 border-white shadow"></div>
-                                    <div class="w-6 h-6 rounded-full bg-amber-600 border-2 border-white shadow"></div>
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <!-- Product Visual -->
+                <div class="relative">
+                    <!-- Main Image Frame -->
+                    <div class="relative ">
+                        @if ($featured->images->count() > 0)
+                            <div class="relative h-full flex items-center justify-center">
+                                <img 
+                                    src="{{ asset('storage/' . $featured->images->first()->image_path) }}" 
+                                    alt="{{ $featured->images->first()->alt_text ?? $featured->name }}"
+                                    class="max-h-full w-auto object-contain"
+                                />
+                            </div>
+                            
+                            <!-- Color Options -->
+                            <div class="absolute bottom-8 right-20">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-sm text-gray-500">{{ __('messages.available_in') }}</span>
+                                    <div class="flex gap-1">
+                                        <div class="w-6 h-6 rounded-full bg-gray-900 border-2 border-white shadow"></div>
+                                        <div class="w-6 h-6 rounded-full bg-gray-400 border-2 border-white shadow"></div>
+                                        <div class="w-6 h-6 rounded-full bg-amber-600 border-2 border-white shadow"></div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @else
-                        <div class="h-80 flex items-center justify-center">
-                            <div class="text-center">
-                                <div class="text-gray-300 text-8xl mb-4">
-                                    <i class="fas fa-gem"></i>
+                        @else
+                            <div class="h-80 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-gray-300 text-8xl mb-4">
+                                        <i class="fas fa-gem"></i>
+                                    </div>
+                                    <p class="text-gray-400 text-lg">{{ __('messages.premium_product') }}</p>
                                 </div>
-                                <p class="text-gray-400 text-lg">Premium Product</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Product Details -->
+                <div class="space-y-8">
+                    <!-- Product Title -->
+                    <div>
+                        <h1 class="text-4xl md:text-5xl font-light text-gray-900 leading-tight tracking-tight">
+                            {{ $featured->name }}
+                        </h1>
+                        <div class="h-px w-20 bg-gray-300 mt-4"></div>
+                    </div>
+
+                    <!-- Rating -->
+                    @if ($featured->rating_cache > 0)
+                        <div class="flex items-center gap-4">
+                            <div class="flex items-center">
+                                <div class="flex text-amber-400">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <i class="{{ $i <= $featured->rating_cache ? 'fas' : 'far' }} fa-star"></i>
+                                    @endfor
+                                </div>
+                                <span class="ml-3 text-gray-900 font-bold text-lg">
+                                    {{ number_format($featured->rating_cache, 1) }}
+                                </span>
+                            </div>
+                            <span class="text-gray-500">•</span>
+                            <span class="text-gray-600">{{ $featured->review_count }} {{ __('messages.verified_reviews') }}</span>
+                        </div>
+                    @endif
+
+                    <!-- Description -->
+                    <div class="space-y-6">
+                        <p class="text-gray-600 text-lg leading-relaxed">
+                            {{ $featured->short_description ?? Str::limit($featured->description, 300) }}
+                        </p>
+                        
+                        <!-- Highlights -->
+                        <div class="space-y-3">
+                            <h4 class="font-medium text-gray-900">{{ __('messages.key_features') }}</h4>
+                            <ul class="space-y-2">
+                                <li class="flex items-center gap-3 text-gray-600">
+                                    <i class="fas fa-check text-green-500 text-sm"></i>
+                                    <span>{{ __('messages.premium_quality') }}</span>
+                                </li>
+                                <li class="flex items-center gap-3 text-gray-600">
+                                    <i class="fas fa-check text-green-500 text-sm"></i>
+                                    <span>{{ __('messages.extended_warranty') }}</span>
+                                </li>
+                                <li class="flex items-center gap-3 text-gray-600">
+                                    <i class="fas fa-check text-green-500 text-sm"></i>
+                                    <span>{{ __('messages.free_personalization') }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pricing -->
+                    @if ($featured->variants->count() > 0)
+                        @php
+                            $minPrice = $featured->variants->min('price');
+                            $minSalePrice = $featured->variants
+                                ->whereNotNull('sale_price')
+                                ->min('sale_price');
+                            $displayPrice = $minSalePrice ? min($minPrice, $minSalePrice) : $minPrice;
+                            $originalPrice = $minPrice;
+                        @endphp
+
+                        <div class="space-y-2">
+                            <div class="flex items-baseline gap-4">
+                                <span class="text-4xl font-light text-gray-900">
+                                    ${{ number_format($displayPrice, 2) }}
+                                </span>
+                                
+                                @if ($minSalePrice && $minSalePrice < $originalPrice)
+                                    <span class="text-lg text-gray-400 line-through">
+                                        ${{ number_format($originalPrice, 2) }}
+                                    </span>
+                                    <span class="text-sm font-medium text-amber-600">
+                                        {{ __('messages.special_price') }}
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="text-sm text-gray-500">
+                                {{ __('messages.price_includes') }}
                             </div>
                         </div>
                     @endif
-                </div>
-            </div>
 
-            <!-- Product Details -->
-            <div class="space-y-8">
-                <!-- Product Title -->
-                <div>
-                    <h1 class="text-4xl md:text-5xl font-light text-gray-900 leading-tight tracking-tight">
-                        {{ $featured->name }}
-                    </h1>
-                    <div class="h-px w-20 bg-gray-300 mt-4"></div>
-                </div>
+                    <!-- Action Buttons -->
+                    <div class="space-y-4 pt-4">
+                        <div class="flex gap-4">
+                            <a href="{{ route('product.view', $featured->slug) }}"
+                                class="flex-1 bg-gray-900 text-white px-8 py-4 text-center font-medium text-lg hover:bg-gray-800 transition-colors duration-300">
+                                {{ __('messages.purchase_now') }}
+                            </a>
+                            <button class="flex-1 border border-gray-300 text-gray-700 px-8 py-4 font-medium text-lg hover:border-gray-900 transition-colors duration-300">
+                                {{ __('messages.add_to_cart') }}
+                            </button>
+                        </div>
+                    </div>
 
-                <!-- Rating -->
-                @if ($featured->rating_cache > 0)
-                    <div class="flex items-center gap-4">
-                        <div class="flex items-center">
-                            <div class="flex text-amber-400">
-                                @for ($i = 1; $i <= 5; $i++)
-                                    <i class="{{ $i <= $featured->rating_cache ? 'fas' : 'far' }} fa-star"></i>
-                                @endfor
+                    <!-- Additional Info -->
+                    <div class="grid grid-cols-2 gap-4 pt-6 border-t">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                                <i class="fas fa-truck text-gray-600 text-sm"></i>
                             </div>
-                            <span class="ml-3 text-gray-900 font-bold text-lg">
-                                {{ number_format($featured->rating_cache, 1) }}
-                            </span>
+                            <div>
+                                <div class="text-sm font-medium text-gray-900">{{ __('messages.free_shipping') }}</div>
+                                <div class="text-xs text-gray-500">{{ __('messages.worldwide') }}</div>
+                            </div>
                         </div>
-                        <span class="text-gray-500">•</span>
-                        <span class="text-gray-600">{{ $featured->review_count }} verified reviews</span>
-                    </div>
-                @endif
-
-                <!-- Description -->
-                <div class="space-y-6">
-                    <p class="text-gray-600 text-lg leading-relaxed">
-                        {{ $featured->short_description ?? Str::limit($featured->description, 300) }}
-                    </p>
-                    
-                    <!-- Highlights -->
-                    <div class="space-y-3">
-                        <h4 class="font-medium text-gray-900">Key Features:</h4>
-                        <ul class="space-y-2">
-                            <li class="flex items-center gap-3 text-gray-600">
-                                <i class="fas fa-check text-green-500 text-sm"></i>
-                                <span>Premium quality materials</span>
-                            </li>
-                            <li class="flex items-center gap-3 text-gray-600">
-                                <i class="fas fa-check text-green-500 text-sm"></i>
-                                <span>Extended warranty included</span>
-                            </li>
-                            <li class="flex items-center gap-3 text-gray-600">
-                                <i class="fas fa-check text-green-500 text-sm"></i>
-                                <span>Free personalization available</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Pricing -->
-                @if ($featured->variants->count() > 0)
-                    @php
-                        $minPrice = $featured->variants->min('price');
-                        $minSalePrice = $featured->variants
-                            ->whereNotNull('sale_price')
-                            ->min('sale_price');
-                        $displayPrice = $minSalePrice ? min($minPrice, $minSalePrice) : $minPrice;
-                        $originalPrice = $minPrice;
-                    @endphp
-
-                    <div class="space-y-2">
-                        <div class="flex items-baseline gap-4">
-                            <span class="text-4xl font-light text-gray-900">
-                                ${{ number_format($displayPrice, 2) }}
-                            </span>
-                            
-                            @if ($minSalePrice && $minSalePrice < $originalPrice)
-                                <span class="text-lg text-gray-400 line-through">
-                                    ${{ number_format($originalPrice, 2) }}
-                                </span>
-                                <span class="text-sm font-medium text-amber-600">
-                                    Special price today only
-                                </span>
-                            @endif
-                        </div>
-                        <div class="text-sm text-gray-500">
-                            Price includes all taxes. Financing available.
-                        </div>
-                    </div>
-                @endif
-
-                <!-- Action Buttons -->
-                <div class="space-y-4 pt-4">
-                    <div class="flex gap-4">
-                        <a href="{{ route('product.view', $featured->slug) }}"
-                            class="flex-1 bg-gray-900 text-white px-8 py-4 text-center font-medium text-lg hover:bg-gray-800 transition-colors duration-300">
-                            Purchase Now
-                        </a>
-                        <button class="flex-1 border border-gray-300 text-gray-700 px-8 py-4 font-medium text-lg hover:border-gray-900 transition-colors duration-300">
-                            Add to Cart
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Additional Info -->
-                <div class="grid grid-cols-2 gap-4 pt-6 border-t">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-                            <i class="fas fa-truck text-gray-600 text-sm"></i>
-                        </div>
-                        <div>
-                            <div class="text-sm font-medium text-gray-900">Free Shipping</div>
-                            <div class="text-xs text-gray-500">Worldwide</div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-                            <i class="fas fa-shield-alt text-gray-600 text-sm"></i>
-                        </div>
-                        <div>
-                            <div class="text-sm font-medium text-gray-900">Secure Payment</div>
-                            <div class="text-xs text-gray-500">SSL Encrypted</div>
+                        
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                                <i class="fas fa-shield-alt text-gray-600 text-sm"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-medium text-gray-900">{{ __('messages.secure_payment') }}</div>
+                                <div class="text-xs text-gray-500">{{ __('messages.ssl_encrypted') }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-@endif
+    </section>
+    @endif
 
     <!-- EMAIL OPT-IN SECTION -->
     <section class="email-optin-full" data-aos="fade-up" id="emails">
         <div class="optin-text">
-            <h2>Get Styled, Stay Updated.</h2>
-            <p>Be the first to know about exclusive drops, latest arrivals, and limited-time offers from Outfit 818.</p>
+            <h2>{{ __('messages.get_styled') }}</h2>
+            <p>{{ __('messages.subscribe_description') }}</p>
         </div>
 
         @auth
@@ -537,14 +535,13 @@
                                 </div>
                             </div>
                             <div class="text-left">
-                                <p class="text-green-800 font-medium">You're subscribed to our updates!</p>
-                                <p class="text-green-600 text-sm">We'll keep you informed about the latest trends and exclusive
-                                    offers.</p>
+                                <p class="text-green-800 font-medium">{{ __('messages.subscribed_message') }}</p>
+                                <p class="text-green-600 text-sm">{{ __('messages.subscribed_detail') }}</p>
                             </div>
                         </div>
                         <button type="button" onclick="showUnsubscribeModal()"
                             class="inline-flex items-center px-4 py-2 border border-red-300 text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
-                            Unsubscribe
+                            {{ __('messages.unsubscribe') }}
                         </button>
                     </div>
                 </div>
@@ -558,7 +555,7 @@
                             required>
                         <button type="button" onclick="showSubscribeModal()"
                             class="px-6 py-3 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-200">
-                            Subscribe
+                            {{ __('messages.subscribe') }}
                         </button>
                     </div>
                 </form>
@@ -567,11 +564,11 @@
             <!-- Guest State -->
             <form class="optin-form-bottom mt-4">
                 <div class="flex space-x-3">
-                    <input type="email" placeholder="Enter your email" required disabled
+                    <input type="email" placeholder="{{ __('messages.enter_email') }}" required disabled
                         class="flex-1 px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-400 cursor-not-allowed focus:outline-none">
                     <a href="{{ route('login') }}"
                         class="inline-flex items-center px-6 py-3 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-200">
-                        Login to Subscribe
+                        {{ __('messages.login_to_subscribe') }}
                     </a>
                 </div>
             </form>
@@ -580,7 +577,6 @@
         <div id="subscribe-message" class="text-sm mt-3"></div>
     </section>
 @endsection
-
 
 <!-- Swiper CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />

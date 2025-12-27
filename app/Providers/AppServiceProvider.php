@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,5 +23,29 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Route::aliasMiddleware('admin', AdminMiddleware::class);
+          // Force locale specifically for the layout
+    View::composer('layouts.front', function ($view) {
+        if (session()->has('locale')) {
+            $locale = session('locale');
+            if (in_array($locale, ['en', 'km'])) {
+                app()->setLocale($locale);
+                config(['app.locale' => $locale]);
+            }
+        }
+    });
+    
+    // Also force it for all views to be safe
+    View::composer('*', function ($view) {
+        static $localeSet = false;
+        
+        if (!$localeSet && session()->has('locale')) {
+            $locale = session('locale');
+            if (in_array($locale, ['en', 'km'])) {
+                app()->setLocale($locale);
+                config(['app.locale' => $locale]);
+                $localeSet = true;
+            }
+        }
+    });
     }
 }

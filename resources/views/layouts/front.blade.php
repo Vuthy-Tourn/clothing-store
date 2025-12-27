@@ -1,5 +1,6 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 
 <head>
     <meta charset="UTF-8">
@@ -25,10 +26,12 @@
 </head>
 
 <body>
+    
     @include('partials.navbar')
 
     <x-toast />
     <x-subscribe-modal />
+
 
     <main>
         @yield('content')
