@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\EmailController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\LanguageController;
+use App\Models\Product;
 
 // ==================== PUBLIC ROUTES ====================
 
@@ -298,3 +299,13 @@ Route::get('/products/{product}/reviews', [ProductDisplayController::class, 'get
 // Language routes
 Route::post('/language/set', [LanguageController::class, 'set'])->name('language.set');
 Route::post('/language/ajax', [LanguageController::class, 'ajax'])->name('language.ajax');
+Route::get('/search', [ProductDisplayController::class, 'search'])->name('products.search');
+// Add this route for quick view
+Route::get('/product/{slug}/quick-view', function($slug) {
+    $product = Product::with(['variants', 'images', 'category'])
+        ->where('slug', $slug)
+        ->where('status', 'active')
+        ->firstOrFail();
+    
+    return view('frontend.partials.quick-view', compact('product'));
+})->name('products.quick-view');

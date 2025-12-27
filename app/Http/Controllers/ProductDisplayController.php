@@ -216,30 +216,158 @@ class ProductDisplayController extends Controller
     }
 
     // Search products
-    public function search(Request $request)
-    {
-        $request->validate([
-            'q' => 'required|string|min:2|max:100',
-        ]);
+public function search(Request $request)
+{
+    $request->validate([
+        'q' => 'required|string|min:2|max:100',
+    ]);
 
-        $products = Product::with(['images' => function($query) {
-            $query->orderBy('is_primary', 'desc')->limit(1);
-        }, 'variants', 'category'])
-        ->where(function($query) use ($request) {
-            $query->where('name', 'like', '%' . $request->q . '%')
-                  ->orWhere('description', 'like', '%' . $request->q . '%')
-                  ->orWhere('short_description', 'like', '%' . $request->q . '%')
-                  ->orWhere('sku', 'like', '%' . $request->q . '%');
-        })
-        ->where('status', 'active')
-        ->orderBy('created_at', 'desc')
-        ->paginate(30);
+    $searchQuery = $request->q;
+    $query = Product::with(['images' => function($query) {
+        $query->orderBy('is_primary', 'desc')->limit(1);
+    }, 'variants', 'category'])
+    ->where('status', 'active');
 
-        return view('frontend.search-results', [
-            'products' => $products,
-            'searchQuery' => $request->q,
-        ]);
+    // Handle quick filters differently - don't make them too restrictive
+    $searchTerm = strtolower($searchQuery);
+    
+    // Build search conditions
+    $query->where(function($q) use ($searchQuery, $searchTerm) {
+        $q->where('name', 'like', '%' . $searchQuery . '%')
+          ->orWhere('description', 'like', '%' . $searchQuery . '%')
+          ->orWhereHas('category', function($categoryQuery) use ($searchQuery) {
+              $categoryQuery->where('name', 'like', '%' . $searchQuery . '%');
+          });
+        
+        // Add additional search terms based on quick filters
+        if (str_contains($searchTerm, 'new')) {
+            $q->orWhere('is_new', true);
+        }
+        if (str_contains($searchTerm, 'featured')) {
+            $q->orWhere('is_featured', true);
+        }
+    });
+
+    // Apply gender filters as a separate condition (not OR, but AND)
+    // This makes the search more flexible
+    if (str_contains($searchTerm, 'men')) {
+        $query->whereHas('category', function($q) {
+            $q->where('gender', 'men');
+        });
+    } elseif (str_contains($searchTerm, 'women')) {
+        $query->whereHas('category', function($q) {
+            $q->where('gender', 'women');
+        });
+    } elseif (str_contains($searchTerm, 'kids')) {
+        $query->whereHas('category', function($q) {
+            $q->where('gender', 'unisex');
+        });
     }
+
+    // For AJAX requests (search modal)
+    if ($request->ajax() || $request->wantsJson()) {
+        try {
+            $total = $query->count();
+            
+            // If no results with the current filters, try a broader search
+            if ($total === 0) {
+                // Try a broader search without the gender filter
+                $fallbackQuery = Product::with(['images' => function($query) {
+                    $query->orderBy('is_primary', 'desc')->limit(1);
+                }, 'variants', 'category'])
+                ->where('status', 'active')
+                ->where(function($q) use ($searchQuery) {
+                    $q->where('name', 'like', '%' . $searchQuery . '%')
+                      ->orWhere('description', 'like', '%' . $searchQuery . '%')
+                      ->orWhereHas('category', function($categoryQuery) use ($searchQuery) {
+                          $categoryQuery->where('name', 'like', '%' . $searchQuery . '%');
+                      });
+                });
+                
+                $total = $fallbackQuery->count();
+                $limit = $request->get('limit', 6);
+                $products = $fallbackQuery->take($limit)->get();
+            } else {
+                $limit = $request->get('limit', 6);
+                $products = $query->take($limit)->get();
+            }
+            
+            // If still no results, check if it's a category name search
+            if ($total === 0) {
+                $categoryQuery = Product::with(['images' => function($query) {
+                    $query->orderBy('is_primary', 'desc')->limit(1);
+                }, 'variants', 'category'])
+                ->where('status', 'active')
+                ->whereHas('category', function($q) use ($searchQuery) {
+                    $q->where('name', 'like', '%' . $searchQuery . '%');
+                });
+                
+                $total = $categoryQuery->count();
+                $limit = $request->get('limit', 6);
+                $products = $categoryQuery->take($limit)->get();
+            }
+            
+            // Transform products for JSON response
+            $productsData = $products->map(function($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'slug' => $product->slug,
+                    'short_description' => $product->short_description,
+                    'rating_cache' => $product->rating_cache,
+                    'review_count' => $product->review_count,
+                    'is_new' => $product->is_new,
+                    'is_featured' => $product->is_featured,
+                    'images' => $product->images->map(function($image) {
+                        return [
+                            'image_path' => $image->image_path,
+                            'is_primary' => $image->is_primary
+                        ];
+                    }),
+                    'variants' => $product->variants->map(function($variant) {
+                        return [
+                            'price' => $variant->price,
+                            'discount_price' => $variant->discount_price,
+                            'stock' => $variant->stock,
+                            'size' => $variant->size,
+                            'color' => $variant->color
+                        ];
+                    }),
+                    'category' => $product->category ? [
+                        'id' => $product->category->id,
+                        'name' => $product->category->name,
+                        'slug' => $product->category->slug,
+                        'gender' => $product->category->gender
+                    ] : null
+                ];
+            });
+            
+            return response()->json([
+                'success' => true,
+                'products' => $productsData,
+                'total' => $total,
+                'searchQuery' => $searchQuery,
+                'hasResults' => $total > 0,
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error performing search',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // Regular pagination for full page view
+    $products = $query->paginate(24);
+
+    return view('frontend.search-results', [
+        'products' => $products,
+        'searchQuery' => $searchQuery,
+    ]);
+}
+
     public function submitReview(Request $request, $slug)
 {
     $product = Product::where('slug', $slug)->firstOrFail();
