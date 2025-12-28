@@ -1,17 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
-    <title>Login - Outfit 818</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ __('messages.login_title') }} - Outfit 818</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
-        * {
-            font-family: 'Inter', sans-serif;
-        }
-        
         body {
             background: #f8f9fa;
         }
@@ -118,7 +114,6 @@
     </style>
 </head>
 <body class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-    
     <!-- Main Container -->
     <div class="max-w-6xl w-full">
         <div class="main-container rounded-2xl overflow-hidden">
@@ -134,6 +129,7 @@
                          src="https://i.pinimg.com/736x/82/96/3d/82963dc01313dd8f866e39a868fc62d0.jpg" 
                          alt="Fashion Slide"
                          class="absolute inset-0 w-full h-full object-cover opacity-100 transition-all duration-[1500ms] ease-[cubic-bezier(0.7, 0, 0.3, 1)]">
+                    
                     <!-- Content Overlay -->
                     <div class="relative z-20 h-full min-h-[600px] flex items-center justify-center p-8">
                         <div class="text-center max-w-md">
@@ -141,7 +137,7 @@
                             <div class="mt-12 fade-in">
                                 <div class="border-l-4 border-white pl-4 py-2">
                                     <p class="text-gray-300 italic text-sm">
-                                        "Welcome back to your style sanctuary."
+                                        {{ __('messages.welcome_quote') }}
                                     </p>
                                 </div>
                             </div>
@@ -153,9 +149,12 @@
                 <div class="right-panel p-8 lg:p-12">
                     <!-- Form Header -->
                     <div class="text-center mb-8">
-                        
-                        <h1 class="text-3xl font-bold text-primary-black mb-2 slide-in slide-in-1">WELCOME BACK</h1>
-                        <p class="text-gray-medium slide-in slide-in-2">Sign in to your account</p>
+                        <h1 class="text-3xl font-bold text-primary-black mb-2 slide-in slide-in-1">
+                            {{ __('messages.welcome_back') }}
+                        </h1>
+                        <p class="text-gray-medium slide-in slide-in-2">
+                            {{ __('messages.sign_in_to_account') }}
+                        </p>
                     </div>
                     
                     <!-- Login Form -->
@@ -165,12 +164,12 @@
                         <!-- Email -->
                         <div class="slide-in slide-in-2">
                             <label class="block text-sm font-medium text-secondary-black mb-2">
-                                Email Address
+                                {{ __('messages.email_address') }}
                             </label>
                             <div class="relative">
                                 <input type="email" name="email" value="{{ old('email') }}" 
                                     class="form-input w-full px-4 py-3 pl-10 rounded-lg @error('email') border-red-500 @enderror"
-                                    placeholder="you@example.com"
+                                    placeholder="{{ __('messages.email_placeholder') }}"
                                     required>
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
                                     <i class="fas fa-envelope text-gray-light"></i>
@@ -184,12 +183,12 @@
                         <!-- Password -->
                         <div class="slide-in slide-in-3">
                             <label class="block text-sm font-medium text-secondary-black mb-2">
-                                Password
+                                {{ __('messages.password') }}
                             </label>
                             <div class="relative">
                                 <input type="password" name="password" 
                                     class="form-input w-full px-4 py-3 pl-10 pr-10 rounded-lg @error('password') border-red-500 @enderror"
-                                    placeholder="••••••••"
+                                    placeholder="{{ __('messages.password_placeholder') }}"
                                     required>
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
                                     <i class="fas fa-lock text-gray-light"></i>
@@ -207,19 +206,19 @@
                         <div class="flex items-center justify-between slide-in slide-in-3">
                             <label class="flex items-center text-sm text-gray-medium">
                                 <input type="checkbox" name="remember" class="mr-2 w-4 h-4 text-black rounded border-gray-light focus:ring-black">
-                                Remember me
+                                {{ __('messages.remember_me') }}
                             </label>
                             <a href="{{ route('password.request') }}" class="text-sm text-secondary-black hover:underline font-medium">
-                                Forgot password?
+                                {{ __('messages.forgot_password') }}
                             </a>
                         </div>
                         
                         <!-- Submit Button -->
                         <div class="slide-in slide-in-3">
                             <button type="submit" 
-                                    class="w-full py-3 btn-primary font-semibold rounded-lg transition-all duration-300">
+                                    class="w-full py-3 btn-primary font-semibold rounded-lg transition-all duration-300 group">
                                 <span class="flex items-center justify-center">
-                                    SIGN IN
+                                    {{ __('messages.sign_in') }}
                                     <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
                                 </span>
                             </button>
@@ -228,8 +227,10 @@
                         <!-- Register Link -->
                         <div class="text-center mt-6 slide-in slide-in-3">
                             <p class="text-sm text-gray-medium">
-                                Don't have an account?
-                                <a href="{{ route('register') }}" class="text-secondary-black font-medium hover:underline ml-1">CREATE ACCOUNT</a>
+                                {{ __('messages.no_account') }}
+                                <a href="{{ route('register') }}" class="text-secondary-black font-medium hover:underline ml-1">
+                                    {{ __('messages.create_account') }}
+                                </a>
                             </p>
                         </div>
                     </form>
@@ -242,13 +243,10 @@
     <script>
         const images = [
             "https://i.pinimg.com/736x/f9/66/88/f96688e3f57b009ca0caf9bf560de2e3.jpg",
-           
             "https://i.pinimg.com/1200x/84/40/9a/84409ae0093a8096fc9a5412b5d362c6.jpg",
-                         "https://i.pinimg.com/736x/57/e6/c8/57e6c8d2a33eed475832bafff1159c3e.jpg",
-
+            "https://i.pinimg.com/736x/57/e6/c8/57e6c8d2a33eed475832bafff1159c3e.jpg",
             "https://i.pinimg.com/736x/aa/23/07/aa2307e5d187f5585298e44f21dc6750.jpg",
         ];
-
 
         const sliderImage = document.getElementById('sliderImage');
         let current = 0;
@@ -275,6 +273,20 @@
                 passwordField.type = 'password';
                 icon.className = 'fas fa-eye text-gray-light';
             }
+        }
+        
+        // Change language
+        function changeLanguage(lang) {
+            fetch('/change-language', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ locale: lang })
+            }).then(() => {
+                location.reload();
+            });
         }
         
         // Initialize animations

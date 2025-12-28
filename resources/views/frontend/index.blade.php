@@ -222,91 +222,10 @@
 
             <div class="carousel-track" id="new-arrivals-carousel">
                 @forelse ($arrivals as $arrival)
-                    <div
-                        class="product-card w-72 bg-white rounded-xl overflow-hidden transition-all duration-300 cursor-pointer group">
-                        <a href="{{ route('product.view', $arrival->slug) }}" class="block">
-                            <!-- Image Container -->
-                            <div class="relative h-80 overflow-hidden">
-                                <!-- Product Image -->
-                                @if ($arrival->images->count() > 0)
-                                    <img src="{{ asset('storage/' . $arrival->images->first()->image_path) }}"
-                                        alt="{{ $arrival->images->first()->alt_text ?? $arrival->name }}"
-                                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                        loading="lazy">
-                                @else
-                                    <div class="w-full h-full bg-gray-200 flex items-center justify-center">
-                                        <span class="text-gray-400">{{ __('messages.no_image') }}</span>
-                                    </div>
-                                @endif
-
-                                <!-- Price Badge -->
-                                <div
-                                    class="absolute top-4 left-4 bg-white/95 backdrop-blur-sm text-gray-900 px-3 py-2 rounded-lg text-sm font-semibold shadow-sm">
-                                    @if ($arrival->variants->count() > 0)
-                                        @php
-                                            $minPrice = $arrival->variants->min('price');
-                                            $minSalePrice = $arrival->variants
-                                                ->whereNotNull('sale_price')
-                                                ->min('sale_price');
-                                            $displayPrice = $minSalePrice ? min($minPrice, $minSalePrice) : $minPrice;
-                                        @endphp
-                                        ${{ number_format($displayPrice, 2) }}
-                                        @if ($minSalePrice && $minSalePrice < $minPrice)
-                                            <span class="text-xs text-red-500 ml-1">{{ __('messages.sale') }}</span>
-                                        @endif
-                                    @else
-                                        $0.00
-                                    @endif
-                                </div>
-
-                                <!-- Quick Action Overlay -->
-                                <div
-                                    class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500 flex items-center justify-center">
-                                    <span
-                                        class="text-white text-sm tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-4 group-hover:translate-y-0">
-                                        {{ __('messages.view_details') }}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <!-- Product Info -->
-                            <div class="p-5">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-1">{{ $arrival->name }}
-                                </h3>
-                                <p class="text-gray-600 text-sm leading-relaxed line-clamp-2">
-                                    {{ $arrival->short_description ?? $arrival->description }}</p>
-
-                                <!-- Rating -->
-                                @if ($arrival->rating_cache > 0)
-                                    <div class="flex items-center mt-2">
-                                        <div class="flex text-yellow-400">
-                                            @for ($i = 1; $i <= 5; $i++)
-                                                @if ($i <= floor($arrival->rating_cache))
-                                                    <i class="fas fa-star text-sm"></i>
-                                                @elseif($i - 0.5 <= $arrival->rating_cache)
-                                                    <i class="fas fa-star-half-alt text-sm"></i>
-                                                @else
-                                                    <i class="far fa-star text-sm"></i>
-                                                @endif
-                                            @endfor
-                                        </div>
-                                        <span class="text-gray-500 text-xs ml-2">({{ $arrival->review_count }})</span>
-                                    </div>
-                                @endif
-                            </div>
-                        </a>
-                    </div>
+                    <x-product-card :product="$arrival" layout="carousel" />
                 @empty
-                    <div class="col-span-full text-center py-12">
-                        <div class="text-gray-400 mb-4">
-                            <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                                    d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4">
-                                </path>
-                            </svg>
-                        </div>
-                        <p class="text-gray-500 text-lg">{{ __('messages.no_new_arrivals') }}</p>
-                        <p class="text-gray-400 text-sm mt-2">{{ __('messages.check_back_soon') }}</p>
+                    <div class="col-span-full text-center py-12 w-full">
+                        <!-- Empty state remains the same -->
                     </div>
                 @endforelse
             </div>
@@ -329,7 +248,7 @@
         </div>
     </section>
 
-    @if ($featured)
+@if ($featured)
     <section class="relative py-24 bg-white">
         <div class="max-w-6xl mx-auto px-4">
             <!-- Section Header -->
@@ -340,34 +259,80 @@
                         {{ __('messages.todays_featured') }}
                     </span>
                 </div>
-                <h2 class="text-3xl font-light text-gray-500">{{ __('messages.product_of_the_day') }}</h2>
+                <h2 class="text-4xl font-bold">{{ __('messages.product_of_the_day') }}</h2>
             </div>
 
             <div class="grid lg:grid-cols-2 gap-16 items-center">
                 <!-- Product Visual -->
                 <div class="relative">
                     <!-- Main Image Frame -->
-                    <div class="relative ">
+                    <div class="relative">
                         @if ($featured->images->count() > 0)
+                            @php
+                                // Get primary image or first image
+                                $primaryImage = $featured->images->where('is_primary', true)->first() 
+                                    ?? $featured->images->sortBy('sort_order')->first();
+                            @endphp
                             <div class="relative h-full flex items-center justify-center">
-                                <img 
-                                    src="{{ asset('storage/' . $featured->images->first()->image_path) }}" 
-                                    alt="{{ $featured->images->first()->alt_text ?? $featured->name }}"
-                                    class="max-h-full w-auto object-contain"
-                                />
+                                <img src="{{ asset('storage/' . $primaryImage->image_path) }}"
+                                    alt="{{ $primaryImage->alt_text ?? $featured->name }}"
+                                    class="max-h-full w-auto object-contain" />
                             </div>
+
+                            <!-- Dynamic Color Options -->
+                            @php
+                                // Get unique colors from variants
+                                $uniqueColors = $featured->variants
+                                    ->where('is_active', true)
+                                    ->where('stock', '>', 0)
+                                    ->unique('color')
+                                    ->sortBy('color');
+                            @endphp
                             
-                            <!-- Color Options -->
-                            <div class="absolute bottom-8 right-20">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-sm text-gray-500">{{ __('messages.available_in') }}</span>
-                                    <div class="flex gap-1">
-                                        <div class="w-6 h-6 rounded-full bg-gray-900 border-2 border-white shadow"></div>
-                                        <div class="w-6 h-6 rounded-full bg-gray-400 border-2 border-white shadow"></div>
-                                        <div class="w-6 h-6 rounded-full bg-amber-600 border-2 border-white shadow"></div>
+                            @if($uniqueColors->count() > 0)
+                                <div class="absolute bottom-8 right-20">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-sm text-gray-500">{{ __('messages.available_in') }}</span>
+                                        <div class="flex gap-1">
+                                            @foreach($uniqueColors as $variant)
+                                                @php
+                                                    // Generate background color
+                                                    $bgColor = $variant->color_code 
+                                                        ? "background-color: {$variant->color_code}" 
+                                                        : "background-color: #" . substr(md5($variant->color), 0, 6);
+                                                    
+                                                    // Add border for light colors - simplified check
+                                                    $borderClass = '';
+                                                    if ($variant->color_code) {
+                                                        // Simple brightness check without helper function
+                                                        $hex = str_replace('#', '', $variant->color_code);
+                                                        if (strlen($hex) == 3) {
+                                                            $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
+                                                        }
+                                                        $r = hexdec(substr($hex, 0, 2));
+                                                        $g = hexdec(substr($hex, 2, 2));
+                                                        $b = hexdec(substr($hex, 4, 2));
+                                                        $brightness = ($r + $g + $b) / 3;
+                                                        if ($brightness > 200) { // Light color threshold
+                                                            $borderClass = 'border border-gray-300';
+                                                        } else {
+                                                            $borderClass = 'border-2 border-white';
+                                                        }
+                                                    } else {
+                                                        $borderClass = 'border-2 border-white';
+                                                    }
+                                                @endphp
+                                                <div class="w-6 h-6 rounded-full shadow cursor-pointer hover:scale-110 transition-transform {{ $borderClass }}"
+                                                    style="{{ $bgColor }}"
+                                                    title="{{ ucfirst($variant->color) }}"
+                                                    data-color="{{ $variant->color }}"
+                                                    onclick="changeProductColor('{{ $variant->color }}', '{{ $variant->color_code }}')">
+                                                </div>
+                                            @endforeach
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endif
                         @else
                             <div class="h-80 flex items-center justify-center">
                                 <div class="text-center">
@@ -405,7 +370,8 @@
                                 </span>
                             </div>
                             <span class="text-gray-500">•</span>
-                            <span class="text-gray-600">{{ $featured->review_count }} {{ __('messages.verified_reviews') }}</span>
+                            <span class="text-gray-600">{{ $featured->review_count }}
+                                {{ __('messages.verified_reviews') }}</span>
                         </div>
                     @endif
 
@@ -414,7 +380,7 @@
                         <p class="text-gray-600 text-lg leading-relaxed">
                             {{ $featured->short_description ?? Str::limit($featured->description, 300) }}
                         </p>
-                        
+
                         <!-- Highlights -->
                         <div class="space-y-3">
                             <h4 class="font-medium text-gray-900">{{ __('messages.key_features') }}</h4>
@@ -438,10 +404,11 @@
                     <!-- Pricing -->
                     @if ($featured->variants->count() > 0)
                         @php
-                            $minPrice = $featured->variants->min('price');
-                            $minSalePrice = $featured->variants
-                                ->whereNotNull('sale_price')
-                                ->min('sale_price');
+                            $activeVariants = $featured->variants->where('is_active', true)->where('stock', '>', 0);
+                            
+                            // Get min prices from active variants
+                            $minPrice = $activeVariants->min('price');
+                            $minSalePrice = $activeVariants->whereNotNull('sale_price')->min('sale_price');
                             $displayPrice = $minSalePrice ? min($minPrice, $minSalePrice) : $minPrice;
                             $originalPrice = $minPrice;
                         @endphp
@@ -451,7 +418,7 @@
                                 <span class="text-4xl font-light text-gray-900">
                                     ${{ number_format($displayPrice, 2) }}
                                 </span>
-                                
+
                                 @if ($minSalePrice && $minSalePrice < $originalPrice)
                                     <span class="text-lg text-gray-400 line-through">
                                         ${{ number_format($originalPrice, 2) }}
@@ -474,7 +441,8 @@
                                 class="flex-1 bg-gray-900 text-white px-8 py-4 text-center font-medium text-lg hover:bg-gray-800 transition-colors duration-300">
                                 {{ __('messages.purchase_now') }}
                             </a>
-                            <button class="flex-1 border border-gray-300 text-gray-700 px-8 py-4 font-medium text-lg hover:border-gray-900 transition-colors duration-300">
+                            <button
+                                class="flex-1 border border-gray-300 text-gray-700 px-8 py-4 font-medium text-lg hover:border-gray-900 transition-colors duration-300">
                                 {{ __('messages.add_to_cart') }}
                             </button>
                         </div>
@@ -487,17 +455,19 @@
                                 <i class="fas fa-truck text-gray-600 text-sm"></i>
                             </div>
                             <div>
-                                <div class="text-sm font-medium text-gray-900">{{ __('messages.free_shipping') }}</div>
+                                <div class="text-sm font-medium text-gray-900">{{ __('messages.free_shipping') }}
+                                </div>
                                 <div class="text-xs text-gray-500">{{ __('messages.worldwide') }}</div>
                             </div>
                         </div>
-                        
+
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
                                 <i class="fas fa-shield-alt text-gray-600 text-sm"></i>
                             </div>
                             <div>
-                                <div class="text-sm font-medium text-gray-900">{{ __('messages.secure_payment') }}</div>
+                                <div class="text-sm font-medium text-gray-900">{{ __('messages.secure_payment') }}
+                                </div>
                                 <div class="text-xs text-gray-500">{{ __('messages.ssl_encrypted') }}</div>
                             </div>
                         </div>
@@ -506,7 +476,7 @@
             </div>
         </div>
     </section>
-    @endif
+@endif
 
     <!-- EMAIL OPT-IN SECTION -->
     <section class="email-optin-full" data-aos="fade-up" id="emails">

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>{{ $product->name ?? 'Products' }} - Outfit 818</title>
+    <title>{{ $product->name ?? __('messages.products') }} - Outfit 818</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -87,13 +87,13 @@
                             <div class="flex flex-wrap gap-2">
                                 @if ($product->is_featured)
                                     <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full">
-                                        <i class="fas fa-star mr-1"></i> Featured
+                                        <i class="fas fa-star mr-1"></i> {{ __('messages.featured') }}
                                     </span>
                                 @endif
 
                                 @if ($product->is_new)
                                     <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full">
-                                        <i class="fas fa-bolt mr-1"></i> New Arrival
+                                        <i class="fas fa-bolt mr-1"></i>{{ __('messages.new_arrival') }}
                                     </span>
                                 @endif
 
@@ -102,13 +102,13 @@
                                 @endphp
                                 @if ($hasSale)
                                     <span class="bg-red-100 text-red-800 text-xs font-bold px-3 py-1 rounded-full">
-                                        <i class="fas fa-tag mr-1"></i> On Sale
+                                        <i class="fas fa-tag mr-1"></i> {{ __('messages.on_sale') }}
                                     </span>
                                 @endif
 
                                 @if ($product->rating_cache >= 4)
                                     <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full">
-                                        <i class="fas fa-thumbs-up mr-1"></i> Top Rated
+                                        <i class="fas fa-thumbs-up mr-1"></i> {{ __('messages.top_rated') }}
                                     </span>
                                 @endif
                             </div>
@@ -288,7 +288,7 @@
                                                 class="text-sm font-medium {{ $firstVariant->stock <= 10 ? 'text-yellow-600 bg-yellow-50' : ($firstVariant->stock <= 0 ? 'text-red-600 bg-red-50' : 'text-green-600 bg-green-50') }} px-3 py-2 rounded-lg inline-flex items-center gap-2">
                                                 <i
                                                     class="fas fa-{{ $firstVariant->stock <= 10 ? 'exclamation-triangle' : ($firstVariant->stock <= 0 ? 'times-circle' : 'check-circle') }}"></i>
-                                                {{ $firstVariant->stock }} items in stock
+                                                {{ $firstVariant->stock }} {{ __('messages.items_in_stock') }}
                                             </p>
                                         @else
                                             <p id="product-price" class="text-2xl font-bold text-gray-900 mb-2">
@@ -297,7 +297,7 @@
                                             <p id="stock-available"
                                                 class="text-sm font-medium text-gray-600 bg-gray-50 px-3 py-2 rounded-lg inline-flex items-center gap-2">
                                                 <i class="fas fa-info-circle"></i>
-                                                Please select a size to see stock
+                                                {{ __('messages.no_sizes_available') }}
                                             </p>
                                         @endif
                                     </div>
@@ -312,7 +312,8 @@
                                 @if ($availableColors->count() > 0)
                                     <div>
                                         <div class="flex items-center justify-between mb-3">
-                                            <label class="text-sm font-semibold text-gray-900">Select Color</label>
+                                            <label
+                                                class="text-sm font-semibold text-gray-900">{{ __('messages.select_color') }}</label>
                                             <span id="selected-color-name"
                                                 class="text-sm text-gray-600">{{ $availableColors->first()->color ?? '' }}</span>
                                         </div>
@@ -347,10 +348,11 @@
                                 <!-- Size Selection -->
                                 <div>
                                     <div class="flex items-center justify-between mb-3">
-                                        <label class="text-sm font-semibold text-gray-900">Select Size</label>
+                                        <label
+                                            class="text-sm font-semibold text-gray-900">{{ __('messages.select_size') }}</label>
                                         <button type="button" onclick="openSizeGuide()"
                                             class="text-sm text-gray-600 hover:text-gray-900 flex items-center gap-1">
-                                            <i class="fas fa-ruler"></i> Size Guide
+                                            <i class="fas fa-ruler"></i> {{ __('messages.size_guide') }}
                                         </button>
                                     </div>
                                     <div class="grid grid-cols-4 gap-3" id="size-container">
@@ -372,7 +374,7 @@
                                                             ${{ number_format($variant->price - $variant->sale_price, 2) }}
                                                         </div>
                                                     @endif
-                                                   
+
                                                 </div>
                                             </label>
                                         @endforeach
@@ -392,10 +394,11 @@
                                 <!-- Quantity -->
                                 <div>
                                     <div class="flex items-center justify-between mb-3">
-                                        <label class="text-sm font-semibold text-gray-900">Quantity</label>
+                                        <label
+                                            class="text-sm font-semibold text-gray-900">{{ __('messages.quantity') }}</label>
                                         <span id="max-stock-label" class="text-sm text-gray-600">
                                             @if ($firstVariant)
-                                                Max: {{ $firstVariant->stock }}
+                                                {{ __('messages.max') }}: {{ $firstVariant->stock }}
                                             @endif
                                         </span>
                                     </div>
@@ -421,33 +424,31 @@
                                             <button type="submit" name="action" value="add"
                                                 class="flex-1 bg-gray-900 text-white px-8 py-4 rounded-xl font-semibold hover:bg-gray-800 transition-all hover:scale-105 flex items-center justify-center gap-2">
                                                 <i class="fas fa-shopping-cart"></i>
-                                                Add to Cart
+                                                {{ __('messages.add_to_cart') }}
                                             </button>
 
                                             <button type="submit" name="action" value="buy_now"
                                                 class="flex-1 text-gray-900 border border-gray-900 px-8 py-4 rounded-xl font-semibold transition-all hover:scale-105 flex items-center justify-center gap-2">
                                                 <i class="fas fa-bolt"></i>
-                                                Buy Now
+                                                {{ __('messages.buy_now') }}
                                             </button>
                                         @else
                                             <button type="button" disabled
                                                 class="flex-1 bg-gray-300 text-gray-500 px-8 py-4 rounded-xl font-semibold cursor-not-allowed flex items-center justify-center gap-2">
                                                 <i class="fas fa-times-circle"></i>
-                                                Out of Stock
+                                                {{ __('messages.out_of_stock') }}
                                             </button>
                                         @endif
                                     @else
                                         <button type="button"
-                                            onclick="showWarningToast('Please log in to purchase this item.')"
+                                            onclick="showWarningToast(' {{ __('messages.login_to_purchase') }}')"
                                             class="flex-1 bg-gray-900 text-white px-8 py-4 rounded-xl font-semibold hover:bg-gray-800 transition-all hover:scale-105 flex items-center justify-center gap-2">
                                             <i class="fas fa-sign-in-alt"></i>
-                                            Login to Purchase
+                                            {{ __('messages.login_to_purchase') }}
                                         </button>
                                     @endauth
                                 </div>
                             </form>
-
-
                         </div>
                     </div>
                     <!-- Tabs Navigation -->
@@ -456,18 +457,18 @@
                             <button onclick="switchTab('details')"
                                 class="tab-button py-3 font-medium text-gray-500 hover:text-gray-900 active"
                                 data-tab="details">
-                                <i class="fas fa-info-circle mr-2"></i>Product Details
+                                <i class="fas fa-info-circle mr-2"></i>{{ __('messages.product_details') }}
                             </button>
                             <button onclick="switchTab('reviews')"
                                 class="tab-button py-3 font-medium text-gray-500 hover:text-gray-900"
                                 data-tab="reviews">
                                 <i class="fas fa-star mr-2"></i>
-                                Reviews ({{ $product->review_count }})
+                                {{ __('messages.reviews') }} ({{ $product->review_count }})
                             </button>
                             <button onclick="switchTab('specifications')"
                                 class="tab-button py-3 font-medium text-gray-500 hover:text-gray-900"
                                 data-tab="specifications">
-                                <i class="fas fa-list-alt mr-2"></i>Specifications
+                                <i class="fas fa-list-alt mr-2"></i>{{ __('messages.specifications') }}
                             </button>
                         </nav>
                     </div>
@@ -480,7 +481,7 @@
                                 <div class="space-y-4">
                                     <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
                                         <i class="fas fa-file-alt"></i>
-                                        Product Description
+                                        {{ __('messages.product_description') }}
                                     </h3>
                                     <div class="text-gray-600 leading-relaxed whitespace-pre-line">
                                         {{ $product->description }}
@@ -489,7 +490,7 @@
                             @else
                                 <div class="text-center py-8">
                                     <i class="fas fa-file-alt text-4xl text-gray-300 mb-3"></i>
-                                    <p class="text-gray-500">No detailed description available.</p>
+                                    <p class="text-gray-500">{{ __('messages.no_description_available') }}</p>
                                 </div>
                             @endif
                         </div>
@@ -516,7 +517,7 @@
                                                 @endfor
                                             </div>
                                             <p class="text-gray-600">
-                                                Based on {{ $product->review_count }} reviews
+                                                {{ __('messages.based_on_reviews', ['count' => $product->review_count]) }}
                                             </p>
                                         </div>
 
@@ -561,7 +562,7 @@
                                 <!-- Review Submission -->
                                 <div>
                                     <h4 class="text-lg font-semibold text-gray-900 mb-4">
-                                        Write a Review
+                                        {{ __('messages.please_write_review') }}
                                     </h4>
 
                                     @auth
@@ -580,8 +581,9 @@
 
                                                 <!-- Star Rating -->
                                                 <div class="mb-6">
-                                                    <label class="block text-sm font-medium text-gray-900 mb-3">Your Rating
-                                                        *</label>
+                                                    <label
+                                                        class="block text-sm font-medium text-gray-900 mb-3">{{ __('messages.your_rating') }}
+                                                        <span class="text-red-500">*</span></label>
                                                     <div class="flex items-center space-x-1">
                                                         @for ($i = 1; $i <= 5; $i++)
                                                             <button type="button"
@@ -592,8 +594,7 @@
                                                         @endfor
                                                         <input type="hidden" name="rating" id="rating"
                                                             value="0" required>
-                                                        <span id="rating-text" class="ml-3 text-sm text-gray-600">Select
-                                                            stars</span>
+                                                        <span id="rating-text" class="ml-3 text-sm text-gray-600">{{ __('messages.select_stars') }}</span>
                                                     </div>
                                                     @error('rating')
                                                         <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
@@ -604,11 +605,11 @@
                                                 <div class="mb-4">
                                                     <label for="title"
                                                         class="block text-sm font-medium text-gray-900 mb-2">
-                                                        Review Title (Optional)
+                                                      {{ __('messages.review_title_placeholder') }} 
                                                     </label>
                                                     <input type="text" name="title" id="title"
                                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-                                                        placeholder="e.g., Amazing quality!">
+                                                        placeholder=" {{ __('messages.your_review') }}">
                                                     @error('title')
                                                         <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                                                     @enderror
@@ -618,7 +619,7 @@
                                                 <div class="mb-6">
                                                     <label for="comment"
                                                         class="block text-sm font-medium text-gray-900 mb-2">
-                                                        Your Review *
+                                                         {{ __('messages.your_review') }} <span class="text-red-500">*</span>
                                                     </label>
                                                     <textarea name="comment" id="comment" rows="4" required
                                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
@@ -632,26 +633,27 @@
                                                 <button type="submit"
                                                     class="bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-all flex items-center gap-2">
                                                     <i class="fas fa-paper-plane"></i>
-                                                    Submit Review
+                                                   {{ __('messages.submit_review') }}
                                                 </button>
                                             </form>
                                         @else
                                             <div class="bg-green-50 border border-green-200 rounded-xl p-6 text-center">
                                                 <i class="fas fa-check-circle text-green-500 text-3xl mb-3"></i>
-                                                <p class="text-green-800 font-medium">You've already reviewed this product!
+                                                <p class="text-green-800 font-medium"> {{ __('messages.already_reviewed') }}
                                                 </p>
-                                                <p class="text-green-600 text-sm mt-1">Thank you for your feedback.</p>
+                                                <p class="text-green-600 text-sm mt-1"> {{ __('messages.thank_you_for_feedback') }}</p>
                                             </div>
                                         @endif
                                     @else
                                         <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 text-center">
                                             <i class="fas fa-user-circle text-gray-400 text-3xl mb-3"></i>
-                                            <p class="text-gray-800 font-medium">Please login to leave a review</p>
-                                            <p class="text-gray-600 text-sm mt-1">You need to be logged in to rate
-                                                products.</p>
+                                            <p class="text-gray-800 font-medium">
+                                                {{ __('messages.please_login_to_review') }}</p>
+                                            <p class="text-gray-600 text-sm mt-1">
+                                                {{ __('messages.login_to_review_message') }}</p>
                                             <a href="{{ route('login') }}"
                                                 class="inline-block mt-3 text-gray-900 font-medium hover:text-gray-700">
-                                                Login to Review →
+                                                {{ __('messages.login_to_review') }}
                                             </a>
                                         </div>
                                     @endauth
@@ -661,7 +663,7 @@
                                 @if (isset($product->reviews) && $product->reviews->count() > 0)
                                     <div>
                                         <h4 class="text-lg font-semibold text-gray-900 mb-4">
-                                            Customer Reviews
+                                            {{ __('messages.customer_reviews') }}
                                         </h4>
 
                                         <div class="space-y-4">
@@ -714,7 +716,9 @@
                                                 <div class="text-center pt-4">
                                                     <button onclick="showAllReviews()"
                                                         class="text-gray-900 hover:text-gray-700 font-medium px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                                                        Load More Reviews ({{ $product->review_count - 5 }} more)
+                                                        {{ __('messages.load_more_reviews') }}
+                                                        ({{ $product->review_count - 5 }}
+                                                        {{ __('messages.more_items') }})
                                                     </button>
                                                 </div>
                                             @endif
@@ -723,7 +727,7 @@
                                 @else
                                     <div class="text-center py-8">
                                         <i class="fas fa-star text-4xl text-gray-300 mb-3"></i>
-                                        <p class="text-gray-500">No reviews yet. Be the first to review this product!
+                                        <p class="text-gray-500"> {{ __('messages.no_reviews_yet') }}
                                         </p>
                                     </div>
                                 @endif
@@ -737,7 +741,7 @@
                                 <div>
                                     <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                         <i class="fas fa-info-circle"></i>
-                                        Product Specifications
+                                        {{ __('messages.product_specifications') }}
                                     </h3>
 
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -764,10 +768,10 @@
                                         @endif
 
                                         @if ($product->sku)
-                                        <div>
-                                            <h4 class="text-sm font-medium text-gray-700 mb-1">SKU</h4>
-                                            <p class="text-gray-600 text-sm">{{ $product->sku }}</p>
-                                        </div>
+                                            <div>
+                                                <h4 class="text-sm font-medium text-gray-700 mb-1">SKU</h4>
+                                                <p class="text-gray-600 text-sm">{{ $product->sku }}</p>
+                                            </div>
                                         @endif
 
                                         @if ($product->category)
@@ -783,24 +787,25 @@
                                 <div>
                                     <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                         <i class="fas fa-chart-bar"></i>
-                                        Product Statistics
+                                        {{ __('messages.product_statistics') }}
                                     </h3>
 
                                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                         <div class="bg-gray-50 rounded-lg p-4 text-center">
                                             <div class="text-xl font-bold text-gray-900">{{ $product->view_count }}
                                             </div>
-                                            <div class="text-xs text-gray-600">Views</div>
+                                            <div class="text-xs text-gray-600"> {{ __('messages.views') }}</div>
                                         </div>
                                         <div class="bg-gray-50 rounded-lg p-4 text-center">
                                             <div class="text-xl font-bold text-gray-900">{{ $product->review_count }}
                                             </div>
-                                            <div class="text-xs text-gray-600">Reviews</div>
+                                            <div class="text-xs text-gray-600"> {{ __('messages.reviews') }}</div>
                                         </div>
                                         <div class="bg-gray-50 rounded-lg p-4 text-center">
                                             <div class="text-xl font-bold text-gray-900">
                                                 {{ $product->is_featured ? 'Yes' : 'No' }}</div>
-                                            <div class="text-xs text-gray-600">Featured Product</div>
+                                            <div class="text-xs text-gray-600"> {{ __('messages.featured_product') }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -812,8 +817,8 @@
                 <!-- New Arrivals Grid -->
                 <div class="mb-8">
                     <div class="flex items-center justify-between mb-8">
-                        <h2 class="text-3xl font-bold text-gray-900">New Arrivals</h2>
-                        <p class="text-gray-500">{{ count($arrivals) }} items</p>
+                        <h2 class="text-3xl font-bold text-gray-900">{{ __('messages.new_arrivals') }}</h2>
+                        <p class="text-gray-500">{{ count($arrivals) }} {{ __('messages.items') }}</p>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -873,7 +878,8 @@
 
                                     <!-- Info -->
                                     <div class="p-4">
-                                        <h3 class="font-semibold text-gray-900 mb-1 line-clamp-1">{{ $arrival->name }}
+                                        <h3 class="font-semibold text-gray-900 mb-1 line-clamp-1">
+                                            {{ $arrival->name }}
                                         </h3>
                                         <p class="text-gray-500 text-sm line-clamp-2">
                                             {{ $arrival->short_description ?? $arrival->description }}</p>
@@ -914,7 +920,7 @@
             @if (isset($relatedProducts) && $relatedProducts->count() > 0)
                 <div class="mt-16">
                     <div class="flex items-center justify-between mb-8">
-                        <h2 class="text-3xl font-bold text-gray-900">You May Also Like</h2>
+                        <h2 class="text-3xl font-bold text-gray-900">{{ __('messages.you_may_also_like') }}</h2>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -945,7 +951,8 @@
                                     </div>
 
                                     <div class="p-4">
-                                        <h3 class="font-semibold text-gray-900 mb-2 line-clamp-1">{{ $related->name }}
+                                        <h3 class="font-semibold text-gray-900 mb-2 line-clamp-1">
+                                            {{ $related->name }}
                                         </h3>
                                         <div class="flex items-center justify-between">
                                             @php
@@ -993,7 +1000,7 @@
     <div id="sizeGuideModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-bold text-gray-900">Size Guide</h3>
+                <h3 class="text-2xl font-bold text-gray-900">{{ __('messages.size_guide') }}</h3>
                 <button onclick="closeSizeGuide()" class="text-gray-400 hover:text-gray-900">
                     <i class="fas fa-times text-xl"></i>
                 </button>
@@ -1003,11 +1010,11 @@
                 <table class="w-full text-sm text-left text-gray-600">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3">Size</th>
-                            <th class="px-6 py-3">Chest (in)</th>
-                            <th class="px-6 py-3">Waist (in)</th>
-                            <th class="px-6 py-3">Hip (in)</th>
-                            <th class="px-6 py-3">Fit</th>
+                            <th class="px-6 py-3">{{ __('messages.size') }}</th>
+                            <th class="px-6 py-3">{{ __('messages.chest') }} (in)</th>
+                            <th class="px-6 py-3">{{ __('messages.waist') }} (in)</th>
+                            <th class="px-6 py-3">{{ __('messages.hip') }} (in)</th>
+                            <th class="px-6 py-3">{{ __('messages.fit') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1016,46 +1023,46 @@
                             <td class="px-6 py-4">32-34</td>
                             <td class="px-6 py-4">26-28</td>
                             <td class="px-6 py-4">34-36</td>
-                            <td class="px-6 py-4">Slim</td>
+                            <td class="px-6 py-4">{{ __('messages.slim') }}</td>
                         </tr>
                         <tr class="bg-white border-b">
                             <td class="px-6 py-4 font-medium">S</td>
                             <td class="px-6 py-4">35-37</td>
                             <td class="px-6 py-4">29-31</td>
                             <td class="px-6 py-4">37-39</td>
-                            <td class="px-6 py-4">Regular</td>
+                            <td class="px-6 py-4">{{ __('messages.regular') }}</td>
                         </tr>
                         <tr class="bg-white border-b">
                             <td class="px-6 py-4 font-medium">M</td>
                             <td class="px-6 py-4">38-40</td>
                             <td class="px-6 py-4">32-34</td>
                             <td class="px-6 py-4">40-42</td>
-                            <td class="px-6 py-4">Regular</td>
+                            <td class="px-6 py-4">{{ __('messages.regular') }}</td>
                         </tr>
                         <tr class="bg-white border-b">
                             <td class="px-6 py-4 font-medium">L</td>
                             <td class="px-6 py-4">41-43</td>
                             <td class="px-6 py-4">35-37</td>
                             <td class="px-6 py-4">43-45</td>
-                            <td class="px-6 py-4">Regular</td>
+                            <td class="px-6 py-4">{{ __('messages.regular') }}</td>
                         </tr>
                         <tr class="bg-white">
                             <td class="px-6 py-4 font-medium">XL</td>
                             <td class="px-6 py-4">44-46</td>
                             <td class="px-6 py-4">38-40</td>
                             <td class="px-6 py-4">46-48</td>
-                            <td class="px-6 py-4">Loose</td>
+                            <td class="px-6 py-4">{{ __('messages.loose') }}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
             <div class="mt-6 p-4 bg-blue-50 rounded-lg">
-                <h4 class="font-medium text-gray-900 mb-2">How to measure:</h4>
+                <h4 class="font-medium text-gray-900 mb-2">{{ __('messages.how_to_measure') }}</h4>
                 <ul class="text-sm text-gray-600 space-y-1">
-                    <li><strong>Chest:</strong> Measure around the fullest part of your chest</li>
-                    <li><strong>Waist:</strong> Measure around your natural waistline</li>
-                    <li><strong>Hip:</strong> Measure around the fullest part of your hips</li>
+                    <li><strong>{{ __('messages.chest') }}:</strong> {{ __('messages.chest_measurement') }}</li>
+                    <li><strong>{{ __('messages.waist') }}:</strong> {{ __('messages.waist_measurement') }}</li>
+                    <li><strong>{{ __('messages.hip') }}:</strong> {{ __('messages.hip_measurement') }}</li>
                 </ul>
             </div>
         </div>
@@ -1103,7 +1110,14 @@
 
             // Update rating text
             const ratingText = document.getElementById('rating-text');
-            const texts = ['Select stars', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+            const texts = [
+                '{{ __('messages.select_stars') }}',
+                '{{ __('messages.poor') }}',
+                '{{ __('messages.fair') }}',
+                '{{ __('messages.good') }}',
+                '{{ __('messages.very_good') }}',
+                '{{ __('messages.excellent') }}'
+            ];
             ratingText.textContent = texts[rating];
         }
 
@@ -1111,14 +1125,14 @@
         document.getElementById('reviewForm')?.addEventListener('submit', function(e) {
             if (selectedRating === 0) {
                 e.preventDefault();
-                showWarningToast('Please select a rating by clicking the stars.');
+                showWarningToast('{{ __('messages.please_select_rating') }}');
                 return false;
             }
 
             const comment = document.getElementById('comment').value.trim();
             if (!comment) {
                 e.preventDefault();
-                showWarningToast('Please write a review comment.');
+                showWarningToast('{{ __('messages.please_write_review') }}');
                 return false;
             }
 
@@ -1182,11 +1196,12 @@
                 if (filteredVariants.length === 0) {
                     sizeContainer.innerHTML =
                         '<div class="col-span-4 text-center py-8">' +
-                        '<p class="text-gray-500">No sizes available for this color</p>' +
+                        '<p class="text-gray-500">{{ __('messages.no_sizes_available') }}</p>' +
                         '</div>';
                     // Reset price and stock display
-                    priceLabel.textContent = 'Select Size';
-                    stockLabel.innerHTML = '<i class="fas fa-info-circle"></i> Please select a size to see stock';
+                    priceLabel.textContent = '{{ __('messages.select_size') }}';
+                    stockLabel.innerHTML =
+                        '<i class="fas fa-info-circle"></i> {{ __('messages.select_size_to_see_stock') }}';
                     stockLabel.className =
                         'text-sm font-medium text-gray-600 bg-gray-50 px-3 py-2 rounded-lg inline-flex items-center gap-2';
                     maxStockLabel.textContent = '';
@@ -1205,34 +1220,35 @@
                     const isOutOfStock = variant.stock <= 0;
 
                     sizesHTML += `
-                <label class="relative">
-                    <input type="radio" name="variant_id" value="${variant.id}"
-                        data-price="${price}"
-                        data-stock="${variant.stock}"
-                        data-size="${variant.size}"
-                        data-weight="${variant.weight || ''}"
-                        data-dimensions="${variant.dimensions || ''}"
-                        class="hidden variant-radio"
-                        ${isChecked ? 'checked' : ''}
-                        ${isOutOfStock ? 'disabled' : ''}>
-                    <div class="variant-option border-2 rounded-lg p-3 text-center cursor-pointer transition-all hover:border-gray-900 hover:bg-gray-50
-                        ${isOutOfStock ? 'border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed' : 
-                          'border-gray-200 hover:border-gray-900 hover:bg-gray-50'}
-                        ${isChecked ? (isOutOfStock ? '' : 'border-gray-900 bg-gray-900 text-white hover:bg-gray-900') : ''}">
-                        <span class="font-medium block">${variant.size}</span>
-                        ${variant.sale_price ? 
-                            `<div class="text-xs font-bold mt-1 ${isChecked ? 'text-red-300' : 'text-red-500'}">
-                                                        SAVE $${discount.toFixed(2)}
-                                                    </div>` : ''}
-                        ${isLowStock && !isOutOfStock ? 
-                            `<div class="text-xs ${isChecked ? 'text-yellow-300' : 'text-yellow-600'} mt-1">
-                                                      ` : ''}
-                        ${isOutOfStock ? 
-                            `<div class="text-xs text-gray-400 mt-1">
-                                                        <i class="fas fa-times-circle"></i> Out of Stock
-                                                    </div>` : ''}
-                    </div>
-                </label>
+            <label class="relative">
+                <input type="radio" name="variant_id" value="${variant.id}"
+                    data-price="${price}"
+                    data-stock="${variant.stock}"
+                    data-size="${variant.size}"
+                    data-weight="${variant.weight || ''}"
+                    data-dimensions="${variant.dimensions || ''}"
+                    class="hidden variant-radio"
+                    ${isChecked ? 'checked' : ''}
+                    ${isOutOfStock ? 'disabled' : ''}>
+                <div class="variant-option border-2 rounded-lg p-3 text-center cursor-pointer transition-all hover:border-gray-900 hover:bg-gray-50
+                    ${isOutOfStock ? 'border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed' : 
+                      'border-gray-200 hover:border-gray-900 hover:bg-gray-50'}
+                    ${isChecked ? (isOutOfStock ? '' : 'border-gray-900 bg-gray-900 text-white hover:bg-gray-900') : ''}">
+                    <span class="font-medium block">${variant.size}</span>
+                    ${variant.sale_price ? 
+                        `<div class="text-xs font-bold mt-1 ${isChecked ? 'text-red-300' : 'text-red-500'}">
+                                        ${'{{ __('messages.save_amount') }}'.replace(':amount', discount.toFixed(2))}
+                                    </div>` : ''}
+                    ${isLowStock && !isOutOfStock ? 
+                        `<div class="text-xs ${isChecked ? 'text-yellow-300' : 'text-yellow-600'} mt-1">
+                                        <i class="fas fa-exclamation-circle"></i> ${variant.stock} {{ __('messages.items_in_stock') }}
+                                    </div>` : ''}
+                    ${isOutOfStock ? 
+                        `<div class="text-xs text-gray-400 mt-1">
+                                        <i class="fas fa-times-circle"></i> {{ __('messages.out_of_stock') }}
+                                    </div>` : ''}
+                </div>
+            </label>
             `;
                 });
 
@@ -1264,7 +1280,7 @@
 
                 if (stock) {
                     stockLabel.innerHTML =
-                        `<i class="fas fa-${stock <= 10 ? 'exclamation-triangle' : (stock <= 0 ? 'times-circle' : 'check-circle')}"></i> ${stock} items in stock`;
+                        `<i class="fas fa-${stock <= 10 ? 'exclamation-triangle' : (stock <= 0 ? 'times-circle' : 'check-circle')}"></i> ${stock} {{ __('messages.items_in_stock') }}`;
                     if (stock <= 10) {
                         stockLabel.className =
                             'text-sm font-medium text-yellow-600 bg-yellow-50 px-3 py-2 rounded-lg inline-flex items-center gap-2';
@@ -1277,7 +1293,7 @@
                     }
 
                     // Update max stock label
-                    maxStockLabel.textContent = `Max: ${stock}`;
+                    maxStockLabel.textContent = `{{ __('messages.max') }}: ${stock}`;
                 }
 
                 // Update quantity max
@@ -1301,7 +1317,7 @@
                     } else if (parseInt(parentRadio.dataset.stock) <= 10) {
                         opt.classList.add('text-gray-900');
                     } else {
-                        opt.classList.add('border-gray-200', 'text-gray-900','hover:text-gray-900');
+                        opt.classList.add('border-gray-200', 'text-gray-900', 'hover:text-gray-900');
                     }
                 });
 
@@ -1356,13 +1372,13 @@
 
                 if (!selectedVariant) {
                     e.preventDefault();
-                    showWarningToast('Please select a size.');
+                    showWarningToast('{{ __('messages.please_select_size') }}');
                     return false;
                 }
 
                 if (selectedVariant.disabled) {
                     e.preventDefault();
-                    showWarningToast('This size is out of stock.');
+                    showWarningToast('{{ __('messages.size_out_of_stock') }}');
                     return false;
                 }
 
@@ -1389,7 +1405,7 @@
             if (current < maxStock) {
                 quantityInput.value = current + 1;
             } else {
-                showWarningToast(`Maximum ${maxStock} items available.`);
+                showWarningToast(`{{ __('messages.maximum_items') }}`.replace(':count', maxStock));
             }
         }
 
@@ -1432,7 +1448,7 @@
             if (navigator.share) {
                 navigator.share({
                         title: '{{ $product->name }}',
-                        text: 'Check out this product!',
+                        text: '{{ __('messages.check_out_this_product') }}',
                         url: window.location.href,
                     })
                     .then(() => console.log('Successful share'))
@@ -1440,15 +1456,15 @@
             } else {
                 // Fallback for browsers that don't support Web Share API
                 navigator.clipboard.writeText(window.location.href)
-                    .then(() => showSuccessToast('Link copied to clipboard!'))
-                    .catch(err => showWarningToast('Failed to copy link: ' + err));
+                    .then(() => showSuccessToast('{{ __('messages.link_copied') }}'))
+                    .catch(err => showWarningToast('{{ __('messages.failed_to_copy') }}'));
             }
         }
 
         // Show all reviews
         function showAllReviews() {
             // Implement your logic to show all reviews
-            alert('This would show all reviews. Implement pagination or modal as needed.');
+            alert('{{ __('messages.this_would_show_all_reviews') }}');
         }
 
         // Toast Functions
@@ -1475,14 +1491,14 @@
             const urlParams = new URLSearchParams(window.location.search);
 
             if (urlParams.get('added') === 'true') {
-                showSuccessToast("Product added to cart successfully!");
+                showSuccessToast("{{ __('messages.product_added_to_cart') }}");
                 // Clean URL without reloading page
                 const cleanUrl = window.location.pathname;
                 window.history.replaceState({}, document.title, cleanUrl);
             }
 
             @if (session('status') === 'added_to_cart')
-                showSuccessToast("Product added to cart successfully!");
+                showSuccessToast("{{ __('messages.product_added_to_cart') }}");
             @endif
 
             @if ($errors->any())
