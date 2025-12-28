@@ -1,4 +1,4 @@
-<nav class="navbar fixed top-0 left-0 right-0 z-50 transition-all duration-300 transform"
+<nav class="navbar fixed top-0 left-0 right-0 z-50 transition-all duration-500 transform -translate-y-full"
     id="mainNavbar">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
@@ -15,8 +15,10 @@
                     $menCategories = $categories->where('gender', 'men')->sortBy('sort_order');
                 @endphp
                 @if ($menCategories->count() > 0)
-                    <div class="relative group" id="menCategory" x-data="{ open: false }" @mouseenter="open = true"
-                        @mouseleave="open = false">
+                    <div class="relative group" id="menCategory" x-data="{ open: false }" 
+                         @mouseenter="open = true" 
+                         @mouseleave="open = false"
+                         @keydown.escape="open = false">
                         <a href="{{ url('men') }}"
                             class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10 {{ request()->is('men') || request()->is('men/*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">
                             {{ __('messages.men') }}
@@ -24,14 +26,16 @@
                         <!-- Mega Dropdown with invisible spacer -->
                         <div class="absolute left-0 w-full h-4" style="top: 100%;"></div>
                         <!-- Mega Dropdown -->
-                        <div x-show="open" x-transition:enter="transition ease-out duration-200"
-                            x-transition:enter-start="opacity-0 translate-y-1"
-                            x-transition:enter-end="opacity-100 translate-y-0"
-                            x-transition:leave="transition ease-in duration-150"
-                            x-transition:leave-start="opacity-100 translate-y-0"
-                            x-transition:leave-end="opacity-0 translate-y-1"
-                            class="absolute left-0 mt-4 w-screen max-w-6xl bg-white shadow-lg rounded-lg z-50 border border-gray-100"
-                            style="left: 50%; transform: translateX(-40%);">
+                        <div x-show="open" 
+                             x-cloak
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 translate-y-1"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave-start="opacity-100 translate-y-0"
+                             x-transition:leave-end="opacity-0 translate-y-1"
+                             class="absolute left-0 mt-4 w-screen max-w-6xl bg-white shadow-lg rounded-lg z-50 border border-gray-100 ml-48"
+                             style="left: 50%; transform: translateX(-50%);">
                             <div class="px-8 py-6 grid grid-cols-3 gap-8">
                                 <!-- Clothing Section -->
                                 <div>
@@ -122,8 +126,10 @@
                     $womenCategories = $categories->where('gender', 'women')->sortBy('sort_order');
                 @endphp
                 @if ($womenCategories->count() > 0)
-                    <div class="relative group" id="womenCategory" x-data="{ open: false }" @mouseenter="open = true"
-                        @mouseleave="open = false">
+                    <div class="relative group" id="womenCategory" x-data="{ open: false }" 
+                         @mouseenter="open = true" 
+                         @mouseleave="open = false"
+                         @keydown.escape="open = false">
                         <a href="{{ url('women') }}"
                             class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10 {{ request()->is('women') || request()->is('women/*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">
                             {{ __('messages.women') }}
@@ -131,14 +137,16 @@
                         <!-- Invisible spacer to bridge the gap -->
                         <div class="absolute left-0 w-full h-4" style="top: 100%;"></div>
                         <!-- Mega Dropdown -->
-                        <div x-show="open" x-transition:enter="transition ease-out duration-200"
-                            x-transition:enter-start="opacity-0 translate-y-1"
-                            x-transition:enter-end="opacity-100 translate-y-0"
-                            x-transition:leave="transition ease-in duration-150"
-                            x-transition:leave-start="opacity-100 translate-y-0"
-                            x-transition:leave-end="opacity-0 translate-y-1"
-                            class="absolute left-0 mt-4 w-screen max-w-6xl bg-white shadow-lg rounded-lg z-50 border border-gray-100"
-                            style="left: 50%; transform: translateX(-40%);">
+                        <div x-show="open" 
+                             x-cloak
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 translate-y-1"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave-start="opacity-100 translate-y-0"
+                             x-transition:leave-end="opacity-0 translate-y-1"
+                             class="absolute left-0 mt-4 w-screen max-w-6xl bg-white shadow-lg rounded-lg z-50 border border-gray-100 ml-36"
+                             style="left: 50%; transform: translateX(-50%);">
                             <div class="px-8 py-6 grid grid-cols-3 gap-8">
                                 <!-- Clothing Section -->
                                 <div>
@@ -229,8 +237,10 @@
                     $kidsCategories = $categories->where('gender', 'unisex')->sortBy('sort_order');
                 @endphp
                 @if ($kidsCategories->count() > 0)
-                    <div class="relative group" id="kidsCategory" x-data="{ open: false }" @mouseenter="open = true"
-                        @mouseleave="open = false">
+                    <div class="relative group" id="kidsCategory" x-data="{ open: false }" 
+                         @mouseenter="open = true" 
+                         @mouseleave="open = false"
+                         @keydown.escape="open = false">
                         <a href="{{ url('kids') }}"
                             class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10 {{ request()->is('kids') || request()->is('kids/*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">
                             {{ __('messages.kids') }}
@@ -238,14 +248,16 @@
                         <!-- Invisible spacer to bridge the gap -->
                         <div class="absolute left-0 w-full h-4" style="top: 100%;"></div>
                         <!-- Mega Dropdown -->
-                        <div x-show="open" x-transition:enter="transition ease-out duration-200"
-                            x-transition:enter-start="opacity-0 translate-y-1"
-                            x-transition:enter-end="opacity-100 translate-y-0"
-                            x-transition:leave="transition ease-in duration-150"
-                            x-transition:leave-start="opacity-100 translate-y-0"
-                            x-transition:leave-end="opacity-0 translate-y-1"
-                            class="absolute left-0 mt-4 w-screen max-w-6xl bg-white shadow-lg rounded-lg z-50 border border-gray-100"
-                            style="left: 50%; transform: translateX(-40%);">
+                        <div x-show="open" 
+                             x-cloak
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 translate-y-1"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave-start="opacity-100 translate-y-0"
+                             x-transition:leave-end="opacity-0 translate-y-1"
+                             class="absolute left-0 mt-4 w-screen max-w-6xl bg-white shadow-lg rounded-lg z-50 border border-gray-100  ml-36"
+                             style="left: 50%; transform: translateX(-50%);">
                             <div class="px-8 py-6 grid grid-cols-3 gap-8">
                                 <!-- Boys Section -->
                                 <div>
@@ -711,159 +723,22 @@
 <script src="//unpkg.com/alpinejs" defer></script>
 
 <style>
-    /* Smooth navbar transitions */
-    #mainNavbar {
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                    background-color 0.3s ease,
-                    box-shadow 0.3s ease,
-                    border-color 0.3s ease;
-    }
-    
-    /* Prevent FOUC for Alpine.js dropdowns */
+    /* Fix for FOUC (Flash of Unstyled Content) - keeps dropdowns hidden until Alpine loads */
     [x-cloak] {
         display: none !important;
     }
     
-    /* Ensure dropdowns are properly positioned */
-    .relative.group .absolute[x-show] {
-        transform-origin: top center;
-    }
-    
-    /* Fix for dropdown positioning */
+    /* Fix dropdown positioning */
     .relative.group .absolute {
         left: 50% !important;
         transform: translateX(-50%) !important;
     }
     
-    /* Dropdown animations */
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    @keyframes slideDown {
-        from { opacity: 0; transform: translateY(-20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .animate-fadeIn {
-        animation: fadeIn 0.2s ease-out;
-    }
-    
-    .animate-slideDown {
-        animation: slideDown 0.3s ease-out;
-    }
-    
-    /* Active link indicator for main nav */
-    .nav-link.text-gray-900.font-semibold {
-        position: relative;
-    }
-    
-    /* Make dropdown items more clickable */
-    .relative.group ul li a {
-        display: block;
-        padding: 0.25rem 0.5rem;
-        margin: 0 -0.5rem;
-        border-radius: 0.25rem;
-    }
-    
-    .relative.group ul li a:hover {
-        background-color: rgba(0, 0, 0, 0.05);
-    }
-    
-    /* Ensure dropdown stays open when hovering over it */
-    .relative.group:hover > div[x-show] {
-        display: block !important;
-    }
-    
-    /* Search modal animations */
-    #searchModal {
-        backdrop-filter: blur(4px);
-    }
-    
-    #searchModalContent {
-        transform-origin: center;
-    }
-    
-    /* Line clamp utility */
-    .line-clamp-1 {
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-    
-    .line-clamp-2 {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-    
-    /* Responsive improvements */
-    @media (max-width: 768px) {
-        #mobileMenu {
-            position: absolute;
-            left: 0;
-            right: 0;
-            background: white;
-            z-index: 40;
-        }
-        
-        .navbar {
-            background: white !important;
-        }
-        
-        #searchModalContent {
-            max-height: 90vh;
-        }
-        
-        #searchResults {
-            grid-template-columns: 1fr;
-        }
-    }
-    
-    /* Custom scrollbar */
-    #searchResults {
-        scrollbar-width: thin;
-        scrollbar-color: #cbd5e0 #f7fafc;
-    }
-    
-    #searchResults::-webkit-scrollbar {
-        width: 6px;
-    }
-    
-    #searchResults::-webkit-scrollbar-track {
-        background: #f7fafc;
-        border-radius: 3px;
-    }
-    
-    #searchResults::-webkit-scrollbar-thumb {
-        background: #cbd5e0;
-        border-radius: 3px;
-    }
-    
-    #searchResults::-webkit-scrollbar-thumb:hover {
-        background: #a0aec0;
-    }
-    
-    /* Make search results more compact */
-    #searchResults {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        max-height: 400px;
-        overflow-y: auto;
-    }
-    
-    /* Compact product card hover effects */
-    #searchResults .group:hover {
-        background-color: #f9fafb;
-    }
-    
-    /* Ensure text doesn't overflow */
-    #searchResults .line-clamp-2 {
-        line-height: 1.3;
+    /* Ensure smooth transitions */
+    .navbar {
+        will-change: transform;
+        backface-visibility: hidden;
+        -webkit-font-smoothing: antialiased;
     }
 </style>
 
@@ -1423,104 +1298,69 @@
             }, 3000);
         }
 
-        // FIXED: Enhanced Navbar scroll effect - no initial hiding
+        // FIXED: Enhanced Navbar scroll effect - WITH CLOSE DROPDOWNS BEFORE NAVIGATION
         const navbar = document.getElementById('mainNavbar');
         let lastScrollY = window.scrollY;
-        let scrollTimeout;
-        let isNavbarVisible = true;
-        const excludedPages = ['/orders', '/admin', '/products', '/product', '/cart', '/checkout', '/thank-you', '/profile'];
+        const excludedPages = ['/orders', '/admin', '/products', '/product', '/cart', '/checkout', '/thank-you',
+            '/profile'
+        ];
 
         function updateNavbarOnScroll() {
             const currentPath = window.location.pathname;
             const isExcludedPage = excludedPages.some(page => currentPath.includes(page));
 
-            // Clear previous timeout
-            clearTimeout(scrollTimeout);
-
-            // Set new timeout for debounced scroll
-            scrollTimeout = setTimeout(() => {
-                const currentScrollY = window.scrollY;
-                const scrollDelta = currentScrollY - lastScrollY;
-                
-                // For excluded pages, always show navbar
-                if (isExcludedPage) {
-                    navbar.style.transform = 'translateY(0)';
-                    updateNavbarStyle(currentScrollY);
-                    return;
+            if (isExcludedPage) {
+                navbar.style.transform = 'translateY(0)';
+                if (window.scrollY > 20) {
+                    navbar.classList.remove('bg-white/95', 'backdrop-blur-sm');
+                    navbar.classList.add('bg-white', 'shadow-md', 'border-b', 'border-gray-100');
+                } else {
+                    navbar.classList.remove('bg-white', 'shadow-md', 'border-b', 'border-gray-100');
+                    navbar.classList.add('bg-white/95', 'backdrop-blur-sm');
                 }
+                return;
+            }
 
-                // At top of page, always show
-                if (currentScrollY <= 10) {
-                    navbar.style.transform = 'translateY(0)';
-                    isNavbarVisible = true;
+            if (window.scrollY > 100) {
+                navbar.style.transform = 'translateY(0)';
+                if (window.scrollY > 50) {
+                    navbar.classList.remove('bg-white/95', 'backdrop-blur-sm');
+                    navbar.classList.add('bg-white', 'shadow-sm', 'border-b', 'border-gray-100');
+                } else {
+                    navbar.classList.remove('bg-white', 'shadow-sm', 'border-b', 'border-gray-100');
+                    navbar.classList.add('bg-white/95', 'backdrop-blur-sm');
                 }
-                // Scrolling down
-                else if (scrollDelta > 5 && currentScrollY > 100) {
-                    // Check if any dropdown is open
-                    let anyDropdownOpen = false;
-                    document.querySelectorAll('[x-data]').forEach(el => {
-                        if (el.__x && el.__x.$data && el.__x.$data.open) {
-                            anyDropdownOpen = true;
-                        }
-                    });
-                    
-                    // Only hide if no dropdowns are open
-                    if (!anyDropdownOpen && isNavbarVisible) {
-                        navbar.style.transform = 'translateY(-100%)';
-                        isNavbarVisible = false;
-                    }
-                }
-                // Scrolling up
-                else if (scrollDelta < -5) {
-                    navbar.style.transform = 'translateY(0)';
-                    isNavbarVisible = true;
-                }
-
-                // Update navbar style
-                updateNavbarStyle(currentScrollY);
-                
-                lastScrollY = currentScrollY;
-            }, 100);
-        }
-
-        function updateNavbarStyle(scrollY) {
-            if (scrollY > 20) {
-                navbar.classList.remove('bg-white/95', 'backdrop-blur-sm');
-                navbar.classList.add('bg-white', 'shadow-sm', 'border-b', 'border-gray-100');
             } else {
+                navbar.style.transform = 'translateY(-100%)';
                 navbar.classList.remove('bg-white', 'shadow-sm', 'border-b', 'border-gray-100');
                 navbar.classList.add('bg-white/95', 'backdrop-blur-sm');
             }
+
+            lastScrollY = window.scrollY;
         }
 
-        // Initial style based on current scroll position
-        updateNavbarStyle(window.scrollY);
-        
-        // Set navbar to visible initially
-        navbar.style.transform = 'translateY(0)';
+        // Initial check
+        updateNavbarOnScroll();
 
-        // Listen for scroll events
-        window.addEventListener('scroll', updateNavbarOnScroll, { passive: true });
-
-        // Keep navbar visible when hovering over it
-        navbar.addEventListener('mouseenter', function() {
-            navbar.style.transform = 'translateY(0)';
-            isNavbarVisible = true;
+        // Enhanced scroll event listener
+        let ticking = false;
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                window.requestAnimationFrame(function() {
+                    updateNavbarOnScroll();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, {
+            passive: true
         });
 
-        // Keep navbar visible when hovering over dropdowns
-        document.querySelectorAll('[x-data]').forEach(el => {
-            el.addEventListener('mouseenter', function() {
-                navbar.style.transform = 'translateY(0)';
-                isNavbarVisible = true;
-            });
-        });
-
-        // Close dropdowns before page navigation to prevent flicker
+        // FIX: Close all dropdowns before page navigation to prevent flickering
         document.querySelectorAll('a[href]').forEach(link => {
             link.addEventListener('click', function(e) {
                 if (this.getAttribute('href').startsWith('/') && !this.getAttribute('href').startsWith('#')) {
-                    // Close all mega dropdowns immediately
+                    // Close all mega dropdowns
                     document.querySelectorAll('[x-data]').forEach(el => {
                         if (el.__x && el.__x.$data && el.__x.$data.open !== undefined) {
                             el.__x.$data.open = false;
@@ -1528,12 +1368,11 @@
                     });
                     
                     // Close user dropdown
-                    const userDropdowns = document.querySelectorAll('[x-data*="userDropdownOpen"]');
-                    userDropdowns.forEach(el => {
-                        if (el.__x && el.__x.$data && el.__x.$data.userDropdownOpen !== undefined) {
-                            el.__x.$data.userDropdownOpen = false;
-                        }
-                    });
+                    const userDropdown = document.getElementById('userDropdown');
+                    if (userDropdown && !userDropdown.classList.contains('hidden')) {
+                        userDropdown.classList.add('hidden');
+                        userDropdown.classList.remove('animate-fadeIn');
+                    }
                     
                     // Close mobile menu
                     const mobileMenu = document.getElementById('mobileMenu');
@@ -1545,21 +1384,181 @@
             });
         });
 
-        // Prevent Alpine.js from interfering with page navigation
-        document.addEventListener('alpine:init', () => {
-            // Watch for dropdown state changes
-            Alpine.data('dropdown', () => ({
-                open: false,
-                init() {
-                    // When dropdown opens, ensure navbar is visible
-                    this.$watch('open', (value) => {
-                        if (value) {
-                            navbar.style.transform = 'translateY(0)';
-                            isNavbarVisible = true;
-                        }
-                    });
+        // Add CSS for animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes slideDown {
+                from { opacity: 0; transform: translateY(-20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .animate-fadeIn {
+                animation: fadeIn 0.2s ease-out;
+            }
+            .animate-slideDown {
+                animation: slideDown 0.3s ease-out;
+            }
+            
+            /* Active link indicator for main nav */
+            .nav-link.text-gray-900.font-semibold {
+                position: relative;
+            }
+            
+            /* Improved dropdown styles */
+            .relative.group > .absolute {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            /* Make dropdown items more clickable */
+            .relative.group ul li a {
+                display: block;
+                padding: 0.25rem 0.5rem;
+                margin: 0 -0.5rem;
+                border-radius: 0.25rem;
+            }
+            
+            .relative.group ul li a:hover {
+                background-color: rgba(0, 0, 0, 0.05);
+            }
+            
+            /* Ensure dropdown stays open when hovering over it */
+            .relative.group:hover > div[x-show] {
+                display: block !important;
+            }
+            
+            /* Search modal animations */
+            #searchModal {
+                backdrop-filter: blur(4px);
+            }
+            
+            #searchModalContent {
+                transform-origin: center;
+            }
+            
+            /* Line clamp utility */
+            .line-clamp-1 {
+                display: -webkit-box;
+                -webkit-line-clamp: 1;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+            
+            .line-clamp-2 {
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+            
+            /* Aspect ratio */
+            .aspect-square {
+                aspect-ratio: 1 / 1;
+            }
+            
+            /* Responsive improvements */
+            @media (max-width: 768px) {
+                #mobileMenu {
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    background: white;
+                    z-index: 40;
                 }
-            }));
-        });
+                
+                .navbar {
+                    background: white !important;
+                }
+                
+                #searchModalContent {
+                    max-height: 90vh;
+                }
+                
+                #searchResults {
+                    grid-template-columns: 1fr;
+                }
+            }
+            
+            /* Smooth transitions */
+            .transition-all {
+                transition-property: all;
+                transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            
+            /* Custom scrollbar */
+            #searchResults {
+                scrollbar-width: thin;
+                scrollbar-color: #cbd5e0 #f7fafc;
+            }
+            
+            #searchResults::-webkit-scrollbar {
+                width: 6px;
+            }
+            
+            #searchResults::-webkit-scrollbar-track {
+                background: #f7fafc;
+                border-radius: 3px;
+            }
+            
+            #searchResults::-webkit-scrollbar-thumb {
+                background: #cbd5e0;
+                border-radius: 3px;
+            }
+            
+            #searchResults::-webkit-scrollbar-thumb:hover {
+                background: #a0aec0;
+            }
+                /* Make search results more compact */
+            #searchResults {
+                display: flex;
+                flex-direction: column;
+                gap: 8px; /* Smaller gap between items */
+                max-height: 400px; /* Limit height */
+                overflow-y: auto;
+            }
+
+            /* Compact product card hover effects */
+            #searchResults .group:hover {
+                background-color: #f9fafb;
+            }
+
+            /* Ensure text doesn't overflow */
+            #searchResults .line-clamp-2 {
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                line-height: 1.3;
+            }
+
+            /* Smaller image container */
+            #searchResults .w-20 {
+                width: 80px;
+            }
+            #searchResults .h-20 {
+                height: 80px;
+            }
+
+            /* Adjust modal container height */
+            #searchModalContent {
+                max-height: 85vh;
+            }
+
+            /* Make the results section scrollable */
+            #searchResultsContainer {
+                display: flex;
+                flex-direction: column;
+                min-height: 0;
+            }
+
+            #searchResults {
+                flex: 1;
+                overflow-y: auto;
+            }
+        `;
+        document.head.appendChild(style);
     });
 </script>

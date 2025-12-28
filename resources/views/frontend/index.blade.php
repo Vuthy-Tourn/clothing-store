@@ -214,6 +214,7 @@
     <br>
 
     <!-- New Arrivals -->
+    @if ($arrivals && $arrivals->count() > 0)
     <section class="new-arrivals" data-aos="fade-left" id="NewArrivals">
         <h2 style="font-weight: 900;">{{ __('messages.new_arrivals_title') }}</h2>
 
@@ -233,6 +234,7 @@
             <button class="carousel-btn next" id="new-arrivals-next">&#10095;</button>
         </div>
     </section>
+    @endif
 
     <!-- About Brand -->
     <section class="about-brand" data-aos="fade-right">

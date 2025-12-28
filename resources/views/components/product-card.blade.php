@@ -19,35 +19,33 @@
     $isOnSale = $minSalePrice && $minSalePrice < $minPrice;
     $bestDiscount = $product->best_discount ?? 0;
     $discountPercent = $isOnSale ? round((($minPrice - $minSalePrice) / $minPrice) * 100) : 0;
-    
+
     // Layout-specific classes - keep layout consistent, only width changes
-    $containerClasses = match($layout) {
-        'carousel' => 'rounded-xl overflow-hidden transition-all duration-300 cursor-pointer group flex-shrink-0 w-64 sm:w-72',
-        default => 'group rounded-xl overflow-hidden transition-all duration-300 cursor-pointer'
+    $containerClasses = match ($layout) {
+        'carousel'
+            => 'rounded-xl overflow-hidden transition-all duration-300 cursor-pointer group flex-shrink-0 w-64 sm:w-72',
+        default => 'group rounded-xl overflow-hidden transition-all duration-300 cursor-pointer',
     };
-    
+
     // Same image container for both layouts
     $imageContainerClasses = 'relative overflow-hidden bg-gray-100 aspect-[3/4]';
 @endphp
 
 <div {{ $attributes->merge(['class' => $containerClasses, 'data-product-id' => $product->id]) }}>
     {{-- Image Container --}}
-    <a href="{{ route('product.view', ['slug' => $product->slug]) }}"
-        class="block {{ $imageContainerClasses }}">
+    <a href="{{ route('product.view', ['slug' => $product->slug]) }}" class="block {{ $imageContainerClasses }}">
 
         @if ($product->images && $product->images->count() > 0)
             {{-- Primary Image --}}
             <img src="{{ asset('storage/' . $product->images->first()->image_path) }}"
                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                alt="{{ $product->images->first()->alt_text ?? $product->name }}"
-                loading="lazy">
+                alt="{{ $product->images->first()->alt_text ?? $product->name }}" loading="lazy">
 
             {{-- Secondary Image (hover) --}}
             @if ($showHoverImage && $product->images->count() > 1)
                 <img src="{{ asset('storage/' . $product->images->skip(1)->first()->image_path) }}"
                     class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out"
-                    alt="{{ $product->name }}"
-                    loading="lazy">
+                    alt="{{ $product->name }}" loading="lazy">
             @endif
         @else
             {{-- Placeholder Image --}}
@@ -60,7 +58,8 @@
         @endif
 
         {{-- Price Badge (show for both layouts) --}}
-        <div class="absolute top-3 left-3 bg-white/95 backdrop-blur-sm text-gray-900 px-3 py-2 rounded-lg text-sm font-semibold shadow-sm">
+        <div
+            class="absolute top-3 left-3 bg-white/95 backdrop-blur-sm text-gray-900 px-3 py-2 rounded-lg text-sm font-semibold shadow-sm">
             ${{ number_format($displayPrice, 2) }}
             @if ($isOnSale)
                 <span class="text-xs text-red-500 ml-1">{{ __('messages.sale') }}</span>
@@ -68,28 +67,32 @@
         </div>
 
         {{-- Status Badges --}}
-        @if($product->is_new || $product->is_featured || $product->IsOnSale() || $product->is_out_of_stock)
+        @if ($product->is_new || $product->is_featured || $product->IsOnSale() || $product->is_out_of_stock)
             <div class="absolute top-3 right-3 flex flex-col gap-2">
                 @if ($product->is_new)
-                    <span class="px-2 py-1 bg-black text-white text-xs font-bold tracking-widest uppercase whitespace-nowrap rounded">
+                    <span
+                        class="px-2 py-1 bg-black text-white text-xs font-bold tracking-widest uppercase whitespace-nowrap rounded">
                         {{ __('messages.new') }}
                     </span>
                 @endif
 
                 @if ($product->is_featured)
-                    <span class="px-2 py-1 bg-red-600 text-white text-xs font-bold tracking-widest uppercase whitespace-nowrap rounded">
+                    <span
+                        class="px-2 py-1 bg-red-600 text-white text-xs font-bold tracking-widest uppercase whitespace-nowrap rounded">
                         {{ __('messages.featured') }}
                     </span>
                 @endif
 
                 @if ($product->IsOnSale())
-                    <span class="px-2 py-1 bg-green-600 text-white text-xs font-bold tracking-widest uppercase whitespace-nowrap rounded">
+                    <span
+                        class="px-2 py-1 bg-green-600 text-white text-xs font-bold tracking-widest uppercase whitespace-nowrap rounded">
                         {{ __('messages.save') }} {{ $discountPercent }}%
                     </span>
                 @endif
 
                 @if ($product->is_out_of_stock)
-                    <span class="px-2 py-1 bg-gray-600 text-white text-xs font-bold tracking-widest uppercase whitespace-nowrap rounded">
+                    <span
+                        class="px-2 py-1 bg-gray-600 text-white text-xs font-bold tracking-widest uppercase whitespace-nowrap rounded">
                         {{ __('messages.out_of_stock') }}
                     </span>
                 @endif
@@ -98,7 +101,8 @@
 
         {{-- Quick View Overlay --}}
         @if ($showQuickView)
-            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500 flex items-center justify-center">
+            <div
+                class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500 flex items-center justify-center">
                 <button type="button" onclick="openQuickView({{ $product->id }})"
                     class="quick-view-btn opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
                     {{ __('messages.quick_view') }}
@@ -110,17 +114,20 @@
     {{-- Content --}}
     <div class="p-4 space-y-3 text-left">
         <a href="{{ route('product.view', ['slug' => $product->slug]) }}" class="block">
-            <h3 class="text-base font-semibold text-gray-900 tracking-tight group-hover:text-gray-600 transition-colors line-clamp-2 leading-snug">
+            <h3
+                class="text-base font-semibold text-gray-900 tracking-tight group-hover:text-gray-600 transition-colors line-clamp-2 leading-snug">
                 {{ $product->name }}
             </h3>
-            
+
             @if ($showCategory || $showBrand)
                 <p class="text-xs text-gray-500 uppercase tracking-widest mt-1">
                     @if ($showCategory)
                         {{ $product->category->name ?? __('messages.uncategorized') }}
                     @endif
                     @if ($showBrand && $product->brand)
-                        @if ($showCategory) • @endif {{ $product->brand }}
+                        @if ($showCategory)
+                            •
+                        @endif {{ $product->brand }}
                     @endif
                 </p>
             @endif

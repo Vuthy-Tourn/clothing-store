@@ -76,7 +76,7 @@ Route::middleware('guest')->group(function () {
     // Password Reset Routes
     Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
     Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
-    Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::get('reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
     Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
 });
 
@@ -300,12 +300,3 @@ Route::get('/products/{product}/reviews', [ProductDisplayController::class, 'get
 Route::post('/language/set', [LanguageController::class, 'set'])->name('language.set');
 Route::post('/language/ajax', [LanguageController::class, 'ajax'])->name('language.ajax');
 Route::get('/search', [ProductDisplayController::class, 'search'])->name('products.search');
-// Add this route for quick view
-Route::get('/product/{slug}/quick-view', function($slug) {
-    $product = Product::with(['variants', 'images', 'category'])
-        ->where('slug', $slug)
-        ->where('status', 'active')
-        ->firstOrFail();
-    
-    return view('frontend.partials.quick-view', compact('product'));
-})->name('products.quick-view');

@@ -507,7 +507,7 @@ public function index(Request $request)
         'primary_image'                => 'nullable|exists:product_images,id',
         
         'new_images'                   => 'nullable|array',
-        'new_images.*.image'           => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'new_images.*.image'           => 'nullable|image|mimes:jpg,jpeg,png,webp,avif|max:2048',
         'new_images.*.alt_text'        => 'nullable|string|max:255',
         'new_images.*.sort_order'      => 'nullable|integer|min:0',
         

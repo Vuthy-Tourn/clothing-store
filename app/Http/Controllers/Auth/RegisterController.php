@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class RegisterController extends Controller
@@ -61,7 +59,7 @@ class RegisterController extends Controller
         // Handle profile picture upload
         $profilePicturePath = null;
         if ($request->hasFile('profile_picture')) {
-            $profilePicturePath = $request->file('profile_picture')->store('profile_pictures', 'public');
+            $profilePicturePath = $request->file('profile_picture')->store('user/profile_pictures', 'public');
         }
 
         $user = User::create([

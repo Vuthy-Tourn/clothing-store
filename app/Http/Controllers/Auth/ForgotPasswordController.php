@@ -23,22 +23,22 @@ class ForgotPasswordController extends Controller
         $request->validate([
             'email' => ['required', 'email', 'max:255'],
         ], [
-            'email.required' => 'Email is required.',
-            'email.email' => 'Enter a valid email address.',
-            'email.max' => 'Email cannot exceed 255 characters.',
+            'email.required' => __('messages.email_required'),
+            'email.email' => __('messages.email_valid'),
+            'email.max' => __('messages.email_max'),
         ]);
 
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
             return back()->withErrors([
-                'email' => 'We couldn’t find an account with that email.',
+                'email' => __('messages.email_not_found'),
             ]);
         }
 
         if (!$user->is_verified) {
             return back()->withErrors([
-                'email' => 'This email is not verified. Please verify your account before resetting the password.',
+                'email' => __('messages.email_not_verified'),
             ]);
         }
 
@@ -57,6 +57,10 @@ class ForgotPasswordController extends Controller
         // Send custom reset email
         Mail::to($user->email)->send(new CustomPasswordResetMail($token, $user));
 
-        return back()->with('status', 'We have emailed your password reset link!');
+        // Translated success message
+        return back()->with('status', __('messages.email_sent'));
+        
+        // OR if you want to use 'success' key instead of 'status'
+        // return back()->with('success', __('messages.email_sent'));
     }
 }
