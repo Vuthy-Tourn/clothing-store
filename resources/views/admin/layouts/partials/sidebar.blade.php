@@ -2,7 +2,6 @@
 <aside id="sidebar"
     class="w-80 bg-gradient-to-b from-white to-gray-50 min-h-screen fixed flex flex-col justify-between shadow-lg transition-all duration-500 ease-out z-40 lg:translate-x-0 -translate-x-full transform-gpu">
     <!-- Overlay for mobile -->
-                       @include('components.language-switcher')
 
     <div id="sidebarOverlay"
         class="lg:hidden fixed inset-0 bg-black/50 z-30 opacity-0 pointer-events-none transition-opacity duration-300">
