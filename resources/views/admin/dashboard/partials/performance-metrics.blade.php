@@ -1,11 +1,11 @@
 <div class="card p-6" data-aos="fade-up">
-    <h2 class="text-xl font-bold text-gray-900 mb-6">Performance Metrics</h2>
+    <h2 class="text-xl font-bold text-gray-900 mb-6">{{ __('admin.performance_metrics_alt.title') }}</h2>
 
     <div class="space-y-6">
         <!-- Average Order Value -->
         <div>
             <div class="flex items-center justify-between mb-2">
-                <span class="text-sm font-medium text-gray-700">Avg. Order Value</span>
+                <span class="text-sm font-medium text-gray-700">{{ __('admin.performance_metrics_alt.avg_order_value') }}</span>
                 <span class="text-sm font-bold text-gray-900" id="avgOrderValue">$0</span>
             </div>
             <div class="w-full bg-gray-200 rounded-full h-2">
@@ -16,7 +16,7 @@
         <!-- Conversion Rate -->
         <div>
             <div class="flex items-center justify-between mb-2">
-                <span class="text-sm font-medium text-gray-700">Conversion Rate</span>
+                <span class="text-sm font-medium text-gray-700">{{ __('admin.performance_metrics_alt.conversion_rate') }}</span>
                 <span class="text-sm font-bold text-gray-900" id="conversionRate">0%</span>
             </div>
             <div class="w-full bg-gray-200 rounded-full h-2">
@@ -27,7 +27,7 @@
         <!-- Customer Satisfaction -->
         <div>
             <div class="flex items-center justify-between mb-2">
-                <span class="text-sm font-medium text-gray-700">Customer Satisfaction</span>
+                <span class="text-sm font-medium text-gray-700">{{ __('admin.performance_metrics_alt.customer_satisfaction') }}</span>
                 <span class="text-sm font-bold text-gray-900" id="satisfaction">0%</span>
             </div>
             <div class="w-full bg-gray-200 rounded-full h-2">
@@ -38,7 +38,7 @@
         <!-- Order Fulfillment -->
         <div>
             <div class="flex items-center justify-between mb-2">
-                <span class="text-sm font-medium text-gray-700">Order Fulfillment</span>
+                <span class="text-sm font-medium text-gray-700">{{ __('admin.performance_metrics_alt.order_fulfillment') }}</span>
                 <span class="text-sm font-bold text-gray-900" id="fulfillment">0%</span>
             </div>
             <div class="w-full bg-gray-200 rounded-full h-2">

@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'User Details - ' . $user->name)
+@section('title', __('admin.users.show.title') . ' - ' . $user->name)
 
 @section('content')
     <div class="container-fluid px-4 md:px-8 py-6">
@@ -13,20 +13,20 @@
                         <i class="fas fa-arrow-left"></i>
                     </a>
                     <div>
-                        <h1 class="text-2xl md:text-3xl font-bold text-gray-900">User Details</h1>
-                        <p class="text-gray-600 mt-1">View and manage user information</p>
+                        <h1 class="text-2xl md:text-3xl font-bold text-gray-900">{{ __('admin.users.show.title') }}</h1>
+                        <p class="text-gray-600 mt-1">{{ __('admin.users.show.subtitle') }}</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-3">
                     <button onclick="editUser({{ $user->id }})"
                         class="flex items-center space-x-2 px-4 py-2.5 bg-gradient-to-r from-Ocean to-Ocean/80 text-white rounded-xl hover:shadow-lg transition-all duration-300">
                         <i class="fas fa-edit"></i>
-                        <span class="font-medium">Edit User</span>
+                        <span class="font-medium">{{ __('admin.users.show.edit_user') }}</span>
                     </button>
                     <button onclick="deleteUser({{ $user->id }}, '{{ addslashes($user->name) }}')"
                         class="flex items-center space-x-2 px-4 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:shadow-lg transition-all duration-300">
                         <i class="fas fa-trash"></i>
-                        <span class="font-medium">Delete User</span>
+                        <span class="font-medium">{{ __('admin.users.show.delete_user') }}</span>
                     </button>
                 </div>
             </div>
@@ -51,7 +51,7 @@
                         <span
                             class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium {{ $user->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                             <i class="fas fa-{{ $user->is_active ? 'check-circle' : 'times-circle' }} mr-1"></i>
-                            {{ $user->is_active ? 'Active' : 'Inactive' }}
+                            {{ $user->is_active ? __('admin.users.show.profile_header.status_active') : __('admin.users.show.profile_header.status_inactive') }}
                         </span>
                     </div>
                 </div>
@@ -73,18 +73,18 @@
                                             : 'bg-gray-100 text-gray-800')) }}">
                                     <i
                                         class="fas fa-{{ $user->account_type === 'admin' ? 'crown' : ($user->account_type === 'staff' ? 'user-tie' : ($user->account_type === 'vendor' ? 'store' : 'user')) }} mr-1 text-xs"></i>
-                                    {{ ucfirst($user->account_type) }}
+                                    {{ __('admin.users.account_types.' . $user->account_type) }}
                                 </span>
                                 @if ($user->email_verified_at)
                                     <span
                                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                        <i class="fas fa-check-circle mr-1"></i>Verified
+                                        <i class="fas fa-check-circle mr-1"></i>{{ __('admin.users.show.profile_header.verified') }}
                                     </span>
                                 @endif
                                 @if ($user->newsletter_opt_in)
                                     <span
                                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-Ocean/10 text-Ocean">
-                                        <i class="fas fa-newspaper mr-1"></i>Newsletter
+                                        <i class="fas fa-newspaper mr-1"></i>{{ __('admin.users.show.profile_header.newsletter') }}
                                     </span>
                                 @endif
                             </div>
@@ -97,7 +97,7 @@
                                 <div class="flex items-center space-x-2">
                                     <i class="fas fa-star text-yellow-500 text-xl"></i>
                                     <div>
-                                        <p class="text-sm font-medium text-yellow-700">Loyalty Points</p>
+                                        <p class="text-sm font-medium text-yellow-700">{{ __('admin.users.show.profile_header.loyalty_points') }}</p>
                                         <p class="text-2xl font-bold text-gray-900">
                                             {{ number_format($user->loyalty_points) }}</p>
                                     </div>
@@ -111,7 +111,7 @@
                         <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
                             <i class="fas fa-envelope text-gray-400"></i>
                             <div>
-                                <p class="text-sm font-medium text-gray-600">Email</p>
+                                <p class="text-sm font-medium text-gray-600">{{ __('admin.users.show.contact_info.email') }}</p>
                                 <a href="mailto:{{ $user->email }}"
                                     class="text-gray-900 hover:text-Ocean">{{ $user->email }}</a>
                             </div>
@@ -121,7 +121,7 @@
                             <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
                                 <i class="fas fa-phone text-gray-400"></i>
                                 <div>
-                                    <p class="text-sm font-medium text-gray-600">Phone</p>
+                                    <p class="text-sm font-medium text-gray-600">{{ __('admin.users.show.contact_info.phone') }}</p>
                                     <a href="tel:{{ $user->phone }}"
                                         class="text-gray-900 hover:text-Ocean">{{ $user->phone }}</a>
                                 </div>
@@ -131,7 +131,7 @@
                         <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
                             <i class="fas fa-id-card text-gray-400"></i>
                             <div>
-                                <p class="text-sm font-medium text-gray-600">Customer ID</p>
+                                <p class="text-sm font-medium text-gray-600">{{ __('admin.users.show.contact_info.customer_id') }}</p>
                                 <p class="text-gray-900 font-mono">{{ $user->customer_id ?? 'N/A' }}</p>
                             </div>
                         </div>
@@ -139,7 +139,7 @@
                         <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
                             <i class="fas fa-calendar-alt text-gray-400"></i>
                             <div>
-                                <p class="text-sm font-medium text-gray-600">Member Since</p>
+                                <p class="text-sm font-medium text-gray-600">{{ __('admin.users.show.contact_info.member_since') }}</p>
                                 <p class="text-gray-900">{{ $user->created_at->format('M d, Y') }}</p>
                                 <p class="text-xs text-gray-500">{{ $user->created_at->diffForHumans() }}</p>
                             </div>
@@ -158,30 +158,42 @@
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-lg font-semibold text-gray-900 flex items-center">
                             <i class="fas fa-user-circle text-Ocean mr-2"></i>
-                            Personal Information
+                            {{ __('admin.users.show.personal_info.title') }}
                         </h3>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Gender -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.users.show.personal_info.gender') }}</label>
                             <div class="flex items-center space-x-2">
                                 <i
                                     class="fas fa-{{ $user->gender == 'male' ? 'mars' : ($user->gender == 'female' ? 'venus' : 'genderless') }} text-gray-400"></i>
-                                <p class="text-gray-900">{{ $user->gender ? ucfirst($user->gender) : 'Not specified' }}</p>
+                                <p class="text-gray-900">
+                                    @if ($user->gender == 'male')
+                                        {{ __('admin.users.show.personal_info.male') }}
+                                    @elseif ($user->gender == 'female')
+                                        {{ __('admin.users.show.personal_info.female') }}
+                                    @elseif ($user->gender == 'other')
+                                        {{ __('admin.users.show.personal_info.other') }}
+                                    @else
+                                        {{ __('admin.users.show.personal_info.not_specified') }}
+                                    @endif
+                                </p>
                             </div>
                         </div>
 
                         <!-- Date of Birth -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.users.show.personal_info.date_of_birth') }}</label>
                             <div class="flex items-center space-x-2">
                                 <i class="fas fa-birthday-cake text-gray-400"></i>
                                 <p class="text-gray-900">
-                                    {{ $user->dob ? $user->dob->format('F d, Y') : 'Not specified' }}
+                                    {{ $user->dob ? $user->dob->format('F d, Y') : __('admin.users.show.personal_info.not_specified') }}
                                     @if ($user->dob)
-                                        <span class="text-sm text-gray-500">({{ $user->dob->age }} years old)</span>
+                                        <span class="text-sm text-gray-500">
+                                            ({{ __('admin.users.show.personal_info.years_old', ['age' => $user->dob->age]) }})
+                                        </span>
                                     @endif
                                 </p>
                             </div>
@@ -189,11 +201,11 @@
 
                         <!-- Last Login -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Last Login</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.users.show.personal_info.last_login') }}</label>
                             <div class="flex items-center space-x-2">
                                 <i class="fas fa-sign-in-alt text-gray-400"></i>
                                 <p class="text-gray-900">
-                                    {{ $user->last_login_at ? $user->last_login_at->format('M d, Y h:i A') : 'Never' }}
+                                    {{ $user->last_login_at ? $user->last_login_at->format('M d, Y h:i A') : __('admin.users.show.personal_info.never') }}
                                 </p>
                             </div>
                             @if ($user->last_login_at)
@@ -203,14 +215,14 @@
 
                         <!-- Account Status -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Account Status</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.users.show.personal_info.account_status') }}</label>
                             <div class="flex items-center space-x-2">
                                 @if ($user->is_active)
                                     <i class="fas fa-check-circle text-green-500"></i>
-                                    <span class="text-green-700 font-medium">Active</span>
+                                    <span class="text-green-700 font-medium">{{ __('admin.users.table.active') }}</span>
                                 @else
                                     <i class="fas fa-times-circle text-red-500"></i>
-                                    <span class="text-red-700 font-medium">Inactive</span>
+                                    <span class="text-red-700 font-medium">{{ __('admin.users.table.inactive') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -223,27 +235,14 @@
                         <div class="flex items-center space-x-2">
                             <h3 class="text-lg font-semibold text-gray-900 flex items-center">
                                 <i class="fas fa-map-marker-alt text-Ocean mr-2"></i>
-                                Address Information
+                                {{ __('admin.users.show.address_info.title') }}
                             </h3>
                             @if ($uniqueAddresses->count() > 0)
-                                <span class="text-sm text-gray-500">{{ $uniqueAddresses->count() }} address(es)</span>
+                                <span class="text-sm text-gray-500">
+                                    {{ __('admin.users.show.address_info.addresses_count', ['count' => $uniqueAddresses->count()]) }}
+                                </span>
                             @endif
                         </div>
-
-                        {{-- @if ($allAddresses->count() > $uniqueAddresses->count())
-                            <div class="flex items-center space-x-2">
-                                <span class="text-sm text-gray-600">Show:</span>
-                                <div class="flex items-center space-x-1">
-                                    <button id="showUniqueBtn" class="px-3 py-1 text-sm bg-Ocean text-white rounded-lg">
-                                        Unique Only
-                                    </button>
-                                    <button id="showAllBtn"
-                                        class="px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
-                                        All ({{ $allAddresses->count() }})
-                                    </button>
-                                </div>
-                            </div>
-                        @endif --}}
                     </div>
 
                     <!-- Unique Addresses (default view) -->
@@ -258,12 +257,16 @@
                                                 <span
                                                     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                                 {{ $address->type === 'shipping' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800' }}">
-                                                    {{ ucfirst($address->type) }}
+                                                    @if ($address->type === 'shipping')
+                                                        {{ __('admin.users.show.address_info.shipping') }}
+                                                    @else
+                                                        {{ __('admin.users.show.address_info.billing') }}
+                                                    @endif
                                                 </span>
                                                 @if ($address->is_default)
                                                     <span
                                                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                        Default
+                                                        {{ __('admin.users.show.address_info.default') }}
                                                     </span>
                                                 @endif
                                             </div>
@@ -290,57 +293,12 @@
                         @else
                             <div class="text-center py-8">
                                 <i class="fas fa-map-marker-alt text-gray-400 text-4xl mb-3"></i>
-                                <p class="text-gray-500">No addresses found</p>
-                                <p class="text-gray-400 text-sm mt-1">This user hasn't added any addresses yet</p>
+                                <p class="text-gray-500">{{ __('admin.users.show.address_info.no_addresses') }}</p>
+                                <p class="text-gray-400 text-sm mt-1">{{ __('admin.users.show.address_info.no_addresses_message') }}</p>
                             </div>
                         @endif
                     </div>
-
-                    {{-- <!-- All Addresses (hidden by default) -->
-                    <div id="allAddresses" class="hidden">
-                        @if ($allAddresses->count() > 0)
-                            <div class="space-y-4">
-                                @foreach ($allAddresses as $address)
-                                    <div
-                                        class="border border-gray-200 rounded-xl p-4 hover:border-Ocean/30 transition-colors">
-                                        <div class="flex items-center justify-between mb-3">
-                                            <div class="flex items-center space-x-2">
-                                                <span
-                                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                {{ $address->type === 'shipping' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800' }}">
-                                                    {{ ucfirst($address->type) }}
-                                                </span>
-                                                @if ($address->is_default)
-                                                    <span
-                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                        Default
-                                                    </span>
-                                                @endif
-                                            </div>
-                                            @if ($address->address_name)
-                                                <span
-                                                    class="text-sm font-medium text-gray-700">{{ $address->address_name }}</span>
-                                            @endif
-                                        </div>
-
-                                        <div class="space-y-2">
-                                            <p class="text-gray-900 font-medium">{{ $address->full_name }}</p>
-                                            <p class="text-gray-600">{{ $address->phone }}</p>
-                                            <p class="text-gray-600">{{ $address->address_line1 }}</p>
-                                            @if ($address->address_line2)
-                                                <p class="text-gray-600">{{ $address->address_line2 }}</p>
-                                            @endif
-                                            <p class="text-gray-600">{{ $address->city }}, {{ $address->state }}
-                                                {{ $address->zip_code }}</p>
-                                            <p class="text-gray-600">{{ $address->country }}</p>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @endif
-                    </div> --}}
                 </div>
-
             </div>
 
             <!-- Right Column -->
@@ -349,7 +307,7 @@
                 <div class="card p-6">
                     <h3 class="text-lg font-semibold text-gray-900 flex items-center mb-6">
                         <i class="fas fa-chart-bar text-Ocean mr-2"></i>
-                        Account Statistics
+                        {{ __('admin.users.show.statistics.title') }}
                     </h3>
 
                     <div class="space-y-4">
@@ -359,7 +317,7 @@
                                     <i class="fas fa-shopping-bag text-blue-600"></i>
                                 </div>
                                 <div>
-                                    <p class="text-sm font-medium text-gray-600">Total Orders</p>
+                                    <p class="text-sm font-medium text-gray-600">{{ __('admin.users.show.statistics.total_orders') }}</p>
                                     <p class="text-lg font-bold text-gray-900">{{ $stats['orders_count'] }}</p>
                                 </div>
                             </div>
@@ -371,7 +329,7 @@
                                     <i class="fas fa-dollar-sign text-green-600"></i>
                                 </div>
                                 <div>
-                                    <p class="text-sm font-medium text-gray-600">Total Spent</p>
+                                    <p class="text-sm font-medium text-gray-600">{{ __('admin.users.show.statistics.total_spent') }}</p>
                                     <p class="text-lg font-bold text-gray-900">
                                         ${{ number_format($stats['total_spent'], 2) }}</p>
                                 </div>
@@ -383,13 +341,8 @@
                                     <i class="fas fa-map-marker-alt text-purple-600"></i>
                                 </div>
                                 <div>
-                                    <p class="text-sm font-medium text-gray-600">Saved Addresses</p>
-                                    <p class="text-lg font-bold text-gray-900">{{ $uniqueAddressCount }}
-                                        {{-- @if ($totalAddressCount > $uniqueAddressCount)
-                                            <span class="text-sm font-normal text-gray-500">/ {{ $totalAddressCount }}
-                                                total</span>
-                                        @endif --}}
-                                    </p>
+                                    <p class="text-sm font-medium text-gray-600">{{ __('admin.users.show.statistics.saved_addresses') }}</p>
+                                    <p class="text-lg font-bold text-gray-900">{{ $uniqueAddressCount }}</p>
                                 </div>
                             </div>
                         </div>
@@ -400,7 +353,7 @@
                                     <i class="fas fa-clock text-yellow-600"></i>
                                 </div>
                                 <div>
-                                    <p class="text-sm font-medium text-gray-600">Account Age</p>
+                                    <p class="text-sm font-medium text-gray-600">{{ __('admin.users.show.statistics.account_age') }}</p>
                                     <p class="text-lg font-bold text-gray-900">{{ $stats['account_age'] }}</p>
                                 </div>
                             </div>
@@ -412,7 +365,7 @@
                 <div class="card p-6">
                     <h3 class="text-lg font-semibold text-gray-900 flex items-center mb-6">
                         <i class="fas fa-cog text-Ocean mr-2"></i>
-                        Account Settings
+                        {{ __('admin.users.show.settings.title') }}
                     </h3>
 
                     <div class="space-y-4">
@@ -424,9 +377,10 @@
                                     <i class="fas fa-{{ $user->is_verified ? 'shield-alt' : 'shield' }}"></i>
                                 </div>
                                 <div>
-                                    <p class="text-sm font-medium text-gray-700">Account Verification</p>
+                                    <p class="text-sm font-medium text-gray-700">{{ __('admin.users.show.settings.account_verification') }}</p>
                                     <p class="text-xs text-gray-500">
-                                        {{ $user->is_verified ? 'Verified' : 'Not Verified' }}</p>
+                                        {{ $user->is_verified ? __('admin.users.show.settings.verified') : __('admin.users.show.settings.not_verified') }}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -439,9 +393,10 @@
                                     <i class="fas fa-envelope"></i>
                                 </div>
                                 <div>
-                                    <p class="text-sm font-medium text-gray-700">Email Verification</p>
+                                    <p class="text-sm font-medium text-gray-700">{{ __('admin.users.show.settings.email_verification') }}</p>
                                     <p class="text-xs text-gray-500">
-                                        {{ $user->email_verified_at ? 'Verified' : 'Not Verified' }}</p>
+                                        {{ $user->email_verified_at ? __('admin.users.show.settings.verified') : __('admin.users.show.settings.not_verified') }}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -454,9 +409,10 @@
                                     <i class="fas fa-newspaper"></i>
                                 </div>
                                 <div>
-                                    <p class="text-sm font-medium text-gray-700">Newsletter Subscription</p>
+                                    <p class="text-sm font-medium text-gray-700">{{ __('admin.users.show.settings.newsletter_subscription') }}</p>
                                     <p class="text-xs text-gray-500">
-                                        {{ $user->newsletter_opt_in ? 'Subscribed' : 'Not Subscribed' }}</p>
+                                        {{ $user->newsletter_opt_in ? __('admin.users.show.settings.subscribed') : __('admin.users.show.settings.not_subscribed') }}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -467,7 +423,7 @@
                                     <i class="fas fa-calendar"></i>
                                 </div>
                                 <div>
-                                    <p class="text-sm font-medium text-gray-700">Last Updated</p>
+                                    <p class="text-sm font-medium text-gray-700">{{ __('admin.users.show.settings.last_updated') }}</p>
                                     <p class="text-xs text-gray-500">{{ $user->updated_at->format('M d, Y') }}</p>
                                 </div>
                             </div>
@@ -479,7 +435,7 @@
                 <div class="card p-6">
                     <h3 class="text-lg font-semibold text-gray-900 flex items-center mb-6">
                         <i class="fas fa-bolt text-Ocean mr-2"></i>
-                        Quick Actions
+                        {{ __('admin.users.show.quick_actions.title') }}
                     </h3>
 
                     <div class="space-y-3">
@@ -490,8 +446,9 @@
                                 <i class="fas fa-power-off text-{{ $user->is_active ? 'green' : 'red' }}-500"></i>
                                 <div>
                                     <p class="text-sm font-medium text-gray-700">
-                                        {{ $user->is_active ? 'Deactivate' : 'Activate' }} Account</p>
-                                    <p class="text-xs text-gray-500">Toggle user access</p>
+                                        {{ $user->is_active ? __('admin.users.show.quick_actions.deactivate_account') : __('admin.users.show.quick_actions.activate_account') }}
+                                    </p>
+                                    <p class="text-xs text-gray-500">{{ __('admin.users.show.quick_actions.toggle_access') }}</p>
                                 </div>
                             </div>
                             <i class="fas fa-chevron-right text-gray-400"></i>
@@ -502,8 +459,8 @@
                             <div class="flex items-center space-x-3">
                                 <i class="fas fa-edit text-blue-500"></i>
                                 <div>
-                                    <p class="text-sm font-medium text-gray-700">Edit Profile</p>
-                                    <p class="text-xs text-gray-500">Update user information</p>
+                                    <p class="text-sm font-medium text-gray-700">{{ __('admin.users.show.quick_actions.edit_profile') }}</p>
+                                    <p class="text-xs text-gray-500">{{ __('admin.users.show.quick_actions.update_info') }}</p>
                                 </div>
                             </div>
                             <i class="fas fa-chevron-right text-gray-400"></i>
@@ -514,8 +471,8 @@
                             <div class="flex items-center space-x-3">
                                 <i class="fas fa-key text-yellow-500"></i>
                                 <div>
-                                    <p class="text-sm font-medium text-gray-700">Reset Password</p>
-                                    <p class="text-xs text-gray-500">Send password reset link</p>
+                                    <p class="text-sm font-medium text-gray-700">{{ __('admin.users.show.quick_actions.reset_password') }}</p>
+                                    <p class="text-xs text-gray-500">{{ __('admin.users.show.quick_actions.send_reset_link') }}</p>
                                 </div>
                             </div>
                             <i class="fas fa-chevron-right text-gray-400"></i>
@@ -526,8 +483,8 @@
                             <div class="flex items-center space-x-3">
                                 <i class="fas fa-envelope text-purple-500"></i>
                                 <div>
-                                    <p class="text-sm font-medium text-gray-700">Resend Verification</p>
-                                    <p class="text-xs text-gray-500">Send email verification</p>
+                                    <p class="text-sm font-medium text-gray-700">{{ __('admin.users.show.quick_actions.resend_verification') }}</p>
+                                    <p class="text-xs text-gray-500">{{ __('admin.users.show.quick_actions.send_verification') }}</p>
                                 </div>
                             </div>
                             <i class="fas fa-chevron-right text-gray-400"></i>
@@ -558,7 +515,6 @@
     @endpush
 
     @push('scripts')
-       
         <script>
             // Edit User from show page
             function editUser(userId) {
@@ -580,7 +536,7 @@
                 editContent.innerHTML = `
         <div class="text-center py-8">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-Ocean mx-auto"></div>
-            <p class="mt-4 text-gray-600">Loading user data...</p>
+            <p class="mt-4 text-gray-600">{{ __('admin.users.modal.loading') }}</p>
         </div>
     `;
 
@@ -594,9 +550,9 @@
                         editContent.innerHTML = `
                 <div class="text-center py-8">
                     <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-4"></i>
-                    <p class="text-gray-600">Failed to load user data</p>
+                    <p class="text-gray-600">{{ __('admin.users.modal.failed_load') }}</p>
                     <button onclick="hideEditModal()" class="mt-4 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg">
-                        Close
+                        {{ __('admin.users.modal.close') }}
                     </button>
                 </div>
             `;
@@ -613,7 +569,7 @@
                         const submitBtn = this.querySelector('button[type="submit"]');
                         const originalText = submitBtn.innerHTML;
 
-                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Saving...';
+                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>{{ __("admin.users.messages.saving") }}';
                         submitBtn.disabled = true;
 
                         fetch(this.action, {
@@ -627,7 +583,7 @@
                                 if (response.ok) {
                                     Toast.fire({
                                         icon: 'success',
-                                        title: 'User updated successfully!'
+                                        title: '{{ __("admin.users.messages.success_updated") }}'
                                     });
                                     setTimeout(() => {
                                         hideEditModal();
@@ -635,7 +591,7 @@
                                     }, 1500);
                                 } else {
                                     return response.json().then(data => {
-                                        let errorMessage = 'Please fix the errors:';
+                                        let errorMessage = '{{ __("admin.users.messages.error_fix_errors") }}';
                                         if (data.errors) {
                                             errorMessage = Object.values(data.errors).flat().join('<br>');
                                         } else if (data.message) {
@@ -643,7 +599,7 @@
                                         }
                                         Swal.fire({
                                             icon: 'error',
-                                            title: 'Error',
+                                            title: '{{ __("admin.users.messages.error_failed") }}',
                                             html: errorMessage
                                         });
                                         submitBtn.innerHTML = originalText;
@@ -654,8 +610,8 @@
                             .catch(error => {
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Error',
-                                    text: 'Failed to update user'
+                                    title: '{{ __("admin.users.messages.error_occurred") }}',
+                                    text: '{{ __("admin.users.messages.error_failed_message") }}'
                                 });
                                 submitBtn.innerHTML = originalText;
                                 submitBtn.disabled = false;
@@ -680,13 +636,13 @@
             // Delete User from show page
             async function deleteUser(userId, userName) {
                 const result = await Swal.fire({
-                    title: 'Delete User?',
+                    title: '{{ __("admin.users.delete.title") }}',
                     html: `<div class="text-left">
-            <p class="mb-4">Are you sure you want to delete <strong>"${userName}"</strong>?</p>
+            <p class="mb-4">{{ __("admin.users.delete.message", ['name' => '"${userName}"']) }}</p>
             <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
                 <p class="text-sm text-red-700">
                     <i class="fas fa-exclamation-triangle mr-2"></i>
-                    This will permanently delete all user data including addresses and profile.
+                    {{ __("admin.users.delete.warning") }}
                 </p>
             </div>
         </div>`,
@@ -694,14 +650,14 @@
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Yes, delete!',
-                    cancelButtonText: 'Cancel'
+                    confirmButtonText: '{{ __("admin.users.delete.yes_delete") }}',
+                    cancelButtonText: '{{ __("admin.users.delete.cancel") }}'
                 });
 
                 if (result.isConfirmed) {
                     Swal.fire({
-                        title: 'Deleting...',
-                        text: 'Please wait',
+                        title: '{{ __("admin.users.delete.deleting") }}',
+                        text: '{{ __("admin.users.messages.please_wait") }}',
                         allowOutsideClick: false,
                         showConfirmButton: false,
                         willOpen: () => Swal.showLoading()
@@ -721,8 +677,8 @@
                         if (data.success) {
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Deleted!',
-                                text: data.message,
+                                title: '{{ __("admin.users.messages.success_deleted") }}',
+                                text: data.message || '{{ __("admin.users.messages.success_deleted_message") }}',
                                 timer: 2000,
                                 showConfirmButton: false
                             });
@@ -732,15 +688,15 @@
                         } else {
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Failed!',
-                                text: data.message || 'Failed to delete user'
+                                title: '{{ __("admin.users.messages.error_failed") }}',
+                                text: data.message || '{{ __("admin.users.messages.error_failed_message") }}'
                             });
                         }
                     } catch (error) {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Error!',
-                            text: 'An error occurred'
+                            title: '{{ __("admin.users.messages.error_occurred") }}',
+                            text: '{{ __("admin.users.messages.error_occurred") }}'
                         });
                     }
                 }
@@ -749,16 +705,25 @@
             // Toggle User Status from show page
             async function toggleUserStatus(userId, newStatus) {
                 const statusText = newStatus ? 'activate' : 'deactivate';
+                const title = newStatus ? 
+                    '{{ __("admin.users.toggle_status.activate_title") }}' : 
+                    '{{ __("admin.users.toggle_status.deactivate_title") }}';
+                const message = newStatus ? 
+                    '{{ __("admin.users.toggle_status.activate_message") }}' : 
+                    '{{ __("admin.users.toggle_status.deactivate_message") }}';
+                const confirmText = newStatus ? 
+                    '{{ __("admin.users.toggle_status.yes_activate") }}' : 
+                    '{{ __("admin.users.toggle_status.yes_deactivate") }}';
 
                 const result = await Swal.fire({
-                    title: `${statusText.charAt(0).toUpperCase() + statusText.slice(1)} User?`,
-                    text: `Are you sure you want to ${statusText} this user?`,
+                    title: title,
+                    text: message,
                     icon: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: `Yes, ${statusText}!`,
-                    cancelButtonText: 'Cancel'
+                    confirmButtonText: confirmText,
+                    cancelButtonText: '{{ __("admin.users.toggle_status.cancel") }}'
                 });
 
                 if (result.isConfirmed) {
@@ -779,19 +744,19 @@
                         if (data.success) {
                             Toast.fire({
                                 icon: 'success',
-                                title: data.message
+                                title: data.message || '{{ __("admin.users.messages.success_status_changed") }}'
                             });
                             setTimeout(() => window.location.reload(), 1000);
                         } else {
                             Toast.fire({
                                 icon: 'error',
-                                title: data.message
+                                title: data.message || '{{ __("admin.users.messages.error_occurred") }}'
                             });
                         }
                     } catch (error) {
                         Toast.fire({
                             icon: 'error',
-                            title: 'An error occurred'
+                            title: '{{ __("admin.users.messages.error_occurred") }}'
                         });
                     }
                 }
@@ -800,70 +765,114 @@
             // Reset Password Function
             async function resetPassword(userId) {
                 const result = await Swal.fire({
-                    title: 'Reset Password?',
-                    text: 'Send password reset link to this user?',
+                    title: '{{ __("admin.users.reset_password.title") }}',
+                    text: '{{ __("admin.users.reset_password.message") }}',
                     icon: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, send reset link',
-                    cancelButtonText: 'Cancel'
+                    confirmButtonText: '{{ __("admin.users.reset_password.yes_send") }}',
+                    cancelButtonText: '{{ __("admin.users.reset_password.cancel") }}'
                 });
 
                 if (result.isConfirmed) {
                     Swal.fire({
-                        title: 'Sending...',
-                        text: 'Please wait',
+                        title: '{{ __("admin.users.reset_password.sending") }}',
+                        text: '{{ __("admin.users.messages.please_wait") }}',
                         allowOutsideClick: false,
                         showConfirmButton: false,
                         willOpen: () => Swal.showLoading()
                     });
 
-                    // Here you would implement password reset logic
-                    setTimeout(() => {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Reset Link Sent!',
-                            text: 'Password reset link has been sent to the user\'s email.',
-                            timer: 2000,
-                            showConfirmButton: false
+                    try {
+                        const response = await fetch(`{{ url('admin/users/reset-password') }}/${userId}`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
                         });
-                    }, 1500);
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: '{{ __("admin.users.messages.success_reset_sent") }}',
+                                text: data.message || '{{ __("admin.users.messages.success_reset_message") }}',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: '{{ __("admin.users.messages.error_failed") }}',
+                                text: data.message || '{{ __("admin.users.messages.error_occurred") }}'
+                            });
+                        }
+                    } catch (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '{{ __("admin.users.messages.error_occurred") }}',
+                            text: '{{ __("admin.users.messages.error_occurred") }}'
+                        });
+                    }
                 }
             }
 
             // Send Verification Email
             async function sendVerificationEmail(userId) {
                 const result = await Swal.fire({
-                    title: 'Send Verification Email?',
-                    text: 'Send email verification link to this user?',
+                    title: '{{ __("admin.users.verification.title") }}',
+                    text: '{{ __("admin.users.verification.message") }}',
                     icon: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, send verification',
-                    cancelButtonText: 'Cancel'
+                    confirmButtonText: '{{ __("admin.users.verification.yes_send") }}',
+                    cancelButtonText: '{{ __("admin.users.verification.cancel") }}'
                 });
 
                 if (result.isConfirmed) {
                     Swal.fire({
-                        title: 'Sending...',
-                        text: 'Please wait',
+                        title: '{{ __("admin.users.verification.sending") }}',
+                        text: '{{ __("admin.users.messages.please_wait") }}',
                         allowOutsideClick: false,
                         showConfirmButton: false,
                         willOpen: () => Swal.showLoading()
                     });
 
-                    // Here you would implement email verification logic
-                    setTimeout(() => {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Verification Sent!',
-                            text: 'Email verification link has been sent.',
-                            timer: 2000,
-                            showConfirmButton: false
+                    try {
+                        const response = await fetch(`{{ url('admin/users/resend-verification') }}/${userId}`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
                         });
-                    }, 1500);
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: '{{ __("admin.users.messages.success_verification_sent") }}',
+                                text: data.message || '{{ __("admin.users.messages.success_verification_message") }}',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: '{{ __("admin.users.messages.error_failed") }}',
+                                text: data.message || '{{ __("admin.users.messages.error_occurred") }}'
+                            });
+                        }
+                    } catch (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '{{ __("admin.users.messages.error_occurred") }}',
+                            text: '{{ __("admin.users.messages.error_occurred") }}'
+                        });
+                    }
                 }
             }
 

@@ -38,20 +38,20 @@
     <!-- Recent Orders (2 columns) -->
     <div class="lg:col-span-2 card p-6" data-aos="fade-up" data-aos-delay="100">
         <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-bold text-gray-900">Recent Orders</h2>
+            <h2 class="text-xl font-bold text-gray-900">{{ __('admin.recent_activity.recent_orders') }}</h2>
             <a href="{{ route('admin.orders.index') }}" class="text-sm text-Ocean hover:text-blue-700 font-medium">
-                View All <i class="fas fa-arrow-right ml-1"></i>
+                {{ __('admin.recent_activity.view_all') }} <i class="fas fa-arrow-right ml-1"></i>
             </a>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead>
                     <tr class="border-b border-gray-200">
-                        <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">Order #</th>
-                        <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">Customer</th>
-                        <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">Amount</th>
-                        <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">Status</th>
-                        <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">Date</th>
+                        <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">{{ __('admin.recent_activity.order') }}</th>
+                        <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">{{ __('admin.recent_activity.customer') }}</th>
+                        <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">{{ __('admin.recent_activity.amount') }}</th>
+                        <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">{{ __('admin.recent_activity.status') }}</th>
+                        <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">{{ __('admin.recent_activity.date') }}</th>
                     </tr>
                 </thead>
                 <tbody id="recentOrdersList">
@@ -74,8 +74,8 @@
                 <i class="fas fa-box text-blue-600 text-xl"></i>
             </div>
             <div>
-                <h3 class="font-bold text-gray-900">Products</h3>
-                <p class="text-sm text-gray-600">Manage products</p>
+                <h3 class="font-bold text-gray-900">{{ __('admin.quick_actions.products') }}</h3>
+                <p class="text-sm text-gray-600">{{ __('admin.quick_actions.manage_products') }}</p>
             </div>
         </div>
     </a>
@@ -86,8 +86,8 @@
                 <i class="fas fa-shopping-bag text-green-600 text-xl"></i>
             </div>
             <div>
-                <h3 class="font-bold text-gray-900">Orders</h3>
-                <p class="text-sm text-gray-600">Manage all orders</p>
+                <h3 class="font-bold text-gray-900">{{ __('admin.quick_actions.orders') }}</h3>
+                <p class="text-sm text-gray-600">{{ __('admin.quick_actions.manage_all_orders') }}</p>
             </div>
         </div>
     </a>
@@ -98,8 +98,8 @@
                 <i class="fas fa-tags text-purple-600 text-xl"></i>
             </div>
             <div>
-                <h3 class="font-bold text-gray-900">Categories</h3>
-                <p class="text-sm text-gray-600">Manage categories</p>
+                <h3 class="font-bold text-gray-900">{{ __('admin.quick_actions.categories') }}</h3>
+                <p class="text-sm text-gray-600">{{ __('admin.quick_actions.manage_categories') }}</p>
             </div>
         </div>
     </a>
@@ -110,8 +110,8 @@
                 <i class="fas fa-sync-alt text-orange-600 text-xl"></i>
             </div>
             <div>
-                <h3 class="font-bold text-gray-900">Refresh Data</h3>
-                <p class="text-sm text-gray-600">Update dashboard</p>
+                <h3 class="font-bold text-gray-900">{{ __('admin.quick_actions.refresh_data') }}</h3>
+                <p class="text-sm text-gray-600">{{ __('admin.quick_actions.update_dashboard') }}</p>
             </div>
         </div>
     </button>

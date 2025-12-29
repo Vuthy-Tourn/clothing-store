@@ -8,14 +8,14 @@
         <div class="mb-8" data-aos="fade-up">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 class="text-2xl md:text-3xl font-bold text-gray-900">User Management</h1>
-                    <p class="text-gray-600 mt-1">Manage all registered users in the system</p>
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-900">{{ __('admin.users.title') }}</h1>
+                    <p class="text-gray-600 mt-1">{{ __('admin.users.subtitle') }}</p>
                 </div>
                 <div class="flex items-center space-x-3" data-aos="fade-left" data-aos-delay="200">
                     <button onclick="showCreateModal()"
                         class="flex items-center space-x-2 px-4 py-2.5 bg-gradient-to-r from-Ocean to-Ocean/80 text-white rounded-xl transition-all duration-300 hover:from-Ocean/90 hover:to-Ocean/70 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                         <i class="fas fa-plus"></i>
-                        <span class="font-medium">Add New User</span>
+                        <span class="font-medium">{{ __('admin.users.actions.add_user') }}</span>
                     </button>
                 </div>
             </div>
@@ -36,11 +36,11 @@
                 data-aos="fade-up" data-aos-delay="50">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-blue-600 text-sm font-medium">Total Users</p>
+                        <p class="text-blue-600 text-sm font-medium">{{ __('admin.users.stats.total_users') }}</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1" id="totalUsers">{{ number_format($totalUsers) }}
                         </p>
                         <p class="text-blue-500 text-xs mt-2 flex items-center">
-                            <i class="fas fa-users mr-1"></i> All registered users
+                            <i class="fas fa-users mr-1"></i> {{ __('admin.users.stats.all_registered') }}
                         </p>
                     </div>
                     <div
@@ -54,7 +54,7 @@
                 data-aos="fade-up" data-aos-delay="100">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-green-600 text-sm font-medium">Active Users</p>
+                        <p class="text-green-600 text-sm font-medium">{{ __('admin.users.stats.active_users') }}</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1" id="activeUsers">{{ number_format($activeUsers) }}
                         </p>
                         <div class="flex items-center mt-2">
@@ -75,7 +75,7 @@
                 data-aos="fade-up" data-aos-delay="150">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-purple-600 text-sm font-medium">Verified Users</p>
+                        <p class="text-purple-600 text-sm font-medium">{{ __('admin.users.stats.verified_users') }}</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1" id="verifiedUsers">
                             {{ number_format($verifiedUsers) }}</p>
                         <div class="flex items-center mt-2">
@@ -96,11 +96,11 @@
                 data-aos="fade-up" data-aos-delay="200">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-orange-600 text-sm font-medium">Newsletter Subscribers</p>
+                        <p class="text-orange-600 text-sm font-medium">{{ __('admin.users.stats.newsletter_subscribers') }}</p>
                         <p class="text-3xl font-bold text-gray-900 mt-1" id="newsletterUsers">
                             {{ number_format($newsletterSubscribers) }}</p>
                         <p class="text-orange-500 text-xs mt-2 flex items-center">
-                            <i class="fas fa-newspaper mr-1"></i> Email newsletter
+                            <i class="fas fa-newspaper mr-1"></i> {{ __('admin.users.stats.email_newsletter') }}
                         </p>
                     </div>
                     <div
@@ -134,7 +134,7 @@
                     <div data-aos="fade-down" data-aos-delay="400">
                         <select id="accountTypeFilter"
                             class="w-full md:w-auto px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300 shadow-sm">
-                            <option value="">All Account Types</option>
+                            <option value="">{{ __('admin.users.filters.all_account_types') }}</option>
                             @foreach ($accountTypes as $type)
                                 <option value="{{ $type }}"
                                     {{ request('account_type') == $type ? 'selected' : '' }}>
@@ -148,9 +148,9 @@
                     <div data-aos="fade-down" data-aos-delay="450">
                         <select id="statusFilter"
                             class="w-full md:w-auto px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300 shadow-sm">
-                            <option value="">All Status</option>
-                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive
+                            <option value="">{{ __('admin.users.filters.all_status') }}</option>
+                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>{{ __('admin.users.filters.status_active') }}</option>
+                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>{{ __('admin.users.filters.status_inactive') }}
                             </option>
                         </select>
                     </div>
@@ -159,11 +159,11 @@
                     <div data-aos="fade-down" data-aos-delay="500">
                         <select id="verificationFilter"
                             class="w-full md:w-auto px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300 shadow-sm">
-                            <option value="">All Verification</option>
+                            <option value="">{{ __('admin.users.filters.all_verification') }}</option>
                             <option value="verified" {{ request('verification') == 'verified' ? 'selected' : '' }}>
-                                Verified</option>
+                                {{ __('admin.users.filters.verified') }}</option>
                             <option value="unverified" {{ request('verification') == 'unverified' ? 'selected' : '' }}>
-                                Unverified</option>
+                                {{ __('admin.users.filters.unverified') }}</option>
                         </select>
                     </div>
 
@@ -171,7 +171,7 @@
                     <div data-aos="fade-left" data-aos-delay="550">
                         <button id="resetFilters"
                             class="w-full md:w-auto px-4 py-3 bg-gray-100 text-gray-700 rounded-xl transition-colors duration-300 hover:bg-gray-200 shadow-sm">
-                            <i class="fas fa-redo mr-2"></i>Reset
+                            <i class="fas fa-redo mr-2"></i> {{ __('admin.users.filters.reset') }}
                         </button>
                     </div>
                 </div>
@@ -182,13 +182,13 @@
                 data-aos-delay="600">
                 <div class="flex items-center space-x-3">
                     <input type="checkbox" id="select-all" class="w-4 h-4 text-Ocean rounded focus:ring-Ocean">
-                    <label for="select-all" class="text-sm font-medium text-gray-700">Select All</label>
+                    <label for="select-all" class="text-sm font-medium text-gray-700">{{ __('admin.users.bulk_actions.select_all') }}</label>
                     <select id="bulk-action-select"
                         class="text-sm p-2 border-gray-300 rounded-lg focus:ring-Ocean focus:border-Ocean shadow-sm">
-                        <option value="">Bulk Actions</option>
-                        <option value="activate">Activate Selected</option>
-                        <option value="deactivate">Deactivate Selected</option>
-                        <option value="delete">Delete Selected</option>
+                        <option value="">{{ __('admin.users.bulk_actions.bulk_actions') }}</option>
+                        <option value="activate">{{ __('admin.users.bulk_actions.activate_selected') }}</option>
+                        <option value="deactivate">{{ __('admin.users.bulk_actions.deactivate_selected') }}</option>
+                        <option value="delete">{{ __('admin.users.bulk_actions.delete_selected') }}</option>
                     </select>
                     <button id="apply-bulk-action"
                         class="px-3 py-1.5 text-sm bg-Ocean text-white rounded-lg transition-colors hover:bg-Ocean/90 shadow-sm">
@@ -196,7 +196,7 @@
                     </button>
                 </div>
                 <div class="text-sm text-gray-600">
-                    <span id="showingText">Loading...</span>
+                    <span id="showingText">{{ __('admin.users.filters.loading') }}</span>
                 </div>
             </div>
 
@@ -211,17 +211,17 @@
                                         class="w-4 h-4 text-Ocean rounded focus:ring-Ocean">
                                 </th>
                                 <th class="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    User</th>
+                                    {{ __('admin.users.table.user')  }}</th>
                                 <th class="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Account Type</th>
+                                    {{ __('admin.users.table.account_type') }}</th>
                                 <th class="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Status</th>
+                                    {{ __('admin.users.table.status') }}</th>
                                 <th class="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Verification</th>
+                                    {{ __('admin.users.table.verification') }}</th>
                                 <th class="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Loyalty Points</th>
+                                    {{ __('admin.users.table.loyalty_points') }}</th>
                                 <th class="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Actions</th>
+                                    {{ __('admin.users.table.actions') }}</th>
                             </tr>
                         </thead>
                         <tbody id="usersTableBody" class="divide-y divide-gray-200">
@@ -229,7 +229,7 @@
                             <tr data-aos="fade-in">
                                 <td colspan="8" class="py-8 text-center">
                                     <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-Ocean mx-auto"></div>
-                                    <p class="mt-4 text-gray-600">Loading users...</p>
+                                    <p class="mt-4 text-gray-600">{{ __('admin.users.filters.loading') }}</p>
                                 </td>
                             </tr>
                         </tbody>
@@ -255,8 +255,8 @@
             <div class="p-6">
                 <div class="flex items-center justify-between mb-6">
                     <div>
-                        <h3 class="text-xl font-bold text-gray-900">Create New User</h3>
-                        <p class="text-gray-600 mt-1">Add a new user to the system</p>
+                        <h3 class="text-xl font-bold text-gray-900">{{ __('admin.users.modal.create_title') }}</h3>
+                        <p class="text-gray-600 mt-1">{{ __('admin.users.modal.create_subtitle') }}</p>
                     </div>
                     <button onclick="hideCreateModal()" class="text-gray-500 p-2 rounded-lg hover:bg-gray-100">
                         <i class="fas fa-times text-lg"></i>
@@ -1072,69 +1072,69 @@
 
         // Delete User Function
         async function deleteUser(userId, userName) {
-            const result = await Swal.fire({
-                title: 'Delete User?',
-                html: `<div class="text-left">
+    const result = await Swal.fire({
+        title: '{{ __("admin.users.delete.title") }}',
+        html: `<div class="text-left">
             <p class="mb-4">Are you sure you want to delete <strong>"${userName}"</strong>?</p>
             <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
                 <p class="text-sm text-red-700">
                     <i class="fas fa-exclamation-triangle mr-2"></i>
-                    This will permanently delete all user data.
+                    {{ __("admin.users.delete.warning") }}
                 </p>
             </div>
         </div>`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete!',
-                cancelButtonText: 'Cancel'
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: '{{ __("admin.users.delete.yes_delete") }}',
+        cancelButtonText: '{{ __("admin.users.delete.cancel") }}'
+    });
+
+    if (result.isConfirmed) {
+        Swal.fire({
+            title: '{{ __("admin.users.delete.deleting") }}',
+            text: '{{ __("admin.users.messages.please_wait") }}',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            willOpen: () => Swal.showLoading()
+        });
+
+        try {
+            const response = await fetch(`{{ url('admin/users') }}/${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
             });
 
-            if (result.isConfirmed) {
+            const data = await response.json();
+
+            if (data.success) {
                 Swal.fire({
-                    title: 'Deleting...',
-                    text: 'Please wait',
-                    allowOutsideClick: false,
-                    showConfirmButton: false,
-                    willOpen: () => Swal.showLoading()
+                    icon: 'success',
+                    title: '{{ __("admin.users.messages.success_deleted") }}',
+                    text: data.message || '{{ __("admin.users.messages.success_deleted_message") }}',
+                    timer: 2000,
+                    showConfirmButton: false
                 });
-
-                try {
-                    const response = await fetch(`{{ url('admin/users') }}/${userId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Accept': 'application/json'
-                        }
-                    });
-
-                    const data = await response.json();
-
-                    if (data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Deleted!',
-                            text: data.message,
-                            timer: 2000,
-                            showConfirmButton: false
-                        });
-                        loadUsers(currentPage); // Reload current page
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Failed!',
-                            text: data.message || 'Failed to delete user'
-                        });
-                    }
-                } catch (error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'An error occurred'
-                    });
-                }
+                loadUsers(currentPage); // Reload current page
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: '{{ __("admin.users.messages.error_failed") }}',
+                    text: data.message || '{{ __("admin.users.messages.error_failed_message") }}'
+                });
             }
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: '{{ __("admin.users.messages.error_occurred") }}',
+                text: '{{ __("admin.users.messages.error_occurred") }}'
+            });
+        }
+    }
         }
 
         // Initialize on page load

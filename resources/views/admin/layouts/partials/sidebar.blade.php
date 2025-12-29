@@ -1,6 +1,9 @@
+
 <aside id="sidebar"
     class="w-80 bg-gradient-to-b from-white to-gray-50 min-h-screen fixed flex flex-col justify-between shadow-lg transition-all duration-500 ease-out z-40 lg:translate-x-0 -translate-x-full transform-gpu">
     <!-- Overlay for mobile -->
+                       @include('components.language-switcher')
+
     <div id="sidebarOverlay"
         class="lg:hidden fixed inset-0 bg-black/50 z-30 opacity-0 pointer-events-none transition-opacity duration-300">
     </div>
@@ -41,7 +44,7 @@
                         class="fas fa-chart-pie text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.dashboard') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
                 </div>
                 <span
-                    class="font-medium tracking-wide">Dashboard</span>
+                    class="font-medium tracking-wide">{{ __('admin.sidebar.dashboard') }}</span>
                 <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                 </div>
@@ -51,7 +54,7 @@
             <div class="mt-8 mb-3 relative">
                 <div class="px-4 py-2 text-gray-500 uppercase text-xs font-semibold tracking-wider flex items-center">
                     <span class="bg-gradient-to-r from-gray-300 to-transparent h-px w-4 mr-3"></span>
-                    Content
+                    {{ __('admin.sidebar.content') }}
                     <span class="bg-gradient-to-l from-gray-300 to-transparent h-px w-4 ml-3 flex-1"></span>
                 </div>
             </div>
@@ -63,7 +66,7 @@
                         class="fas fa-images text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.carousels.*') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
                 </div>
                 <span
-                    class="font-medium tracking-wide">Carousels</span>
+                    class="font-medium tracking-wide">{{ __('admin.sidebar.carousels') }}</span>
                 <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                 </div>
@@ -75,7 +78,7 @@
                     <i
                         class="fas fa-user text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.users.*') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
                 </div>
-                <span class="font-medium tracking-wide">Users</span>
+                <span class="font-medium tracking-wide">{{ __('admin.sidebar.users') }}</span>
                 <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                 </div>
@@ -85,7 +88,7 @@
             <div class="mt-8 mb-3 relative">
                 <div class="px-4 py-2 text-gray-500 uppercase text-xs font-semibold tracking-wider flex items-center">
                     <span class="bg-gradient-to-r from-gray-300 to-transparent h-px w-4 mr-3"></span>
-                    Catalog
+                    {{ __('admin.sidebar.catalog') }}
                     <span class="bg-gradient-to-l from-gray-300 to-transparent h-px w-4 ml-3 flex-1"></span>
                 </div>
             </div>
@@ -97,7 +100,7 @@
                         class="fas fa-tags text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.categories.*') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
                 </div>
                 <span
-                    class="font-medium tracking-wide">Categories</span>
+                    class="font-medium tracking-wide">{{ __('admin.sidebar.categories') }}</span>
                 <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                 </div>
@@ -110,7 +113,7 @@
                         class="fas fa-box text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.products.*') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
                 </div>
                 <span
-                    class="font-medium tracking-wide">Products</span>
+                    class="font-medium tracking-wide">{{ __('admin.sidebar.products') }}</span>
                 <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                 </div>
@@ -120,7 +123,7 @@
             <div class="mt-8 mb-3 relative">
                 <div class="px-4 py-2 text-gray-500 uppercase text-xs font-semibold tracking-wider flex items-center">
                     <span class="bg-gradient-to-r from-gray-300 to-transparent h-px w-4 mr-3"></span>
-                    Customers
+                    {{ __('admin.sidebar.customers') }}
                     <span class="bg-gradient-to-l from-gray-300 to-transparent h-px w-4 ml-3 flex-1"></span>
                 </div>
             </div>
@@ -132,7 +135,7 @@
                         class="fas fa-shopping-bag text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.orders.*') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
                 </div>
                 <span
-                    class="font-medium tracking-wide">Orders</span>
+                    class="font-medium tracking-wide">{{ __('admin.sidebar.orders') }}</span>
                 <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                 </div>
@@ -145,7 +148,7 @@
                         class="fas fa-envelope text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.emails.*') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
                 </div>
                 <span
-                    class="font-medium tracking-wide">Subscribers</span>
+                    class="font-medium tracking-wide">{{ __('admin.sidebar.subscribers') }}</span>
                 <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                 </div>
@@ -227,8 +230,8 @@
 
                 <!-- Dropdown Header -->
                 <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-Ocean/5 to-transparent">
-                    <p class="text-sm font-semibold text-gray-900">Account Menu</p>
-                    <p class="text-xs text-gray-500 mt-1">Manage your admin account</p>
+                    <p class="text-sm font-semibold text-gray-900">{{ __('admin.sidebar.account_menu') }}</p>
+                    <p class="text-xs text-gray-500 mt-1">{{ __('admin.sidebar.manage_account') }}</p>
                 </div>
 
                 <!-- Dropdown Items -->
@@ -237,7 +240,7 @@
                     <a href="{{ route('admin.profile.show') }}"
                         class="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-Ocean transition-colors duration-200 group">
                         <i class="fas fa-user text-gray-400 group-hover:text-Ocean text-sm w-5"></i>
-                        <span class="text-sm font-medium">View Profile</span>
+                        <span class="text-sm font-medium">{{ __('admin.sidebar.view_profile') }}</span>
                     </a>
                 </div>
 
@@ -248,7 +251,7 @@
                         <button type="submit"
                             class="w-full flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-red-50 transition-colors duration-200 group">
                             <i class="fas fa-sign-out-alt text-red-400 group-hover:text-red-600 text-sm w-5"></i>
-                            <span class="text-sm font-medium">Logout</span>
+                            <span class="text-sm font-medium">{{ __('admin.sidebar.logout') }}</span>
                         </button>
                     </form>
                 </div>
@@ -264,7 +267,7 @@
             class="lg:hidden w-full card flex items-center justify-center space-x-3 py-3.5 px-4 rounded-xl text-gray-700 hover:text-Ocean bg-white/80 backdrop-blur-sm border border-gray-200/50 hover:border-Ocean/30 hover:shadow-lg hover:bg-gradient-to-r hover:from-red-50/50 hover:to-transparent transition-all duration-300 group">
             <i
                 class="fas fa-sign-out-alt group-hover:scale-110 group-hover:-translate-x-0.5 transition-transform duration-300"></i>
-            <span class="font-medium text-sm tracking-wide">Logout</span>
+            <span class="font-medium text-sm tracking-wide">{{ __('admin.sidebar.logout') }}</span>
         </button>
     </div>
 </aside>

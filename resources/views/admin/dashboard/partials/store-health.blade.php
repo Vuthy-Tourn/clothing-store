@@ -1,6 +1,6 @@
 <!-- Store Health -->
 <div class="card p-6" data-aos="fade-left">
-    <h2 class="text-xl font-bold text-gray-900 mb-6">Store Health</h2>
+    <h2 class="text-xl font-bold text-gray-900 mb-6">{{ __('admin.store_health.title') }}</h2>
     <div class="space-y-4">
         <div class="p-4 rounded-lg bg-green-50 border border-green-200">
             <div class="flex items-center justify-between">
@@ -9,7 +9,7 @@
                         <i class="fas fa-check text-white"></i>
                     </div>
                     <div>
-                        <p class="font-semibold text-gray-900 text-sm">Online Store</p>
+                        <p class="font-semibold text-gray-900 text-sm">{{ __('admin.store_health_alt.online_store') }}</p>
                         <p class="text-xs text-gray-600">All systems active</p>
                     </div>
                 </div>
@@ -22,7 +22,7 @@
                     <i class="fas fa-box text-white"></i>
                 </div>
                 <div>
-                    <p class="font-semibold text-gray-900 text-sm">Inventory</p>
+                    <p class="font-semibold text-gray-900 text-sm">{{ __('admin.store_health_alt.inventory') }}</p>
                     <p class="text-xs text-gray-600"><span id="inventoryPercent">0</span>% stocked</p>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                     <i class="fas fa-truck text-white"></i>
                 </div>
                 <div>
-                    <p class="font-semibold text-gray-900 text-sm">Shipping</p>
+                    <p class="font-semibold text-gray-900 text-sm">{{ __('admin.store_health_alt.shipping') }}</p>
                     <p class="text-xs text-gray-600"><span id="pendingShipments">0</span> pending</p>
                 </div>
             </div>
