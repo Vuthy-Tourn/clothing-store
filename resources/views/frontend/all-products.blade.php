@@ -20,13 +20,13 @@
         <div class="relative h-full flex items-center justify-center">
             <div class="text-center px-4 max-w-4xl">
                 <div class="overflow-hidden mb-8">
-                    <h1 class="text-7xl md:text-9xl font-bold text-white tracking-tighter animate-[slideUp_0.8s_ease-out]">
-                        ALL PRODUCTS
+                    <h1 class="text-7xl md:text-9xl font-bold text-white tracking-tighter animate-[slideUp_0.8s_ease-out] py-5">
+                        {{ __('messages.all_products') }}
                     </h1>
                 </div>
                 <div class="flex items-center justify-center gap-4 text-white/80 text-sm tracking-[0.3em] uppercase">
                     <span class="w-12 h-px bg-white/60"></span>
-                    <span>Collection</span>
+                    <span>{{ __('messages.collection') }}</span>
                     <span class="w-12 h-px bg-white/60"></span>
                 </div>
             </div>
@@ -49,10 +49,10 @@
 
                                 {{-- Search --}}
                                 <div class="space-y-4">
-                                    <h2 class="text-base font-medium text-gray-900 tracking-wide">SEARCH</h2>
+                                    <h2 class="text-base font-medium text-gray-900 tracking-wide">{{ __('messages.search') }}</h2>
                                     <div class="relative">
                                         <input type="text" id="searchInput" value="{{ request('search') }}"
-                                            placeholder="Find your style..."
+                                            placeholder="{{ __('messages.find_your_style') }}"
                                             class="w-full px-0 py-3 bg-transparent border-0 border-b border-gray-300 focus:border-black focus:ring-0 transition-all text-sm placeholder:text-gray-400 rounded-none">
                                         <div class="absolute right-0 top-1/2 -translate-y-1/2">
                                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
@@ -66,7 +66,7 @@
 
                                 {{-- Category --}}
                                 <div class="space-y-4">
-                                    <h2 class="text-base font-medium text-gray-900 tracking-wide">CATEGORY</h2>
+                                    <h2 class="text-base font-medium text-gray-900 tracking-wide">{{ __('messages.category') }}</h2>
                                     <div class="space-y-2">
                                         <label class="flex items-center gap-3 cursor-pointer py-2">
                                             <div class="relative">
@@ -80,7 +80,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <span class="text-sm text-gray-600">All Categories</span>
+                                            <span class="text-sm text-gray-600">{{ __('messages.all_categories') }}</span>
                                         </label>
                                         @foreach ($categories as $cat)
                                             <label class="flex items-center gap-3 cursor-pointer py-2">
@@ -103,7 +103,7 @@
 
                                 {{-- Stock --}}
                                 <div class="space-y-4">
-                                    <h2 class="text-base font-medium text-gray-900 tracking-wide">STOCK STATUS</h2>
+                                    <h2 class="text-base font-medium text-gray-900 tracking-wide">{{ __('messages.stock_status') }}</h2>
                                     <div class="space-y-2">
                                         <label class="flex items-center gap-3 cursor-pointer py-2">
                                             <div class="relative">
@@ -117,7 +117,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <span class="text-sm text-gray-600">All Items</span>
+                                            <span class="text-sm text-gray-600">{{ __('messages.all_items') }}</span>
                                         </label>
                                         <label class="flex items-center gap-3 cursor-pointer py-2">
                                             <div class="relative">
@@ -131,7 +131,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <span class="text-sm text-gray-600">In Stock</span>
+                                            <span class="text-sm text-gray-600">{{ __('messages.in_stock') }}</span>
                                         </label>
                                         <label class="flex items-center gap-3 cursor-pointer py-2">
                                             <div class="relative">
@@ -145,14 +145,14 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <span class="text-sm text-gray-600">Out of Stock</span>
+                                            <span class="text-sm text-gray-600">{{ __('messages.out_of_stock') }}</span>
                                         </label>
                                     </div>
                                 </div>
 
                                 {{-- Sort --}}
                                 <div class="space-y-4">
-                                    <h2 class="text-base font-medium text-gray-900 tracking-wide">SORT BY</h2>
+                                    <h2 class="text-base font-medium text-gray-900 tracking-wide">{{ __('messages.sort_by') }}</h2>
                                     <div class="space-y-2">
                                         <label class="flex items-center gap-3 cursor-pointer py-2">
                                             <div class="relative">
@@ -166,7 +166,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <span class="text-sm text-gray-600">Newest First</span>
+                                            <span class="text-sm text-gray-600">{{ __('messages.newest_first') }}</span>
                                         </label>
                                         <label class="flex items-center gap-3 cursor-pointer py-2">
                                             <div class="relative">
@@ -180,7 +180,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <span class="text-sm text-gray-600">Price: Low to High</span>
+                                            <span class="text-sm text-gray-600">{{ __('messages.price_low_to_high') }}</span>
                                         </label>
                                         <label class="flex items-center gap-3 cursor-pointer py-2">
                                             <div class="relative">
@@ -194,7 +194,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <span class="text-sm text-gray-600">Price: High to Low</span>
+                                            <span class="text-sm text-gray-600">{{ __('messages.price_high_to_low') }}</span>
                                         </label>
                                     </div>
                                 </div>

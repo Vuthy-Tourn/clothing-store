@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\EmailController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\LanguageController;
+use App\Models\Product;
 
 // ==================== PUBLIC ROUTES ====================
 
@@ -75,7 +76,7 @@ Route::middleware('guest')->group(function () {
     // Password Reset Routes
     Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
     Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
-    Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::get('reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
     Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
 });
 
@@ -298,3 +299,4 @@ Route::get('/products/{product}/reviews', [ProductDisplayController::class, 'get
 // Language routes
 Route::post('/language/set', [LanguageController::class, 'set'])->name('language.set');
 Route::post('/language/ajax', [LanguageController::class, 'ajax'])->name('language.ajax');
+Route::get('/search', [ProductDisplayController::class, 'search'])->name('products.search');

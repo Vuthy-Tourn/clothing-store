@@ -1,17 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
-    <title>Verify OTP - Outfit 818</title>
+    <title>{{ __('messages.verify_otp') }} - Outfit 818</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
-        * {
-            font-family: 'Inter', sans-serif;
-        }
-        
+        <link rel="stylesheet" href="{{ asset('assets/css/toast.css') }}">
+     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    
+    <style>        
         body {
             background: #f8f9fa;
         }
@@ -91,15 +88,6 @@
         .slide-in-2 { animation-delay: 0.2s; }
         .slide-in-3 { animation-delay: 0.3s; }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-        
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
@@ -108,16 +96,6 @@
         
         .shake {
             animation: shake 0.5s ease-in-out;
-        }
-        
-        @keyframes success {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        
-        .success-animation {
-            animation: success 0.5s ease-in-out;
         }
         
         /* Text Colors */
@@ -131,132 +109,123 @@
 
     <main class="flex-grow flex items-center justify-center p-4">
         <!-- Main Container -->
-        <div class="max-w-2xl w-full">
+        <div class="max-w-xl w-full">
             <div class="main-container rounded-2xl overflow-hidden">
-                <div class="">
+                <!-- OTP Form -->
+                <div class="bg-white p-8 lg:p-12">
+                    <!-- Header -->
+                    <div class="text-center mb-8">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-black rounded-full flex items-center justify-center slide-in slide-in-1">
+                            <i class="fas fa-envelope text-white text-xl"></i>
+                        </div>
+                        <h1 class="text-2xl font-bold text-primary-black mb-2 slide-in slide-in-1">
+                            {{ __('messages.email_verification') }}
+                        </h1>
+                        <p class="text-gray-medium slide-in slide-in-2">
+                            {{ __('messages.enter_6_digit_code') }}
+                        </p>
+                        <div class="mt-1 slide-in slide-in-2">
+                            <span class="font-medium text-secondary-black">{{ $email }}</span>
+                        </div>
+                    </div>
                     
-               
-                    <!-- RIGHT SIDE: OTP Form -->
-                    <div class="bg-white p-8 lg:p-12">
-                        <!-- Header -->
-                        <div class="text-center mb-8">
-                            <div class="w-16 h-16 mx-auto mb-4 bg-black rounded-full flex items-center justify-center slide-in slide-in-1">
-                                <i class="fas fa-envelope text-white text-xl"></i>
+                    <!-- OTP Form -->
+                    <form method="POST" action="{{ route('otp.verify') }}" id="otpForm">
+                        @csrf
+                        <input type="hidden" name="email" value="{{ $email }}">
+                        
+                        <!-- OTP Input Boxes -->
+                        <div class="mb-8 slide-in slide-in-2">
+                            <label class="block text-sm font-medium text-secondary-black mb-3 text-center">
+                                {{ __('messages.enter_6_digit_code') }}
+                            </label>
+                            <div class="flex justify-center">
+                                <input type="text" maxlength="1" 
+                                       class="otp-input form-input rounded-lg first:ml-0"
+                                       data-index="1"
+                                       oninput="moveToNext(this, 2)"
+                                       onkeydown="handleBackspace(this, event)"
+                                       aria-label="OTP digit 1">
+                                <input type="text" maxlength="1" 
+                                       class="otp-input form-input rounded-lg"
+                                       data-index="2"
+                                       oninput="moveToNext(this, 3)"
+                                       onkeydown="handleBackspace(this, event)"
+                                       aria-label="OTP digit 2">
+                                <input type="text" maxlength="1" 
+                                       class="otp-input form-input rounded-lg"
+                                       data-index="3"
+                                       oninput="moveToNext(this, 4)"
+                                       onkeydown="handleBackspace(this, event)"
+                                       aria-label="OTP digit 3">
+                                <div class="w-4"></div>
+                                <input type="text" maxlength="1" 
+                                       class="otp-input form-input rounded-lg"
+                                       data-index="4"
+                                       oninput="moveToNext(this, 5)"
+                                       onkeydown="handleBackspace(this, event)"
+                                       aria-label="OTP digit 4">
+                                <input type="text" maxlength="1" 
+                                       class="otp-input form-input rounded-lg"
+                                       data-index="5"
+                                       oninput="moveToNext(this, 6)"
+                                       onkeydown="handleBackspace(this, event)"
+                                       aria-label="OTP digit 5">
+                                <input type="text" maxlength="1" 
+                                       class="otp-input form-input rounded-lg"
+                                       data-index="6"
+                                       oninput="updateHiddenOTP()"
+                                       onkeydown="handleBackspace(this, event)"
+                                       aria-label="OTP digit 6">
                             </div>
-                            <h1 class="text-2xl font-bold text-primary-black mb-2 slide-in slide-in-1">EMAIL VERIFICATION</h1>
-                            <p class="text-gray-medium slide-in slide-in-2">Enter the 6-digit code sent to</p>
-                            <div class="mt-1 slide-in slide-in-2">
-                                <span class="font-medium text-secondary-black">{{ $email }}</span>
-                            </div>
+                            <input type="hidden" name="otp" id="hiddenOTP">
+                            <p class="text-xs text-gray-medium text-center mt-3">
+                                {{ __('messages.type_6_digit_code') }}
+                            </p>
                         </div>
                         
-                        <!-- Messages -->
-                        @if(session('success'))
-                            <div class="mb-6 p-3 bg-green-50 border border-green-200 rounded-lg slide-in slide-in-2">
-                                <div class="flex items-center">
-                                    <i class="fas fa-check-circle text-green-600 mr-2"></i>
-                                    <span class="text-green-700 text-sm">{{ session('success') }}</span>
-                                </div>
-                            </div>
-                        @endif
-
-                        @if($errors->any())
-                            <div class="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg slide-in slide-in-2 shake" id="error-message">
-                                <div class="flex items-center">
-                                    <i class="fas fa-exclamation-circle text-red-600 mr-2"></i>
-                                    <div class="text-red-700 text-sm">
-                                        @foreach ($errors->all() as $error)
-                                            <div>{{ $error }}</div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                        
-                        <!-- OTP Form -->
-                        <form method="POST" action="{{ route('otp.verify') }}" id="otpForm">
-                            @csrf
-                            <input type="hidden" name="email" value="{{ $email }}">
-                            
-                            <!-- OTP Input Boxes -->
-                            <div class="mb-8 slide-in slide-in-2">
-                                <label class="block text-sm font-medium text-secondary-black mb-3 text-center">
-                                    Enter 6-digit code
-                                </label>
-                                <div class="flex justify-center">
-                                    <input type="text" maxlength="1" 
-                                           class="otp-input form-input rounded-lg first:ml-0"
-                                           data-index="1"
-                                           oninput="moveToNext(this, 2)"
-                                           onkeydown="handleBackspace(this, event)">
-                                    <input type="text" maxlength="1" 
-                                           class="otp-input form-input rounded-lg"
-                                           data-index="2"
-                                           oninput="moveToNext(this, 3)"
-                                           onkeydown="handleBackspace(this, event)">
-                                    <input type="text" maxlength="1" 
-                                           class="otp-input form-input rounded-lg"
-                                           data-index="3"
-                                           oninput="moveToNext(this, 4)"
-                                           onkeydown="handleBackspace(this, event)">
-                                    <div class="w-4"></div>
-                                    <input type="text" maxlength="1" 
-                                           class="otp-input form-input rounded-lg"
-                                           data-index="4"
-                                           oninput="moveToNext(this, 5)"
-                                           onkeydown="handleBackspace(this, event)">
-                                    <input type="text" maxlength="1" 
-                                           class="otp-input form-input rounded-lg"
-                                           data-index="5"
-                                           oninput="moveToNext(this, 6)"
-                                           onkeydown="handleBackspace(this, event)">
-                                    <input type="text" maxlength="1" 
-                                           class="otp-input form-input rounded-lg"
-                                           data-index="6"
-                                           oninput="updateHiddenOTP()"
-                                           onkeydown="handleBackspace(this, event)">
-                                </div>
-                                <input type="hidden" name="otp" id="hiddenOTP">
-                                <p class="text-xs text-gray-medium text-center mt-3">Type the 6-digit verification code</p>
-                            </div>
-                            
-                            <!-- Submit Button -->
-                            <div class="mb-6 slide-in slide-in-3">
-                                <button type="submit" 
-                                        class="w-full py-3 btn-primary font-semibold rounded-lg transition-all duration-300"
-                                        id="verifyBtn">
-                                    <span class="flex items-center justify-center">
-                                        VERIFY OTP
-                                        <i class="fas fa-check-circle ml-2"></i>
-                                    </span>
-                                </button>
-                            </div>
-                        </form>
-                        
-                        <!-- Resend OTP -->
-                        <div class="text-center slide-in slide-in-3">
-                            <p class="text-sm text-gray-medium mb-2">Didn't receive the code?</p>
-                            <a href="{{ route('otp.resend', ['email' => $email]) }}" 
-                               class="inline-flex items-center text-secondary-black font-medium hover:underline"
-                               id="resendLink">
-                                <i class="fas fa-redo mr-2"></i>
-                                <span>Resend OTP</span>
-                                <span id="resendTimer" class="ml-2 text-gray-medium hidden">(60s)</span>
-                            </a>
+                        <!-- Submit Button -->
+                        <div class="mb-6 slide-in slide-in-3">
+                            <button type="submit" 
+                                    class="w-full py-3 btn-primary font-semibold rounded-lg transition-all duration-300"
+                                    id="verifyBtn" disabled>
+                                <span class="flex items-center justify-center">
+                                    {{ __('messages.verify_otp') }}
+                                    <i class="fas fa-check-circle ml-2"></i>
+                                </span>
+                            </button>
                         </div>
-                        
-                        <!-- Alternative Options -->
-                        <div class="mt-8 pt-6 border-t border-gray-200 slide-in slide-in-3">
-                            <div class="text-center">
-                                <p class="text-sm text-gray-medium mb-3">Having trouble?</p>
-                                <div class="flex justify-center space-x-4">
-                                    <a href="mailto:support@outfit818.com" class="text-sm text-secondary-black hover:underline">
-                                        <i class="fas fa-envelope mr-1"></i> Contact Support
-                                    </a>
-                                    <a href="{{ route('register') }}" class="text-sm text-secondary-black hover:underline">
-                                        <i class="fas fa-user-plus mr-1"></i> Register Again
-                                    </a>
-                                </div>
+                    </form>
+                    
+                    <!-- Resend OTP -->
+                    <div class="text-center slide-in slide-in-3">
+                        <p class="text-sm text-gray-medium mb-2">
+                            {{ __('messages.didnt_receive_code') }}
+                        </p>
+                        <a href="{{ route('otp.resend', ['email' => $email]) }}" 
+                           class="inline-flex items-center text-secondary-black font-medium hover:underline"
+                           id="resendLink">
+                            <i class="fas fa-redo mr-2"></i>
+                            <span>{{ __('messages.resend_otp') }}</span>
+                            <span id="resendTimer" class="ml-2 text-gray-medium hidden"></span>
+                        </a>
+                    </div>
+                    
+                    <!-- Alternative Options -->
+                    <div class="mt-8 pt-6 border-t border-gray-200 slide-in slide-in-3">
+                        <div class="text-center">
+                            <p class="text-sm text-gray-medium mb-3">
+                                {{ __('messages.having_trouble') }}
+                            </p>
+                            <div class="flex justify-center space-x-4">
+                                <a href="mailto:support@outfit818.com" class="text-sm text-secondary-black hover:underline">
+                                    <i class="fas fa-envelope mr-1"></i> 
+                                    {{ __('messages.contact_support') }}
+                                </a>
+                                <a href="{{ route('register') }}" class="text-sm text-secondary-black hover:underline">
+                                    <i class="fas fa-user-plus mr-1"></i> 
+                                    {{ __('messages.register_again') }}
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -265,13 +234,19 @@
         </div>
     </main>
 
-    <!-- Footer Placeholder -->
-    <footer class="bg-white py-4 text-center border-t border-gray-200">
-        <p class="text-gray-600 text-sm">&copy; 2024 Outfit 818. All rights reserved.</p>
-    </footer>
-
+    <!-- Include Toast JS -->
+    <script src="{{ asset('assets/js/toast.js') }}"></script>
+    
     <script>
-        // Initialize animations
+        // Set translated titles for toast
+        window.toastTitles = {
+            success: '{{ __("messages.success") }}',
+            error: '{{ __("messages.error") }}',
+            info: '{{ __("messages.info") }}',
+            warning: '{{ __("messages.warning") }}'
+        };
+        
+        // Initialize on DOM loaded
         document.addEventListener('DOMContentLoaded', function() {
             // Add slide-in animations
             document.querySelectorAll('.slide-in').forEach((el, index) => {
@@ -287,13 +262,28 @@
             
             // Setup resend timer
             setupResendTimer();
+            
+            // Setup form submission
+            setupFormSubmission();
+            
+            // Show session messages as toasts
+            @if(session('success'))
+                showSuccess('{{ session('success') }}');
+            @endif
+            
+            @if($errors->any())
+                @foreach ($errors->all() as $error)
+                    showError('{{ $error }}');
+                @endforeach
+            @endif
         });
         
         // Countdown Timer
         function startCountdown(seconds) {
-            const countdownElement = document.getElementById('countdown');
             const resendTimer = document.getElementById('resendTimer');
             const resendLink = document.getElementById('resendLink');
+            
+            if (!resendTimer || !resendLink) return;
             
             let timer = seconds;
             
@@ -301,22 +291,20 @@
                 const minutes = Math.floor(timer / 60);
                 const secs = timer % 60;
                 
-                countdownElement.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                resendTimer.textContent = `(${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')})`;
+                resendTimer.classList.remove('hidden');
                 
-                if (timer <= 60) {
-                    countdownElement.classList.add('text-red-500');
-                }
+                // Disable resend link during countdown
+                resendLink.style.pointerEvents = 'none';
+                resendLink.classList.add('text-gray-400');
+                resendLink.classList.remove('text-secondary-black', 'hover:underline');
                 
                 if (timer <= 0) {
                     clearInterval(interval);
-                    countdownElement.textContent = "Expired";
-                    countdownElement.classList.add('text-red-600');
-                    
-                    // Show resend timer
-                    if (resendTimer) {
-                        resendTimer.classList.remove('hidden');
-                        startResendCountdown(60);
-                    }
+                    resendTimer.classList.add('hidden');
+                    resendLink.style.pointerEvents = 'auto';
+                    resendLink.classList.remove('text-gray-400');
+                    resendLink.classList.add('text-secondary-black', 'hover:underline');
                 }
                 
                 timer--;
@@ -345,6 +333,10 @@
                     
                     updateHiddenOTP();
                     otpInputs[5].focus();
+                });
+                
+                input.addEventListener('focus', function() {
+                    this.select();
                 });
             });
         }
@@ -392,72 +384,129 @@
             }
         }
         
-        // Resend Timer
-        function setupResendTimer() {
-            let canResend = false;
-            const resendLink = document.getElementById('resendLink');
-            const resendTimer = document.getElementById('resendTimer');
+        // Form Submission with AJAX
+        function setupFormSubmission() {
+            const otpForm = document.getElementById('otpForm');
+            if (!otpForm) return;
             
-            if (resendLink) {
-                resendLink.addEventListener('click', function(e) {
-                    if (!canResend) {
-                        e.preventDefault();
-                        return;
+            otpForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const verifyBtn = document.getElementById('verifyBtn');
+                const btnText = verifyBtn.querySelector('span');
+                const originalHTML = btnText.innerHTML;
+                
+                // Show loading state
+                btnText.innerHTML = `
+                    <i class="fas fa-spinner fa-spin mr-2"></i>
+                    {{ __("messages.verifying") }}
+                `;
+                verifyBtn.disabled = true;
+                verifyBtn.classList.add('opacity-75');
+                
+                try {
+                    const formData = new FormData(this);
+                    
+                    const response = await fetch(this.action, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                        },
+                        body: formData
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        if (data.success) {
+                            // Show success toast
+                            showSuccess(data.message || '{{ __("messages.verification_success") }}');
+                            
+                            // Redirect to home after 1.5 seconds
+                            setTimeout(() => {
+                                window.location.href = data.redirect || '/';
+                            }, 1500);
+                        } else {
+                            showError(data.message || '{{ __("messages.verification_failed") }}');
+                        }
+                    } else {
+                        // Handle validation errors
+                        if (data.errors) {
+                            Object.values(data.errors).forEach(error => {
+                                showError(error[0]);
+                            });
+                        } else {
+                            showError(data.message || '{{ __("messages.verification_error") }}');
+                        }
                     }
-                });
-            }
-        }
-        
-        function startResendCountdown(seconds) {
-            const resendLink = document.getElementById('resendLink');
-            const resendTimer = document.getElementById('resendTimer');
-            
-            if (!resendLink || !resendTimer) return;
-            
-            let timer = seconds;
-            resendTimer.classList.remove('hidden');
-            resendLink.style.pointerEvents = 'none';
-            resendLink.classList.add('text-gray-light');
-            
-            const interval = setInterval(() => {
-                resendTimer.textContent = `(${timer}s)`;
-                
-                if (timer <= 0) {
-                    clearInterval(interval);
-                    resendTimer.classList.add('hidden');
-                    resendLink.style.pointerEvents = 'auto';
-                    resendLink.classList.remove('text-gray-light');
-                    resendLink.classList.add('text-secondary-black');
+                } catch (error) {
+                    console.error('Error:', error);
+                    showError('{{ __("messages.network_error") }}');
+                    
+                    // Fallback to normal form submission
+                    setTimeout(() => {
+                        otpForm.submit();
+                    }, 1000);
+                } finally {
+                    // Re-enable button after 2 seconds
+                    setTimeout(() => {
+                        verifyBtn.disabled = false;
+                        btnText.innerHTML = originalHTML;
+                        verifyBtn.classList.remove('opacity-75');
+                    }, 2000);
                 }
-                
-                timer--;
-            }, 1000);
+            });
         }
         
-        // Form Submission Animation
-        document.getElementById('otpForm').addEventListener('submit', function(e) {
-            const verifyBtn = document.getElementById('verifyBtn');
-            const btnText = verifyBtn.querySelector('span');
-            const btnIcon = verifyBtn.querySelector('i');
-            
-            // Show loading state
-            btnText.innerHTML = 'VERIFYING...';
-            btnIcon.className = 'fas fa-spinner fa-spin ml-2';
-            verifyBtn.disabled = true;
-            verifyBtn.classList.add('opacity-75');
-            
-            // Optional: Add success animation on successful verification
-            // This would be handled by the backend response
-        });
-        
-        // Error message shake animation
-        const errorMessage = document.getElementById('error-message');
-        if (errorMessage) {
-            setTimeout(() => {
-                errorMessage.classList.remove('shake');
-                void errorMessage.offsetWidth; // Trigger reflow
-                errorMessage.classList.add('shake');
-            }, 100);
+        // Resend OTP with AJAX
+        const resendLink = document.getElementById('resendLink');
+        if (resendLink) {
+            resendLink.addEventListener('click', async function(e) {
+                e.preventDefault();
+                
+                const link = this.href;
+                const timerElement = document.getElementById('resendTimer');
+                const linkText = this.querySelector('span');
+                const originalText = linkText.textContent;
+                
+                // Show loading
+                linkText.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>{{ __("messages.sending") }}';
+                this.style.pointerEvents = 'none';
+                
+                try {
+                    const response = await fetch(link, {
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        if (data.success) {
+                            showSuccess(data.message || '{{ __("messages.otp_resent") }}');
+                            
+                            // Start new countdown
+                            startCountdown(60);
+                        } else {
+                            showError(data.message || '{{ __("messages.resend_failed") }}');
+                        }
+                    } else {
+                        showError(data.message || '{{ __("messages.resend_error") }}');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showError('{{ __("messages.network_error") }}');
+                } finally {
+                    // Restore link text
+                    setTimeout(() => {
+                        linkText.textContent = originalText;
+                    }, 1000);
+                }
+            });
         }
     </script>
 </body>

@@ -21,13 +21,20 @@ class CustomPasswordResetMail extends Mailable
 
     public function build()
     {
-        $url = url(route('password.reset', ['token' => $this->token, 'email' => $this->user->email], false));
+        // Generate the reset URL - make sure it's just the relative path
+        $resetUrl = url('/reset-password/' . $this->token . '?email=' . urlencode($this->user->email));
+        
+        // Alternative using route() - but ensure it's correct
+        // $resetUrl = route('password.reset', [
+        //     'token' => $this->token,
+        //     'email' => $this->user->email,
+        // ]);
 
         return $this->subject('Reset Your Outfit 818 Password')
-                    ->view('emails.custom-password-reset')
-                    ->with([
-                        'resetUrl' => $url,
-                        'user' => $this->user,
-                    ]);
+            ->view('emails.custom-password-reset')
+            ->with([
+                'resetUrl' => $resetUrl,
+                'user' => $this->user,
+            ]);
     }
 }

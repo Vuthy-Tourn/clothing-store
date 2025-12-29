@@ -2275,7 +2275,7 @@
         maxAdditionalImages: 5,
         imageIndex: 1,
         fileSizeLimit: 5 * 1024 * 1024, // 5MB
-        allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'],
+        allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml','image/avif'],
 
         // Initialize image manager
         init: function() {

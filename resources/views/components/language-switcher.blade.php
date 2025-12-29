@@ -4,10 +4,10 @@
             class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none">
         @if(app()->getLocale() == 'en')
             <span class="mr-2">🇺🇸</span>
-            <span>English</span>
+            <span class="hidden lg:flex">English</span>
         @else
             <span class="mr-2">🇰🇭</span>
-            <span>ខ្មែរ</span>
+            <span class="hidden lg:flex">ខ្មែរ</span>
         @endif
         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>

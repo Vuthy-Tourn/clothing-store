@@ -1,0 +1,150 @@
+/* Toast Notification System */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+}
+
+.toast {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-left: 4px solid;
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+    overflow: hidden;
+    min-width: 300px;
+    max-width: 400px;
+}
+
+.toast.show {
+    transform: translateX(0);
+}
+
+.toast-success {
+    border-left-color: #10b981;
+}
+
+.toast-error {
+    border-left-color: #ef4444;
+}
+
+.toast-info {
+    border-left-color: #3b82f6;
+}
+
+.toast-warning {
+    border-left-color: #f59e0b;
+}
+
+.toast-content {
+    padding: 16px;
+    position: relative;
+}
+
+.toast-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px;
+    transition: color 0.2s;
+}
+
+.toast-close:hover {
+    color: #666;
+}
+
+.toast-progress {
+    height: 3px;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.1);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.toast-progress-bar {
+    height: 100%;
+    width: 100%;
+    transform-origin: left;
+    animation: toast-progress 5s linear forwards;
+}
+
+.toast-success .toast-progress-bar {
+    background: #10b981;
+}
+
+.toast-error .toast-progress-bar {
+    background: #ef4444;
+}
+
+.toast-info .toast-progress-bar {
+    background: #3b82f6;
+}
+
+.toast-warning .toast-progress-bar {
+    background: #f59e0b;
+}
+
+.slide-in {
+    animation: slideIn 0.6s ease-out forwards;
+    opacity: 0;
+}
+
+.slide-in-1 { animation-delay: 0.1s; }
+.slide-in-2 { animation-delay: 0.2s; }
+.slide-in-3 { animation-delay: 0.3s; }
+
+.text-primary-black { color: #111111; }
+.text-secondary-black { color: #333333; }
+.text-gray-medium { color: #666666; }
+.text-gray-light { color: #999999; }
+
+ @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+@keyframes toast-progress {
+    from { transform: scaleX(1); }
+    to { transform: scaleX(0); }
+}
+
+/* Animation for toast */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}

@@ -4,8 +4,8 @@
         <div class="max-w-6xl mx-auto px-4">
             <!-- Header -->
             <div class="text-center mb-12">
-                <h1 class="text-4xl font-bold text-gray-900 mb-3">Complete Your Order</h1>
-                <p class="text-gray-600 text-lg">Secure checkout with fast delivery</p>
+                <h1 class="text-4xl font-bold text-gray-900 mb-3">{{ __('messages.complete_your_order') }}</h1>
+                <p class="text-gray-600 text-lg">{{ __('messages.secure_checkout_fast_delivery') }}</p>
             </div>
 
             @if ($items->count() > 0)
@@ -18,7 +18,7 @@
                                 <div
                                     class="w-8 h-8 bg-gray-900 text-white rounded-full flex items-center justify-center text-sm font-semibold">
                                     1</div>
-                                <h2 class="text-2xl font-bold text-gray-900">Shipping Information</h2>
+                                <h2 class="text-2xl font-bold text-gray-900">{{ __('messages.shipping_information') }}</h2>
                             </div>
 
                             <!-- Address Selection Tabs -->
@@ -27,7 +27,7 @@
                                     <button type="button"
                                         class="address-tab flex-1 py-3 px-4 text-center font-medium text-gray-600 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-300 transition-all @if ($savedAddresses->count() > 0) active @endif"
                                         data-tab="saved">
-                                        <i class="fas fa-bookmark mr-2"></i>Use Saved Address
+                                        <i class="fas fa-bookmark mr-2"></i>{{ __('messages.use_saved_address') }}
                                         @if ($savedAddresses->count() > 0)
                                             <span class="ml-1 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
                                                 {{ $savedAddresses->count() }}
@@ -37,7 +37,7 @@
                                     <button type="button"
                                         class="address-tab flex-1 py-3 px-4 text-center font-medium text-gray-600 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-300 transition-all @if ($savedAddresses->count() == 0) active @endif"
                                         data-tab="new">
-                                        <i class="fas fa-plus mr-2"></i>Add New Address
+                                        <i class="fas fa-plus mr-2"></i>{{ __('messages.add_new_address') }}
                                     </button>
                                 </div>
                             </div>
@@ -61,10 +61,10 @@
                                                             <div>
                                                                 <div class="flex items-center gap-2 mb-2">
                                                                     <span
-                                                                        class="font-semibold text-gray-900">{{ $address->address_name ?? 'Home' }}</span>
+                                                                        class="font-semibold text-gray-900">{{ $address->address_name ?? __('messages.home') }}</span>
                                                                     @if ($address->is_default)
                                                                         <span
-                                                                            class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Default</span>
+                                                                            class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">{{ __('messages.default') }}</span>
                                                                     @endif
                                                                 </div>
                                                                 <p class="text-gray-900 font-medium">
@@ -98,8 +98,8 @@
                                     @else
                                         <div class="text-center py-8 border-2 border-dashed border-gray-300 rounded-xl">
                                             <i class="fas fa-map-marker-alt text-gray-400 text-4xl mb-3"></i>
-                                            <p class="text-gray-600">No saved addresses found.</p>
-                                            <p class="text-gray-500 text-sm mt-1">Please add a new address below.</p>
+                                            <p class="text-gray-600">{{ __('messages.no_saved_addresses') }}</p>
+                                            <p class="text-gray-500 text-sm mt-1">{{ __('messages.add_new_address_below') }}</p>
                                         </div>
                                     @endif
                                 </div>
@@ -113,8 +113,8 @@
                                     <!-- Save Address Option -->
                                     <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
                                         <div>
-                                            <p class="font-medium text-gray-900">Save this address for future use</p>
-                                            <p class="text-sm text-gray-600">We'll store this address in your address book
+                                            <p class="font-medium text-gray-900">{{ __('messages.save_address_for_future') }}</p>
+                                            <p class="text-sm text-gray-600">{{ __('messages.save_address_description') }}
                                             </p>
                                         </div>
                                         <label class="relative inline-flex items-center cursor-pointer">
@@ -129,23 +129,23 @@
                                     <!-- Address Name Field (Conditional) -->
                                     <div id="address_name_field" class="hidden">
                                         <label for="address_name" class="block text-sm font-semibold text-gray-900 mb-2">
-                                            Address Name
+                                            {{ __('messages.address_name') }}
                                         </label>
                                         <input type="text" id="address_name" name="address_name"
                                             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
-                                            placeholder="e.g., Home, Office, Mom's House"
+                                            placeholder="{{ __('messages.address_name_placeholder') }}"
                                             value="{{ old('address_name') }}">
                                     </div>
 
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
                                             <label for="name" class="block text-sm font-semibold text-gray-900 mb-2">
-                                                Full Name <span class="text-red-500">*</span>
+                                                {{ __('messages.full_name') }} <span class="text-red-500">*</span>
                                             </label>
                                             <input type="text" id="name" name="name" required
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all @error('name') border-red-500 @enderror"
                                                 value="{{ old('name', auth()->user()->name ?? '') }}"
-                                                placeholder="Enter your full name">
+                                                placeholder="{{ __('messages.enter_full_name') }}">
                                             @error('name')
                                                 <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                                             @enderror
@@ -153,7 +153,7 @@
 
                                         <div>
                                             <label for="email" class="block text-sm font-semibold text-gray-900 mb-2">
-                                                Email Address <span class="text-red-500">*</span>
+                                                {{ __('messages.email_address') }} <span class="text-red-500">*</span>
                                             </label>
                                             <input type="email" id="email" name="email" required
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all @error('email') border-red-500 @enderror"
@@ -166,14 +166,13 @@
 
                                         <div>
                                             <label for="phone" class="block text-sm font-semibold text-gray-900 mb-2">
-                                                Phone Number <span class="text-red-500">*</span>
+                                                {{ __('messages.phone_number') }} <span class="text-red-500">*</span>
                                             </label>
                                             <input type="tel" id="phone" name="phone" required
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all @error('phone') border-red-500 @enderror"
                                                 value="{{ old('phone', auth()->user()->phone ?? '') }}"
-                                                placeholder="e.g., +855123456789">
-                                            <p class="text-xs text-gray-500 mt-1">Cambodia format: +85510xxxxxx or
-                                                010xxxxxx (10, 11, 12, 15-20, 23-29)</p>
+                                                placeholder="{{ __('messages.phone_placeholder') }}">
+                                            <p class="text-xs text-gray-500 mt-1">{{ __('messages.cambodia_phone_format') }}</p>
                                             @error('phone')
                                                 <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                                             @enderror
@@ -181,11 +180,11 @@
 
                                         <div>
                                             <label for="city" class="block text-sm font-semibold text-gray-900 mb-2">
-                                                City <span class="text-red-500">*</span>
+                                                {{ __('messages.city') }} <span class="text-red-500">*</span>
                                             </label>
                                             <input type="text" id="city" name="city" required
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all @error('city') border-red-500 @enderror"
-                                                value="{{ old('city') }}" placeholder="Your city">
+                                                value="{{ old('city') }}" placeholder="{{ __('messages.your_city') }}">
                                             @error('city')
                                                 <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                                             @enderror
@@ -193,11 +192,11 @@
 
                                         <div>
                                             <label for="state" class="block text-sm font-semibold text-gray-900 mb-2">
-                                                State/Province <span class="text-red-500">*</span>
+                                                {{ __('messages.state_province') }} <span class="text-red-500">*</span>
                                             </label>
                                             <input type="text" id="state" name="state" required
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all @error('state') border-red-500 @enderror"
-                                                value="{{ old('state') }}" placeholder="Your state or province">
+                                                value="{{ old('state') }}" placeholder="{{ __('messages.your_state_province') }}">
                                             @error('state')
                                                 <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                                             @enderror
@@ -205,12 +204,12 @@
 
                                         <div>
                                             <label for="zip" class="block text-sm font-semibold text-gray-900 mb-2">
-                                                ZIP Code <span class="text-red-500">*</span>
+                                                {{ __('messages.zip_code') }} <span class="text-red-500">*</span>
                                             </label>
                                             <input type="text" id="zip" name="zip" required
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all @error('zip') border-red-500 @enderror"
                                                 value="{{ old('zip') }}" placeholder="12345">
-                                            <p class="text-xs text-gray-500 mt-1">5-6 digit postal code</p>
+                                            <p class="text-xs text-gray-500 mt-1">{{ __('messages.zip_code_format') }}</p>
                                             @error('zip')
                                                 <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                                             @enderror
@@ -218,11 +217,11 @@
 
                                         <div class="md:col-span-2">
                                             <label for="address" class="block text-sm font-semibold text-gray-900 mb-2">
-                                                Full Address <span class="text-red-500">*</span>
+                                                {{ __('messages.full_address') }} <span class="text-red-500">*</span>
                                             </label>
                                             <textarea id="address" name="address" rows="3" required
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all @error('address') border-red-500 @enderror"
-                                                placeholder="House number, street, building name (min. 10 characters)">{{ old('address') }}</textarea>
+                                                placeholder="{{ __('messages.address_placeholder') }}">{{ old('address') }}</textarea>
                                             @error('address')
                                                 <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                                             @enderror
@@ -230,31 +229,31 @@
 
                                         <div class="md:col-span-2">
                                             <label for="address2" class="block text-sm font-semibold text-gray-900 mb-2">
-                                                Address Line 2 (Optional)
+                                                {{ __('messages.address_line_2') }}
                                             </label>
                                             <input type="text" id="address2" name="address2"
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
-                                                value="{{ old('address2') }}" placeholder="Apartment, suite, unit, etc.">
+                                                value="{{ old('address2') }}" placeholder="{{ __('messages.address_line_2_placeholder') }}">
                                         </div>
 
                                         <div class="md:col-span-2">
                                             <label for="country" class="block text-sm font-semibold text-gray-900 mb-2">
-                                                Country <span class="text-red-500">*</span>
+                                                {{ __('messages.country') }} <span class="text-red-500">*</span>
                                             </label>
                                             <select id="country" name="country" required
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all">
                                                 <option value="United States"
                                                     {{ old('country', 'United States') == 'United States' ? 'selected' : '' }}>
-                                                    United States</option>
+                                                    {{ __('messages.united_states') }}</option>
                                                 <option value="Cambodia"
-                                                    {{ old('country') == 'Cambodia' ? 'selected' : '' }}>Cambodia</option>
+                                                    {{ old('country') == 'Cambodia' ? 'selected' : '' }}>{{ __('messages.cambodia') }}</option>
                                                 <option value="Canada" {{ old('country') == 'Canada' ? 'selected' : '' }}>
-                                                    Canada</option>
+                                                    {{ __('messages.canada') }}</option>
                                                 <option value="United Kingdom"
-                                                    {{ old('country') == 'United Kingdom' ? 'selected' : '' }}>United
-                                                    Kingdom</option>
+                                                    {{ old('country') == 'United Kingdom' ? 'selected' : '' }}>{{ __('messages.united_kingdom') }}
+                                                </option>
                                                 <option value="Australia"
-                                                    {{ old('country') == 'Australia' ? 'selected' : '' }}>Australia
+                                                    {{ old('country') == 'Australia' ? 'selected' : '' }}>{{ __('messages.australia') }}
                                                 </option>
                                             </select>
                                         </div>
@@ -265,60 +264,59 @@
                                                 <input type="checkbox" name="different_billing" value="1"
                                                     class="w-5 h-5 text-gray-900 rounded focus:ring-gray-900"
                                                     id="different_billing_toggle">
-                                                <span class="text-gray-900 font-medium">Use a different billing
-                                                    address</span>
+                                                <span class="text-gray-900 font-medium">{{ __('messages.different_billing_address') }}</span>
                                             </label>
 
                                             <!-- Billing Address Fields (Initially Hidden) -->
                                             <div id="billing_address_fields"
                                                 class="hidden space-y-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
-                                                <h3 class="font-semibold text-gray-900 mb-3">Billing Address</h3>
+                                                <h3 class="font-semibold text-gray-900 mb-3">{{ __('messages.billing_address') }}</h3>
 
                                                 <div>
                                                     <label for="billing_name"
                                                         class="block text-sm font-semibold text-gray-900 mb-2">
-                                                        Billing Name
+                                                        {{ __('messages.billing_name') }}
                                                     </label>
                                                     <input type="text" id="billing_name" name="billing_name"
                                                         class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
-                                                        value="{{ old('billing_name') }}" placeholder="Name on the card">
+                                                        value="{{ old('billing_name') }}" placeholder="{{ __('messages.name_on_card') }}">
                                                 </div>
 
                                                 <div>
                                                     <label for="billing_address"
                                                         class="block text-sm font-semibold text-gray-900 mb-2">
-                                                        Billing Address
+                                                        {{ __('messages.billing_address_field') }}
                                                     </label>
                                                     <textarea id="billing_address" name="billing_address" rows="2"
                                                         class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
-                                                        placeholder="Billing address">{{ old('billing_address') }}</textarea>
+                                                        placeholder="{{ __('messages.billing_address_placeholder') }}">{{ old('billing_address') }}</textarea>
                                                 </div>
 
                                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                     <div>
                                                         <label for="billing_city"
                                                             class="block text-sm font-semibold text-gray-900 mb-2">
-                                                            City
+                                                            {{ __('messages.city') }}
                                                         </label>
                                                         <input type="text" id="billing_city" name="billing_city"
                                                             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
-                                                            value="{{ old('billing_city') }}" placeholder="City">
+                                                            value="{{ old('billing_city') }}" placeholder="{{ __('messages.city') }}">
                                                     </div>
 
                                                     <div>
                                                         <label for="billing_state"
                                                             class="block text-sm font-semibold text-gray-900 mb-2">
-                                                            State
+                                                            {{ __('messages.state') }}
                                                         </label>
                                                         <input type="text" id="billing_state" name="billing_state"
                                                             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
-                                                            value="{{ old('billing_state') }}" placeholder="State">
+                                                            value="{{ old('billing_state') }}" placeholder="{{ __('messages.state') }}">
                                                     </div>
 
                                                     <div>
                                                         <label for="billing_zip"
                                                             class="block text-sm font-semibold text-gray-900 mb-2">
-                                                            ZIP Code
+                                                            {{ __('messages.zip_code') }}
                                                         </label>
                                                         <input type="text" id="billing_zip" name="billing_zip"
                                                             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
@@ -328,15 +326,15 @@
                                                     <div>
                                                         <label for="billing_country"
                                                             class="block text-sm font-semibold text-gray-900 mb-2">
-                                                            Country
+                                                            {{ __('messages.country') }}
                                                         </label>
                                                         <select id="billing_country" name="billing_country"
                                                             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all">
-                                                            <option value="United States">United States</option>
-                                                            <option value="Cambodia">Cambodia</option>
-                                                            <option value="Canada">Canada</option>
-                                                            <option value="United Kingdom">United Kingdom</option>
-                                                            <option value="Australia">Australia</option>
+                                                            <option value="United States">{{ __('messages.united_states') }}</option>
+                                                            <option value="Cambodia">{{ __('messages.cambodia') }}</option>
+                                                            <option value="Canada">{{ __('messages.canada') }}</option>
+                                                            <option value="United Kingdom">{{ __('messages.united_kingdom') }}</option>
+                                                            <option value="Australia">{{ __('messages.australia') }}</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -349,8 +347,7 @@
                                                 <input type="checkbox" name="make_default" value="1"
                                                     class="w-5 h-5 text-gray-900 rounded focus:ring-gray-900"
                                                     {{ old('make_default') ? 'checked' : '' }}>
-                                                <span class="text-gray-900 font-medium">Set as default shipping
-                                                    address</span>
+                                                <span class="text-gray-900 font-medium">{{ __('messages.set_as_default_shipping') }}</span>
                                             </label>
                                         </div>
 
@@ -358,13 +355,12 @@
                                         <div class="md:col-span-2">
                                             <label for="customer_notes"
                                                 class="block text-sm font-semibold text-gray-900 mb-2">
-                                                Order Notes (Optional)
+                                                {{ __('messages.order_notes') }}
                                             </label>
                                             <textarea id="customer_notes" name="customer_notes" rows="2"
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
-                                                placeholder="Any special instructions for your order?">{{ old('customer_notes') }}</textarea>
-                                            <p class="text-xs text-gray-500 mt-1">Delivery instructions, gift messages,
-                                                etc.</p>
+                                                placeholder="{{ __('messages.order_notes_placeholder') }}">{{ old('customer_notes') }}</textarea>
+                                            <p class="text-xs text-gray-500 mt-1">{{ __('messages.order_notes_description') }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -376,7 +372,7 @@
                                 <div
                                     class="w-8 h-8 bg-gray-900 text-white rounded-full flex items-center justify-center text-sm font-semibold">
                                     2</div>
-                                <h2 class="text-2xl font-bold text-gray-900">Payment Method</h2>
+                                <h2 class="text-2xl font-bold text-gray-900">{{ __('messages.payment_method') }}</h2>
                             </div>
 
                             <div class="space-y-4">
@@ -394,11 +390,10 @@
                                             <i class="fas fa-credit-card text-gray-600"></i>
                                         </div>
                                         <div>
-                                            <p class="font-semibold text-gray-900">Online Payment (Stripe)</p>
-                                            <p class="text-sm text-gray-500">Pay securely with your card</p>
+                                            <p class="font-semibold text-gray-900">{{ __('messages.online_payment_stripe') }}</p>
+                                            <p class="text-sm text-gray-500">{{ __('messages.pay_securely_with_card') }}</p>
                                             <p class="text-xs text-gray-400 mt-1">
-                                                <i class="fas fa-globe-americas"></i> USD → KHR conversion shown at
-                                                checkout
+                                                <i class="fas fa-globe-americas"></i> {{ __('messages.usd_khr_conversion') }}
                                             </p>
                                         </div>
                                     </div>
@@ -413,7 +408,7 @@
                     <!-- Order Summary Sidebar -->
                     <div class="lg:col-span-1">
                         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-8">
-                            <h2 class="text-xl font-bold text-gray-900 mb-6">Order Summary</h2>
+                            <h2 class="text-xl font-bold text-gray-900 mb-6">{{ __('messages.order_summary') }}</h2>
 
                             <!-- Order Items -->
                             <div class="space-y-4 mb-6 max-h-96 overflow-y-auto">
@@ -423,7 +418,7 @@
                                             <img src="{{ Str::startsWith($item->product_image, ['http://', 'https://'])
                                                 ? $item->product_image
                                                 : asset('storage/' . $item->product_image) }}"
-                                                alt="{{ $item->product_name ?? 'Product' }}"
+                                                alt="{{ $item->product_name ?? __('messages.product') }}"
                                                 class="w-16 h-16 object-cover rounded-xl">
                                         @else
                                             <div class="w-16 h-16 bg-gray-200 rounded-xl flex items-center justify-center">
@@ -432,10 +427,10 @@
                                         @endif
                                         <div class="flex-1 min-w-0">
                                             <h3 class="font-semibold text-gray-900 text-sm line-clamp-1">
-                                                {{ $item->product_name ?? 'Product' }}</h3>
-                                            <p class="text-sm text-gray-500">Size: {{ $item->size ?? 'N/A' }}</p>
-                                            <p class="text-sm text-gray-500">Color: {{ $item->color ?? 'N/A' }}</p>
-                                            <p class="text-sm text-gray-500">Qty: {{ $item->quantity }}</p>
+                                                {{ $item->product_name ?? __('messages.product') }}</h3>
+                                            <p class="text-sm text-gray-500">{{ __('messages.size') }}: {{ $item->size ?? __('messages.na') }}</p>
+                                            <p class="text-sm text-gray-500">{{ __('messages.color') }}: {{ $item->color ?? __('messages.na') }}</p>
+                                            <p class="text-sm text-gray-500">{{ __('messages.quantity') }}: {{ $item->quantity }}</p>
                                         </div>
                                         <div class="text-right">
                                             <p class="font-semibold text-gray-900">
@@ -448,23 +443,22 @@
                             <!-- Order Totals -->
                             <div class="space-y-3 mb-6">
                                 <div class="flex justify-between text-gray-600">
-                                    <span>Subtotal</span>
+                                    <span>{{ __('messages.subtotal') }}</span>
                                     <span>${{ number_format($subtotal, 2) }}</span>
                                 </div>
                                 <div class="flex justify-between text-gray-600">
-                                    <span>Shipping</span>
+                                    <span>{{ __('messages.shipping') }}</span>
                                     <span class="{{ $shipping == 0 ? 'text-green-600 font-semibold' : 'text-gray-900' }}">
-    {{ $shipping == 0 ? 'Free' : '$' . number_format($shipping, 2) }}
-</span>
-
+                                        {{ $shipping == 0 ? __('messages.free') : '$' . number_format($shipping, 2) }}
+                                    </span>
                                 </div>
                                 <div class="flex justify-between text-gray-600">
-                                    <span>Tax (8%)</span>
+                                    <span>{{ __('messages.tax') }} (8%)</span>
                                     <span>${{ number_format($tax, 2) }}</span>
                                 </div>
                                 <div class="border-t border-gray-200 pt-3">
                                     <div class="flex justify-between text-lg font-bold text-gray-900">
-                                        <span>Total</span>
+                                        <span>{{ __('messages.total') }}</span>
                                         <span>${{ number_format($grandTotal, 2) }}</span>
                                     </div>
                                     @php
@@ -484,21 +478,21 @@
                                         class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-1">
                                         <i class="fas fa-lock text-green-600 text-sm"></i>
                                     </div>
-                                    <p class="text-xs text-gray-500">Secure</p>
+                                    <p class="text-xs text-gray-500">{{ __('messages.secure') }}</p>
                                 </div>
                                 <div class="text-center">
                                     <div
                                         class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-1">
                                         <i class="fas fa-shield-alt text-blue-600 text-sm"></i>
                                     </div>
-                                    <p class="text-xs text-gray-500">Protected</p>
+                                    <p class="text-xs text-gray-500">{{ __('messages.protected') }}</p>
                                 </div>
                                 <div class="text-center">
                                     <div
                                         class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-1">
                                         <i class="fas fa-bolt text-purple-600 text-sm"></i>
                                     </div>
-                                    <p class="text-xs text-gray-500">Fast</p>
+                                    <p class="text-xs text-gray-500">{{ __('messages.fast') }}</p>
                                 </div>
                             </div>
 
@@ -506,7 +500,7 @@
                             <button type="submit"
                                 class="w-full bg-gray-900 text-white py-4 px-6 rounded-xl font-semibold hover:bg-gray-800 transition-all duration-300 hover:scale-105 shadow-lg flex items-center justify-center gap-3 checkout-btn">
                                 <i class="fa-solid fa-cart-shopping"></i>
-                                Pay ${{ number_format($grandTotal, 2) }}
+                                {{ __('messages.pay') }} ${{ number_format($grandTotal, 2) }}
                             </button>
 
                             <!-- Continue Shopping -->
@@ -514,7 +508,7 @@
                                 <a href="{{ route('cart') }}"
                                     class="text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors flex items-center justify-center gap-2">
                                     <i class="fas fa-arrow-left"></i>
-                                    Back to Cart
+                                    {{ __('messages.back_to_cart') }}
                                 </a>
                             </div>
                         </div>
@@ -528,12 +522,12 @@
                         <div class="w-32 h-32 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
                             <i class="fas fa-shopping-cart text-gray-400 text-4xl"></i>
                         </div>
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4">Your cart is empty</h2>
-                        <p class="text-gray-600 mb-8">Add some items to your cart to proceed with checkout.</p>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ __('messages.your_cart_is_empty') }}</h2>
+                        <p class="text-gray-600 mb-8">{{ __('messages.add_items_to_checkout') }}</p>
                         <a href="{{ route('products.all') }}"
                             class="inline-flex items-center gap-2 bg-gray-900 text-white px-8 py-4 rounded-xl font-semibold hover:bg-gray-800 transition-all duration-300 hover:scale-105">
                             <i class="fas fa-bag-shopping"></i>
-                            Browse Products
+                            {{ __('messages.browse_products') }}
                         </a>
                     </div>
                 </div>
@@ -843,7 +837,7 @@
                     // Validate saved address selection
                     if (!savedAddressIdInput.value) {
                         e.preventDefault();
-                        alert('Please select a saved address');
+                        alert('{{ __("messages.select_saved_address") }}');
                         // Switch to saved address tab if not already there
                         if (!tabs[0].classList.contains('active')) {
                             tabs[0].click();
@@ -868,14 +862,14 @@
 
                     if (!isValid) {
                         e.preventDefault();
-                        alert('Please fill in all required fields marked with *');
+                        alert('{{ __("messages.fill_required_fields") }}');
                         return false;
                     }
                 }
 
                 // Disable button and show loading state
                 checkoutBtn.disabled = true;
-                checkoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                checkoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> {{ __("messages.processing") }}...';
             });
         });
     </script>

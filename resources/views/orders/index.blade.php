@@ -7,8 +7,8 @@
                 <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <i class="fas fa-history text-green-600 text-3xl"></i>
                 </div>
-                <h1 class="text-4xl font-bold text-gray-900 mb-3">Order History</h1>
-                <p class="text-xl text-gray-600">Track and manage your purchases</p>
+                <h1 class="text-4xl font-bold text-gray-900 mb-3">{{ __('messages.order_history') }}</h1>
+                <p class="text-xl text-gray-600">{{ __('messages.track_manage_purchases') }}</p>
             </div>
 
             @if ($orders->isEmpty())
@@ -18,12 +18,12 @@
                         <div class="w-32 h-32 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
                             <i class="fas fa-shopping-bag text-gray-400 text-5xl"></i>
                         </div>
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4">No Orders Yet</h2>
-                        <p class="text-gray-600 mb-8">Start shopping to see your order history here</p>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ __('messages.no_orders_yet') }}</h2>
+                        <p class="text-gray-600 mb-8">{{ __('messages.start_shopping_message') }}</p>
                         <a href="{{ route('products.all') }}"
                             class="inline-flex items-center gap-3 bg-gray-900 text-white px-8 py-4 rounded-xl font-semibold hover:bg-gray-800 transition-all duration-300 hover:scale-105">
                             <i class="fas fa-bag-shopping"></i>
-                            Start Shopping
+                            {{ __('messages.start_shopping') }}
                         </a>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                             <!-- Order Header -->
                             <div class="p-6 border-b border-gray-100">
                                 <div class="flex items-center justify-between mb-3">
-                                    <h3 class="text-lg font-bold text-gray-900">Order #{{ $order->order_number }}</h3>
+                                    <h3 class="text-lg font-bold text-gray-900">{{ __('messages.order') }} #{{ $order->order_number }}</h3>
                                     <span class="text-sm text-gray-500">
                                         {{ $order->created_at->setTimezone('Asia/Kolkata')->format('d M Y') }}
                                     </span>
@@ -46,18 +46,18 @@
                                         class="text-2xl font-bold text-gray-900">${{ number_format($order->total_amount, 2) }}</span>
                                     <span
                                         class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium capitalize 
-                                @if ($order->status === 'paid') bg-green-100 text-green-800
-                                @elseif($order->status === 'pending') bg-yellow-100 text-yellow-800
-                                @elseif($order->status === 'cancelled') bg-red-100 text-red-800
+                                @if ($order->payment_status === 'paid') bg-green-100 text-green-800
+                                @elseif($order->payment_status === 'pending') bg-yellow-100 text-yellow-800
+                                @elseif($order->payment_status === 'cancelled') bg-red-100 text-red-800
                                 @else bg-blue-100 text-blue-800 @endif">
                                         <i
                                             class="fas 
-                                    @if ($order->status === 'paid') fa-check-circle 
-                                    @elseif($order->status === 'pending') fa-clock
-                                    @elseif($order->status === 'cancelled') fa-times-circle
+                                    @if ($order->payment_status === 'paid') fa-check-circle 
+                                    @elseif($order->payment_status === 'pending') fa-clock
+                                    @elseif($order->payment_status === 'cancelled') fa-times-circle
                                     @else fa-info-circle @endif mr-1 text-xs">
                                         </i>
-                                        {{ $order->status }}
+                                        {{ __('messages.' . $order->payment_status) }}
                                     </span>
                                 </div>
                             </div>
@@ -98,7 +98,7 @@
                                             <div class="flex-1 min-w-0">
                                                 <p class="font-medium text-gray-900 text-sm line-clamp-1">
                                                     {{ $item->product_name }}</p>
-                                                <p class="text-xs text-gray-500">Size: {{ $item->size }} • Qty:
+                                                <p class="text-xs text-gray-500">{{ __('messages.size') }}: {{ $item->size }} • {{ __('messages.quantity') }}:
                                                     {{ $item->quantity }}</p>
                                             </div>
                                             <!-- FIXED LINE: Changed $order->total_amount to $item->price -->
@@ -109,8 +109,7 @@
 
                                     @if ($order->items->count() > 2)
                                         <div class="text-center">
-                                            <span class="text-sm text-gray-500">+{{ $order->items->count() - 2 }} more
-                                                items</span>
+                                            <span class="text-sm text-gray-500">+{{ $order->items->count() - 2 }} {{ __('messages.more_items') }}</span>
                                         </div>
                                     @endif
                                 </div>
@@ -122,12 +121,12 @@
                                     <a href="{{ route('orders.show', $order->order_number) }}"
                                         class="flex-1 bg-gray-900 text-white py-2 px-4 rounded-lg font-semibold text-sm hover:bg-gray-800 transition-colors flex items-center justify-center gap-2">
                                         <i class="fas fa-eye"></i>
-                                        View Details
+                                        {{ __('messages.view_details') }}
                                     </a>
                                     <a href="{{ route('orders.invoice', $order->order_number) }}"
                                         class="flex-1 border border-gray-300 text-gray-700 py-2 px-4 rounded-lg font-semibold text-sm hover:bg-gray-50 transition-colors flex items-center justify-center gap-2">
                                         <i class="fas fa-download"></i>
-                                        Invoice
+                                        {{ __('messages.invoice') }}
                                     </a>
                                 </div>
                             </div>
@@ -142,22 +141,22 @@
                             <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <i class="fas fa-shipping-fast text-blue-600 text-2xl"></i>
                             </div>
-                            <h3 class="font-semibold text-gray-900 mb-2">Fast Delivery</h3>
-                            <p class="text-sm text-gray-600">Orders typically delivered within 3-5 business days</p>
+                            <h3 class="font-semibold text-gray-900 mb-2">{{ __('messages.fast_delivery') }}</h3>
+                            <p class="text-sm text-gray-600">{{ __('messages.fast_delivery_description') }}</p>
                         </div>
                         <div>
                             <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <i class="fas fa-shield-alt text-green-600 text-2xl"></i>
                             </div>
-                            <h3 class="font-semibold text-gray-900 mb-2">Secure Payments</h3>
-                            <p class="text-sm text-gray-600">All transactions are encrypted and secure</p>
+                            <h3 class="font-semibold text-gray-900 mb-2">{{ __('messages.secure_payments') }}</h3>
+                            <p class="text-sm text-gray-600">{{ __('messages.secure_payments_description') }}</p>
                         </div>
                         <div>
                             <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <i class="fas fa-headset text-purple-600 text-2xl"></i>
                             </div>
-                            <h3 class="font-semibold text-gray-900 mb-2">24/7 Support</h3>
-                            <p class="text-sm text-gray-600">Need help? Contact our support team anytime</p>
+                            <h3 class="font-semibold text-gray-900 mb-2">{{ __('messages.support_24_7') }}</h3>
+                            <p class="text-sm text-gray-600">{{ __('messages.support_24_7_description') }}</p>
                         </div>
                     </div>
                 </div>
