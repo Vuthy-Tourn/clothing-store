@@ -4,7 +4,7 @@
     <div class="min-h-screen bg-gray-50 py-12 px-4 mt-10">
         <div class="max-w-5xl mx-auto">
             <div class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
-                <!-- Header Section (unchanged) -->
+                <!-- Header Section -->
                 <div class="relative bg-gray-900 h-48 md:h-56">
                     <div class="absolute inset-0 bg-black bg-opacity-30"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
@@ -28,7 +28,7 @@
                                     <p class="text-gray-200">{{ $user->email }}</p>
                                     @if ($user->customer_id)
                                         <p class="text-gray-300 text-sm mt-1">
-                                            <i class="fas fa-id-card mr-1"></i> Customer ID: {{ $user->customer_id }}
+                                            <i class="fas fa-id-card mr-1"></i> {{ __('messages.customer_id') }}: {{ $user->customer_id }}
                                         </p>
                                     @endif
                                 </div>
@@ -36,12 +36,12 @@
                             <div class="mt-4 md:mt-0 md:mb-4 flex flex-col space-y-2">
                                 <a href="{{ route('profile.edit') }}"
                                     class="inline-flex items-center gap-2 bg-white bg-opacity-10 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-opacity-20 transition-all duration-200 border border-white border-opacity-30">
-                                    <i class="fas fa-edit"></i> Edit Profile
+                                    <i class="fas fa-edit"></i> {{ __('messages.edit_profile') }}
                                 </a>
                                 @if ($user->loyalty_points > 0)
                                     <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 bg-opacity-20 px-4 py-2 rounded-xl">
                                         <p class="text-yellow-300 text-sm font-medium">
-                                            <i class="fas fa-star mr-1"></i> {{ $user->loyalty_points }} Loyalty Points
+                                            <i class="fas fa-star mr-1"></i> {{ $user->loyalty_points }} {{ __('messages.loyalty_points') }}
                                         </p>
                                     </div>
                                 @endif
@@ -50,40 +50,40 @@
                     </div>
                 </div>
 
-                <!-- Info Section (unchanged) -->
+                <!-- Info Section -->
                 <div class="bg-white p-6 md:p-10 pt-20 md:pt-24">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <!-- Personal Information -->
                         <div class="p-6 rounded-2xl border border-gray-200 shadow-sm">
                             <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                                <i class="fas fa-user-circle mr-2"></i> Personal Information
+                                <i class="fas fa-user-circle mr-2"></i> {{ __('messages.personal_information') }}
                             </h2>
                             <div class="space-y-4">
                                 <div>
-                                    <p class="text-sm text-gray-500">Full Name</p>
+                                    <p class="text-sm text-gray-500">{{ __('messages.full_name') }}</p>
                                     <p class="text-gray-900 font-medium">{{ $user->name }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500">Email Address</p>
+                                    <p class="text-sm text-gray-500">{{ __('messages.email_address') }}</p>
                                     <p class="text-gray-900 font-medium flex items-center">
                                         {{ $user->email }}
                                         @if ($user->email_verified_at)
                                             <span class="ml-2 px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                                                <i class="fas fa-check-circle"></i> Verified
+                                                <i class="fas fa-check-circle"></i> {{ __('messages.verified') }}
                                             </span>
                                         @else
                                             <span class="ml-2 px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">
-                                                <i class="fas fa-exclamation-circle"></i> Unverified
+                                                <i class="fas fa-exclamation-circle"></i> {{ __('messages.unverified') }}
                                             </span>
                                         @endif
                                     </p>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500">Phone Number</p>
-                                    <p class="text-gray-900 font-medium">{{ $user->phone ?? 'Not provided' }}</p>
+                                    <p class="text-sm text-gray-500">{{ __('messages.phone_number') }}</p>
+                                    <p class="text-gray-900 font-medium">{{ $user->phone ?? __('messages.not_provided') }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500">Account Type</p>
+                                    <p class="text-sm text-gray-500">{{ __('messages.account_type') }}</p>
                                     <p class="text-gray-900 font-medium capitalize">{{ $user->account_type }}</p>
                                 </div>
                             </div>
@@ -92,45 +92,45 @@
                         <!-- Additional Details -->
                         <div class="p-6 rounded-2xl border border-gray-200 shadow-sm">
                             <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                                <i class="fas fa-info-circle mr-2"></i> Additional Details
+                                <i class="fas fa-info-circle mr-2"></i> {{ __('messages.additional_details') }}
                             </h2>
                             <div class="space-y-4">
                                 <div>
-                                    <p class="text-sm text-gray-500">Date of Birth</p>
+                                    <p class="text-sm text-gray-500">{{ __('messages.date_of_birth') }}</p>
                                     <p class="text-gray-900 font-medium">
-                                        {{ $user->dob ? \Carbon\Carbon::parse($user->dob)->format('d M Y') : 'Not provided' }}
+                                        {{ $user->dob ? \Carbon\Carbon::parse($user->dob)->format('d M Y') : __('messages.not_provided') }}
                                     </p>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500">Gender</p>
+                                    <p class="text-sm text-gray-500">{{ __('messages.gender') }}</p>
                                     <p class="text-gray-900 font-medium capitalize">
-                                        {{ $user->gender ?? 'Not specified' }}
+                                        {{ $user->gender ?? __('messages.not_specified') }}
                                     </p>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500">Newsletter Subscription</p>
+                                    <p class="text-sm text-gray-500">{{ __('messages.newsletter_subscription') }}</p>
                                     <p class="text-gray-900 font-medium">
                                         @if ($user->newsletter_opt_in)
                                             <span class="text-green-600 font-medium">
-                                                <i class="fas fa-check-circle mr-1"></i> Subscribed
+                                                <i class="fas fa-check-circle mr-1"></i> {{ __('messages.subscribed') }}
                                             </span>
                                         @else
                                             <span class="text-gray-500">
-                                                <i class="fas fa-times-circle mr-1"></i> Not Subscribed
+                                                <i class="fas fa-times-circle mr-1"></i> {{ __('messages.not_subscribed') }}
                                             </span>
                                         @endif
                                     </p>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500">Account Status</p>
+                                    <p class="text-sm text-gray-500">{{ __('messages.account_status') }}</p>
                                     <p class="text-gray-900 font-medium">
                                         @if ($user->is_active)
                                             <span class="text-green-600 font-medium">
-                                                <i class="fas fa-circle mr-1"></i> Active
+                                                <i class="fas fa-circle mr-1"></i> {{ __('messages.active') }}
                                             </span>
                                         @else
                                             <span class="text-red-600 font-medium">
-                                                <i class="fas fa-circle mr-1"></i> Inactive
+                                                <i class="fas fa-circle mr-1"></i> {{ __('messages.inactive') }}
                                             </span>
                                         @endif
                                     </p>
@@ -144,11 +144,11 @@
                         <div class="p-6 rounded-2xl border border-gray-200 shadow-sm">
                             <div class="flex justify-between items-center mb-4">
                                 <h2 class="text-lg font-semibold text-gray-900 flex items-center">
-                                    <i class="fas fa-map-marker-alt mr-2"></i> Addresses
+                                    <i class="fas fa-map-marker-alt mr-2"></i> {{ __('messages.addresses') }}
                                 </h2>
                                 <button onclick="openAddressModal()"
                                     class="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition">
-                                    <i class="fas fa-plus mr-1"></i> Add Address
+                                    <i class="fas fa-plus mr-1"></i> {{ __('messages.add_address') }}
                                 </button>
                             </div>
 
@@ -159,21 +159,23 @@
                                             <div class="flex justify-between items-start mb-2">
                                                 <div>
                                                     <h3 class="font-semibold text-gray-900">
-                                                        {{ $address->address_name ?? 'Address' }}</h3>
+                                                        {{ $address->address_name ?? __('messages.address_type') }}</h3>
                                                     @if ($address->is_default)
                                                         <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-                                                            <i class="fas fa-check-circle mr-1"></i> Default
+                                                            <i class="fas fa-check-circle mr-1"></i> {{ __('messages.default') }}
                                                         </span>
                                                     @endif
                                                 </div>
                                                 <div class="flex space-x-2">
                                                     <button onclick="editAddress({{ $address->id }})"
-                                                        class="text-gray-600 hover:text-gray-900">
+                                                        class="text-gray-600 hover:text-gray-900"
+                                                        title="{{ __('messages.edit') }}">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
                                                     @if (!$address->is_default)
                                                         <button onclick="deleteAddress({{ $address->id }})"
-                                                            class="text-red-600 hover:text-red-900">
+                                                            class="text-red-600 hover:text-red-900"
+                                                            title="{{ __('messages.delete') }}">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
                                                     @endif
@@ -202,11 +204,11 @@
                                                 @if (!$address->is_default)
                                                     <button onclick="setDefaultAddress({{ $address->id }})"
                                                         class="text-blue-600 hover:text-blue-900 text-sm">
-                                                        <i class="fas fa-star mr-1"></i> Set as Default
+                                                        <i class="fas fa-star mr-1"></i> {{ __('messages.set_as_default') }}
                                                     </button>
                                                 @endif
                                                 <span class="text-gray-500 text-sm capitalize">
-                                                    <i class="fas fa-tag mr-1"></i>{{ $address->type }}
+                                                    <i class="fas fa-tag mr-1"></i>{{ __("messages.{$address->type}") }}
                                                 </span>
                                             </div>
                                         </div>
@@ -215,10 +217,10 @@
                             @else
                                 <div class="text-center py-8">
                                     <i class="fas fa-map-marker-alt text-gray-300 text-4xl mb-4"></i>
-                                    <p class="text-gray-500">No addresses added yet.</p>
+                                    <p class="text-gray-500">{{ __('messages.no_addresses') }}</p>
                                     <button onclick="openAddressModal()"
                                         class="mt-4 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition">
-                                        <i class="fas fa-plus mr-1"></i> Add Your First Address
+                                        <i class="fas fa-plus mr-1"></i> {{ __('messages.add_first_address') }}
                                     </button>
                                 </div>
                             @endif
@@ -242,8 +244,8 @@
                                 <i class="fas fa-map-marker-alt text-blue-600"></i>
                             </div>
                             <div>
-                                <h3 class="text-xl font-semibold text-gray-900" id="modalTitle">Add New Address</h3>
-                                <p class="text-gray-500 text-sm">Fill in your address details</p>
+                                <h3 class="text-xl font-semibold text-gray-900" id="modalTitle">{{ __('messages.add_new_address') }}</h3>
+                                <p class="text-gray-500 text-sm">{{ __('messages.fill_address_details') }}</p>
                             </div>
                         </div>
                         <button type="button" onclick="closeAddressModal()"
@@ -265,20 +267,20 @@
                                 <!-- Section 1: Basic Info -->
                                 <div class="bg-gray-50 p-4 rounded-xl">
                                     <h4 class="text-sm font-semibold text-gray-900 mb-3 uppercase tracking-wider">
-                                        <i class="fas fa-user-circle mr-2"></i> Contact Information
+                                        <i class="fas fa-user-circle mr-2"></i> {{ __('messages.contact_information') }}
                                     </h4>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">
-                                                Address Name <span class="text-gray-400">(Optional)</span>
+                                                {{ __('messages.address_name') }} 
                                             </label>
                                             <input type="text" name="address_name" id="address_name"
-                                                placeholder="e.g., Home, Office"
+                                                placeholder="{{ __('messages.address_name_placeholder') }}"
                                                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">
-                                                Full Name *
+                                                {{ __('messages.full_name_star') }}
                                             </label>
                                             <input type="text" name="full_name" id="full_name" required
                                                 placeholder="John Doe"
@@ -286,10 +288,10 @@
                                         </div>
                                         <div class="md:col-span-2">
                                             <label class="block text-sm font-medium text-gray-700 mb-1">
-                                                Phone Number *
+                                                {{ __('messages.phone_number_star') }}
                                             </label>
                                             <input type="text" name="phone" id="phone" required
-                                                placeholder="+1 (123) 456-7890"
+                                                placeholder="{{ __('messages.phone_placeholder') }}"
                                                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                                         </div>
                                     </div>
@@ -298,45 +300,45 @@
                                 <!-- Section 2: Address Details -->
                                 <div class="bg-gray-50 p-4 rounded-xl">
                                     <h4 class="text-sm font-semibold text-gray-900 mb-3 uppercase tracking-wider">
-                                        <i class="fas fa-home mr-2"></i> Address Details
+                                        <i class="fas fa-home mr-2"></i> {{ __('messages.address_details') }}
                                     </h4>
                                     <div class="space-y-4">
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">
-                                                Address Line 1 *
+                                                {{ __('messages.address_line1_star') }}
                                             </label>
                                             <input type="text" name="address_line1" id="address_line1" required
-                                                placeholder="Street address, P.O. box"
+                                                placeholder="{{ __('messages.address_line1_placeholder') }}"
                                                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">
-                                                Address Line 2 <span class="text-gray-400">(Optional)</span>
+                                                {{ __('messages.address_line2_star') }} 
                                             </label>
                                             <input type="text" name="address_line2" id="address_line2"
-                                                placeholder="Apartment, suite, unit, building, floor"
+                                                placeholder="{{ __('messages.address_line2_placeholder') }}"
                                                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                                         </div>
                                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                             <div>
                                                 <label class="block text-sm font-medium text-gray-700 mb-1">
-                                                    City *
+                                                    {{ __('messages.city_star') }}
                                                 </label>
                                                 <input type="text" name="city" id="city" required
-                                                    placeholder="City"
+                                                    placeholder="{{ __('messages.city') }}"
                                                     class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                                             </div>
                                             <div>
                                                 <label class="block text-sm font-medium text-gray-700 mb-1">
-                                                    State *
+                                                    {{ __('messages.state_star') }}
                                                 </label>
                                                 <input type="text" name="state" id="state" required
-                                                    placeholder="State"
+                                                    placeholder="{{ __('messages.state') }}"
                                                     class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                                             </div>
                                             <div>
                                                 <label class="block text-sm font-medium text-gray-700 mb-1">
-                                                    ZIP Code *
+                                                    {{ __('messages.zip_code_star') }}
                                                 </label>
                                                 <input type="text" name="zip_code" id="zip_code" required
                                                     placeholder="12345"
@@ -345,7 +347,7 @@
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">
-                                                Country *
+                                                {{ __('messages.country_star') }}
                                             </label>
                                             <select name="country" id="country" required
                                                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
@@ -356,6 +358,7 @@
                                                 <option value="Germany">Germany</option>
                                                 <option value="France">France</option>
                                                 <option value="Japan">Japan</option>
+                                                <option value="Cambodia">Cambodia</option>
                                                 <option value="Other">Other</option>
                                             </select>
                                         </div>
@@ -365,12 +368,12 @@
                                 <!-- Section 3: Address Settings -->
                                 <div class="bg-gray-50 p-4 rounded-xl">
                                     <h4 class="text-sm font-semibold text-gray-900 mb-3 uppercase tracking-wider">
-                                        <i class="fas fa-cog mr-2"></i> Address Settings
+                                        <i class="fas fa-cog mr-2"></i> {{ __('messages.address_settings') }}
                                     </h4>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">
-                                                Address Type *
+                                                {{ __('messages.address_type') }} <span class="text-red-500">*</span>
                                             </label>
                                             <div class="flex space-x-4">
                                                 <label class="flex items-center">
@@ -378,7 +381,7 @@
                                                         class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                                                         id="type_shipping" checked>
                                                     <span class="ml-2 text-gray-700">
-                                                        <i class="fas fa-truck mr-1"></i> Shipping
+                                                        <i class="fas fa-truck mr-1"></i> {{ __('messages.shipping') }}
                                                     </span>
                                                 </label>
                                                 <label class="flex items-center">
@@ -386,7 +389,7 @@
                                                         class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                                                         id="type_billing">
                                                     <span class="ml-2 text-gray-700">
-                                                        <i class="fas fa-credit-card mr-1"></i> Billing
+                                                        <i class="fas fa-credit-card mr-1"></i> {{ __('messages.billing') }}
                                                     </span>
                                                 </label>
                                             </div>
@@ -401,9 +404,8 @@
                                                     </div>
                                                 </div>
                                                 <span class="ml-3 text-sm font-medium text-gray-700">
-                                                    Set as Default Address
-                                                    <span class="block text-xs text-gray-500">Use this address for all
-                                                        orders</span>
+                                                    {{ __('messages.set_as_default_address') }}
+                                                    <span class="block text-xs text-gray-500">{{ __('messages.use_default_address') }}</span>
                                                 </span>
                                             </label>
                                         </div>
@@ -419,12 +421,12 @@
                     <div class="flex justify-between items-center">
                         <button type="button" onclick="closeAddressModal()"
                             class="px-5 py-2.5 border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 rounded-lg transition hover:shadow-sm">
-                            Cancel
+                            {{ __('messages.cancel') }}
                         </button>
                         <button type="submit" form="addressForm" id="addressSubmitBtn"
                             class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-medium hover:from-blue-700 hover:to-blue-800 transition hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
                             <i class="fas fa-save"></i>
-                            <span id="submitBtnText">Save Address</span>
+                            <span id="submitBtnText">{{ __('messages.save_address') }}</span>
                         </button>
                     </div>
                 </div>
@@ -432,11 +434,11 @@
         </div>
     </div>
 
-    <!-- Loading Overlay (Separate from modal) -->
+    <!-- Loading Overlay -->
     <div id="loadingOverlay" class="fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-[60] hidden">
         <div class="text-center">
             <div class="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p class="text-gray-700 font-medium">Loading address details...</p>
+            <p class="text-gray-700 font-medium">{{ __('messages.loading_address_details') }}</p>
         </div>
     </div>
 
@@ -518,8 +520,8 @@
                 if (data.error) throw new Error(data.error);
                 
                 this.populateForm(data.address);
-                document.getElementById('modalTitle').textContent = 'Edit Address';
-                document.getElementById('submitBtnText').textContent = 'Update Address';
+                document.getElementById('modalTitle').textContent = '{{ __("messages.update_address") }}';
+                document.getElementById('submitBtnText').textContent = '{{ __("messages.update_address") }}';
                 
             } catch (error) {
                 console.error('Error loading address:', error);
@@ -571,8 +573,8 @@
             document.getElementById('is_default').checked = false;
             document.getElementById('address_id').value = '';
             
-            document.getElementById('modalTitle').textContent = 'Add New Address';
-            document.getElementById('submitBtnText').textContent = 'Save Address';
+            document.getElementById('modalTitle').textContent = '{{ __("messages.add_new_address") }}';
+            document.getElementById('submitBtnText').textContent = '{{ __("messages.save_address") }}';
         }
 
         close() {
@@ -625,7 +627,7 @@
             submitBtn.disabled = true;
             submitBtn.innerHTML = `
                 <i class="fas fa-spinner fa-spin"></i>
-                <span>${isEdit ? 'Updating...' : 'Saving...'}</span>
+                <span>${isEdit ? '{{ __("messages.updating") }}' : '{{ __("messages.saving") }}'}</span>
             `;
 
             try {
@@ -642,14 +644,14 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    this.showToast(data.message || 'Address saved successfully!', 'success');
+                    this.showToast(data.message || '{{ __("messages.address_saved_success") }}', 'success');
                     
                     setTimeout(() => {
                         this.close();
                         location.reload();
                     }, 1500);
                 } else {
-                    let errorMessage = 'An error occurred while saving the address';
+                    let errorMessage = '{{ __("messages.error_occurred") }}';
                     
                     if (data.errors) {
                         errorMessage = Object.values(data.errors).flat().join(', ');
@@ -663,7 +665,7 @@
                 }
             } catch (error) {
                 console.error('Error:', error);
-                this.showToast('Network error. Please try again.', 'error');
+                this.showToast('{{ __("messages.network_error") }}', 'error');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnHTML;
             }
@@ -708,7 +710,7 @@
     class AddressOperations {
         constructor(modalManager) {
             this.modalManager = modalManager;
-    }
+        }
 
         async setDefaultAddress(id) {
             try {
@@ -725,27 +727,27 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    this.modalManager.showToast('Default address updated successfully!', 'success');
+                    this.modalManager.showToast('{{ __("messages.default_address_updated") }}', 'success');
                     this.updateDefaultAddressUI(id);
                 } else {
-                    this.modalManager.showToast(data.message || 'Error updating default address', 'error');
+                    this.modalManager.showToast(data.message || '{{ __("messages.error_updating_address") }}', 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                this.modalManager.showToast('An error occurred while updating default address', 'error');
+                this.modalManager.showToast('{{ __("messages.error_updating_address") }}', 'error');
             }
         }
 
         async deleteAddress(id) {
             const result = await Swal.fire({
-                title: 'Delete Address?',
-                text: "Are you sure you want to delete this address?",
+                title: '{{ __("messages.delete_address") }}?',
+                text: "{{ __('messages.delete_address_confirm') }}",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#6b7280',
-                confirmButtonText: 'Delete',
-                cancelButtonText: 'Cancel',
+                confirmButtonText: '{{ __("messages.delete") }}',
+                cancelButtonText: '{{ __("messages.cancel") }}',
                 customClass: {
                     popup: 'rounded-xl',
                     confirmButton: 'px-4 py-2 rounded-lg',
@@ -767,14 +769,14 @@
                     const data = await response.json();
 
                     if (data.success) {
-                        this.modalManager.showToast('Address deleted successfully!', 'success');
+                        this.modalManager.showToast('{{ __("messages.address_deleted_success") }}', 'success');
                         setTimeout(() => location.reload(), 1000);
                     } else {
-                        this.modalManager.showToast(data.message || 'Failed to delete address', 'error');
+                        this.modalManager.showToast(data.message || '{{ __("messages.failed_delete_address") }}', 'error');
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    this.modalManager.showToast('An error occurred while deleting the address', 'error');
+                    this.modalManager.showToast('{{ __("messages.error_deleting_address") }}', 'error');
                 }
             }
         }
@@ -812,7 +814,7 @@
                     if (header) {
                         const badge = document.createElement('span');
                         badge.className = 'inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full ml-2';
-                        badge.innerHTML = '<i class="fas fa-check-circle mr-1"></i> Default';
+                        badge.innerHTML = '<i class="fas fa-check-circle mr-1"></i> {{ __("messages.default") }}';
                         header.appendChild(badge);
                     }
 
@@ -839,71 +841,71 @@
         window.setDefaultAddress = (id) => addressOps.setDefaultAddress(id);
         window.updateDefaultAddressUI = (id) => addressOps.updateDefaultAddressUI(id);
     });
-</script>
+    </script>
 
-<style>
-    /* Modal animations */
-    #addressModal {
-        transition: visibility 0.3s;
-    }
-
-    .modal-backdrop {
-        transition: opacity 0.3s ease;
-    }
-
-    .modal-content {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* Custom scrollbar */
-    .overflow-y-auto::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    .overflow-y-auto::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 3px;
-    }
-
-    .overflow-y-auto::-webkit-scrollbar-thumb {
-        background: #c1c1c1;
-        border-radius: 3px;
-    }
-
-    .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-        background: #a1a1a1;
-    }
-
-    /* Loading spinner */
-    @keyframes spin {
-        from {
-            transform: rotate(0deg);
+    <style>
+        /* Modal animations <span class="text-red-500">*</span>/
+        #addressModal {
+            transition: visibility 0.3s;
         }
-        to {
-            transform: rotate(360deg);
-        }
-    }
 
-    .animate-spin {
-        animation: spin 1s linear infinite;
-    }
-
-    /* Toast animations */
-    @keyframes slideInRight {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
+        .modal-backdrop {
+            transition: opacity 0.3s ease;
         }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
 
-    .custom-toast {
-        animation: slideInRight 0.3s ease-out;
-        min-width: 300px;
-        backdrop-filter: blur(10px);
-    }
-</style>
+        .modal-content {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Custom scrollbar <span class="text-red-500">*</span>/
+        .overflow-y-auto::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .overflow-y-auto::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .overflow-y-auto::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Loading spinner <span class="text-red-500">*</span>/
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Toast animations <span class="text-red-500">*</span>/
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .custom-toast {
+            animation: slideInRight 0.3s ease-out;
+            min-width: 300px;
+            backdrop-filter: blur(10px);
+        }
+    </style>
 @endsection

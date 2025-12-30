@@ -21,8 +21,8 @@
 
             <!-- Header -->
             <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">Edit Your Profile</h1>
-                <p class="text-gray-600">Update your personal information</p>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ __('messages.edit_profile') }}</h1>
+                <p class="text-gray-600">{{ __('messages.update_personal_info') }}</p>
             </div>
 
             <!-- Form Container -->
@@ -36,7 +36,7 @@
                     <div class="flex-1 space-y-6">
                         <!-- Name -->
                         <div class="space-y-2">
-                            <label class="block font-semibold text-gray-900">Full Name *</label>
+                            <label class="block font-semibold text-gray-900">{{ __('messages.full_name') }} *</label>
                             <input type="text" name="name" value="{{ old('name', $user->name) }}"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition">
                             @error('name')
@@ -48,22 +48,22 @@
 
                         <!-- Email (readonly or with verification) -->
                         <div class="space-y-2">
-                            <label class="block font-semibold text-gray-900">Email Address</label>
+                            <label class="block font-semibold text-gray-900">{{ __('messages.email_address') }}</label>
                             <div class="flex items-center space-x-2">
                                 <input type="email" value="{{ $user->email }}" readonly
                                     class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-600">
                             </div>
                             <p class="text-gray-500 text-sm">
-                                To change your email, please contact support or use the email change form.
+                                {{ __('messages.change_email_info') }}
                             </p>
                         </div>
 
                         <!-- Phone -->
                         <div class="space-y-2">
-                            <label class="block font-semibold text-gray-900">Phone Number</label>
+                            <label class="block font-semibold text-gray-900">{{ __('messages.phone_number') }}</label>
                             <input type="text" name="phone" value="{{ old('phone', $user->phone) }}"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition"
-                                placeholder="+1 (123) 456-7890">
+                                placeholder="+855 (12) 345-678">
                             @error('phone')
                                 <p class="text-red-600 text-sm font-medium flex items-center gap-1">
                                     <i class="fas fa-exclamation-circle"></i>{{ $message }}
@@ -75,7 +75,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Date of Birth -->
                             <div class="space-y-2">
-                                <label class="block font-semibold text-gray-900">Date of Birth</label>
+                                <label class="block font-semibold text-gray-900">{{ __('messages.date_of_birth') }}</label>
                                 <input type="date" name="dob" value="{{ old('dob', $user->dob ? \Carbon\Carbon::parse($user->dob)->format('Y-m-d') : '') }}"
                                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition">
                                 @error('dob')
@@ -87,12 +87,18 @@
 
                             <!-- Gender -->
                             <div class="space-y-2">
-                                <label class="block font-semibold text-gray-900">Gender</label>
+                                <label class="block font-semibold text-gray-900">{{ __('messages.gender') }}</label>
                                 <select name="gender" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition">
-                                    <option value="">Select Gender</option>
-                                    <option value="male" {{ old('gender', $user->gender) == 'male' ? 'selected' : '' }}>Male</option>
-                                    <option value="female" {{ old('gender', $user->gender) == 'female' ? 'selected' : '' }}>Female</option>
-                                    <option value="other" {{ old('gender', $user->gender) == 'other' ? 'selected' : '' }}>Other</option>
+                                    <option value="">{{ __('messages.select_gender') }}</option>
+                                    <option value="male" {{ old('gender', $user->gender) == 'male' ? 'selected' : '' }}>
+                                        {{ __('messages.male') }}
+                                    </option>
+                                    <option value="female" {{ old('gender', $user->gender) == 'female' ? 'selected' : '' }}>
+                                        {{ __('messages.female') }}
+                                    </option>
+                                    <option value="other" {{ old('gender', $user->gender) == 'other' ? 'selected' : '' }}>
+                                        {{ __('messages.other') }}
+                                    </option>
                                 </select>
                                 @error('gender')
                                     <p class="text-red-600 text-sm font-medium flex items-center gap-1">
@@ -109,10 +115,10 @@
                                     value="1" {{ old('newsletter_opt_in', $user->newsletter_opt_in) ? 'checked' : '' }}
                                     class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
                                 <label for="newsletter_opt_in" class="ml-3 text-gray-900 font-medium">
-                                    Subscribe to newsletter
+                                    {{ __('messages.subscribe_newsletter') }}
                                 </label>
                             </div>
-                            <p class="text-gray-500 text-sm">Receive updates about new products and promotions.</p>
+                            <p class="text-gray-500 text-sm">{{ __('messages.newsletter_description') }}</p>
                         </div>
                     </div>
 
@@ -122,7 +128,7 @@
                             <!-- Profile Picture Preview -->
                             <div class="relative group">
                                 @if ($user->profile_picture)
-                                    <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile Picture"
+                                    <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="{{ __('messages.profile_picture') }}"
                                         id="profilePreview"
                                         class="w-48 h-48 rounded-full object-cover border-4 border-white shadow-lg mx-auto transition-all duration-300 group-hover:brightness-75">
                                 @else
@@ -155,9 +161,9 @@
                                 <label for="profilePictureInput"
                                     class="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition cursor-pointer">
                                     <i class="fas fa-camera"></i>
-                                    Change Photo
+                                    {{ __('messages.change_photo') }}
                                 </label>
-                                <p class="text-gray-500 text-sm mt-2">Max file size: 2MB</p>
+                                <p class="text-gray-500 text-sm mt-2">{{ __('messages.max_file_size') }}</p>
                                 @error('profile_picture')
                                     <p class="text-red-600 text-sm font-medium flex items-center gap-1 justify-center">
                                         <i class="fas fa-exclamation-circle"></i>{{ $message }}
@@ -173,19 +179,19 @@
                     <a href="{{ route('profile.show') }}"
                         class="flex items-center gap-2 px-6 py-3 border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 rounded-lg transition">
                         <i class="fas fa-arrow-left"></i>
-                        Back to Profile
+                        {{ __('messages.back_to_profile') }}
                     </a>
                     <div class="flex space-x-3">
                         <!-- Change Password Button - Opens Modal -->
                         <button type="button" onclick="openPasswordModal()"
                             class="flex items-center gap-2 px-6 py-3 border border-blue-500 text-blue-600 font-medium hover:bg-blue-50 rounded-lg transition hover:shadow-md">
                             <i class="fas fa-lock"></i>
-                            Change Password
+                            {{ __('messages.change_password') }}
                         </button>
                         <button type="submit" form="profileForm"
                             class="flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition update-btn hover:shadow-lg">
                             <i class="fas fa-save"></i>
-                            Save Changes
+                            {{ __('messages.save_changes') }}
                         </button>
                     </div>
                 </div>
@@ -206,8 +212,8 @@
                                 <i class="fas fa-lock text-blue-600"></i>
                             </div>
                             <div>
-                                <h3 class="text-xl font-semibold text-gray-900">Change Password</h3>
-                                <p class="text-gray-500 text-sm">Update your account password</p>
+                                <h3 class="text-xl font-semibold text-gray-900">{{ __('messages.change_password') }}</h3>
+                                <p class="text-gray-500 text-sm">{{ __('messages.update_password') }}</p>
                             </div>
                         </div>
                         <button type="button" onclick="closePasswordModal()" 
@@ -223,11 +229,11 @@
                         
                         <!-- Current Password -->
                         <div class="space-y-2">
-                            <label class="block text-sm font-medium text-gray-700">Current Password *</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ __('messages.current_password') }} *</label>
                             <div class="relative">
                                 <input type="password" name="current_password" id="currentPassword" required
                                     class="w-full px-4 py-3 pl-4 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition"
-                                    placeholder="Enter current password">
+                                    placeholder="{{ __('messages.enter_current_password') }}">
                                 <button type="button" onclick="togglePassword('currentPassword')"
                                     class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
                                     <i class="fas fa-eye" id="currentPasswordEye"></i>
@@ -242,11 +248,11 @@
                         
                         <!-- New Password -->
                         <div class="space-y-2">
-                            <label class="block text-sm font-medium text-gray-700">New Password *</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ __('messages.new_password') }} *</label>
                             <div class="relative">
                                 <input type="password" name="password" id="newPassword" required
                                     class="w-full px-4 py-3 pl-4 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition"
-                                    placeholder="Enter new password">
+                                    placeholder="{{ __('messages.enter_new_password') }}">
                                 <button type="button" onclick="togglePassword('newPassword')"
                                     class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
                                     <i class="fas fa-eye" id="newPasswordEye"></i>
@@ -255,19 +261,19 @@
                             <div class="grid grid-cols-2 gap-2 mt-2">
                                 <div class="flex items-center space-x-2">
                                     <div class="w-2 h-2 rounded-full" id="lengthCheck"></div>
-                                    <span class="text-xs text-gray-500">8+ characters</span>
+                                    <span class="text-xs text-gray-500">{{ __('messages.characters_8') }}</span>
                                 </div>
                                 <div class="flex items-center space-x-2">
                                     <div class="w-2 h-2 rounded-full" id="numberCheck"></div>
-                                    <span class="text-xs text-gray-500">1 number</span>
+                                    <span class="text-xs text-gray-500">{{ __('messages.one_number') }}</span>
                                 </div>
                                 <div class="flex items-center space-x-2">
                                     <div class="w-2 h-2 rounded-full" id="lowerCheck"></div>
-                                    <span class="text-xs text-gray-500">Lowercase</span>
+                                    <span class="text-xs text-gray-500">{{ __('messages.lowercase') }}</span>
                                 </div>
                                 <div class="flex items-center space-x-2">
                                     <div class="w-2 h-2 rounded-full" id="upperCheck"></div>
-                                    <span class="text-xs text-gray-500">Uppercase</span>
+                                    <span class="text-xs text-gray-500">{{ __('messages.uppercase') }}</span>
                                 </div>
                             </div>
                             @error('password')
@@ -279,11 +285,11 @@
                         
                         <!-- Confirm New Password -->
                         <div class="space-y-2">
-                            <label class="block text-sm font-medium text-gray-700">Confirm New Password *</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ __('messages.confirm_new_password') }} *</label>
                             <div class="relative">
                                 <input type="password" name="password_confirmation" id="confirmPassword" required
                                     class="w-full px-4 py-3 pl-4 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition"
-                                    placeholder="Confirm new password">
+                                    placeholder="{{ __('messages.confirm_password_placeholder') }}">
                                 <button type="button" onclick="togglePassword('confirmPassword')"
                                     class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
                                     <i class="fas fa-eye" id="confirmPasswordEye"></i>
@@ -291,7 +297,7 @@
                             </div>
                             <div class="flex items-center space-x-2 mt-2">
                                 <div class="w-2 h-2 rounded-full" id="matchCheck"></div>
-                                <span class="text-xs text-gray-500" id="matchText">Passwords match</span>
+                                <span class="text-xs text-gray-500" id="matchText">{{ __('messages.passwords_match') }}</span>
                             </div>
                         </div>
                         
@@ -299,13 +305,13 @@
                         <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100">
                             <button type="button" onclick="closePasswordModal()" 
                                 class="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition hover:shadow-sm">
-                                Cancel
+                                {{ __('messages.cancel') }}
                             </button>
                             <button type="submit" id="passwordSubmitBtn"
                                 class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-medium hover:from-blue-700 hover:to-blue-800 transition hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed">
                                 <span class="flex items-center justify-center gap-2">
                                     <i class="fas fa-lock"></i>
-                                    <span>Update Password</span>
+                                    <span>{{ __('messages.update_password_btn') }}</span>
                                 </span>
                             </button>
                         </div>
@@ -326,14 +332,14 @@
             if (file) {
                 // Validate file type
                 if (!file.type.match('image.*')) {
-                    showAlert('Error', 'Please select a valid image file (JPEG, PNG, GIF)', 'error');
+                    showAlert('{{ __("messages.error") }}', '{{ __("messages.invalid_image") }}', 'error');
                     input.value = '';
                     return;
                 }
 
                 // Validate file size (max 2MB)
                 if (file.size > 2 * 1024 * 1024) {
-                    showAlert('Error', 'Image size should be less than 2MB', 'error');
+                    showAlert('{{ __("messages.error") }}', '{{ __("messages.image_too_large") }}', 'error');
                     input.value = '';
                     return;
                 }
@@ -348,7 +354,7 @@
                         newPreview.className =
                             'w-48 h-48 rounded-full object-cover border-4 border-white mx-auto shadow-lg transition-all duration-300 group-hover:brightness-75';
                         newPreview.src = e.target.result;
-                        newPreview.alt = 'Profile Preview';
+                        newPreview.alt = '{{ __("messages.profile_picture") }}';
 
                         preview.parentNode.replaceChild(newPreview, preview);
                     } else {
@@ -356,11 +362,11 @@
                         preview.src = e.target.result;
                     }
                     
-                    showAlert('Success', 'Profile picture selected successfully', 'success');
+                    showAlert('{{ __("messages.success") }}', '{{ __("messages.photo_selected") }}', 'success');
                 };
 
                 reader.onerror = function() {
-                    showAlert('Error', 'Error reading the image file', 'error');
+                    showAlert('{{ __("messages.error") }}', '{{ __("messages.error_occurred") }}', 'error');
                     input.value = '';
                 };
 
@@ -375,7 +381,7 @@
                 text: text,
                 icon: icon,
                 confirmButtonColor: '#3085d6',
-                confirmButtonText: 'OK',
+                confirmButtonText: '{{ __("messages.ok") }}',
                 customClass: {
                     popup: 'rounded-xl',
                     confirmButton: 'px-4 py-2 rounded-lg'
@@ -434,19 +440,19 @@
             
             if (confirmPassword === '') {
                 matchCheck.style.backgroundColor = '#9ca3af';
-                matchText.textContent = 'Passwords match';
+                matchText.textContent = '{{ __("messages.passwords_match") }}';
                 matchText.className = 'text-xs text-gray-500';
                 return false;
             }
             
             if (password === confirmPassword) {
                 matchCheck.style.backgroundColor = '#10b981';
-                matchText.textContent = 'Passwords match ✓';
+                matchText.textContent = '{{ __("messages.passwords_match") }} ✓';
                 matchText.className = 'text-xs text-green-600';
                 return true;
             } else {
                 matchCheck.style.backgroundColor = '#ef4444';
-                matchText.textContent = 'Passwords do not match';
+                matchText.textContent = '{{ __("messages.passwords_not_match") }}';
                 matchText.className = 'text-xs text-red-600';
                 return false;
             }
@@ -474,13 +480,13 @@
             // Show success message for profile update
             const successMessage = document.getElementById('success-message');
             if (successMessage) {
-                showAlert('Success', successMessage.dataset.message, 'success');
+                showAlert('{{ __("messages.success") }}', successMessage.dataset.message, 'success');
             }
 
             // Show success message for password update
             const passwordSuccessMessage = document.getElementById('password-success-message');
             if (passwordSuccessMessage) {
-                showAlert('Success', passwordSuccessMessage.dataset.message, 'success', function() {
+                showAlert('{{ __("messages.success") }}', passwordSuccessMessage.dataset.message, 'success', function() {
                     closePasswordModal();
                 });
             }
@@ -491,7 +497,7 @@
                 const messages = JSON.parse(errorMessages.dataset.messages);
                 if (messages.length > 0) {
                     const errorText = messages.join('<br>');
-                    showAlert('Error', errorText, 'error');
+                    showAlert('{{ __("messages.error") }}', errorText, 'error');
                 }
             }
 
@@ -505,7 +511,7 @@
                     updateBtn.disabled = true;
                     updateBtn.innerHTML = `
                         <i class="fas fa-spinner fa-spin"></i>
-                        Saving...
+                        {{ __("messages.saving") }}
                     `;
                     
                     // Submit the form
@@ -536,7 +542,7 @@
                     e.preventDefault();
                     
                     if (!validatePasswordForm()) {
-                        showAlert('Error', 'Please fix the errors in the form before submitting.', 'error');
+                        showAlert('{{ __("messages.error") }}', '{{ __("messages.fix_errors") }}', 'error');
                         return;
                     }
                     
@@ -547,7 +553,7 @@
                     submitBtn.disabled = true;
                     submitBtn.innerHTML = `
                         <i class="fas fa-spinner fa-spin"></i>
-                        Updating...
+                        {{ __("messages.updating") }}
                     `;
 
                     try {
@@ -564,7 +570,7 @@
 
                         if (response.ok) {
                             // Success
-                            showAlert('Success', data.message || 'Password updated successfully!', 'success', function() {
+                            showAlert('{{ __("messages.success") }}', data.message || '{{ __("messages.password_updated") }}', 'success', function() {
                                 closePasswordModal();
                                 passwordForm.reset();
                                 submitBtn.disabled = false;
@@ -573,25 +579,25 @@
                                 ['lengthCheck', 'numberCheck', 'lowerCheck', 'upperCheck', 'matchCheck'].forEach(id => {
                                     document.getElementById(id).style.backgroundColor = '#9ca3af';
                                 });
-                                document.getElementById('matchText').textContent = 'Passwords match';
+                                document.getElementById('matchText').textContent = '{{ __("messages.passwords_match") }}';
                                 document.getElementById('matchText').className = 'text-xs text-gray-500';
                             });
                         } else {
                             // Error
-                            let errorMessage = 'An error occurred';
+                            let errorMessage = '{{ __("messages.error_occurred") }}';
                             if (data.errors) {
                                 errorMessage = Object.values(data.errors).flat().join('<br>');
                             } else if (data.message) {
                                 errorMessage = data.message;
                             }
                             
-                            showAlert('Error', errorMessage, 'error');
+                            showAlert('{{ __("messages.error") }}', errorMessage, 'error');
                             
                             submitBtn.disabled = false;
                             submitBtn.innerHTML = originalText;
                         }
                     } catch (error) {
-                        showAlert('Error', 'Network error. Please try again.', 'error');
+                        showAlert('{{ __("messages.error") }}', '{{ __("messages.network_error") }}', 'error');
                         submitBtn.disabled = false;
                         submitBtn.innerHTML = originalText;
                     }
@@ -625,7 +631,7 @@
                 ['lengthCheck', 'numberCheck', 'lowerCheck', 'upperCheck', 'matchCheck'].forEach(id => {
                     document.getElementById(id).style.backgroundColor = '#9ca3af';
                 });
-                document.getElementById('matchText').textContent = 'Passwords match';
+                document.getElementById('matchText').textContent = '{{ __("messages.passwords_match") }}';
                 document.getElementById('matchText').className = 'text-xs text-gray-500';
                 
                 // Reset eye icons
@@ -733,11 +739,6 @@
         /* Password strength indicators */
         #lengthCheck, #numberCheck, #lowerCheck, #upperCheck, #matchCheck {
             transition: background-color 0.3s ease;
-        }
-        
-        /* Eye button hover effects */
-        button[onclick*="togglePassword"]:hover {
-            transform: scale(1.1);
         }
         
         /* Form focus states */

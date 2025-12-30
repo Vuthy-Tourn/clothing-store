@@ -15,16 +15,16 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         $addresses = $user->addresses()->get()
-    ->unique(function ($address) {
-        return $address->full_name . '|' . 
-               $address->phone . '|' . 
-               $address->address_line1 . '|' . 
-               $address->city . '|' . 
-               $address->state . '|' . 
-               $address->zip_code . '|' . 
-               $address->country;
-    })
-    ->values();
+            ->unique(function ($address) {
+                return $address->full_name . '|' . 
+                       $address->phone . '|' . 
+                       $address->address_line1 . '|' . 
+                       $address->city . '|' . 
+                       $address->state . '|' . 
+                       $address->zip_code . '|' . 
+                       $address->country;
+            })
+            ->values();
         $defaultAddress = $user->addresses()->where('is_default', true)->first();
         
         return view('profile.show', compact('user', 'addresses', 'defaultAddress'));
@@ -78,7 +78,7 @@ class ProfileController extends Controller
         $user->save();
 
         return redirect()->route('profile.show')
-            ->with('success', 'Profile updated successfully!');
+            ->with('success', __('messages.profile_updated'));
     }
 
     public function updatePassword(Request $request)
@@ -92,7 +92,7 @@ class ProfileController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
 
-        return back()->with('password_success', 'Password updated successfully!');
+        return back()->with('password_success', __('messages.password_updated'));
     }
 
     public function updateEmail(Request $request)
@@ -111,7 +111,7 @@ class ProfileController extends Controller
         // You would need to implement email verification here
         // $user->sendEmailVerificationNotification();
 
-        return back()->with('success', 'Email updated successfully! Please verify your new email address.');
+        return back()->with('success', __('messages.email_updated'));
     }
 
     public function updateNewsletter(Request $request)
@@ -125,12 +125,12 @@ class ProfileController extends Controller
         $user->newsletter_opt_in = $request->newsletter_opt_in;
         $user->save();
 
-        $status = $request->newsletter_opt_in ? 'subscribed' : 'unsubscribed';
-        return back()->with('success', "Successfully $status from newsletter!");
+        $status = $request->newsletter_opt_in ? __('messages.subscribed') : __('messages.unsubscribed');
+        return back()->with('success', __('messages.newsletter_updated', ['status' => $status]));
     }
 
     // Address Management Methods
-      public function addAddress(Request $request)
+    public function addAddress(Request $request)
     {
         $user = Auth::user();
         
@@ -171,12 +171,12 @@ class ProfileController extends Controller
         if ($request->expectsJson() || $request->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Address added successfully!',
+                'message' => __('messages.address_added'),
                 'address' => $address
             ]);
         }
 
-        return back()->with('success', 'Address added successfully!');
+        return back()->with('success', __('messages.address_added'));
     }
 
     public function getAddress($id)
@@ -185,7 +185,7 @@ class ProfileController extends Controller
         $address = $user->addresses()->find($id);
         
         if (!$address) {
-            return response()->json(['error' => 'Address not found'], 404);
+            return response()->json(['error' => __('messages.address_not_found')], 404);
         }
         
         return response()->json([
@@ -236,12 +236,12 @@ class ProfileController extends Controller
         if ($request->expectsJson() || $request->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Address updated successfully!',
+                'message' => __('messages.address_updated'),
                 'address' => $address
             ]);
         }
 
-        return back()->with('success', 'Address updated successfully!');
+        return back()->with('success', __('messages.address_updated'));
     }
 
     public function deleteAddress($id)
@@ -254,10 +254,10 @@ class ProfileController extends Controller
             if (request()->expectsJson() || request()->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Cannot delete the only address. Add a new address first.'
+                    'message' => __('messages.cannot_delete_only_address')
                 ], 422);
             }
-            return back()->with('error', 'Cannot delete the only address. Add a new address first.');
+            return back()->with('error', __('messages.cannot_delete_only_address'));
         }
         
         // If deleting default address, set another as default
@@ -273,11 +273,11 @@ class ProfileController extends Controller
         if (request()->expectsJson() || request()->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Address deleted successfully!'
+                'message' => __('messages.address_deleted')
             ]);
         }
         
-        return back()->with('success', 'Address deleted successfully!');
+        return back()->with('success', __('messages.address_deleted'));
     }
 
     public function setDefaultAddress($id)
@@ -294,10 +294,10 @@ class ProfileController extends Controller
         if (request()->expectsJson() || request()->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Default address updated successfully!'
+                'message' => __('messages.default_address_updated')
             ]);
         }
         
-        return back()->with('success', 'Default address updated successfully!');
+        return back()->with('success', __('messages.default_address_updated'));
     }
 }
