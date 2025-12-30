@@ -1,3 +1,4 @@
+
 <form id="editUserForm" method="POST" action="{{ route('admin.users.update', $user) }}" enctype="multipart/form-data"
     class="space-y-6">
     @csrf
@@ -6,13 +7,13 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Basic Information -->
         <div class="md:col-span-2">
-            <h4 class="text-sm font-semibold text-gray-700 mb-3">Basic Information</h4>
+            <h4 class="text-sm font-semibold text-gray-700 mb-3">{{ __('admin.users.modal.basic_info') }}</h4>
         </div>
 
         <!-- Name -->
         <div class="md:col-span-2">
             <label for="edit_name" class="block text-sm font-medium text-gray-700 mb-2">
-                Full Name <span class="text-red-500">*</span>
+                {{ __('admin.users.modal.full_name') }} <span class="text-red-500">*</span>
             </label>
             <div class="relative">
                 <i class="fas fa-user absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
@@ -24,7 +25,7 @@
         <!-- Email -->
         <div>
             <label for="edit_email" class="block text-sm font-medium text-gray-700 mb-2">
-                Email Address <span class="text-red-500">*</span>
+                {{ __('admin.users.modal.email') }} <span class="text-red-500">*</span>
             </label>
             <div class="relative">
                 <i class="fas fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
@@ -35,18 +36,18 @@
 
         <!-- Phone -->
         <div>
-            <label for="edit_phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+            <label for="edit_phone" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.users.modal.phone') }}</label>
             <div class="relative">
                 <i class="fas fa-phone absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                 <input type="text" id="edit_phone" name="phone" value="{{ $user->phone ?? '' }}"
                     class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300"
-                    placeholder="+1 (555) 123-4567">
+                    placeholder="{{ __('admin.users.modal.phone_placeholder') }}">
             </div>
         </div>
 
         <!-- Date of Birth -->
         <div>
-            <label for="edit_dob" class="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
+            <label for="edit_dob" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.users.modal.date_of_birth') }}</label>
             <div class="relative">
                 <i class="fas fa-birthday-cake absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                 <input type="date" id="edit_dob" name="dob"
@@ -58,15 +59,15 @@
 
         <!-- Gender -->
         <div>
-            <label for="edit_gender" class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+            <label for="edit_gender" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.users.modal.gender') }}</label>
             <div class="relative">
                 <i class="fas fa-venus-mars absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                 <select id="edit_gender" name="gender"
                     class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300">
-                    <option value="">Select Gender</option>
-                    <option value="male" {{ $user->gender == 'male' ? 'selected' : '' }}>Male</option>
-                    <option value="female" {{ $user->gender == 'female' ? 'selected' : '' }}>Female</option>
-                    <option value="other" {{ $user->gender == 'other' ? 'selected' : '' }}>Other</option>
+                    <option value="">{{ __('admin.users.modal.gender_select') }}</option>
+                    <option value="male" {{ $user->gender == 'male' ? 'selected' : '' }}>{{ __('admin.users.modal.gender_male') }}</option>
+                    <option value="female" {{ $user->gender == 'female' ? 'selected' : '' }}>{{ __('admin.users.modal.gender_female') }}</option>
+                    <option value="other" {{ $user->gender == 'other' ? 'selected' : '' }}>{{ __('admin.users.modal.gender_other') }}</option>
                 </select>
             </div>
         </div>
@@ -74,7 +75,7 @@
         <!-- Account Type -->
         <div>
             <label for="edit_account_type" class="block text-sm font-medium text-gray-700 mb-2">
-                Account Type <span class="text-red-500">*</span>
+                {{ __('admin.users.modal.account_type') }} <span class="text-red-500">*</span>
             </label>
             <div class="relative">
                 <i class="fas fa-user-tag absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
@@ -82,7 +83,7 @@
                     class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300">
                     @foreach ($accountTypes as $type)
                         <option value="{{ $type }}" {{ $user->account_type == $type ? 'selected' : '' }}>
-                            {{ ucfirst($type) }}
+                            {{ __('admin.users.account_types.' . $type) }}
                         </option>
                     @endforeach
                 </select>
@@ -91,70 +92,72 @@
 
         <!-- Address Information -->
         <div class="md:col-span-2">
-            <h4 class="text-sm font-semibold text-gray-700 mb-3">Address Information</h4>
+            <h4 class="text-sm font-semibold text-gray-700 mb-3">{{ __('admin.users.modal.address_info') }}</h4>
         </div>
 
         <!-- Address Type -->
         <div>
             <label for="edit_address_type" class="block text-sm font-medium text-gray-700 mb-2">
-                Address Type <span class="text-red-500">*</span>
+                {{ __('admin.users.modal.address_type') }} <span class="text-red-500">*</span>
             </label>
             <div class="relative">
                 <i class="fas fa-map-marker-alt absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                 <select id="edit_address_type" name="address_type"
                     class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300">
                     <option value="shipping"
-                        {{ $primaryAddress && $primaryAddress->type == 'shipping' ? 'selected' : 'selected' }}>Shipping
+                        {{ $primaryAddress && $primaryAddress->type == 'shipping' ? 'selected' : 'selected' }}>
+                        {{ __('admin.users.modal.address_type_shipping') }}
                     </option>
                     <option value="billing"
-                        {{ $primaryAddress && $primaryAddress->type == 'billing' ? 'selected' : '' }}>Billing</option>
+                        {{ $primaryAddress && $primaryAddress->type == 'billing' ? 'selected' : '' }}>
+                        {{ __('admin.users.modal.address_type_billing') }}
+                    </option>
                 </select>
             </div>
         </div>
 
         <!-- Address Name -->
         <div>
-            <label for="edit_address_name" class="block text-sm font-medium text-gray-700 mb-2">Address Name</label>
+            <label for="edit_address_name" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.users.modal.address_name') }}</label>
             <div class="relative">
                 <i class="fas fa-tag absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                 <input type="text" id="edit_address_name" name="address_name"
                     value="{{ $primaryAddress->address_name ?? '' }}"
                     class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300"
-                    placeholder="e.g., Home, Office">
+                    placeholder="{{ __('admin.users.modal.address_name_placeholder') }}">
             </div>
         </div>
 
         <!-- Address Line 1 -->
         <div class="md:col-span-2">
             <label for="edit_address_line1" class="block text-sm font-medium text-gray-700 mb-2">
-                Address Line 1 <span class="text-red-500">*</span>
+                {{ __('admin.users.modal.address_line1') }} <span class="text-red-500">*</span>
             </label>
             <div class="relative">
                 <i class="fas fa-road absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                 <input type="text" id="edit_address_line1" name="address_line1"
                     value="{{ $primaryAddress->address_line1 ?? '' }}"
                     class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300"
-                    placeholder="Street address, P.O. box, company name">
+                    placeholder="{{ __('admin.users.modal.address_line1_placeholder') }}">
             </div>
         </div>
 
         <!-- Address Line 2 -->
         <div class="md:col-span-2">
-            <label for="edit_address_line2" class="block text-sm font-medium text-gray-700 mb-2">Address Line
-                2</label>
+            <label for="edit_address_line2" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.users.modal.address_line2') }}</label>
             <div class="relative">
                 <i class="fas fa-building absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                 <input type="text" id="edit_address_line2" name="address_line2"
                     value="{{ $primaryAddress->address_line2 ?? '' }}"
                     class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300"
-                    placeholder="Apartment, suite, unit, building, floor">
+                    placeholder="{{ __('admin.users.modal.address_line2_placeholder') }}">
             </div>
         </div>
 
         <!-- City -->
         <div>
             <label for="edit_city" class="block text-sm font-medium text-gray-700 mb-2">
-                City <span class="text-red-500">*</span>
+                {{ __('admin.users.modal.city') }} <span class="text-red-500">*</span>
             </label>
             <div class="relative">
                 <i class="fas fa-city absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
@@ -166,7 +169,7 @@
         <!-- State -->
         <div>
             <label for="edit_state" class="block text-sm font-medium text-gray-700 mb-2">
-                State/Province <span class="text-red-500">*</span>
+                {{ __('admin.users.modal.state') }} <span class="text-red-500">*</span>
             </label>
             <div class="relative">
                 <i class="fas fa-landmark absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
@@ -178,7 +181,7 @@
         <!-- Zip Code -->
         <div>
             <label for="edit_zip_code" class="block text-sm font-medium text-gray-700 mb-2">
-                ZIP/Postal Code <span class="text-red-500">*</span>
+                {{ __('admin.users.modal.zip_code') }} <span class="text-red-500">*</span>
             </label>
             <div class="relative">
                 <i class="fas fa-mail-bulk absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
@@ -191,7 +194,7 @@
         <!-- Country -->
         <div>
             <label for="edit_country" class="block text-sm font-medium text-gray-700 mb-2">
-                Country <span class="text-red-500">*</span>
+                {{ __('admin.users.modal.country') }} <span class="text-red-500">*</span>
             </label>
             <div class="relative">
                 <i class="fas fa-globe absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
@@ -199,8 +202,8 @@
                     class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300">
                     <option value="United States"
                         {{ ($primaryAddress->country ?? 'United States') == 'United States' ? 'selected' : 'selected' }}>
-                        United
-                        States</option>
+                        United States
+                    </option>
                     <option value="Canada" {{ ($primaryAddress->country ?? '') == 'Canada' ? 'selected' : '' }}>Canada
                     </option>
                     <option value="United Kingdom"
@@ -216,7 +219,7 @@
                     </option>
                     <option value="India" {{ ($primaryAddress->country ?? '') == 'India' ? 'selected' : '' }}>India
                     </option>
-                    <option value="Other">Other</option>
+                    <option value="Other">{{ __('admin.users.modal.other') }}</option>
                 </select>
             </div>
         </div>
@@ -228,27 +231,26 @@
                 class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
                 {{ $primaryAddress && $primaryAddress->is_default ? 'checked' : 'checked' }}>
             <label for="edit_is_default_address" class="ml-2 text-sm font-medium text-gray-700">
-                Set as default address
+                {{ __('admin.users.modal.is_default_address') }}
             </label>
         </div>
 
         <!-- Password -->
         <div class="md:col-span-2">
-            <h4 class="text-sm font-semibold text-gray-700 mb-3">Password (Leave blank to keep current)</h4>
+            <h4 class="text-sm font-semibold text-gray-700 mb-3">{{ __('admin.users.modal.password_info_edit') }}</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label for="edit_password" class="block text-sm font-medium text-gray-700 mb-2">New
-                        Password</label>
+                    <label for="edit_password" class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.users.modal.password') }}</label>
                     <div class="relative">
                         <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                         <input type="password" id="edit_password" name="password"
                             class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300"
-                            placeholder="Minimum 8 characters">
+                            placeholder="{{ __('admin.users.modal.password_placeholder') }}">
                     </div>
                 </div>
                 <div>
                     <label for="edit_password_confirmation"
-                        class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+                        class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.users.modal.password_confirm') }}</label>
                     <div class="relative">
                         <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                         <input type="password" id="edit_password_confirmation" name="password_confirmation"
@@ -258,58 +260,58 @@
             </div>
         </div>
 
-<!-- Profile Picture -->
-<div class="md:col-span-2">
-    <label class="block text-sm font-medium text-gray-700 mb-2">Profile Picture</label>
-    <div class="flex items-center space-x-6">
-        <!-- Current Picture -->
-        <div class="relative">
-            @if ($user->profile_picture)
-                <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile Picture"
-                    class="w-20 h-20 rounded-xl object-cover border-2 border-gray-300">
-                <!-- Hidden current picture reference for preview -->
-                <img src="{{ asset('storage/' . $user->profile_picture) }}" 
-                     id="currentProfilePicture" 
-                     class="hidden" 
-                     alt="Current Picture">
-            @else
-                <div id="currentProfilePicturePlaceholder"
-                    class="w-20 h-20 bg-gradient-to-br from-gray-200 to-gray-300 rounded-xl flex items-center justify-center border-2 border-gray-300">
-                    <i class="fas fa-user text-gray-500 text-xl"></i>
+        <!-- Profile Picture -->
+        <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.users.modal.profile_picture') }}</label>
+            <div class="flex items-center space-x-6">
+                <!-- Current Picture -->
+                <div class="relative">
+                    @if ($user->profile_picture)
+                        <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="{{ __('admin.users.modal.current_picture') }}"
+                            class="w-20 h-20 rounded-xl object-cover border-2 border-gray-300">
+                        <!-- Hidden current picture reference for preview -->
+                        <img src="{{ asset('storage/' . $user->profile_picture) }}" 
+                             id="currentProfilePicture" 
+                             class="hidden" 
+                             alt="{{ __('admin.users.modal.current_picture') }}">
+                    @else
+                        <div id="currentProfilePicturePlaceholder"
+                            class="w-20 h-20 bg-gradient-to-br from-gray-200 to-gray-300 rounded-xl flex items-center justify-center border-2 border-gray-300">
+                            <i class="fas fa-user text-gray-500 text-xl"></i>
+                        </div>
+                    @endif
                 </div>
-            @endif
-        </div>
 
-        <!-- Upload Controls -->
-        <div class="flex-1">
-            <input type="file" id="edit_profile_picture" name="profile_picture" accept="image/*" 
-                   class="hidden" onchange="previewEditProfilePicture(this)">
-            <label for="edit_profile_picture"
-                   class="inline-block px-4 py-2 bg-gradient-to-r from-Ocean to-Ocean/80 text-white rounded-lg cursor-pointer hover:shadow-lg transition-all duration-300 mb-2">
-                <i class="fas fa-upload mr-2"></i>Upload New Photo
-            </label>
-            @if ($user->profile_picture)
-                <div class="mt-2">
-                    <input type="checkbox" id="edit_remove_profile_picture" name="remove_profile_picture" 
-                           class="w-4 h-4 text-red-600 rounded focus:ring-red-500">
-                    <label for="edit_remove_profile_picture" class="ml-2 text-sm text-red-600 cursor-pointer">
-                        Remove current photo
+                <!-- Upload Controls -->
+                <div class="flex-1">
+                    <input type="file" id="edit_profile_picture" name="profile_picture" accept="image/*" 
+                           class="hidden" onchange="previewEditProfilePicture(this)">
+                    <label for="edit_profile_picture"
+                           class="inline-block px-4 py-2 bg-gradient-to-r from-Ocean to-Ocean/80 text-white rounded-lg cursor-pointer hover:shadow-lg transition-all duration-300 mb-2">
+                        <i class="fas fa-upload mr-2"></i>{{ __('admin.users.modal.upload_photo') }}
                     </label>
+                    @if ($user->profile_picture)
+                        <div class="mt-2">
+                            <input type="checkbox" id="edit_remove_profile_picture" name="remove_profile_picture" 
+                                   class="w-4 h-4 text-red-600 rounded focus:ring-red-500">
+                            <label for="edit_remove_profile_picture" class="ml-2 text-sm text-red-600 cursor-pointer">
+                                {{ __('admin.users.modal.remove_photo') }}
+                            </label>
+                        </div>
+                    @endif
+                    <p class="text-xs text-gray-500 mt-2">
+                        {{ __('admin.users.modal.photo_formats') }}
+                    </p>
                 </div>
-            @endif
-            <p class="text-xs text-gray-500 mt-2">
-                Max file size: 5MB. Allowed: JPG, PNG, GIF, WEBP
-            </p>
+            </div>
+            <!-- Preview Container -->
+            <div id="editProfilePicturePreview" class="mt-4 hidden">
+                <p class="text-sm font-medium text-gray-700 mb-2">{{ __('admin.users.modal.preview') }}</p>
+                <div class="w-32 h-32 rounded-xl overflow-hidden border-2 border-Ocean">
+                    <img id="editProfilePreviewImage" class="w-full h-full object-cover" alt="{{ __('admin.users.modal.preview') }}">
+                </div>
+            </div>
         </div>
-    </div>
-    <!-- Preview Container -->
-    <div id="editProfilePicturePreview" class="mt-4 hidden">
-        <p class="text-sm font-medium text-gray-700 mb-2">Preview:</p>
-        <div class="w-32 h-32 rounded-xl overflow-hidden border-2 border-Ocean">
-            <img id="editProfilePreviewImage" class="w-full h-full object-cover" alt="Preview">
-        </div>
-    </div>
-</div>
 
         <!-- Status Options -->
         <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -319,7 +321,7 @@
                     class="w-4 h-4 text-green-600 rounded focus:ring-green-500"
                     {{ $user->is_active ? 'checked' : '' }}>
                 <label for="edit_is_active" class="ml-2 text-sm font-medium text-gray-700">
-                    Active Account
+                    {{ __('admin.users.modal.active_account') }}
                 </label>
             </div>
 
@@ -329,7 +331,7 @@
                     class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
                     {{ $user->email_verified_at ? 'checked' : '' }}>
                 <label for="edit_email_verified" class="ml-2 text-sm font-medium text-gray-700">
-                    Email Verified
+                    {{ __('admin.users.modal.email_verified') }}
                 </label>
             </div>
 
@@ -339,7 +341,7 @@
                     class="w-4 h-4 text-Ocean rounded focus:ring-Ocean"
                     {{ $user->newsletter_opt_in ? 'checked' : '' }}>
                 <label for="edit_newsletter_opt_in" class="ml-2 text-sm font-medium text-gray-700">
-                    Newsletter Subscriber
+                    {{ __('admin.users.modal.newsletter_subscriber') }}
                 </label>
             </div>
         </div>
@@ -350,7 +352,7 @@
         <!-- Loyalty Points -->
         <div>
             <label for="edit_loyalty_points" class="block text-sm font-medium text-gray-700 mb-2">
-                Loyalty Points
+                {{ __('admin.users.modal.loyalty_points') }}
             </label>
             <div class="relative">
                 <i class="fas fa-star absolute left-4 top-1/2 transform -translate-y-1/2 text-yellow-500"></i>
@@ -365,14 +367,15 @@
     <div class="mt-8 flex justify-end space-x-3">
         <button type="button" onclick="hideEditModal()"
             class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-xl transition-colors duration-300">
-            Cancel
+            {{ __('admin.users.modal.cancel') }}
         </button>
         <button type="submit"
             class="px-4 py-2 bg-gradient-to-r from-Ocean to-Ocean/80 text-white rounded-xl hover:shadow-lg transition-all duration-300">
-            <i class="fas fa-save mr-2"></i>Save Changes
+            <i class="fas fa-save mr-2"></i>{{ __('admin.users.modal.update') }}
         </button>
     </div>
 </form>
+
 <script>
 // Function for edit form profile preview (same as create form)
 function previewEditProfilePicture(input) {
@@ -434,7 +437,7 @@ document.getElementById('editUserForm').addEventListener('submit', function(e) {
     const originalText = submitBtn.innerHTML;
     
     // Show loading state
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Saving...';
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>{{ __("admin.users.messages.saving") }}';
     submitBtn.disabled = true;
     
     fetch(form.action, {
@@ -449,16 +452,20 @@ document.getElementById('editUserForm').addEventListener('submit', function(e) {
     .then(data => {
         if (data.success) {
             // Success - show message and reload
-            alert(data.message || 'User updated successfully!');
+            alert(data.message || '{{ __("admin.users.messages.success_updated") }}');
             window.location.reload();
         } else {
             // Error
-            alert(data.message || 'Failed to update user');
+            alert(data.message || '{{ __("admin.users.messages.error_failed_message") }}');
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
             
             // Show validation errors if any
             if (data.errors) {
+                // Clear previous errors
+                form.querySelectorAll('.text-red-500').forEach(el => el.remove());
+                form.querySelectorAll('.border-red-500').forEach(el => el.classList.remove('border-red-500'));
+                
                 Object.keys(data.errors).forEach(field => {
                     const input = form.querySelector(`[name="${field}"]`);
                     if (input) {
@@ -474,9 +481,10 @@ document.getElementById('editUserForm').addEventListener('submit', function(e) {
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred. Please try again.');
+        alert('{{ __("admin.users.messages.error_occurred") }}');
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
     });
 });
 </script>
+

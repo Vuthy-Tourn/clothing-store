@@ -3,14 +3,14 @@
     <div class="p-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-                <h2 class="text-xl font-bold text-gray-900">All Categories</h2>
-                <p class="text-gray-700 text-sm mt-1">Manage and organize your product categories</p>
+                <h2 class="text-xl font-bold text-gray-900">{{ __('admin.categories.table.all_admin_categories') }}</h2>
+                <p class="text-gray-700 text-sm mt-1">{{ __('admin.categories.table.manage_organize') }}</p>
             </div>
             <div class="flex items-center gap-3">
                 <button onclick="toggleSortOrder()"
                     class="bg-white border border-gray-300 text-gray-900 hover:bg-gray-50 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 group shadow-sm hover:shadow">
                     <i class="fas fa-sort mr-2 group-hover:rotate-180 transition-transform duration-300"></i>
-                    Arrange Order
+                    {{ __('admin.categories.table.arrange_order') }}
                 </button>
             </div>
         </div>
@@ -19,12 +19,12 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
             <!-- Search Input -->
             <div class="md:col-span-2">
-                <label class="block text-gray-900 font-medium mb-2 text-sm">Search Categories</label>
+                <label class="block text-gray-900 font-medium mb-2 text-sm">{{ __('admin.categories.table.search_placeholder') }}</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                         <i class="fas fa-search text-gray-500"></i>
                     </div>
-                    <input type="text" id="searchInput" placeholder="Search by name, description, or slug..."
+                    <input type="text" id="searchInput" placeholder="{{ __('admin.categories.table.search_placeholder') }}"
                         class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl pl-12 pr-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 shadow-sm placeholder:text-gray-400"
                         onkeyup="filterTable()">
                 </div>
@@ -32,15 +32,15 @@
 
             <!-- Gender Filter -->
             <div>
-                <label class="block text-gray-900 font-medium mb-2 text-sm">Filter by Gender</label>
+                <label class="block text-gray-900 font-medium mb-2 text-sm">{{ __('admin.categories.table.filter_gender') }}</label>
                 <div class="relative">
                     <select id="genderFilter" onchange="filterTable()"
                         class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-4 py-3 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 appearance-none transition-all duration-200 shadow-sm cursor-pointer">
-                        <option value="">All Genders</option>
-                        <option value="men">Men</option>
-                        <option value="women">Women</option>
-                        <option value="kids">Kids</option>
-                        <option value="unisex">Unisex</option>
+                        <option value="">{{ __('admin.categories.table.all_genders') }}</option>
+                        <option value="men">{{ __('admin.categories.modal.gender_men') }}</option>
+                        <option value="women">{{ __('admin.categories.modal.gender_women') }}</option>
+                        <option value="kids">{{ __('admin.categories.modal.gender_kids') }}</option>
+                        <option value="unisex">{{ __('admin.categories.modal.gender_unisex') }}</option>
                     </select>
                     <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                         <i class="fas fa-chevron-down text-gray-500"></i>
@@ -50,13 +50,13 @@
 
             <!-- Status Filter -->
             <div>
-                <label class="block text-gray-900 font-medium mb-2 text-sm">Filter by Status</label>
+                <label class="block text-gray-900 font-medium mb-2 text-sm">{{ __('admin.categories.table.filter_status') }}</label>
                 <div class="relative">
                     <select id="statusFilter" onchange="filterTable()"
                         class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-4 py-3 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 appearance-none transition-all duration-200 shadow-sm cursor-pointer">
-                        <option value="">All Status</option>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
+                        <option value="">{{ __('admin.categories.table.all_status') }}</option>
+                        <option value="active">{{ __('admin.categories.modal.status_active') }}</option>
+                        <option value="inactive">{{ __('admin.categories.modal.status_inactive') }}</option>
                     </select>
                     <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                         <i class="fas fa-chevron-down text-gray-500"></i>
@@ -69,11 +69,11 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
             <!-- Products Range Filter -->
             <div class="md:col-span-2">
-                <label class="block text-gray-900 font-medium mb-2 text-sm">Products Range</label>
+                <label class="block text-gray-900 font-medium mb-2 text-sm">{{ __('admin.categories.table.products_range') }}</label>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span class="text-gray-500 text-sm">Min</span>
+                            <span class="text-gray-500 text-sm">{{ __('admin.categories.table.min') }}</span>
                         </div>
                         <input type="number" id="minProducts" min="0" placeholder="0"
                             class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl pl-14 pr-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 shadow-sm"
@@ -81,9 +81,9 @@
                     </div>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span class="text-gray-500 text-sm">Max</span>
+                            <span class="text-gray-500 text-sm">{{ __('admin.categories.table.max') }}</span>
                         </div>
-                        <input type="number" id="maxProducts" min="0" placeholder="Any"
+                        <input type="number" id="maxProducts" min="0" placeholder="{{ __('admin.categories.table.max') }}"
                             class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl pl-12 pr-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 shadow-sm"
                             oninput="filterTable()">
                     </div>
@@ -93,17 +93,17 @@
             <!-- Sort By and Reset -->
             <div class="flex items-end gap-3">
                 <div class="flex-1">
-                    <label class="block text-gray-900 font-medium mb-2 text-sm">Sort By</label>
+                    <label class="block text-gray-900 font-medium mb-2 text-sm">{{ __('admin.categories.table.sort_by') }}</label>
                     <div class="relative">
                         <select id="sortFilter" onchange="sortTable()"
                             class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 appearance-none transition-all duration-200 shadow-sm cursor-pointer">
-                            <option value="sort_order">Display Order</option>
-                            <option value="name">Name A-Z</option>
-                            <option value="name_desc">Name Z-A</option>
-                            <option value="products_desc">Most Products</option>
-                            <option value="products_asc">Least Products</option>
-                            <option value="created_desc">Newest First</option>
-                            <option value="created_asc">Oldest First</option>
+                            <option value="sort_order">{{ __('admin.categories.sort.display_order') }}</option>
+                            <option value="name">{{ __('admin.categories.sort.name_az') }}</option>
+                            <option value="name_desc">{{ __('admin.categories.sort.name_za') }}</option>
+                            <option value="products_desc">{{ __('admin.categories.sort.most_products') }}</option>
+                            <option value="products_asc">{{ __('admin.categories.sort.least_products') }}</option>
+                            <option value="created_desc">{{ __('admin.categories.sort.newest_first') }}</option>
+                            <option value="created_asc">{{ __('admin.categories.sort.oldest_first') }}</option>
                         </select>
                         <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                             <i class="fas fa-chevron-down text-gray-500"></i>
@@ -113,7 +113,7 @@
                 <button onclick="resetFilters()"
                     class="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white px-4 py-3 rounded-xl font-medium transition-all duration-200 group shadow-md hover:shadow-lg transform hover:-translate-y-0.5 whitespace-nowrap">
                     <i class="fas fa-redo mr-2 group-hover:rotate-180 transition-transform duration-300"></i>
-                    Reset
+                    {{ __('admin.categories.table.reset') }}
                 </button>
             </div>
         </div>
@@ -121,10 +121,10 @@
         <!-- Active Filters Display -->
         <div id="filterSummary" class="mt-4 hidden">
             <div class="flex flex-wrap items-center gap-2">
-                <span class="text-gray-700 text-sm font-medium">Active Filters:</span>
+                <span class="text-gray-700 text-sm font-medium">{{ __('admin.categories.table.active_filters') }}:</span>
                 <div id="activeFilters" class="flex flex-wrap gap-2"></div>
                 <button onclick="resetFilters()" class="text-blue-600 hover:text-blue-800 text-sm font-medium ml-2">
-                    Clear All
+                    {{ __('admin.categories.table.clear_all') }}
                 </button>
             </div>
         </div>
@@ -133,16 +133,15 @@
     @if ($categories->isEmpty())
         <!-- Empty State -->
         <div class="p-16 text-center">
-            <div
-                class="w-24 h-24 rounded-full bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center mx-auto mb-6 border-4 border-blue-100">
+            <div class="w-24 h-24 rounded-full bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center mx-auto mb-6 border-4 border-blue-100">
                 <i class="fas fa-folder-open text-blue-300 text-3xl"></i>
             </div>
-            <h3 class="text-2xl font-bold text-gray-900 mb-3">No Categories Yet</h3>
-            <p class="text-gray-700 mb-6 max-w-md mx-auto">Organize your products by creating categories for better navigation</p>
+            <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ __('admin.categories.no_admin.categories') }}</h3>
+            <p class="text-gray-700 mb-6 max-w-md mx-auto">{{ __('admin.categories.no_admin.categories_desc') }}</p>
             <button onclick="CategoryModal.openAdd()"
                 class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-3.5 rounded-xl font-medium transition-all duration-200 group text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                 <i class="fas fa-plus mr-3 group-hover:rotate-90 transition-transform duration-300"></i>
-                Create First Category
+                {{ __('admin.categories.create_first') }}
             </button>
         </div>
     @else
@@ -150,12 +149,12 @@
         <div id="sortOrderPanel" class="p-6 border-b border-gray-100 bg-gray-50 hidden">
             <div class="flex items-center justify-between mb-4">
                 <div>
-                    <h3 class="text-lg font-bold text-gray-900">Arrange Category Order</h3>
-                    <p class="text-gray-700 text-sm">Drag and drop to reorder categories</p>
+                    <h3 class="text-lg font-bold text-gray-900">{{ __('admin.categories.sort_panel.title') }}</h3>
+                    <p class="text-gray-700 text-sm">{{ __('admin.categories.sort_panel.subtitle') }}</p>
                 </div>
                 <button onclick="saveSortOrder()"
                     class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-5 py-2 rounded-lg font-medium text-sm transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                    <i class="fas fa-save mr-2"></i> Save Order
+                    <i class="fas fa-save mr-2"></i> {{ __('admin.categories.sort_panel.save_order') }}
                 </button>
             </div>
 
@@ -178,31 +177,31 @@
                                 @endif
                                 <div>
                                     <h4 class="font-medium text-gray-900">{{ $category->name }}</h4>
-                                    <p class="text-gray-700 text-xs">{{ $category->products->count() }} products</p>
+                                    <p class="text-gray-700 text-xs">{{ __('admin.categories.sort_panel.products_count', ['count' => $category->products->count()]) }}</p>
                                 </div>
                             </div>
                         </div>
                         <div class="text-gray-700 font-medium">
-                            <span class="text-sm">Position: #{{ $category->sort_order + 1 }}</span>
+                            <span class="text-sm">{{ __('admin.categories.sort_panel.position', ['position' => $category->sort_order + 1]) }}</span>
                         </div>
                     </div>
                 @endforeach
             </div>
         </div>
 
-        <!-- Categories Table -->
+        <!-- admin.categories Table -->
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
                     <tr>
-                        <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">Order</th>
-                        <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">Category</th>
-                        <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">Gender</th>
-                        <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">Slug</th>
-                        <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">Description</th>
-                        <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">Status</th>
-                        <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">Products</th>
-                        <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">Actions</th>
+                        <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">{{ __('admin.categories.table.order') }}</th>
+                        <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">{{ __('admin.categories.table.category') }}</th>
+                        <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">{{ __('admin.categories.table.gender') }}</th>
+                        <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">{{ __('admin.categories.table.slug') }}</th>
+                        <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">{{ __('admin.categories.table.description') }}</th>
+                        <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">{{ __('admin.categories.table.status') }}</th>
+                        <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">{{ __('admin.categories.table.products') }}</th>
+                        <th class="py-4 px-6 text-left text-gray-900 font-semibold text-sm">{{ __('admin.categories.table.actions') }}</th>
                     </tr>
                 </thead>
                 <tbody id="categoriesTableBody" class="divide-y divide-gray-100">
@@ -221,8 +220,7 @@
                             data-created="{{ $category->created_at->timestamp }}"
                             data-aos="fade-in" data-aos-delay="{{ $index * 50 }}">
                             <td class="py-4 px-6">
-                                <span
-                                    class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-gray-800 to-gray-900 text-white text-sm font-bold shadow">
+                                <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-gray-800 to-gray-900 text-white text-sm font-bold shadow">
                                     {{ $category->sort_order + 1 }}
                                 </span>
                             </td>
@@ -268,7 +266,7 @@
                             </td>
                             <td class="py-4 px-6">
                                 <p class="text-gray-700 text-sm line-clamp-2 category-description">
-                                    {{ $category->description ?? 'No description' }}
+                                    {{ $category->description ?? __('admin.categories.table.no_description') }}
                                 </p>
                             </td>
                             <td class="py-4 px-6">
@@ -283,7 +281,7 @@
                             <td class="py-4 px-6">
                                 <div class="flex items-center">
                                     <span class="text-gray-900 font-bold text-lg products-count">{{ $productCount }}</span>
-                                    <span class="text-gray-700 text-sm ml-1">products</span>
+                                    <span class="text-gray-700 text-sm ml-1">{{ __('admin.categories.table.products') }}</span>
                                 </div>
                             </td>
                             <td class="py-4 px-6">
@@ -310,26 +308,34 @@
             <div class="w-24 h-24 rounded-full bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center mx-auto mb-6 border-4 border-gray-200">
                 <i class="fas fa-search text-gray-400 text-3xl"></i>
             </div>
-            <h3 class="text-2xl font-bold text-gray-900 mb-3">No Categories Found</h3>
-            <p class="text-gray-700 mb-6 max-w-md mx-auto">Try adjusting your search or filters</p>
+            <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ __('admin.categories.no_results.title') }}</h3>
+            <p class="text-gray-700 mb-6 max-w-md mx-auto">{{ __('admin.categories.no_results.message') }}</p>
             <button onclick="resetFilters()"
                 class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-3.5 rounded-xl font-medium transition-all duration-200 group text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                 <i class="fas fa-redo mr-3 group-hover:rotate-180 transition-transform duration-300"></i>
-                Reset All Filters
+                {{ __('admin.categories.no_results.reset_filters') }}
             </button>
         </div>
 
         <!-- Results Count -->
         <div id="resultsCount" class="p-4 border-t border-gray-100 bg-gray-50">
             <p class="text-gray-700 text-sm">
-                Showing <span id="visibleCount" class="font-semibold">{{ $categories->count() }}</span> 
-                of <span id="totalCount" class="font-semibold">{{ $categories->count() }}</span> categories
+                {{ __('admin.categories.table.showing') }} <span id="visibleCount" class="font-semibold">{{ $categories->count() }}</span> 
+                {{ __('admin.categories.table.of') }} <span id="totalCount" class="font-semibold">{{ $categories->count() }}</span>
             </p>
         </div>
     @endif
 </div>
 
 <script>
+    // Translation strings for JavaScript
+    const translations = {
+        search: "{{ __('admin.categories.filters.search', ['term' => ':term']) }}",
+        gender: "{{ __('admin.categories.filters.gender', ['gender' => ':gender']) }}",
+        status: "{{ __('admin.categories.filters.status', ['status' => ':status']) }}",
+        products: "{{ __('admin.categories.filters.products', ['range' => ':range']) }}"
+    };
+
     // Real-time filtering functionality
     let filterDebounce;
     
@@ -354,20 +360,14 @@
                 const status = row.getAttribute('data-status') || '';
                 const products = parseInt(row.getAttribute('data-products')) || 0;
                 
-                // Apply filters
                 const matchesSearch = !searchTerm || 
                     name.includes(searchTerm) || 
                     description.includes(searchTerm) || 
                     slug.includes(searchTerm);
                 
-                const matchesGender = !genderFilter || 
-                    gender === genderFilter;
-                
-                const matchesStatus = !statusFilter || 
-                    status === statusFilter;
-                
-                const matchesProductRange = products >= minProducts && 
-                    products <= maxProducts;
+                const matchesGender = !genderFilter || gender === genderFilter;
+                const matchesStatus = !statusFilter || status === statusFilter;
+                const matchesProductRange = products >= minProducts && products <= maxProducts;
                 
                 if (matchesSearch && matchesGender && matchesStatus && matchesProductRange) {
                     row.classList.remove('hidden');
@@ -381,10 +381,8 @@
                 }
             });
             
-            // Update results count
             document.getElementById('visibleCount').textContent = visibleCount;
             
-            // Show/hide no results message
             const noResultsMessage = document.getElementById('noResultsMessage');
             const tableBody = document.getElementById('categoriesTableBody');
             
@@ -396,10 +394,8 @@
                 tableBody.classList.remove('hidden');
             }
             
-            // Update filter summary
             updateFilterSummary(searchTerm, genderFilter, statusFilter, minProducts, maxProducts);
-            
-        }, 50); // Small debounce for smooth real-time filtering
+        }, 50);
     }
     
     function sortTable() {
@@ -421,12 +417,11 @@
                     return (parseInt(b.getAttribute('data-created')) || 0) - (parseInt(a.getAttribute('data-created')) || 0);
                 case 'created_asc':
                     return (parseInt(a.getAttribute('data-created')) || 0) - (parseInt(b.getAttribute('data-created')) || 0);
-                default: // sort_order
+                default:
                     return (parseInt(a.getAttribute('data-sort-order')) || 0) - (parseInt(b.getAttribute('data-sort-order')) || 0);
             }
         });
         
-        // Reorder DOM
         rows.forEach(row => tbody.appendChild(row));
     }
     
@@ -434,15 +429,13 @@
         const filterSummary = document.getElementById('filterSummary');
         const activeFilters = document.getElementById('activeFilters');
         
-        // Clear existing filters
         activeFilters.innerHTML = '';
-        
         let hasActiveFilters = false;
         const filters = [];
         
         if (searchTerm) {
             filters.push({
-                text: `Search: "${searchTerm}"`,
+                text: translations.search.replace(':term', searchTerm),
                 type: 'search'
             });
             hasActiveFilters = true;
@@ -450,7 +443,7 @@
         
         if (gender) {
             filters.push({
-                text: `Gender: ${gender.charAt(0).toUpperCase() + gender.slice(1)}`,
+                text: translations.gender.replace(':gender', gender.charAt(0).toUpperCase() + gender.slice(1)),
                 type: 'gender'
             });
             hasActiveFilters = true;

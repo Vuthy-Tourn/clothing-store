@@ -4,7 +4,7 @@
     <div class="bg-white w-full max-w-5xl rounded-xl shadow-lg max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
             <h2 class="text-xl font-bold text-gray-900 flex items-center">
-                <i class="fas fa-plus-circle mr-2 text-blue-600"></i> Add New Product
+                <i class="fas fa-plus-circle mr-2 text-blue-600"></i> {{ __('admin.products.modal.add_title') }}
             </h2>
             <button onclick="ProductModal.closeAdd()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">
                 &times;
@@ -16,31 +16,32 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-900 mb-2">Product Name <span
-                            class="ml-1 text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-900 mb-2">
+                        {{ __('admin.products.modal.product_name') }} <span class="ml-1 text-red-500">*</span>
+                    </label>
                     <input type="text" name="name" value="{{ old('name') }}" required
                         class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Enter product name">
+                        placeholder="{{ __('admin.products.modal.name_placeholder') }}">
                     @error('name')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-900 mb-2">Category <span
-                            class="ml-1 text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-900 mb-2">
+                        {{ __('admin.products.modal.category') }} <span class="ml-1 text-red-500">*</span>
+                    </label>
                     <select name="category_id" required
                         class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Select category</option>
+                        <option value="">{{ __('admin.products.modal.category_placeholder') }}</option>
 
-                        <!-- Group categories by gender -->
                         @php
                             $groupedCategories = $categories->groupBy('gender');
                         @endphp
 
-                        @foreach (['men' => 'Men\'s', 'women' => 'Women\'s', 'kids' => 'Kids', 'unisex' => 'Unisex'] as $gender => $label)
+                        @foreach (['men' => __('admin.products.category_groups.men'), 'women' => __('admin.products.category_groups.women'), 'kids' => __('admin.products.category_groups.kids'), 'unisex' => __('admin.products.category_groups.unisex')] as $gender => $label)
                             @if ($groupedCategories->has($gender))
-                                <optgroup label="{{ $label }} Clothing">
+                                <optgroup label="{{ $label }}">
                                     @foreach ($groupedCategories[$gender] as $cat)
                                         <option value="{{ $cat->id }}"
                                             {{ old('category_id') == $cat->id ? 'selected' : '' }}>
@@ -51,7 +52,6 @@
                             @endif
                         @endforeach
 
-                        <!-- Main categories (no gender) -->
                         @foreach ($categories->whereNull('gender') as $cat)
                             <option value="{{ $cat->id }}" {{ old('category_id') == $cat->id ? 'selected' : '' }}>
                                 {{ $cat->name }}
@@ -63,51 +63,61 @@
                     @enderror
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-900 mb-2">Material</label>
+                    <label class="block text-sm font-medium text-gray-900 mb-2">
+                        {{ __('admin.products.modal.material') }}
+                    </label>
                     <input type="text" name="material" value="{{ old('material') }}"
                         class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3"
-                        placeholder="Enter material name">
+                        placeholder="{{ __('admin.products.modal.material_placeholder') }}">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-900 mb-2">Brand</label>
+                    <label class="block text-sm font-medium text-gray-900 mb-2">
+                        {{ __('admin.products.modal.brand') }}
+                    </label>
                     <input type="text" name="brand" value="{{ old('brand') }}"
                         class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Enter brand name">
+                        placeholder="{{ __('admin.products.modal.brand_placeholder') }}">
                 </div>
             </div>
 
             <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-900 mb-2">Description <span
-                        class="ml-1 text-red-500">*</span></label>
+                <label class="block text-sm font-medium text-gray-900 mb-2">
+                    {{ __('admin.products.modal.description') }} <span class="ml-1 text-red-500">*</span>
+                </label>
                 <textarea name="description" rows="4" required
                     class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-                    placeholder="Enter detailed product description">{{ old('description') }}</textarea>
+                    placeholder="{{ __('admin.products.modal.description_placeholder') }}">{{ old('description') }}</textarea>
             </div>
 
             <!-- Product-Level Discount Section -->
             <div class="mb-8 border border-gray-200 rounded-lg p-6 bg-gray-50">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                    <i class="fas fa-tag mr-2 text-blue-600"></i> Product Discount Settings
+                    <i class="fas fa-tag mr-2 text-blue-600"></i> {{ __('admin.products.modal.discount_settings') }}
                 </h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-900 mb-2">Discount Type</label>
+                            <label class="block text-sm font-medium text-gray-900 mb-2">
+                                {{ __('admin.products.modal.discount_type') }}
+                            </label>
                             <select name="discount_type"
                                 class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 discount-type-select">
-                                <option value="">No Discount</option>
+                                <option value="">{{ __('admin.products.modal.discount_type_none') }}</option>
                                 <option value="percentage"
                                     {{ old('discount_type') == 'percentage' ? 'selected' : '' }}>
-                                    Percentage (%)
+                                    {{ __('admin.products.modal.discount_type_percentage') }}
                                 </option>
-                                <option value="fixed" {{ old('discount_type') == 'fixed' ? 'selected' : '' }}>Fixed
-                                    Amount</option>
+                                <option value="fixed" {{ old('discount_type') == 'fixed' ? 'selected' : '' }}>
+                                    {{ __('admin.products.modal.discount_type_fixed') }}
+                                </option>
                             </select>
                         </div>
 
                         <div class="discount-value-field" style="display: none;">
-                            <label class="block text-sm font-medium text-gray-900 mb-2">Discount Value</label>
+                            <label class="block text-sm font-medium text-gray-900 mb-2">
+                                {{ __('admin.products.modal.discount_value') }}
+                            </label>
                             <div class="relative">
                                 <div
                                     class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 discount-prefix">
@@ -115,20 +125,24 @@
                                 <input type="number" step="0.01" name="discount_value"
                                     value="{{ old('discount_value') }}"
                                     class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg pl-10 pr-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    placeholder="e.g., 10">
+                                    placeholder="{{ __('admin.products.modal.discount_value_placeholder') }}">
                             </div>
                         </div>
                     </div>
 
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-900 mb-2">Discount Start Date</label>
+                            <label class="block text-sm font-medium text-gray-900 mb-2">
+                                {{ __('admin.products.modal.discount_start') }}
+                            </label>
                             <input type="datetime-local" name="discount_start" value="{{ old('discount_start') }}"
                                 class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-900 mb-2">Discount End Date</label>
+                            <label class="block text-sm font-medium text-gray-900 mb-2">
+                                {{ __('admin.products.modal.discount_end') }}
+                            </label>
                             <input type="datetime-local" name="discount_end" value="{{ old('discount_end') }}"
                                 class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         </div>
@@ -139,10 +153,12 @@
             <!-- Variants Section -->
             <div class="mb-6">
                 <div class="flex items-center justify-between mb-4">
-                    <label class="block text-lg font-semibold text-gray-900">Product Variants</label>
+                    <label class="block text-lg font-semibold text-gray-900">
+                        {{ __('admin.products.modal.variants') }}
+                    </label>
                     <button type="button" onclick="addVariantRow()"
                         class="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
-                        <i class="fas fa-plus mr-1"></i> Add Variant
+                        <i class="fas fa-plus mr-1"></i> {{ __('admin.products.modal.add_variant') }}
                     </button>
                 </div>
 
@@ -151,53 +167,63 @@
                     <div class="variant-row border border-gray-200 rounded-lg p-4 bg-gray-50">
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-3">
                             <div>
-                                <label class="block text-sm font-medium text-gray-900 mb-1">Size <span
-                                        class="ml-1 text-red-500">*</span></label>
+                                <label class="block text-sm font-medium text-gray-900 mb-1">
+                                    {{ __('admin.products.modal.size') }} <span class="ml-1 text-red-500">*</span>
+                                </label>
                                 <select name="variants[0][size]" required
                                     class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-3 py-2 text-sm">
-                                    <option value="">Select Size</option>
-                                    @foreach (['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'FREE'] as $size)
+                                    <option value="">{{ __('admin.products.modal.size_placeholder') }}</option>
+                                    @foreach ([__('admin.products.sizes.xs'), __('admin.products.sizes.s'), __('admin.products.sizes.m'), __('admin.products.sizes.l'), __('admin.products.sizes.xl'), __('admin.products.sizes.xxl'), __('admin.products.sizes.xxxl'), __('admin.products.sizes.free')] as $size)
                                         <option value="{{ $size }}">{{ $size }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-900 mb-1">Color <span
-                                        class="ml-1 text-red-500">*</span></label>
+                                <label class="block text-sm font-medium text-gray-900 mb-1">
+                                    {{ __('admin.products.modal.color') }} <span class="ml-1 text-red-500">*</span>
+                                </label>
                                 <input type="text" name="variants[0][color]" required
                                     class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-3 py-2 text-sm"
-                                    placeholder="e.g., Red, Black">
+                                    placeholder="{{ __('admin.products.modal.color_placeholder') }}">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-900 mb-1">Color Code</label>
+                                <label class="block text-sm font-medium text-gray-900 mb-1">
+                                    {{ __('admin.products.modal.color_code') }}
+                                </label>
                                 <input type="color" name="variants[0][color_code]"
                                     class="w-full h-10 border border-gray-200 bg-white text-gray-900 rounded-lg">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-900 mb-1">SKU (Auto)</label>
+                                <label class="block text-sm font-medium text-gray-900 mb-1">
+                                    {{ __('admin.products.modal.sku') }}
+                                </label>
                                 <input type="text" name="variants[0][sku]" readonly
                                     class="w-full border border-gray-200 bg-gray-100 text-gray-900 rounded-lg px-3 py-2 text-sm"
-                                    placeholder="Will be auto-generated">
+                                    placeholder="{{ __('admin.products.modal.sku_placeholder') }}">
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-3">
                             <div>
-                                <label class="block text-sm font-medium text-gray-900 mb-1">Price ($) <span
-                                        class="ml-1 text-red-500">*</span></label>
+                                <label class="block text-sm font-medium text-gray-900 mb-1">
+                                    {{ __('admin.products.modal.price') }} <span class="ml-1 text-red-500">*</span>
+                                </label>
                                 <input type="number" step="0.01" name="variants[0][price]" required
                                     class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-3 py-2 text-sm"
-                                    placeholder="0.00">
+                                    placeholder="{{ __('admin.products.modal.price_placeholder') }}">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-900 mb-1">Stock <span
-                                        class="ml-1 text-red-500">*</span></label>
+                                <label class="block text-sm font-medium text-gray-900 mb-1">
+                                    {{ __('admin.products.modal.stock') }} <span class="ml-1 text-red-500">*</span>
+                                </label>
                                 <input type="number" name="variants[0][stock]" min="0" required
                                     class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-3 py-2 text-sm"
-                                    placeholder="0">
+                                    placeholder="{{ __('admin.products.modal.stock_placeholder') }}">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-900 mb-1">Stock Alert</label>
+                                <label class="block text-sm font-medium text-gray-900 mb-1">
+                                    {{ __('admin.products.modal.stock_alert') }}
+                                </label>
                                 <input type="number" name="variants[0][stock_alert]" min="0" value="10"
                                     class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-3 py-2 text-sm">
                             </div>
@@ -206,27 +232,27 @@
                         <!-- Variant-Level Discount Fields -->
                         <div class="variant-discount-section mb-4 p-3 bg-gray-100 rounded-lg">
                             <h4 class="text-sm font-medium text-gray-900 mb-3 flex items-center">
-                                <i class="fas fa-tag mr-2 text-sm"></i> Variant Discount (Optional)
+                                <i class="fas fa-tag mr-2 text-sm"></i> {{ __('admin.products.modal.variant_discount') }}
                             </h4>
                             <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
                                 <div>
                                     <label class="block text-xs font-semibold text-gray-900 mb-2">
                                         <span class="inline-flex items-center">
-                                            Discount Type
+                                            {{ __('admin.products.modal.variant_discount_type') }}
                                             <span class="ml-1 text-red-500">*</span>
                                         </span>
                                     </label>
                                     <select name="variants[0][discount_type]"
                                         class="w-full border border-gray-300 bg-white text-gray-900 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all variant-discount-type">
-                                        <option value="">Select Type</option>
-                                        <option value="percentage">Percentage (%)</option>
-                                        <option value="fixed">Fixed Amount ($)</option>
+                                        <option value="">{{ __('admin.products.modal.variant_discount_type_select') }}</option>
+                                        <option value="percentage">{{ __('admin.products.modal.discount_type_percentage') }}</option>
+                                        <option value="fixed">{{ __('admin.products.modal.discount_type_fixed') }}</option>
                                     </select>
                                 </div>
 
                                 <div class="variant-discount-value-field" style="display: none;">
                                     <label class="block text-xs font-semibold text-gray-900 mb-2">
-                                        Discount Value
+                                        {{ __('admin.products.modal.variant_discount_value') }}
                                         <span class="ml-1 text-red-500">*</span>
                                     </label>
                                     <div class="relative group">
@@ -245,7 +271,7 @@
 
                                 <div>
                                     <label class="block text-xs font-semibold text-gray-900 mb-2">
-                                        Discount Status
+                                        {{ __('admin.products.modal.variant_discount_status') }}
                                     </label>
                                     <div class="flex items-center space-x-3 mt-2">
                                         <label class="relative inline-flex items-center cursor-pointer">
@@ -254,9 +280,11 @@
                                             <div
                                                 class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
                                             </div>
-                                            <span class="ml-3 text-sm font-medium text-gray-900">Active</span>
+                                            <span class="ml-3 text-sm font-medium text-gray-900">
+                                                {{ __('admin.products.modal.variant_discount_active') }}
+                                            </span>
                                         </label>
-                                        <div class="tooltip" data-tip="Enable to activate discount">
+                                        <div class="tooltip" data-tip="{{ __('admin.products.modal.variant_discount_tooltip') }}">
                                             <i
                                                 class="fas fa-info-circle text-gray-400 hover:text-gray-600 cursor-help"></i>
                                         </div>
@@ -270,7 +298,7 @@
                                         <label class="block text-xs font-semibold text-gray-900 mb-2">
                                             <span class="inline-flex items-center">
                                                 <i class="far fa-calendar-start mr-2 text-gray-600"></i>
-                                                Start Date & Time
+                                                {{ __('admin.products.modal.variant_discount_start') }}
                                             </span>
                                         </label>
                                         <div class="relative">
@@ -287,7 +315,7 @@
                                         <label class="block text-xs font-semibold text-gray-900 mb-2">
                                             <span class="inline-flex items-center">
                                                 <i class="far fa-calendar-times mr-2 text-gray-600"></i>
-                                                End Date & Time
+                                                {{ __('admin.products.modal.variant_discount_end') }}
                                             </span>
                                         </label>
                                         <div class="relative">
@@ -307,7 +335,9 @@
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center">
                                             <i class="fas fa-calculator text-blue-600 mr-2"></i>
-                                            <span class="text-sm font-medium text-blue-900">Discount Preview:</span>
+                                            <span class="text-sm font-medium text-blue-900">
+                                                {{ __('admin.products.modal.variant_discount_preview') }}
+                                            </span>
                                         </div>
                                         <div class="text-right">
                                             <div class="text-lg font-bold text-blue-700 discount-preview-value">$0.00
@@ -316,8 +346,10 @@
                                         </div>
                                     </div>
                                     <div class="mt-2 text-xs text-blue-800">
-                                        <span class="font-medium">Period:</span>
-                                        <span class="discount-period text-blue-900">Not set</span>
+                                        <span class="font-medium">{{ __('admin.products.modal.variant_discount_period') }}</span>
+                                        <span class="discount-period text-blue-900">
+                                            {{ __('admin.products.modal.variant_discount_period_not_set') }}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -325,12 +357,16 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-900 mb-1">Cost Price ($)</label>
+                                <label class="block text-sm font-medium text-gray-900 mb-1">
+                                    {{ __('admin.products.modal.cost_price') }}
+                                </label>
                                 <input type="number" step="0.01" name="variants[0][cost_price]"
                                     class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-3 py-2 text-sm">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-900 mb-1">Weight (kg)</label>
+                                <label class="block text-sm font-medium text-gray-900 mb-1">
+                                    {{ __('admin.products.modal.weight') }}
+                                </label>
                                 <input type="number" step="0.01" name="variants[0][weight]"
                                     class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-3 py-2 text-sm">
                             </div>
@@ -340,7 +376,9 @@
                             <label class="inline-flex items-center">
                                 <input type="checkbox" name="variants[0][is_active]" value="1" checked
                                     class="rounded border-gray-300">
-                                <span class="ml-2 text-sm text-gray-700">Active</span>
+                                <span class="ml-2 text-sm text-gray-700">
+                                    {{ __('admin.products.modal.variant_active') }}
+                                </span>
                             </label>
                         </div>
                     </div>
@@ -349,12 +387,14 @@
 
             <!-- Images Section -->
             <div class="mb-6">
-                <label class="block text-lg font-semibold text-gray-900 mb-4">Product Images</label>
+                <label class="block text-lg font-semibold text-gray-900 mb-4">
+                    {{ __('admin.products.modal.product_images') }}
+                </label>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Primary Image -->
                     <div>
                         <label class="block text-sm font-medium text-gray-900 mb-2">
-                            Primary Image <span class="ml-1 text-red-500">*</span>
+                            {{ __('admin.products.modal.primary_image') }} <span class="ml-1 text-red-500">*</span>
                         </label>
                         <div
                             class="primary-upload-area border-2 border-dashed border-gray-200 rounded-lg p-4 text-center hover:border-gray-300 transition-colors duration-200 relative">
@@ -366,8 +406,10 @@
                                     class="mx-auto w-12 h-12 mb-3 rounded-full bg-gray-100 flex items-center justify-center">
                                     <i class="fas fa-cloud-upload-alt text-gray-400 text-lg"></i>
                                 </div>
-                                <p class="text-sm font-medium text-gray-700 mb-1">Click to upload primary image</p>
-                                <p class="text-gray-500 text-sm">PNG, JPG, GIF, WebP up to 5MB</p>
+                                <p class="text-sm font-medium text-gray-700 mb-1">
+                                    {{ __('admin.products.modal.primary_image_upload') }}
+                                </p>
+                                <p class="text-gray-500 text-sm">{{ __('admin.products.modal.image_formats') }}</p>
                             </div>
 
                             <!-- Preview Container -->
@@ -375,7 +417,7 @@
                                 <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                                     <div class="w-12 h-12 rounded overflow-hidden bg-gray-200">
                                         <img id="primary-preview-image" class="w-full h-full object-cover"
-                                            src="" alt="Primary image preview">
+                                            src="" alt="{{ __('admin.products.modal.primary_image') }}">
                                     </div>
                                     <div class="flex-1 min-w-0 text-left">
                                         <p id="primary-file-name" class="text-sm font-medium text-gray-900 truncate">
@@ -396,16 +438,18 @@
                     <div>
                         <div class="flex items-center justify-between mb-2">
                             <div>
-                                <label class="block text-sm font-medium text-gray-900">Additional Images</label>
-                                <p class="text-xs text-gray-500">Up to 5 additional images</p>
+                                <label class="block text-sm font-medium text-gray-900">
+                                    {{ __('admin.products.modal.additional_images') }}
+                                </label>
+                                <p class="text-xs text-gray-500">{{ __('admin.products.modal.additional_images_limit') }}</p>
                             </div>
                             <div class="flex items-center space-x-3">
                                 <span class="text-sm text-gray-600">
-                                    <span id="imageCount">0</span>/5 added
+                                    <span id="imageCount">0</span>/5 {{ __('admin.products.modal.images_added') }}
                                 </span>
                                 <button type="button" onclick="addImageRow()"
                                     class="text-blue-600 text-sm font-medium flex items-center px-3 py-1.5 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
-                                    <i class="fas fa-plus mr-1.5"></i> Add Image
+                                    <i class="fas fa-plus mr-1.5"></i> {{ __('admin.products.modal.add_image') }}
                                 </button>
                             </div>
                         </div>
@@ -428,13 +472,20 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-900 mb-2">Status <span
-                            class="ml-1 text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-900 mb-2">
+                        {{ __('admin.products.modal.status') }} <span class="ml-1 text-red-500">*</span>
+                    </label>
                     <select name="status" required
                         class="w-full border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
-                        <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                        <option value="draft" {{ old('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+                        <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>
+                            {{ __('admin.products.modal.status_active') }}
+                        </option>
+                        <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>
+                            {{ __('admin.products.modal.status_inactive') }}
+                        </option>
+                        <option value="draft" {{ old('status') == 'draft' ? 'selected' : '' }}>
+                            {{ __('admin.products.modal.status_draft') }}
+                        </option>
                     </select>
                 </div>
 
@@ -443,14 +494,18 @@
                         <label class="inline-flex items-center">
                             <input type="checkbox" name="is_featured" value="1"
                                 {{ old('is_featured') ? 'checked' : '' }} class="rounded border-gray-300">
-                            <span class="ml-2 text-sm text-gray-700">Featured Product</span>
+                            <span class="ml-2 text-sm text-gray-700">
+                                {{ __('admin.products.modal.featured_product') }}
+                            </span>
                         </label>
                     </div>
                     <div>
                         <label class="inline-flex items-center">
                             <input type="checkbox" name="is_new" value="1"
                                 {{ old('is_new') ? 'checked' : '' }} class="rounded border-gray-300">
-                            <span class="ml-2 text-sm text-gray-700">New Arrival</span>
+                            <span class="ml-2 text-sm text-gray-700">
+                                {{ __('admin.products.modal.new_arrival') }}
+                            </span>
                         </label>
                     </div>
                 </div>
@@ -459,10 +514,10 @@
             <div class="flex justify-end gap-3 mt-6 pt-6 border-t border-gray-200">
                 <button type="button" onclick="ProductModal.closeAdd()"
                     class="px-6 py-3 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-lg font-medium">
-                    Cancel
+                    {{ __('admin.products.modal.cancel') }}
                 </button>
                 <button type="submit" class="btn-primary px-6 py-3 rounded-lg font-medium flex items-center">
-                    <i class="fas fa-save mr-2"></i> Save Product
+                    <i class="fas fa-save mr-2"></i> {{ __('admin.products.modal.create') }}
                 </button>
             </div>
         </form>

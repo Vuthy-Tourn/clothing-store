@@ -4,12 +4,12 @@
     <div class="mb-8" data-aos="fade-down">
         <div class="flex items-center justify-between">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">Email Subscribers</h1>
-                <p class="text-gray-600 text-lg">Send updates, offers, or news to all opted-in users</p>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ __('admin.emails.title') }}</h1>
+                <p class="text-gray-600 text-lg">{{ __('admin.emails.subtitle') }}</p>
             </div>
             <button onclick="showTestEmailModal()"
                 class="bg-purple-600 text-white hover:bg-purple-700 px-4 py-2 rounded-lg font-medium transition-colors flex items-center">
-                <i class="fas fa-envelope mr-2"></i> Send Test Email
+                <i class="fas fa-envelope mr-2"></i> {{ __('admin.emails.send_test') }}
             </button>
         </div>
     </div>
@@ -20,10 +20,10 @@
             data-aos="fade-up" data-aos-delay="100">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-blue-600 text-sm font-medium">Total Subscribers</p>
+                    <p class="text-blue-600 text-sm font-medium">{{ __('admin.emails.stats.total_subscribers') }}</p>
                     <p class="text-3xl font-bold text-gray-900 mt-1" id="total-subscribers">{{ $subscribers->count() }}</p>
                     <p class="text-blue-500 text-xs mt-2 flex items-center">
-                        <i class="fas fa-users mr-1"></i> All time subscribers
+                        <i class="fas fa-users mr-1"></i> {{ __('admin.emails.stats.all_time') }}
                     </p>
                 </div>
                 <div class="w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center">
@@ -36,10 +36,10 @@
             data-aos="fade-up" data-aos-delay="150">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-green-600 text-sm font-medium">Active Now</p>
+                    <p class="text-green-600 text-sm font-medium">{{ __('admin.emails.stats.active_now') }}</p>
                     <p class="text-3xl font-bold text-gray-900 mt-1">{{ $totalActive }}</p>
                     <p class="text-green-500 text-xs mt-2 flex items-center">
-                        <i class="fas fa-check-circle mr-1"></i> Currently subscribed
+                        <i class="fas fa-check-circle mr-1"></i> {{ __('admin.emails.stats.currently_subscribed') }}
                     </p>
                 </div>
                 <div class="w-12 h-12 rounded-lg bg-green-500 flex items-center justify-center">
@@ -52,10 +52,10 @@
             data-aos="fade-up" data-aos-delay="200">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-purple-600 text-sm font-medium">Inactive</p>
+                    <p class="text-purple-600 text-sm font-medium">{{ __('admin.emails.stats.inactive') }}</p>
                     <p class="text-3xl font-bold text-gray-900 mt-1">{{ $totalInactive }}</p>
                     <p class="text-purple-500 text-xs mt-2 flex items-center">
-                        <i class="fas fa-user-times mr-1"></i> Unsubscribed
+                        <i class="fas fa-user-times mr-1"></i> {{ __('admin.emails.stats.unsubscribed') }}
                     </p>
                 </div>
                 <div class="w-12 h-12 rounded-lg bg-purple-500 flex items-center justify-center">
@@ -68,10 +68,10 @@
             data-aos="fade-up" data-aos-delay="250">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-orange-600 text-sm font-medium">30-Day Growth</p>
+                    <p class="text-orange-600 text-sm font-medium">{{ __('admin.emails.stats.growth_30_days') }}</p>
                     <p class="text-3xl font-bold text-gray-900 mt-1">+{{ $last30DaysGrowth }}</p>
                     <p class="text-orange-500 text-xs mt-2 flex items-center">
-                        <i class="fas fa-chart-line mr-1"></i> New subscribers
+                        <i class="fas fa-chart-line mr-1"></i> {{ __('admin.emails.stats.new_subscribers') }}
                     </p>
                 </div>
                 <div class="w-12 h-12 rounded-lg bg-orange-500 flex items-center justify-center">
@@ -86,9 +86,9 @@
         data-aos-delay="300">
         <div class="bg-gradient-to-r from-gray-900 to-gray-800 p-6">
             <h2 class="text-xl font-bold text-white flex items-center">
-                <i class="fas fa-paper-plane mr-3 text-blue-300"></i> Compose Newsletter
+                <i class="fas fa-paper-plane mr-3 text-blue-300"></i>{{ __('admin.emails.compose.title') }}
             </h2>
-            <p class="text-gray-300 text-sm mt-1">Send engaging content to your subscribers</p>
+            <p class="text-gray-300 text-sm mt-1">{{ __('admin.emails.compose.subtitle') }}</p>
         </div>
 
         <form id="newsletter-form" class="p-6">
@@ -98,14 +98,14 @@
                 <div class="space-y-6">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                            <i class="fas fa-heading mr-2 text-gray-500"></i> Email Subject
+                            <i class="fas fa-heading mr-2 text-gray-500"></i>{{ __('admin.emails.compose.subject') }}
                             <span class="text-red-500 ml-1">*</span>
                         </label>
                         <input type="text" name="subject" id="subject" required
                             class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400"
-                            placeholder="Enter compelling subject line...">
+                            placeholder="{{ __('admin.emails.compose.subject_placeholder') }}">
                         <div class="flex justify-between mt-2">
-                            <span class="text-xs text-gray-500">Keep it under 60 characters</span>
+                            <span class="text-xs text-gray-500">{{ __('admin.emails.compose.subject_placeholder') }}</span>
                             <span id="subject-counter" class="text-xs font-medium">0/60</span>
                         </div>
                         @error('subject')
@@ -117,30 +117,30 @@
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                            <i class="fas fa-eye mr-2 text-gray-500"></i> Preview Text
+                            <i class="fas fa-eye mr-2 text-gray-500"></i> {{ __('admin.emails.compose.preview_text') }}
                         </label>
                         <input type="text" name="preview_text" id="preview_text"
                             class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400"
-                            placeholder="Brief preview text for inbox...">
+                            placeholder="{{ __('admin.emails.compose.preview_placeholder') }}">
                         <div class="flex justify-between mt-2">
-                            <span class="text-xs text-gray-500">Appears in email preview</span>
+                            <span class="text-xs text-gray-500">{{ __('admin.emails.compose.preview_desc') }}</span>
                             <span id="preview-counter" class="text-xs font-medium">0/120</span>
                         </div>
                     </div>
 
                     <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
                         <h4 class="font-medium text-blue-800 mb-2 flex items-center">
-                            <i class="fas fa-info-circle mr-2"></i> Sending Tips
+                            <i class="fas fa-info-circle mr-2"></i> {{ __('admin.emails.tips.title') }}
                         </h4>
                         <ul class="text-sm text-blue-700 space-y-1">
                             <li class="flex items-center">
-                                <i class="fas fa-check-circle mr-2 text-xs"></i> Best send time: 10 AM - 2 PM
+                                <i class="fas fa-check-circle mr-2 text-xs"></i> {{ __('admin.emails.tips.best_time') }}
                             </li>
                             <li class="flex items-center">
-                                <i class="fas fa-check-circle mr-2 text-xs"></i> Personalize subject lines
+                                <i class="fas fa-check-circle mr-2 text-xs"></i> {{ __('admin.emails.tips.personalize') }}
                             </li>
                             <li class="flex items-center">
-                                <i class="fas fa-check-circle mr-2 text-xs"></i> Always test before sending
+                                <i class="fas fa-check-circle mr-2 text-xs"></i> {{ __('admin.emails.tips.test_first') }}
                             </li>
                         </ul>
                     </div>
@@ -150,7 +150,7 @@
                     <div>
                         <div class="flex items-center justify-between mb-2">
                             <label class="block text-sm font-semibold text-gray-700 flex items-center">
-                                <i class="fas fa-edit mr-2 text-gray-500"></i> Email Content
+                                <i class="fas fa-edit mr-2 text-gray-500"></i> {{ __('admin.emails.compose.content') }}
                                 <span class="text-red-500 ml-1">*</span>
                             </label>
                             <div class="flex space-x-2">
@@ -166,9 +166,9 @@
                         </div>
                         <textarea name="message" id="message" rows="8" required
                             class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400 resize-none"
-                            placeholder="Write your engaging newsletter content..."></textarea>
+                            placeholder="{{ __('admin.emails.compose.content_placeholder') }}"></textarea>
                         <div class="flex justify-between mt-2">
-                            <span class="text-xs text-gray-500">Plain text or HTML supported</span>
+                            <span class="text-xs text-gray-500">{{ __('admin.emails.compose.content_desc') }}</span>
                             <span id="message-counter" class="text-xs font-medium">0/5000</span>
                         </div>
                         @error('message')
@@ -180,13 +180,13 @@
 
                     <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
                         <div class="flex items-center justify-between mb-2">
-                            <h4 class="font-medium text-gray-800">Recipients</h4>
+                            <h4 class="font-medium text-gray-800">{{ __('admin.emails.compose.recipients') }}</h4>
                             <span class="text-sm text-gray-600 font-medium">
                                 <i class="fas fa-users mr-1"></i>
-                                <span id="recipient-count">{{ $totalActive }}</span> subscribers
+                                <span id="recipient-count">{{ $totalActive }}</span> {{ __('admin.emails.compose.recipients_desc') }}
                             </span>
                         </div>
-                        <p class="text-sm text-gray-600">This newsletter will be sent to all active subscribers.</p>
+                        <p class="text-sm text-gray-600">{{ __('admin.emails.compose.recipients_desc') }}</p>
                     </div>
                 </div>
             </div>
@@ -195,19 +195,19 @@
                 <div>
                     <button type="button" onclick="previewEmail()"
                         class="bg-gray-200 text-gray-800 hover:bg-gray-300 px-6 py-3 rounded-xl font-medium transition-colors flex items-center">
-                        <i class="fas fa-eye mr-2"></i> Preview Email
+                        <i class="fas fa-eye mr-2"></i> {{ __('admin.emails.actions.preview') }}
                     </button>
                 </div>
                 <div class="flex items-center space-x-3">
                     <button type="button" onclick="clearForm()"
                         class="text-gray-600 hover:text-gray-900 hover:bg-gray-100 px-6 py-3 rounded-xl font-medium transition-colors">
-                        Clear
+                        <i class="fas fa-eraser mr-2"></i> {{ __('admin.emails.actions.clear') }}
                     </button>
                     <button type="submit" id="send-btn"
                         class="bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 px-8 py-3 rounded-xl font-medium transition-all transform hover:scale-105 flex items-center shadow-lg">
                         <i class="fas fa-paper-plane mr-2"></i>
-                        <span>Send Newsletter</span>
-                        <span id="sending-text" class="hidden ml-2">Sending...</span>
+                        <span>{{ __('admin.emails.actions.send') }}</span>
+                        <span id="sending-text" class="hidden ml-2"></span>
                     </button>
                 </div>
             </div>
@@ -224,8 +224,8 @@
                     <i class="fas fa-users text-white text-xl"></i>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-900">Subscribers List</h2>
-                    <p class="text-gray-600">Manage your newsletter subscribers</p>
+                    <h2 class="text-2xl font-bold text-gray-900">{{ __('admin.emails.list.title') }}</h2>
+                    <p class="text-gray-600">{{ __('admin.emails.list.subtitle') }}</p>
                 </div>
             </div>
 
@@ -233,16 +233,16 @@
                 <div class="relative">
                     <input type="text" id="search-subscribers"
                         class="border border-gray-300 rounded-lg px-4 py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-64"
-                        placeholder="Search subscribers...">
+                        placeholder="{{ __('admin.emails.list.search_placeholder') }}">
                     <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                 </div>
                 <button onclick="exportSubscribers()"
                     class="bg-green-100 text-green-700 hover:bg-green-200 px-4 py-2.5 rounded-lg font-medium transition-colors flex items-center">
-                    <i class="fas fa-file-export mr-2"></i> Export
+                    <i class="fas fa-file-export mr-2"></i> {{ __('admin.emails.list.export') }}
                 </button>
                 <button onclick="showAddSubscriberModal()"
                     class="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2.5 rounded-lg font-medium transition-colors flex items-center">
-                    <i class="fas fa-plus mr-2"></i> Add Subscriber
+                    <i class="fas fa-plus mr-2"></i> {{ __('admin.emails.list.add_subscriber') }}
                 </button>
             </div>
         </div>
@@ -255,20 +255,20 @@
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                 <label class="flex items-center">
                                     <input type="checkbox" id="select-all" class="rounded text-blue-600">
-                                    <span class="ml-2">Email</span>
+                                    <span class="ml-2">{{ __('admin.emails.list.select_all') }}</span>
                                 </label>
                             </th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                Status
+                                {{ __('admin.emails.list.status') }}
                             </th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                Subscribed Date
+                                {{ __('admin.emails.list.subscribed_date') }}
                             </th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                User
+                                {{ __('admin.emails.list.user') }}
                             </th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                Actions
+                                {{ __('admin.emails.list.actions') }}
                             </th>
                         </tr>
                     </thead>
@@ -300,7 +300,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span
                                         class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                        <i class="fas fa-check-circle mr-1"></i> Active
+                                        <i class="fas fa-check-circle mr-1"></i> {{ __('admin.emails.list.active') }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -321,7 +321,7 @@
                                             </div>
                                         </div>
                                     @else
-                                        <span class="text-gray-400 text-sm">Guest</span>
+                                        <span class="text-gray-400 text-sm">{{ __('admin.emails.list.guest') }}</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -356,13 +356,13 @@
                         <button onclick="deleteSelectedSubscribers()"
                             class="text-red-600 hover:text-red-800 text-sm font-medium flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
                             id="delete-selected-btn" disabled>
-                            <i class="fas fa-trash mr-2"></i> Remove Selected
+                            <i class="fas fa-trash mr-2"></i> {{ __('admin.emails.list.remove_selected') }}
                         </button>
                         <span class="text-sm text-gray-600" id="selected-count">0 selected</span>
                     </div>
                     <div class="flex items-center space-x-6">
                         <div class="text-sm text-gray-600">
-                            Showing <span class="font-semibold">{{ $subscribers->count() }}</span> active subscribers
+                            {{ __('admin.emails.list.showing') }} <span class="font-semibold">{{ $subscribers->count() }}</span> 
                         </div>
                     </div>
                 </div>
@@ -372,11 +372,11 @@
                 <div class="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
                     <i class="fas fa-envelope-open text-gray-400 text-2xl"></i>
                 </div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2">No Active Subscribers</h3>
-                <p class="text-gray-600 mb-4">Subscribers will appear here when they sign up for your newsletter</p>
+                <h3 class="text-lg font-bold text-gray-900 mb-2">{{ __('admin.emails.empty.title') }}</h3>
+                <p class="text-gray-600 mb-4">{{ __('admin.emails.empty.message') }}</p>
                 <button onclick="showAddSubscriberModal()"
                     class="bg-blue-600 text-white hover:bg-blue-700 px-6 py-3 rounded-lg font-medium transition-colors flex items-center mx-auto">
-                    <i class="fas fa-plus mr-2"></i> Add Your First Subscriber
+                    <i class="fas fa-plus mr-2"></i> {{ __('admin.emails.empty.add_first') }}
                 </button>
             </div>
         @endif
@@ -542,15 +542,15 @@
             if (!subject || !message) {
                 Swal.fire({
                     icon: 'warning',
-                    title: 'Missing Content',
-                    text: 'Please fill in subject and message fields',
+                    title: '{{ __('admin.emails.messages.missing_content') }}',
+                    text: '{{ __('admin.emails.messages.missing_content_desc') }}',
                     confirmButtonColor: '#3b82f6'
                 });
                 return;
             }
 
             Swal.fire({
-                title: 'Email Preview',
+                title: '{{ __('admin.emails.modals.preview.title') }}',
                 html: `
                 <div style="text-align: left; max-height: 60vh; overflow-y: auto; font-family: sans-serif;">
                     <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
@@ -573,8 +573,8 @@
         // Clear form
         function clearForm() {
             Swal.fire({
-                title: 'Clear Form?',
-                text: 'This will clear all entered content',
+                title: '{{ __('admin.emails.modals.clear_form.title') }}',
+                text: '{{ __('admin.emails.modals.clear_form.text') }}',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#ef4444',
@@ -703,7 +703,7 @@
         // Send test email modal
         function showTestEmailModal() {
             Swal.fire({
-                title: 'Send Test Email',
+                title: '{{ __('admin.emails.modals.test_email.title') }}',
                 html: `
                 <div class="text-left space-y-4">
                     <div>
@@ -714,13 +714,13 @@
                                value="{{ auth()->user()->email ?? '' }}">
                     </div>
                     <div class="text-sm text-gray-500">
-                        <p>This will send a test email with the content from the form above.</p>
+                        <p>{{ __('admin.emails.modals.test_email.description') }}</p>
                     </div>
                 </div>
             `,
                 showCancelButton: true,
-                confirmButtonText: 'Send Test',
-                cancelButtonText: 'Cancel',
+                confirmButtonText: '{{ __('admin.emails.modals.test_email.send') }}',
+                cancelButtonText: '{{ __('admin.emails.modals.test_email.cancel') }}',
                 confirmButtonColor: '#3b82f6',
                 preConfirm: () => {
                     const email = document.getElementById('test-email').value;
@@ -822,14 +822,14 @@
             }
 
             Swal.fire({
-                title: 'Send Test Email?',
+                title: '{{ __('admin.emails.confirmations.send_test.title') }}',
                 html: `Send test to <strong>${email}</strong>?`,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3b82f6',
                 cancelButtonColor: '#6b7280',
-                confirmButtonText: 'Send Test',
-                cancelButtonText: 'Cancel'
+                confirmButtonText: '{{ __('admin.emails.confirmations.send_test.confirm') }}',
+                cancelButtonText: '{{ __('admin.emails.confirmations.send_test.cancel') }}'
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
@@ -876,14 +876,14 @@
         // Export subscribers
         async function exportSubscribers() {
             const result = await Swal.fire({
-                title: 'Export Format',
-                text: 'Choose export format',
+                title: '{{ __('admin.emails.confirmations.export.title') }}',
+                text: '{{ __('admin.emails.confirmations.export.message') }}',
                 icon: 'question',
                 showCancelButton: true,
                 showDenyButton: true,
                 confirmButtonText: 'CSV',
                 denyButtonText: 'Excel',
-                cancelButtonText: 'Cancel',
+                cancelButtonText: '{{ __('admin.emails.confirmations.export.cancel') }}',
                 confirmButtonColor: '#10b981',
                 denyButtonColor: '#3b82f6'
             });
@@ -921,14 +921,14 @@
         // Remove subscriber with confirmation
         async function confirmRemoveSubscriber(id, email) {
             const result = await Swal.fire({
-                title: 'Remove Subscriber?',
+                title: '{{ __('admin.emails.confirmations.remove_subscriber.title') }}',
                 html: `Are you sure you want to remove <strong>${email}</strong> from the newsletter?<br><br><small class="text-gray-500">They will be marked as unsubscribed.</small>`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#ef4444',
                 cancelButtonColor: '#6b7280',
-                confirmButtonText: 'Yes, remove!',
-                cancelButtonText: 'Cancel',
+                confirmButtonText: '{{ __('admin.emails.confirmations.remove_subscriber.confirm') }}',
+                cancelButtonText: '{{ __('admin.emails.confirmations.remove_subscriber.cancel') }}',
                 reverseButtons: true
             });
 
@@ -1058,7 +1058,7 @@
         // Add subscriber modal
         function showAddSubscriberModal() {
             Swal.fire({
-                title: 'Add Subscriber',
+                title: '{{ __('admin.emails.modals.add_subscriber.title') }}',
                 html: `
                 <div class="text-left space-y-4">
                     <div>
@@ -1083,8 +1083,8 @@
                 </div>
             `,
                 showCancelButton: true,
-                confirmButtonText: 'Add Subscriber',
-                cancelButtonText: 'Cancel',
+                confirmButtonText: '{{ __('admin.emails.modals.add_subscriber.add') }}',
+                cancelButtonText: '{{ __('admin.emails.modals.add_subscriber.cancel') }}',
                 confirmButtonColor: '#3b82f6',
                 preConfirm: () => {
                     const email = document.getElementById('new-email').value;
@@ -1092,12 +1092,12 @@
                     const sendWelcome = document.getElementById('send-welcome').checked;
 
                     if (!email) {
-                        Swal.showValidationMessage('Please enter an email address');
+                        Swal.showValidationMessage('{{ __('admin.emails.messages.enter_email') }}');
                         return false;
                     }
 
                     if (!/^\S+@\S+\.\S+$/.test(email)) {
-                        Swal.showValidationMessage('Please enter a valid email address');
+                        Swal.showValidationMessage('{{ __('admin.emails.messages.valid_email') }}');
                         return false;
                     }
 
@@ -1168,7 +1168,7 @@
             const user = row.querySelector('td:nth-child(4)').textContent.trim();
 
             Swal.fire({
-                title: 'Subscriber Details',
+                title: '{{ __('admin.emails.modals.subscriber_info.title') }}',
                 html: `
                 <div class="text-left space-y-4">
                     <div class="flex items-center space-x-3">
@@ -1184,25 +1184,25 @@
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="bg-gray-50 p-3 rounded-lg">
-                            <p class="text-sm text-gray-500">Subscribed</p>
+                            <p class="text-sm text-gray-500">{{ __('admin.emails.modals.subscriber_info.subscribed') }}</p>
                             <p class="font-medium">${date}</p>
                             <p class="text-sm text-gray-500">${time}</p>
                         </div>
                         <div class="bg-gray-50 p-3 rounded-lg">
-                            <p class="text-sm text-gray-500">User</p>
+                            <p class="text-sm text-gray-500">{{ __('admin.emails.modals.subscriber_info.user') }}</p>
                             <p class="font-medium">${user}</p>
                         </div>
                     </div>
                     <div class="bg-blue-50 p-3 rounded-lg">
-                        <p class="text-sm font-medium text-blue-800 mb-2">Quick Actions</p>
+                        <p class="text-sm font-medium text-blue-800 mb-2">{{ __('admin.emails.modals.subscriber_info.quick_actions') }}</p>
                         <div class="flex space-x-2">
-                            <button onclick="sendTestToSubscriber('${email}')" class="text-sm bg-blue-600 text-white hover:bg-blue-700 px-3 py-1 rounded">Send Test</button>
-                            <button onclick="confirmRemoveSubscriber('${id}', '${email}')" class="text-sm bg-red-600 text-white hover:bg-red-700 px-3 py-1 rounded">Remove</button>
+                            <button onclick="sendTestToSubscriber('${email}')" class="text-sm bg-blue-600 text-white hover:bg-blue-700 px-3 py-1 rounded">{{ __('admin.emails.modals.subscriber_info.send_test') }}</button>
+                            <button onclick="confirmRemoveSubscriber('${id}', '${email}')" class="text-sm bg-red-600 text-white hover:bg-red-700 px-3 py-1 rounded">{{ __('admin.emails.modals.subscriber_info.remove') }}</button>
                         </div>
                     </div>
                 </div>
             `,
-                confirmButtonText: 'Close',
+                confirmButtonText: '{{ __('admin.emails.modals.subscriber_info.close') }}',
                 confirmButtonColor: '#3b82f6'
             });
         }

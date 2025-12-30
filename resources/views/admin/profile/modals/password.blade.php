@@ -6,8 +6,8 @@
         <div class="p-6 border-b border-gray-200">
             <div class="flex items-center justify-between">
                 <div>
-                    <h3 class="text-xl font-bold text-gray-900">Change Password</h3>
-                    <p class="text-gray-600 mt-1">Update your account password</p>
+                    <h3 class="text-xl font-bold text-gray-900">{{ __('admin.profile.password_modal.title') }}</h3>
+                    <p class="text-gray-600 mt-1">{{ __('admin.profile.password_modal.subtitle') }}</p>
                 </div>
                 <button onclick="hidePasswordModal()"
                     class="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100">
@@ -24,7 +24,7 @@
                 <!-- Current Password -->
                 <div>
                     <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">
-                        Current Password <span class="text-red-500">*</span>
+                        {{ __('admin.profile.password_modal.current_password') }} <span class="text-red-500">{{ __('admin.profile.password_modal.required') }}</span>
                     </label>
                     <div class="relative">
                         <input type="password" id="current_password" name="current_password" required
@@ -39,7 +39,7 @@
                 <!-- New Password -->
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                        New Password <span class="text-red-500">*</span>
+                        {{ __('admin.profile.password_modal.new_password') }} <span class="text-red-500">{{ __('admin.profile.password_modal.required') }}</span>
                     </label>
                     <div class="relative">
                         <input type="password" id="password" name="password" required
@@ -49,13 +49,13 @@
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
-                    <p class="text-xs text-gray-500 mt-1">Must be at least 8 characters</p>
+                    <p class="text-xs text-gray-500 mt-1">{{ __('admin.profile.password_modal.password_hint') }}</p>
                 </div>
 
                 <!-- Confirm Password -->
                 <div>
                     <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
-                        Confirm New Password <span class="text-red-500">*</span>
+                        {{ __('admin.profile.password_modal.confirm_password') }} <span class="text-red-500">{{ __('admin.profile.password_modal.required') }}</span>
                     </label>
                     <div class="relative">
                         <input type="password" id="password_confirmation" name="password_confirmation" required
@@ -72,11 +72,11 @@
             <div class="mt-8 flex justify-end space-x-3">
                 <button type="button" onclick="hidePasswordModal()"
                     class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-xl transition-colors duration-300">
-                    Cancel
+                    {{ __('admin.profile.password_modal.cancel') }}
                 </button>
                 <button type="submit"
                     class="px-4 py-2 bg-gradient-to-r from-Ocean to-Ocean/80 text-white rounded-xl hover:shadow-lg transition-all duration-300">
-                    Update Password
+                    {{ __('admin.profile.password_modal.update_password') }}
                 </button>
             </div>
         </form>

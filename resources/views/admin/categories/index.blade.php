@@ -4,12 +4,12 @@
     <div class="mb-8" data-aos="fade-down">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">Categories</h1>
-                <p class="text-gray-700">Organize your products with categories</p>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ __('admin.categories.title') }}</h1>
+                <p class="text-gray-700">{{ __('admin.categories.subtitle') }}</p>
             </div>
             <button onclick="CategoryModal.openAdd()"
                 class="mt-4 md:mt-0 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 group shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                <i class="fas fa-plus mr-2 group-hover:rotate-90 transition-transform duration-300"></i>Add New Category
+                <i class="fas fa-plus mr-2 group-hover:rotate-90 transition-transform duration-300"></i>{{ __('admin.categories.add_new') }}
             </button>
         </div>
     </div>
@@ -35,10 +35,10 @@
             data-aos="fade-up" data-aos-delay="100">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-blue-600 text-sm font-medium">Total Categories</p>
+                    <p class="text-blue-600 text-sm font-medium">{{ __('admin.categories.stats.total') }}</p>
                     <p class="text-3xl font-bold text-gray-900 mt-1">{{ $totalCategories }}</p>
                     <p class="text-blue-500 text-xs mt-2 flex items-center">
-                        <i class="fas fa-folder mr-1"></i> All categories
+                        <i class="fas fa-folder mr-1"></i> {{ __('admin.categories.stats.all_categories') }}
                     </p>
                 </div>
                 <div
@@ -52,7 +52,7 @@
             data-aos="fade-up" data-aos-delay="150">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-green-600 text-sm font-medium">Active Categories</p>
+                    <p class="text-green-600 text-sm font-medium">{{ __('admin.categories.stats.active') }}</p>
                     <p class="text-3xl font-bold text-gray-900 mt-1">{{ $activeCategories }}</p>
                     <p class="text-green-500 text-xs mt-2 flex items-center">
                         <i class="fas fa-check-circle mr-1"></i>
@@ -71,10 +71,10 @@
             data-aos="fade-up" data-aos-delay="200">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-purple-600 text-sm font-medium">Total Products</p>
+                    <p class="text-purple-600 text-sm font-medium">{{ __('admin.categories.stats.total_products') }}</p>
                     <p class="text-3xl font-bold text-gray-900 mt-1">{{ $totalProducts }}</p>
                     <p class="text-purple-500 text-xs mt-2 flex items-center">
-                        <i class="fas fa-box mr-1"></i> Across all categories
+                        <i class="fas fa-box mr-1"></i> {{ __('admin.categories.stats.across_categories') }}
                     </p>
                 </div>
                 <div
@@ -89,10 +89,10 @@
             data-aos="fade-up" data-aos-delay="250">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-blue-600 text-sm font-medium">Men's</p>
+                    <p class="text-blue-600 text-sm font-medium">{{ __('admin.categories.stats.mens') }}</p>
                     <p class="text-3xl font-bold text-gray-900 mt-1">{{ $menCategories }}</p>
                     <p class="text-blue-500 text-xs mt-2 flex items-center">
-                        <i class="fas fa-mars mr-1"></i> Male categories
+                        <i class="fas fa-mars mr-1"></i> {{ __('admin.categories.stats.male_categories') }}
                     </p>
                 </div>
                 <div
@@ -106,10 +106,10 @@
             data-aos="fade-up" data-aos-delay="300">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-pink-600 text-sm font-medium">Women's</p>
+                    <p class="text-pink-600 text-sm font-medium">{{ __('admin.categories.stats.womens') }}</p>
                     <p class="text-3xl font-bold text-gray-900 mt-1">{{ $womenCategories }}</p>
                     <p class="text-pink-500 text-xs mt-2 flex items-center">
-                        <i class="fas fa-venus mr-1"></i> Female categories
+                        <i class="fas fa-venus mr-1"></i> {{ __('admin.categories.stats.female_categories') }}
                     </p>
                 </div>
                 <div
@@ -123,10 +123,10 @@
             data-aos="fade-up" data-aos-delay="350">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-green-600 text-sm font-medium">Kids</p>
+                    <p class="text-green-600 text-sm font-medium">{{ __('admin.categories.stats.kids') }}</p>
                     <p class="text-3xl font-bold text-gray-900 mt-1">{{ $kidsCategories }}</p>
                     <p class="text-green-500 text-xs mt-2 flex items-center">
-                        <i class="fas fa-child mr-1"></i> Children categories
+                        <i class="fas fa-child mr-1"></i> {{ __('admin.categories.stats.children_categories') }}
                     </p>
                 </div>
                 <div
@@ -140,10 +140,10 @@
             data-aos="fade-up" data-aos-delay="400">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-600 text-sm font-medium">Unisex</p>
+                    <p class="text-gray-600 text-sm font-medium">{{ __('admin.categories.stats.unisex') }}</p>
                     <p class="text-3xl font-bold text-gray-900 mt-1">{{ $unisexCategories }}</p>
                     <p class="text-gray-500 text-xs mt-2 flex items-center">
-                        <i class="fas fa-venus-mars mr-1"></i> Gender neutral
+                        <i class="fas fa-venus-mars mr-1"></i> {{ __('admin.categories.stats.gender_neutral') }}
                     </p>
                 </div>
                 <div
@@ -171,8 +171,8 @@
                         <i class="fas fa-plus text-white text-xl"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-900">Create New Category</h2>
-                        <p class="text-gray-700">Add a new category to organize your products</p>
+                        <h2 class="text-2xl font-bold text-gray-900">{{ __('admin.categories.add_new') }}</h2>
+                        <p class="text-gray-700">{{ __('admin.categories.modal.add_subtitle') }}</p>
                     </div>
                 </div>
                 <button onclick="CategoryModal.closeAdd()"
@@ -194,7 +194,7 @@
                             <div>
                                 <label class="block text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-tag mr-2 text-blue-600"></i>
-                                    Category Name *
+                                    {{ __('admin.categories.modal.name') }} *
                                 </label>
                                 <input type="text" name="name" value="{{ old('name') }}" required
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 shadow-sm"
@@ -208,7 +208,7 @@
                             <div>
                                 <label class="block text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-venus-mars mr-2 text-purple-600"></i>
-                                    Gender
+                                    {{ __('admin.categories.modal.gender_label') }}
                                 </label>
                                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
                                     <label class="relative cursor-pointer">
@@ -217,7 +217,7 @@
                                         <div
                                             class="p-3 border-2 border-gray-200 rounded-xl text-center peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-mars text-blue-600 mb-1"></i>
-                                            <p class="font-medium text-gray-900 text-sm">Men</p>
+                                            <p class="font-medium text-gray-900 text-sm">{{ __('admin.categories.modal.gender_men') }}</p>
                                         </div>
                                     </label>
                                     <label class="relative cursor-pointer">
@@ -226,7 +226,7 @@
                                         <div
                                             class="p-3 border-2 border-gray-200 rounded-xl text-center peer-checked:border-pink-500 peer-checked:bg-pink-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-venus text-pink-600 mb-1"></i>
-                                            <p class="font-medium text-gray-900 text-sm">Women</p>
+                                            <p class="font-medium text-gray-900 text-sm">{{ __('admin.categories.modal.gender_women') }}</p>
                                         </div>
                                     </label>
                                     <label class="relative cursor-pointer">
@@ -235,7 +235,7 @@
                                         <div
                                             class="p-3 border-2 border-gray-200 rounded-xl text-center peer-checked:border-green-500 peer-checked:bg-green-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-child text-green-600 mb-1"></i>
-                                            <p class="font-medium text-gray-900 text-sm">Kids</p>
+                                            <p class="font-medium text-gray-900 text-sm">{{ __('admin.categories.modal.gender_kids') }}</p>
                                         </div>
                                     </label>
                                     <label class="relative cursor-pointer">
@@ -245,11 +245,11 @@
                                         <div
                                             class="p-3 border-2 border-gray-200 rounded-xl text-center peer-checked:border-gray-500 peer-checked:bg-gray-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-venus-mars text-gray-700 mb-1"></i>
-                                            <p class="font-medium text-gray-900 text-sm">Unisex</p>
+                                            <p class="font-medium text-gray-900 text-sm">{{ __('admin.categories.modal.gender_unisex') }}</p>
                                         </div>
                                     </label>
                                 </div>
-                                <p class="text-gray-700 text-xs mt-2">Select the target audience for this category</p>
+                                <p class="text-gray-700 text-xs mt-2">{{ __('admin.categories.modal.gender_desc') }}</p>
                                 @error('gender')
                                     <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                                 @enderror
@@ -258,14 +258,13 @@
                             <div>
                                 <label class="block text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-sort-numeric-up mr-2 text-green-600"></i>
-                                    Display Order
+                                    {{ __('admin.categories.modal.display_order') }} *
                                 </label>
                                 <input type="number" name="sort_order"
                                     value="{{ old('sort_order', $categories->count()) }}" min="0"
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200 shadow-sm"
                                     placeholder="Position in display sequence">
-                                <p class="text-gray-700 text-xs mt-2">Lower numbers appear first. Leave empty for last
-                                    position.</p>
+                                <p class="text-gray-700 text-xs mt-2">{{ __('admin.categories.modal.display_order_desc') }}</p>
                                 @error('sort_order')
                                     <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                                 @enderror
@@ -274,11 +273,11 @@
                             <div>
                                 <label class="block text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-align-left mr-2 text-indigo-600"></i>
-                                    Description
+                                    {{ __('admin.categories.modal.description_label') }}
                                 </label>
                                 <textarea name="description" rows="4"
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 resize-none transition-all duration-200 shadow-sm"
-                                    placeholder="Brief description of this category...">{{ old('description') }}</textarea>
+                                    placeholder="{{ __('admin.categories.modal.description_placeholder') }}">{{ old('description') }}</textarea>
                                 @error('description')
                                     <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                                 @enderror
@@ -299,8 +298,8 @@
                                         <div
                                             class="p-4 border-2 border-gray-200 rounded-xl text-center peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-check-circle text-emerald-600 mb-2"></i>
-                                            <p class="font-medium text-gray-900">Active</p>
-                                            <p class="text-gray-700 text-sm">Visible to customers</p>
+                                            <p class="font-medium text-gray-900">{{ __('admin.categories.modal.status_active') }}</p>
+                                            <p class="text-gray-700 text-sm">{{ __('admin.categories.modal.status_active_desc') }}</p>
                                         </div>
                                     </label>
                                     <label class="relative cursor-pointer">
@@ -308,8 +307,8 @@
                                         <div
                                             class="p-4 border-2 border-gray-200 rounded-xl text-center peer-checked:border-red-500 peer-checked:bg-red-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-eye-slash text-red-600 mb-2"></i>
-                                            <p class="font-medium text-gray-900">Inactive</p>
-                                            <p class="text-gray-700 text-sm">Hidden from customers</p>
+                                            <p class="font-medium text-gray-900">{{ __('admin.categories.modal.status_inactive') }}</p>
+                                            <p class="text-gray-700 text-sm">{{ __('admin.categories.modal.status_inactive_desc') }}</p>
                                         </div>
                                     </label>
                                 </div>
@@ -333,7 +332,7 @@
                                             <i
                                                 class="fas fa-cloud-upload-alt text-gray-700 group-hover/upload:text-white text-2xl transition-all duration-200"></i>
                                         </div>
-                                        <p class="text-gray-900 font-medium mb-2">Upload Category Image</p>
+                                        <p class="text-gray-900 font-medium mb-2">{{ __('admin.categories.modal.image_upload') }}</p>
                                         <p class="text-gray-700 text-sm">Recommended: 400×400px • Max 2MB</p>
                                         <p class="text-gray-700 text-sm">JPG, PNG, WebP formats</p>
                                     </label>
@@ -347,7 +346,7 @@
                                             <i class="fas fa-times"></i>
                                         </button>
                                     </div>
-                                    <p class="text-gray-700 text-xs text-center mt-2">Image Preview</p>
+                                    <p class="text-gray-700 text-xs text-center mt-2">{{ __('admin.categories.modal.image_preview') }}</p>
                                 </div>
                                 @error('image')
                                     <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
@@ -360,13 +359,13 @@
                     <div class="flex justify-end gap-4 pt-8 mt-8 border-t border-gray-100">
                         <button type="button" onclick="CategoryModal.closeAdd()"
                             class="px-8 py-4 bg-white border-2 border-gray-200 text-gray-900 hover:bg-gray-50 rounded-xl font-semibold transition-all duration-200 hover:border-gray-900 shadow-sm hover:shadow">
-                            Cancel
+                            {{ __('admin.categories.modal.cancel') }}
                         </button>
                         <button type="submit"
                             class="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl font-semibold transition-all duration-200 flex items-center group/submit shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                             <i
                                 class="fas fa-plus-circle mr-3 group-hover/submit:rotate-90 transition-transform duration-300"></i>
-                            Create Category
+                            {{ __('admin.categories.modal.create') }}
                         </button>
                     </div>
                 </form>
@@ -387,8 +386,8 @@
                         <i class="fas fa-edit text-white text-xl"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-900">Edit Category</h2>
-                        <p class="text-gray-700">Update category details</p>
+                        <h2 class="text-2xl font-bold text-gray-900">{{ __('admin.categories.modal.edit_title') }}</h2>
+                        <p class="text-gray-700">{{ __('admin.categories.modal.edit_subtitle') }}</p>
                     </div>
                 </div>
                 <button onclick="CategoryModal.closeEdit()"
@@ -410,7 +409,7 @@
                             <div>
                                 <label class="block text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-tag mr-2 text-blue-600"></i>
-                                    Category Name *
+                                    {{ __('admin.categories.modal.name') }} *
                                 </label>
                                 <input type="text" name="name" id="editName" required
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 shadow-sm">
@@ -429,7 +428,7 @@
                                         <div
                                             class="p-3 border-2 border-gray-200 rounded-xl text-center peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-mars text-blue-600 mb-1"></i>
-                                            <p class="font-medium text-gray-900 text-sm">Men</p>
+                                            <p class="font-medium text-gray-900 text-sm">{{ __('admin.categories.modal.gender_men') }}</p>
                                         </div>
                                     </label>
                                     <label class="relative cursor-pointer">
@@ -438,7 +437,7 @@
                                         <div
                                             class="p-3 border-2 border-gray-200 rounded-xl text-center peer-checked:border-pink-500 peer-checked:bg-pink-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-venus text-pink-600 mb-1"></i>
-                                            <p class="font-medium text-gray-900 text-sm">Women</p>
+                                            <p class="font-medium text-gray-900 text-sm">{{ __('admin.categories.modal.gender_women') }}</p>
                                         </div>
                                     </label>
                                     <label class="relative cursor-pointer">
@@ -447,7 +446,7 @@
                                         <div
                                             class="p-3 border-2 border-gray-200 rounded-xl text-center peer-checked:border-green-500 peer-checked:bg-green-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-child text-green-600 mb-1"></i>
-                                            <p class="font-medium text-gray-900 text-sm">Kids</p>
+                                            <p class="font-medium text-gray-900 text-sm">{{ __('admin.categories.modal.gender_kids') }}</p>
                                         </div>
                                     </label>
                                     <label class="relative cursor-pointer">
@@ -456,7 +455,7 @@
                                         <div
                                             class="p-3 border-2 border-gray-200 rounded-xl text-center peer-checked:border-gray-500 peer-checked:bg-gray-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-venus-mars text-gray-700 mb-1"></i>
-                                            <p class="font-medium text-gray-900 text-sm">Unisex</p>
+                                            <p class="font-medium text-gray-900 text-sm">{{ __('admin.categories.modal.gender_unisex') }}</p>
                                         </div>
                                     </label>
                                 </div>
@@ -465,7 +464,7 @@
                             <div>
                                 <label class="block text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-sort-numeric-up mr-2 text-green-600"></i>
-                                    Display Order
+                                    {{ __('admin.categories.modal.display_order') }}
                                 </label>
                                 <input type="number" name="sort_order" id="editSortOrder" min="0"
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200 shadow-sm">
@@ -474,7 +473,7 @@
                             <div>
                                 <label class="block text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-align-left mr-2 text-indigo-600"></i>
-                                    Description
+                                    {{ __('admin.categories.modal.description_label') }}
                                 </label>
                                 <textarea name="description" id="editDescription" rows="4"
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 resize-none transition-all duration-200 shadow-sm"></textarea>
@@ -495,8 +494,8 @@
                                         <div
                                             class="p-4 border-2 border-gray-200 rounded-xl text-center peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-check-circle text-emerald-600 mb-2"></i>
-                                            <p class="font-medium text-gray-900">Active</p>
-                                            <p class="text-gray-700 text-sm">Visible to customers</p>
+                                            <p class="font-medium text-gray-900">{{ __('admin.categories.modal.status_active') }}</p>
+                                            <p class="text-gray-700 text-sm">{{ __('admin.categories.modal.status_active_desc') }}</p>
                                         </div>
                                     </label>
                                     <label class="relative cursor-pointer">
@@ -505,8 +504,8 @@
                                         <div
                                             class="p-4 border-2 border-gray-200 rounded-xl text-center peer-checked:border-red-500 peer-checked:bg-red-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-eye-slash text-red-600 mb-2"></i>
-                                            <p class="font-medium text-gray-900">Inactive</p>
-                                            <p class="text-gray-700 text-sm">Hidden from customers</p>
+                                            <p class="font-medium text-gray-900">{{ __('admin.categories.modal.status_inactive') }}</p>
+                                            <p class="text-gray-700 text-sm">{{ __('admin.categories.modal.status_inactive_desc') }}</p>
                                         </div>
                                     </label>
                                 </div>
@@ -515,7 +514,7 @@
                             <div>
                                 <label class="block text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-image mr-2 text-rose-600"></i>
-                                    Category Image
+                                    {{ __('admin.categories.modal.image_label') }}
                                 </label>
                                 <div class="space-y-4">
                                     <!-- Current Image -->
@@ -526,7 +525,7 @@
                                                 <img id="editCurrentImage" src=""
                                                     class="absolute inset-0 w-full h-full object-cover">
                                             </div>
-                                            <p class="text-gray-700 text-xs text-center mt-3">Current Image</p>
+                                            <p class="text-gray-700 text-xs text-center mt-3">{{ __('admin.categories.modal.current_image') }}</p>
                                         </div>
                                     </div>
 
@@ -542,8 +541,8 @@
                                                 <i
                                                     class="fas fa-sync-alt text-gray-700 group-hover/change:text-white transition-all duration-200"></i>
                                             </div>
-                                            <p class="text-gray-900 font-medium mb-1">Change Image</p>
-                                            <p class="text-gray-700 text-sm">Optional: Upload new image</p>
+                                            <p class="text-gray-900 font-medium mb-1">{{ __('admin.categories.modal.change_image') }}</p>
+                                            <p class="text-gray-700 text-sm">{{ __('admin.categories.modal.change_image_optional') }}</p>
                                         </label>
                                     </div>
                                     <div id="editCategoryImagePreview" class="hidden">
@@ -572,7 +571,7 @@
                         <button type="submit"
                             class="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl font-semibold transition-all duration-200 flex items-center group/update shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                             <i class="fas fa-save mr-3 group-hover/update:rotate-12 transition-transform duration-300"></i>
-                            Update Category
+                            {{ __('admin.categories.modal.update') }}
                         </button>
                     </div>
                 </form>
@@ -920,7 +919,7 @@
                 }
 
                 Swal.fire({
-                    title: productCount > 0 ? 'Category in Use!' : 'Delete Category?',
+                    title: productCount > 0 ? '{{ __('admin.categories.delete.title_in_use') }}' : '{{ __('admin.categories.delete.title') }}',
                     html: `<div class="text-left">
                 <div class="w-16 h-16 rounded-full ${productCount > 0 ? 'bg-gradient-to-br from-red-50 to-red-100' : 'bg-gradient-to-br from-yellow-50 to-yellow-100'} flex items-center justify-center mx-auto mb-4">
                     <i class="fas fa-trash ${productCount > 0 ? 'text-red-500' : 'text-yellow-500'} text-2xl"></i>
@@ -933,8 +932,8 @@
                     showCancelButton: true,
                     confirmButtonColor: productCount > 0 ? '#dc2626' : '#6b7280',
                     cancelButtonColor: '#6b7280',
-                    confirmButtonText: productCount > 0 ? 'Move Products & Delete' : 'Yes, delete it',
-                    cancelButtonText: 'Cancel',
+                    confirmButtonText: productCount > 0 ? '{{ __('admin.categories.delete.moving_products') }}' : '{{ __('admin.categories.delete.button_no_products') }}',
+                    cancelButtonText: '{{ __('admin.categories.delete.cancel') }}',
                     reverseButtons: true,
                     customClass: {
                         popup: 'rounded-2xl',

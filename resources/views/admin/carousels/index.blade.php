@@ -6,20 +6,19 @@
     <div class="mb-8" data-aos="fade-down">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">Carousel Banners</h1>
-                <p class="text-gray-700">Arrange and showcase your featured collections and promotions</p>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ __('admin.carousels.title') }}</h1>
+                <p class="text-gray-700">{{ __('admin.carousels.subtitle') }}</p>
             </div>
             <div class="flex items-center gap-3 mt-4 md:mt-0">
                 @if ($carousels->count() > 1)
                     <button onclick="showSortOrder()"
                         class="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 group shadow-lg hover:shadow-xl">
-                        <i class="fas fa-sort mr-2 group-hover:rotate-180 transition-transform duration-300"></i> Arrange
-                        Order
+                        <i class="fas fa-sort mr-2 group-hover:rotate-180 transition-transform duration-300"></i> {{ __('admin.carousels.arrange_order') }}
                     </button>
                 @endif
                 <button onclick="CarouselModal.openAdd()"
                     class="bg-gradient-to-r from-gray-900 to-black hover:from-gray-800 hover:to-gray-900 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 group shadow-lg hover:shadow-xl">
-                    <i class="fas fa-plus mr-2 group-hover:rotate-90 transition-transform duration-300"></i>Add New Banner
+                    <i class="fas fa-plus mr-2 group-hover:rotate-90 transition-transform duration-300"></i> {{ __('admin.carousels.add_new') }}
                 </button>
             </div>
         </div>
@@ -31,10 +30,10 @@
             data-aos="fade-up" data-aos-delay="100">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-blue-600 text-sm font-medium">Total Banners</p>
+                    <p class="text-blue-600 text-sm font-medium">{{ __('admin.carousels.stats.total') }}</p>
                     <p class="text-3xl font-bold text-gray-900 mt-1">{{ $carousels->count() }}</p>
                     <p class="text-blue-500 text-xs mt-2 flex items-center">
-                        <i class="fas fa-images mr-1"></i> All banners created
+                        <i class="fas fa-images mr-1"></i> {{ __('admin.carousels.stats.all_created') }}
                     </p>
                 </div>
                 <div class="w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center">
@@ -47,10 +46,10 @@
             data-aos="fade-up" data-aos-delay="150">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-green-600 text-sm font-medium">Active Banners</p>
+                    <p class="text-green-600 text-sm font-medium">{{ __('admin.carousels.stats.active') }}</p>
                     <p class="text-3xl font-bold text-gray-900 mt-1">{{ $carousels->where('is_active', true)->count() }}</p>
                     <p class="text-green-500 text-xs mt-2 flex items-center">
-                        <i class="fas fa-eye mr-1"></i> Currently visible
+                        <i class="fas fa-eye mr-1"></i> {{ __('admin.carousels.stats.currently_visible') }}
                     </p>
                 </div>
                 <div class="w-12 h-12 rounded-lg bg-green-500 flex items-center justify-center">
@@ -63,11 +62,11 @@
             data-aos="fade-up" data-aos-delay="200">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-red-600 text-sm font-medium">Inactive Banners</p>
+                    <p class="text-red-600 text-sm font-medium">{{ __('admin.carousels.stats.inactive') }}</p>
                     <p class="text-3xl font-bold text-gray-900 mt-1">{{ $carousels->where('is_active', false)->count() }}
                     </p>
                     <p class="text-red-500 text-xs mt-2 flex items-center">
-                        <i class="fas fa-eye-slash mr-1"></i> Currently hidden
+                        <i class="fas fa-eye-slash mr-1"></i> {{ __('admin.carousels.stats.currently_hidden') }}
                     </p>
                 </div>
                 <div class="w-12 h-12 rounded-lg bg-red-500 flex items-center justify-center">
@@ -80,7 +79,7 @@
             data-aos="fade-up" data-aos-delay="250">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-purple-600 text-sm font-medium">First Display</p>
+                    <p class="text-purple-600 text-sm font-medium">{{ __('admin.carousels.stats.first_display') }}</p>
                     <p class="text-lg font-bold text-gray-900 mt-1 line-clamp-1">
                         @if ($carousels->isNotEmpty())
                             {{ $carousels->sortBy('sort_order')->first()->title }}
@@ -89,7 +88,7 @@
                         @endif
                     </p>
                     <p class="text-purple-500 text-xs mt-2 flex items-center">
-                        <i class="fas fa-sort-numeric-up mr-1"></i> Top position banner
+                        <i class="fas fa-sort-numeric-up mr-1"></i> {{ __('admin.carousels.stats.top_position') }}
                     </p>
                 </div>
                 <div class="w-12 h-12 rounded-lg bg-purple-500 flex items-center justify-center">
@@ -105,12 +104,12 @@
         data-aos="fade-up">
         <div class="flex items-center justify-between mb-6">
             <div>
-                <h2 class="text-xl font-bold text-gray-900">Arrange Banner Order</h2>
-                <p class="text-gray-700 text-sm">Drag and drop to reorder banners. First banner will be shown first.</p>
+                <h2 class="text-xl font-bold text-gray-900">{{ __('admin.carousels.sort_panel.title') }}</h2>
+                <p class="text-gray-700 text-sm">{{ __('admin.carousels.sort_panel.subtitle') }}</p>
             </div>
             <button onclick="saveSortOrder()"
                 class="bg-gradient-to-r from-gray-900 to-black hover:from-gray-800 hover:to-gray-900 text-white px-6 py-2.5 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl">
-                <i class="fas fa-save mr-2"></i> Save Order
+                <i class="fas fa-save mr-2"></i>{{ __('admin.carousels.sort_panel.save_order') }}
             </button>
         </div>
 
@@ -142,12 +141,11 @@
                 class="w-32 h-32 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center mx-auto mb-8 border-4 border-gray-100 shadow-lg">
                 <i class="fas fa-images text-gray-300 text-4xl"></i>
             </div>
-            <h3 class="text-3xl font-bold text-gray-900 mb-4">No Banners Yet</h3>
-            <p class="text-gray-700 mb-8 max-w-md mx-auto">Create stunning banners to showcase your collections, promotions,
-                and seasonal offers on the homepage</p>
+            <h3 class="text-3xl font-bold text-gray-900 mb-4">{{ __('admin.carousels.no_banners') }}</h3>
+            <p class="text-gray-700 mb-8 max-w-md mx-auto">{{ __('admin.carousels.no_banners_desc') }}</p>
             <button onclick="CarouselModal.openAdd()"
                 class="bg-gradient-to-r from-gray-900 to-black hover:from-gray-800 hover:to-gray-900 text-white px-10 py-4 rounded-xl font-medium transition-all duration-200 group text-lg shadow-lg hover:shadow-xl">
-                <i class="fas fa-plus mr-3 group-hover:rotate-90 transition-transform duration-300"></i>Create First Banner
+                <i class="fas fa-plus mr-3 group-hover:rotate-90 transition-transform duration-300"></i>{{ __('admin.carousels.no_banners_button') }}
             </button>
         </div>
     @else
@@ -244,8 +242,8 @@
                         <i class="fas fa-plus text-white text-xl"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-900">Create New Banner</h2>
-                        <p class="text-gray-700">Add a new promotional banner to your store</p>
+                        <h2 class="text-2xl font-bold text-gray-900">{{ __('admin.carousels.modal.add_title') }}</h2>
+                        <p class="text-gray-700">{{ __('admin.carousels.modal.add_subtitle') }}</p>
                     </div>
                 </div>
                 <button onclick="CarouselModal.closeAdd()"
@@ -267,11 +265,11 @@
                             <div>
                                 <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-heading mr-2 text-gray-700"></i>
-                                    Banner Title *
+                                {{ __('admin.carousels.modal.banner_title') }} *
                                 </label>
                                 <input type="text" name="title" value="{{ old('title') }}" required
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-gray-900 focus:ring-0 transition-all duration-200 shadow-sm"
-                                    placeholder="e.g., Summer Collection 2024">
+                                    placeholder="{{ __('admin.carousels.modal.title_placeholder') }}">
                                 @error('title')
                                     <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                                 @enderror
@@ -280,11 +278,11 @@
                             <div>
                                 <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-align-left mr-2 text-gray-700"></i>
-                                    Description *
+                                    {{ __('admin.carousels.modal.description') }} *
                                 </label>
                                 <textarea name="description" rows="5" required
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-gray-900 focus:ring-0 resize-none transition-all duration-200 shadow-sm"
-                                    placeholder="Describe your promotion or collection...">{{ old('description') }}</textarea>
+                                    placeholder="{{ __('admin.carousels.modal.description_placeholder') }}">{{ old('description') }}</textarea>
                                 @error('description')
                                     <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                                 @enderror
@@ -293,14 +291,13 @@
                             <div>
                                 <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-sort-numeric-up mr-2 text-gray-700"></i>
-                                    Display Order
+                                    {{ __('admin.carousels.modal.display_order') }}
                                 </label>
                                 <input type="number" name="sort_order"
                                     value="{{ old('sort_order', $carousels->count()) }}" min="0"
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-gray-900 focus:ring-0 transition-all duration-200 shadow-sm"
-                                    placeholder="Position in display sequence">
-                                <p class="text-gray-700 text-xs mt-2">Lower numbers appear first. Leave empty for last
-                                    position.</p>
+                                    placeholder="{{ __('admin.carousels.modal.display_order_placeholder') }}">
+                                <p class="text-gray-700 text-xs mt-2">{{ __('admin.carousels.modal.display_order_desc') }}</p>
                                 @error('sort_order')
                                     <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                                 @enderror
@@ -312,11 +309,11 @@
                             <div>
                                 <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-mouse-pointer mr-2 text-gray-700"></i>
-                                    Button Text *
+                                    {{ __('admin.carousels.modal.button_text') }} *
                                 </label>
                                 <input type="text" name="button_text" value="{{ old('button_text') }}" required
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-gray-900 focus:ring-0 transition-all duration-200 shadow-sm"
-                                    placeholder="e.g., Shop Now, Explore Collection">
+                                    placeholder="{{ __('admin.carousels.modal.button_text_placeholder') }}">
                                 @error('button_text')
                                     <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                                 @enderror
@@ -325,7 +322,7 @@
                             <div>
                                 <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-link mr-2 text-gray-700"></i>
-                                    Button Link *
+                                    {{ __('admin.carousels.modal.button_link') }} *
                                 </label>
                                 <input type="url" name="button_link" value="{{ old('button_link') }}" required
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-gray-900 focus:ring-0 transition-all duration-200 shadow-sm"
@@ -338,7 +335,7 @@
                             <div>
                                 <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-toggle-on mr-2 text-gray-700"></i>
-                                    Status
+                                    {{ __('admin.carousels.modal.status') }}
                                 </label>
                                 <div class="grid grid-cols-2 gap-4">
                                     <label class="relative cursor-pointer">
@@ -347,8 +344,8 @@
                                         <div
                                             class="p-4 border-2 border-gray-200 rounded-xl text-center peer-checked:border-green-500 peer-checked:bg-green-50 transition-all duration-200 hover:bg-gray-50 shadow-sm">
                                             <i class="fas fa-check-circle text-green-600 mb-2"></i>
-                                            <p class="font-medium text-gray-900">Active</p>
-                                            <p class="text-gray-700 text-sm">Visible to customers</p>
+                                            <p class="font-medium text-gray-900">{{ __('admin.carousels.modal.status_active') }}</p>
+                                            <p class="text-gray-700 text-sm">{{ __('admin.carousels.modal.status_active_desc') }}</p>
                                         </div>
                                     </label>
                                     <label class="relative cursor-pointer">
@@ -356,8 +353,8 @@
                                         <div
                                             class="p-4 border-2 border-gray-200 rounded-xl text-center peer-checked:border-red-500 peer-checked:bg-red-50 transition-all duration-200 hover:bg-gray-50 shadow-sm">
                                             <i class="fas fa-eye-slash text-red-600 mb-2"></i>
-                                            <p class="font-medium text-gray-900">Inactive</p>
-                                            <p class="text-gray-700 text-sm">Hidden from customers</p>
+                                            <p class="font-medium text-gray-900">{{ __('admin.carousels.modal.status_inactive') }}</p>
+                                            <p class="text-gray-700 text-sm">{{ __('admin.carousels.modal.status_inactive_desc') }}</p>
                                         </div>
                                     </label>
                                 </div>
@@ -366,7 +363,7 @@
                             <div>
                                 <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-image mr-2 text-gray-700"></i>
-                                    Banner Image *
+                                    {{ __('admin.carousels.modal.image') }} *
                                 </label>
                                 <div class="space-y-4">
                                     <!-- Upload Area -->
@@ -380,7 +377,7 @@
                                                 <i
                                                     class="fas fa-cloud-upload-alt text-gray-700 group-hover/upload:text-white text-2xl transition-all duration-200"></i>
                                             </div>
-                                            <p class="text-gray-900 font-medium mb-2">Upload Banner Image</p>
+                                            <p class="text-gray-900 font-medium mb-2">{{ __('admin.carousels.modal.image_upload') }}</p>
                                             <p class="text-gray-700 text-sm">Recommended: 1920×800px • Max 2MB</p>
                                             <p class="text-gray-700 text-sm">JPG, PNG, WebP formats</p>
                                         </label>
@@ -400,7 +397,7 @@
                                                     <i class="fas fa-times"></i>
                                                 </button>
                                             </div>
-                                            <p class="text-gray-700 text-xs text-center mt-3">Image Preview</p>
+                                            <p class="text-gray-700 text-xs text-center mt-3">{{ __('admin.carousels.modal.image_preview') }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -415,13 +412,13 @@
                     <div class="flex justify-end gap-4 pt-8 mt-8 border-t border-gray-100">
                         <button type="button" onclick="CarouselModal.closeAdd()"
                             class="px-8 py-4 bg-white border-2 border-gray-200 text-gray-900 hover:bg-gray-50 rounded-xl font-semibold transition-all duration-200 hover:border-gray-900 shadow-sm hover:shadow-md">
-                            Cancel
+                            {{ __('admin.carousels.modal.cancel') }}
                         </button>
                         <button type="submit"
                             class="px-8 py-4 bg-gradient-to-r from-gray-900 to-black text-white hover:from-gray-800 hover:to-gray-900 rounded-xl font-semibold transition-all duration-200 flex items-center group/submit shadow-lg hover:shadow-xl">
                             <i
                                 class="fas fa-plus-circle mr-3 group-hover/submit:rotate-90 transition-transform duration-300"></i>
-                            Create Banner
+                            {{ __('admin.carousels.modal.create') }}
                         </button>
                     </div>
                 </form>
@@ -441,8 +438,8 @@
                         <i class="fas fa-edit text-white text-xl"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-900">Edit Banner</h2>
-                        <p class="text-gray-700">Update your promotional banner</p>
+                        <h2 class="text-2xl font-bold text-gray-900">{{ __('admin.carousels.modal.edit_title') }}</h2>
+                        <p class="text-gray-700">{{ __('admin.carousels.modal.edit_subtitle') }}</p>
                     </div>
                 </div>
                 <button onclick="CarouselModal.closeEdit()"
@@ -464,7 +461,7 @@
                             <div>
                                 <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-heading mr-2 text-gray-700"></i>
-                                    Banner Title *
+                                    {{ __('admin.carousels.modal.banner_title') }} *
                                 </label>
                                 <input type="text" name="title" id="editTitle" required
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-gray-900 focus:ring-0 transition-all duration-200 shadow-sm">
@@ -473,7 +470,7 @@
                             <div>
                                 <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-align-left mr-2 text-gray-700"></i>
-                                    Description *
+                                    {{ __('admin.carousels.modal.description') }} *
                                 </label>
                                 <textarea name="description" id="editDescription" rows="5" required
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-gray-900 focus:ring-0 resize-none transition-all duration-200 shadow-sm"></textarea>
@@ -482,11 +479,11 @@
                             <div>
                                 <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-sort-numeric-up mr-2 text-gray-700"></i>
-                                    Display Order
+                                    {{ __('admin.carousels.modal.display_order') }}
                                 </label>
                                 <input type="number" name="sort_order" id="editSortOrder" min="0"
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-gray-900 focus:ring-0 transition-all duration-200 shadow-sm">
-                                <p class="text-gray-700 text-xs mt-2">Lower numbers appear first. 0 = First position.</p>
+                                <p class="text-gray-700 text-xs mt-2">{{ __('admin.carousels.modal.display_order_desc') }}</p>
                             </div>
                         </div>
 
@@ -495,7 +492,7 @@
                             <div>
                                 <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-mouse-pointer mr-2 text-gray-700"></i>
-                                    Button Text *
+                                    {{ __('admin.carousels.modal.button_text') }} *
                                 </label>
                                 <input type="text" name="button_text" id="editButtonText" required
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-gray-900 focus:ring-0 transition-all duration-200 shadow-sm">
@@ -504,7 +501,7 @@
                             <div>
                                 <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-link mr-2 text-gray-700"></i>
-                                    Button Link *
+                                    {{ __('admin.carousels.modal.button_link') }} *
                                 </label>
                                 <input type="url" name="button_link" id="editButtonLink" required
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-gray-900 focus:ring-0 transition-all duration-200 shadow-sm">
@@ -522,8 +519,8 @@
                                         <div
                                             class="p-4 border-2 border-gray-200 rounded-xl text-center peer-checked:border-green-500 peer-checked:bg-green-50 transition-all duration-200 hover:bg-gray-50 shadow-sm">
                                             <i class="fas fa-check-circle text-green-600 mb-2"></i>
-                                            <p class="font-medium text-gray-900">Active</p>
-                                            <p class="text-gray-700 text-sm">Visible to customers</p>
+                                            <p class="font-medium text-gray-900">{{ __('admin.carousels.modal.status_active') }}</p>
+                                            <p class="text-gray-700 text-sm">{{ __('admin.carousels.modal.status_active_desc') }}</p>
                                         </div>
                                     </label>
                                     <label class="relative cursor-pointer">
@@ -532,8 +529,8 @@
                                         <div
                                             class="p-4 border-2 border-gray-200 rounded-xl text-center peer-checked:border-red-500 peer-checked:bg-red-50 transition-all duration-200 hover:bg-gray-50 shadow-sm">
                                             <i class="fas fa-eye-slash text-red-600 mb-2"></i>
-                                            <p class="font-medium text-gray-900">Inactive</p>
-                                            <p class="text-gray-700 text-sm">Hidden from customers</p>
+                                            <p class="font-medium text-gray-900">{{ __('admin.carousels.modal.status_inactive') }}</p>
+                                            <p class="text-gray-700 text-sm">{{ __('admin.carousels.modal.status_inactive_desc') }}</p>
                                         </div>
                                     </label>
                                 </div>
@@ -542,7 +539,7 @@
                             <div>
                                 <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-image mr-2 text-gray-700"></i>
-                                    Banner Image
+                                    {{ __('admin.carousels.modal.image') }} *
                                 </label>
                                 <div class="space-y-4">
                                     <!-- Current Image -->
@@ -553,7 +550,7 @@
                                             <img id="editCurrentImage" src=""
                                                 class="absolute inset-0 w-full h-full object-cover">
                                         </div>
-                                        <p class="text-gray-700 text-xs text-center mt-3">Current Image</p>
+                                        <p class="text-gray-700 text-xs text-center mt-3">{{ __('admin.carousels.modal.current_image') }}</p>
                                     </div>
 
                                     <!-- Change Image -->
@@ -568,8 +565,8 @@
                                                     <i
                                                         class="fas fa-sync-alt text-gray-700 group-hover/change:text-white transition-all duration-200"></i>
                                                 </div>
-                                                <p class="text-gray-900 font-medium mb-1">Change Image</p>
-                                                <p class="text-gray-700 text-sm">Optional: Upload new image</p>
+                                                <p class="text-gray-900 font-medium mb-1">{{ __('admin.carousels.modal.change_image') }}</p>
+                                                <p class="text-gray-700 text-sm">{{ __('admin.carousels.modal.change_image_optional') }}</p>
                                             </label>
                                         </div>
 
@@ -587,7 +584,7 @@
                                                         <i class="fas fa-times"></i>
                                                     </button>
                                                 </div>
-                                                <p class="text-gray-700 text-xs text-center mt-3">New Image Preview</p>
+                                                <p class="text-gray-700 text-xs text-center mt-3">{{ __('admin.carousels.modal.new_image_preview') }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -600,12 +597,12 @@
                     <div class="flex justify-end gap-4 pt-8 mt-8 border-t border-gray-100">
                         <button type="button" onclick="CarouselModal.closeEdit()"
                             class="px-8 py-4 bg-white border-2 border-gray-200 text-gray-900 hover:bg-gray-50 rounded-xl font-semibold transition-all duration-200 hover:border-gray-900 shadow-sm hover:shadow-md">
-                            Cancel
+                            {{ __('admin.carousels.modal.cancel') }}
                         </button>
                         <button type="submit"
                             class="px-8 py-4 bg-gradient-to-r from-gray-900 to-black text-white hover:from-gray-800 hover:to-gray-900 rounded-xl font-semibold transition-all duration-200 flex items-center group/update shadow-lg hover:shadow-xl">
                             <i class="fas fa-save mr-3 group-hover/update:rotate-12 transition-transform duration-300"></i>
-                            Update Banner
+                            {{ __('admin.carousels.modal.update') }}
                         </button>
                     </div>
                 </form>
@@ -926,17 +923,17 @@
             // Delete function with SweetAlert2
             function deleteCarousel(id, title) {
                 Swal.fire({
-                    title: 'Delete Banner?',
+                    title: '{{ __('admin.carousels.delete.title') }}',
                     html: `<div class="text-left">
                 <p class="text-gray-900 font-semibold text-lg mb-2">"${title}"</p>
-                <p class="text-gray-700">This banner will be permanently removed from your store. This action cannot be undone.</p>
+                <p class="text-gray-700">{{ __('admin.carousels.delete.message') }}</p>
             </div>`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#dc2626',
                     cancelButtonColor: '#6b7280',
-                    confirmButtonText: 'Yes, delete it',
-                    cancelButtonText: 'Cancel',
+                    confirmButtonText: '{{ __('admin.carousels.delete.yes_delete') }}',
+                    cancelButtonText: '{{ __('admin.carousels.delete.cancel') }}',
                     reverseButtons: true,
                     customClass: {
                         popup: 'rounded-2xl',

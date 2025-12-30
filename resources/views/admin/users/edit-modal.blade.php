@@ -4,8 +4,8 @@
         <div class="p-6">
             <div class="flex items-center justify-between mb-6">
                 <div>
-                    <h3 class="text-xl font-bold text-gray-900">Edit User</h3>
-                    <p class="text-gray-600 mt-1">Update user information</p>
+                    <h3 class="text-xl font-bold text-gray-900">{{ __('admin.users.modal.edit_title') }}</h3>
+                    <p class="text-gray-600 mt-1">{{ __('admin.users.modal.edit_subtitle') }}</p>
                 </div>
                 <button onclick="hideEditModal()" class="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100">
                     <i class="fas fa-times text-lg"></i>
@@ -14,6 +14,10 @@
             
             <div id="editUserContent">
                 <!-- Content loaded via AJAX -->
+                <div class="text-center py-8">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-Ocean mx-auto"></div>
+                    <p class="text-gray-600 mt-4">{{ __('admin.users.modal.loading') }}</p>
+                </div>
             </div>
         </div>
     </div>
