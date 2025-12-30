@@ -6,8 +6,8 @@
         <div class="p-6 border-b border-gray-200">
             <div class="flex items-center justify-between">
                 <div>
-                    <h3 class="text-xl font-bold text-gray-900">Security Settings</h3>
-                    <p class="text-gray-600 mt-1">Manage your account security</p>
+                    <h3 class="text-xl font-bold text-gray-900">{{ __('admin.profile.security_modal.title') }}</h3>
+                    <p class="text-gray-600 mt-1">{{ __('admin.profile.security_modal.subtitle') }}</p>
                 </div>
                 <button onclick="hideSecurityModal()"
                     class="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100">
@@ -24,8 +24,8 @@
                 <!-- Two-Factor Authentication -->
                 <div class="flex items-center justify-between">
                     <div>
-                        <h4 class="font-semibold text-gray-900">Two-Factor Authentication</h4>
-                        <p class="text-sm text-gray-600 mt-1">Add an extra layer of security</p>
+                        <h4 class="font-semibold text-gray-900">{{ __('admin.profile.security_modal.two_factor_auth') }}</h4>
+                        <p class="text-sm text-gray-600 mt-1">{{ __('admin.profile.security_modal.two_factor_desc') }}</p>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" name="two_factor_enabled" class="sr-only peer"
@@ -39,8 +39,8 @@
                 <!-- Login Notifications -->
                 <div class="flex items-center justify-between">
                     <div>
-                        <h4 class="font-semibold text-gray-900">Login Notifications</h4>
-                        <p class="text-sm text-gray-600 mt-1">Get alerts for new logins</p>
+                        <h4 class="font-semibold text-gray-900">{{ __('admin.profile.security_modal.login_notifications') }}</h4>
+                        <p class="text-sm text-gray-600 mt-1">{{ __('admin.profile.security_modal.login_notifications_desc') }}</p>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" name="login_notifications" class="sr-only peer"
@@ -54,32 +54,26 @@
                 <!-- Session Timeout -->
                 <div>
                     <label for="session_timeout" class="block text-sm font-medium text-gray-700 mb-2">
-                        Session Timeout (minutes)
+                        {{ __('admin.profile.security_modal.session_timeout') }}
                     </label>
                     <div class="relative">
                         <i class="fas fa-clock absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                         <select id="session_timeout" name="session_timeout"
                             class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300">
-                            <option value="15" {{ $securitySettings['session_timeout'] == 15 ? 'selected' : '' }}>15
-                                minutes</option>
-                            <option value="30" {{ $securitySettings['session_timeout'] == 30 ? 'selected' : '' }}>30
-                                minutes (Default)</option>
-                            <option value="60" {{ $securitySettings['session_timeout'] == 60 ? 'selected' : '' }}>1
-                                hour</option>
-                            <option value="120" {{ $securitySettings['session_timeout'] == 120 ? 'selected' : '' }}>2
-                                hours</option>
-                            <option value="480" {{ $securitySettings['session_timeout'] == 480 ? 'selected' : '' }}>8
-                                hours</option>
+                            <option value="15" {{ $securitySettings['session_timeout'] == 15 ? 'selected' : '' }}>{{ __('admin.profile.security_modal.15_minutes') }}</option>
+                            <option value="30" {{ $securitySettings['session_timeout'] == 30 ? 'selected' : '' }}>{{ __('admin.profile.security_modal.30_minutes') }}</option>
+                            <option value="60" {{ $securitySettings['session_timeout'] == 60 ? 'selected' : '' }}>{{ __('admin.profile.security_modal.1_hour') }}</option>
+                            <option value="120" {{ $securitySettings['session_timeout'] == 120 ? 'selected' : '' }}>{{ __('admin.profile.security_modal.2_hours') }}</option>
+                            <option value="480" {{ $securitySettings['session_timeout'] == 480 ? 'selected' : '' }}>{{ __('admin.profile.security_modal.8_hours') }}</option>
                         </select>
                     </div>
-                    <p class="text-xs text-gray-500 mt-1">Automatically log out after inactivity</p>
+                    <p class="text-xs text-gray-500 mt-1">{{ __('admin.profile.security_modal.auto_logout_hint') }}</p>
                 </div>
 
                 <!-- Last Password Change -->
                 <div class="p-4 bg-gray-50 rounded-xl">
-                    <h4 class="font-semibold text-gray-900 mb-2">Password Information</h4>
-                    <p class="text-sm text-gray-600">Last changed: <span
-                            class="font-medium">{{ $securitySettings['last_password_change'] }}</span></p>
+                    <h4 class="font-semibold text-gray-900 mb-2">{{ __('admin.profile.security_modal.password_info') }}</h4>
+                    <p class="text-sm text-gray-600">{{ __('admin.profile.security_modal.last_changed') }}</p>
                 </div>
             </div>
 
@@ -87,16 +81,17 @@
             <div class="mt-8 flex justify-end space-x-3">
                 <button type="button" onclick="hideSecurityModal()"
                     class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-xl transition-colors duration-300">
-                    Cancel
+                    {{ __('admin.profile.security_modal.cancel') }}
                 </button>
                 <button type="submit"
                     class="px-4 py-2 bg-gradient-to-r from-Ocean to-Ocean/80 text-white rounded-xl hover:shadow-lg transition-all duration-300">
-                    Save Settings
+                    {{ __('admin.profile.security_modal.save_settings') }}
                 </button>
             </div>
         </form>
     </div>
 </div>
+
 
 <script>
     function showSecurityModal() {

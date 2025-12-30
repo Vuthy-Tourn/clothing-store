@@ -362,7 +362,7 @@
                     </div>
                     <div class="flex items-center space-x-6">
                         <div class="text-sm text-gray-600">
-                            {{ __('admin.emails.list.showing') }} <span class="font-semibold">{{ $subscribers->count() }}</span> {{ __('admin.emails.list.active_subscribers') }}
+                            {{ __('admin.emails.list.showing') }} <span class="font-semibold">{{ $subscribers->count() }}</span> 
                         </div>
                     </div>
                 </div>

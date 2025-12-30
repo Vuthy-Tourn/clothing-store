@@ -6,8 +6,8 @@
         <div class="p-6 border-b border-gray-200">
             <div class="flex items-center justify-between">
                 <div>
-                    <h3 class="text-xl font-bold text-gray-900">Activity Log</h3>
-                    <p class="text-gray-600 mt-1">Recent account activities</p>
+                    <h3 class="text-xl font-bold text-gray-900">{{ __('admin.profile.activity_modal.title') }}</h3>
+                    <p class="text-gray-600 mt-1">{{ __('admin.profile.activity_modal.subtitle') }}</p>
                 </div>
                 <button onclick="hideActivityModal()"
                     class="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100">
@@ -45,8 +45,8 @@
                         <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <i class="fas fa-history text-gray-400 text-2xl"></i>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-2">No Activity Yet</h3>
-                        <p class="text-gray-600">Your activities will appear here</p>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('admin.profile.activity_modal.no_activity') }}</h3>
+                        <p class="text-gray-600">{{ __('admin.profile.activity_modal.no_activity_desc') }}</p>
                     </div>
                 @endif
             </div>
@@ -57,16 +57,17 @@
             <div class="flex justify-between items-center">
                 <p class="text-sm text-gray-600">
                     <i class="fas fa-info-circle mr-1"></i>
-                    Activities are logged for security purposes
+                    {{ __('admin.profile.activity_modal.security_note') }}
                 </p>
                 <button onclick="hideActivityModal()"
                     class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-xl transition-colors duration-300">
-                    Close
+                    {{ __('admin.profile.activity_modal.close') }}
                 </button>
             </div>
         </div>
     </div>
 </div>
+
 
 <script>
     function showActivityModal() {

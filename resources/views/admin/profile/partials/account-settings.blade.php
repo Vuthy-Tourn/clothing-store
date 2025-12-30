@@ -2,7 +2,7 @@
     <div class="px-6 py-5 border-b border-gray-200/50 bg-gradient-to-r from-gray-50 to-white">
         <h2 class="text-xl font-bold text-gray-900 flex items-center">
             <i class="fas fa-cog text-Ocean mr-3"></i>
-            Account Settings
+            {{ __('admin.profile.account_settings.title') }}
         </h2>
     </div>
     <div class="p-6">
@@ -17,8 +17,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h4 class="font-semibold text-gray-900">Language Preference</h4>
-                            <p class="text-sm text-gray-600 mt-1">Switch between languages</p>
+                            <h4 class="font-semibold text-gray-900">{{ __('admin.profile.account_settings.language_preference') }}</h4>
+                            <p class="text-sm text-gray-600 mt-1">{{ __('admin.profile.account_settings.language_subtitle') }}</p>
                         </div>
                     </div>
                     <div class="ml-4 relative">
@@ -32,8 +32,8 @@
             <!-- Newsletter Subscription -->
             <div class="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-green-100/50 rounded-xl border border-green-200/50">
                 <div>
-                    <h4 class="font-semibold text-gray-900">Newsletter Subscription</h4>
-                    <p class="text-sm text-gray-600 mt-1">Receive admin updates and notifications</p>
+                    <h4 class="font-semibold text-gray-900">{{ __('admin.profile.account_settings.newsletter_subscription') }}</h4>
+                    <p class="text-sm text-gray-600 mt-1">{{ __('admin.profile.account_settings.newsletter_subtitle') }}</p>
                 </div>
                 <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" id="newsletterToggle" class="sr-only peer"
@@ -45,12 +45,12 @@
             <!-- Password Security -->
             <div class="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-blue-100/50 rounded-xl border border-blue-200/50">
                 <div>
-                    <h4 class="font-semibold text-gray-900">Password Security</h4>
-                    <p class="text-sm text-gray-600 mt-1">Last changed {{ $user->updated_at->diffForHumans() }}</p>
+                    <h4 class="font-semibold text-gray-900">{{ __('admin.profile.account_settings.password_security') }}</h4>
+                    <p class="text-sm text-gray-600 mt-1">{{ __('admin.profile.account_settings.last_changed', ['time' => $user->updated_at->diffForHumans()]) }}</p>
                 </div>
                 <button onclick="showPasswordModal()"
                     class="px-4 py-2 bg-gradient-to-r from-Ocean to-Ocean/80 text-white rounded-lg hover:shadow-lg transition-all duration-300">
-                    Change Password
+                    {{ __('admin.profile.account_settings.change_password') }}
                 </button>
             </div>
 
@@ -62,38 +62,89 @@
 </div>
 
 
-
 <script>
-    // Newsletter toggle function
-    function toggleNewsletter(checkbox) {
-        const isChecked = checkbox.checked;
+    // Newsletter toggle function with detailed debugging
+function toggleNewsletter(checkbox) {
+    const isChecked = checkbox.checked;
+    
+    console.log('Toggle initiated:', {
+        isChecked: isChecked,
+        csrfToken: '{{ csrf_token() }}',
+        route: '{{ route('admin.profile.toggle-newsletter') }}'
+    });
 
-        fetch('{{ route('admin.profile.toggle-newsletter') }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify({
-                    newsletter_opt_in: isChecked
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showToast(
-                        isChecked ? 'Subscribed to newsletter!' : 'Unsubscribed from newsletter',
-                        'success'
-                    );
-                } else {
-                    showToast('Failed to update newsletter preference', 'error');
-                    checkbox.checked = !isChecked; // Revert on error
-                }
-            })
-            .catch(error => {
-                showToast('An error occurred', 'error');
-                checkbox.checked = !isChecked;
+    fetch('{{ route('admin.profile.toggle-newsletter') }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            newsletter_opt_in: isChecked ? 1 : 0
+        })
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        console.log('Response headers:', [...response.headers.entries()]);
+        
+        // Clone response to read it twice
+        return response.clone().text().then(text => {
+            console.log('Raw response:', text);
+            try {
+                const json = JSON.parse(text);
+                return {
+                    ok: response.ok,
+                    status: response.status,
+                    data: json
+                };
+            } catch (e) {
+                console.error('JSON parse error:', e);
+                return {
+                    ok: false,
+                    status: response.status,
+                    data: { error: 'Invalid JSON response', raw: text }
+                };
+            }
+        });
+    })
+    .then(({ok, status, data}) => {
+        console.log('Parsed response:', data);
+        
+        if (!ok) {
+            console.error('Request failed:', {
+                status: status,
+                errors: data.errors,
+                message: data.message
             });
-    }
+            
+            // Show specific validation errors if available
+            if (data.errors) {
+                Object.keys(data.errors).forEach(field => {
+                    console.error(`Validation error for ${field}:`, data.errors[field]);
+                });
+            }
+            
+            showToast(data.message || 'Failed to update newsletter preference', 'error');
+            checkbox.checked = !isChecked;
+            return;
+        }
+        
+        if (data.success) {
+            showToast(
+                isChecked ? 'Subscribed to newsletter!' : 'Unsubscribed from newsletter',
+                'success'
+            );
+        } else {
+            showToast('Failed to update newsletter preference', 'error');
+            checkbox.checked = !isChecked;
+        }
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+        showToast('An error occurred: ' + error.message, 'error');
+        checkbox.checked = !isChecked;
+    });
+}
 </script>

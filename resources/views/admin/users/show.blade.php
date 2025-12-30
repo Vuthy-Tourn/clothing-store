@@ -73,7 +73,7 @@
                                             : 'bg-gray-100 text-gray-800')) }}">
                                     <i
                                         class="fas fa-{{ $user->account_type === 'admin' ? 'crown' : ($user->account_type === 'staff' ? 'user-tie' : ($user->account_type === 'vendor' ? 'store' : 'user')) }} mr-1 text-xs"></i>
-                                    {{ __('admin.users.account_types.' . $user->account_type) }}
+                                    {{ ucfirst($user->account_type) }}
                                 </span>
                                 @if ($user->email_verified_at)
                                     <span

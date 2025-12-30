@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Admin Profile')
+@section('title', __('admin.profile.title'))
 
 @section('content')
     <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8">
@@ -9,14 +9,14 @@
             <div class="mb-8">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h1 class="text-3xl font-bold text-gray-900">Admin Profile</h1>
-                        <p class="text-gray-600 mt-2">Manage your administrator account</p>
+                        <h1 class="text-3xl font-bold text-gray-900">{{ __('admin.profile.title') }}</h1>
+                        <p class="text-gray-600 mt-2">{{ __('admin.profile.subtitle') }}</p>
                     </div>
                     <div class="flex items-center space-x-3">
                         <button onclick="showProfileModal()"
                             class="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-Ocean to-Ocean/80 text-white rounded-xl hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5">
                             <i class="fas fa-edit mr-2"></i>
-                            Edit Profile
+                            {{ __('admin.profile.edit_profile') }}
                         </button>
                     </div>
                 </div>
@@ -28,6 +28,7 @@
                 {{-- @include('admin.profile.partials.addresses') --}}
             </div>
         </div>
+    </div>
     </div>
 
     <!-- Include Modals -->

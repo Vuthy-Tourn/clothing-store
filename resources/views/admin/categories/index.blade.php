@@ -258,7 +258,7 @@
                             <div>
                                 <label class="block text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-sort-numeric-up mr-2 text-green-600"></i>
-                                    Display Order
+                                    {{ __('admin.categories.modal.display_order') }} *
                                 </label>
                                 <input type="number" name="sort_order"
                                     value="{{ old('sort_order', $categories->count()) }}" min="0"
@@ -273,11 +273,11 @@
                             <div>
                                 <label class="block text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-align-left mr-2 text-indigo-600"></i>
-                                    Description
+                                    {{ __('admin.categories.modal.description_label') }}
                                 </label>
                                 <textarea name="description" rows="4"
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 resize-none transition-all duration-200 shadow-sm"
-                                    placeholder="Brief description of this category...">{{ old('description') }}</textarea>
+                                    placeholder="{{ __('admin.categories.modal.description_placeholder') }}">{{ old('description') }}</textarea>
                                 @error('description')
                                     <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                                 @enderror

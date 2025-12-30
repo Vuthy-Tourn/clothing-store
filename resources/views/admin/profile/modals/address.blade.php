@@ -4,8 +4,8 @@
         <div class="p-6 border-b border-gray-200">
             <div class="flex items-center justify-between">
                 <div>
-                    <h3 class="text-xl font-bold text-gray-900" id="addressModalTitle">Add New Address</h3>
-                    <p class="text-gray-600 mt-1">Fill in your address details</p>
+                    <h3 class="text-xl font-bold text-gray-900" id="addressModalTitle">{{ __('admin.profile.address_modal.add_title') }}</h3>
+                    <p class="text-gray-600 mt-1">{{ __('admin.profile.address_modal.subtitle') }}</p>
                 </div>
                 <button onclick="hideAddressModal()"
                     class="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100">
@@ -20,7 +20,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Type Selection -->
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-3">Address Type</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-3">{{ __('admin.profile.address_modal.address_type') }}</label>
                     <div class="grid grid-cols-2 gap-4">
                         <label class="relative">
                             <input type="radio" name="type" value="shipping" class="sr-only peer" checked>
@@ -31,8 +31,8 @@
                                         <i class="fas fa-truck text-blue-600"></i>
                                     </div>
                                     <div>
-                                        <h4 class="font-medium text-gray-900">Shipping Address</h4>
-                                        <p class="text-sm text-gray-600">For product deliveries</p>
+                                        <h4 class="font-medium text-gray-900">{{ __('admin.profile.address_modal.shipping_address') }}</h4>
+                                        <p class="text-sm text-gray-600">{{ __('admin.profile.address_modal.shipping_desc') }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -47,8 +47,8 @@
                                         <i class="fas fa-credit-card text-purple-600"></i>
                                     </div>
                                     <div>
-                                        <h4 class="font-medium text-gray-900">Billing Address</h4>
-                                        <p class="text-sm text-gray-600">For invoices and payments</p>
+                                        <h4 class="font-medium text-gray-900">{{ __('admin.profile.address_modal.billing_address') }}</h4>
+                                        <p class="text-sm text-gray-600">{{ __('admin.profile.address_modal.billing_desc') }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -59,17 +59,17 @@
                 <!-- Address Name -->
                 <div class="md:col-span-2">
                     <label for="address_name" class="block text-sm font-medium text-gray-700 mb-2">
-                        Address Nickname (Optional)
+                        {{ __('admin.profile.address_modal.address_nickname') }}
                     </label>
                     <input type="text" id="address_name" name="address_name"
                         class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300"
-                        placeholder="e.g., Home, Office">
+                        placeholder="{{ __('admin.profile.address_modal.nickname_placeholder') }}">
                 </div>
 
                 <!-- Full Name -->
                 <div>
                     <label for="full_name" class="block text-sm font-medium text-gray-700 mb-2">
-                        Full Name <span class="text-red-500">*</span>
+                        {{ __('admin.profile.address_modal.full_name') }} <span class="text-red-500">{{ __('admin.profile.address_modal.required') }}</span>
                     </label>
                     <input type="text" id="full_name" name="full_name" required
                         class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300">
@@ -78,7 +78,7 @@
                 <!-- Phone -->
                 <div>
                     <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
-                        Phone Number <span class="text-red-500">*</span>
+                        {{ __('admin.profile.address_modal.phone_number') }} <span class="text-red-500">{{ __('admin.profile.address_modal.required') }}</span>
                     </label>
                     <input type="text" id="phone" name="phone" required
                         class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300">
@@ -87,7 +87,7 @@
                 <!-- Address Line 1 -->
                 <div class="md:col-span-2">
                     <label for="address_line1" class="block text-sm font-medium text-gray-700 mb-2">
-                        Address Line 1 <span class="text-red-500">*</span>
+                        {{ __('admin.profile.address_modal.address_line1') }} <span class="text-red-500">{{ __('admin.profile.address_modal.required') }}</span>
                     </label>
                     <input type="text" id="address_line1" name="address_line1" required
                         class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300">
@@ -96,7 +96,7 @@
                 <!-- Address Line 2 -->
                 <div class="md:col-span-2">
                     <label for="address_line2" class="block text-sm font-medium text-gray-700 mb-2">
-                        Address Line 2 (Optional)
+                        {{ __('admin.profile.address_modal.address_line2') }}
                     </label>
                     <input type="text" id="address_line2" name="address_line2"
                         class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300">
@@ -105,7 +105,7 @@
                 <!-- City -->
                 <div>
                     <label for="city" class="block text-sm font-medium text-gray-700 mb-2">
-                        City <span class="text-red-500">*</span>
+                        {{ __('admin.profile.address_modal.city') }} <span class="text-red-500">{{ __('admin.profile.address_modal.required') }}</span>
                     </label>
                     <input type="text" id="city" name="city" required
                         class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300">
@@ -114,7 +114,7 @@
                 <!-- State -->
                 <div>
                     <label for="state" class="block text-sm font-medium text-gray-700 mb-2">
-                        State <span class="text-red-500">*</span>
+                        {{ __('admin.profile.address_modal.state') }} <span class="text-red-500">{{ __('admin.profile.address_modal.required') }}</span>
                     </label>
                     <input type="text" id="state" name="state" required
                         class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300">
@@ -123,7 +123,7 @@
                 <!-- Zip Code -->
                 <div>
                     <label for="zip_code" class="block text-sm font-medium text-gray-700 mb-2">
-                        ZIP Code <span class="text-red-500">*</span>
+                        {{ __('admin.profile.address_modal.zip_code') }} <span class="text-red-500">{{ __('admin.profile.address_modal.required') }}</span>
                     </label>
                     <input type="text" id="zip_code" name="zip_code" required
                         class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300">
@@ -132,17 +132,17 @@
                 <!-- Country -->
                 <div>
                     <label for="country" class="block text-sm font-medium text-gray-700 mb-2">
-                        Country
+                        {{ __('admin.profile.address_modal.country') }}
                     </label>
                     <select id="country" name="country"
                         class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-Ocean focus:border-transparent transition-all duration-300">
-                        <option value="United States" selected>United States</option>
-                        <option value="Canada">Canada</option>
-                        <option value="United Kingdom">United Kingdom</option>
-                        <option value="Australia">Australia</option>
-                        <option value="Germany">Germany</option>
-                        <option value="France">France</option>
-                        <option value="Japan">Japan</option>
+                        <option value="United States" selected>{{ __('admin.profile.countries.united_states') }}</option>
+                        <option value="Canada">{{ __('admin.profile.countries.canada') }}</option>
+                        <option value="United Kingdom">{{ __('admin.profile.countries.united_kingdom') }}</option>
+                        <option value="Australia">{{ __('admin.profile.countries.australia') }}</option>
+                        <option value="Germany">{{ __('admin.profile.countries.germany') }}</option>
+                        <option value="France">{{ __('admin.profile.countries.france') }}</option>
+                        <option value="Japan">{{ __('admin.profile.countries.japan') }}</option>
                     </select>
                 </div>
 
@@ -151,7 +151,7 @@
                     <input type="checkbox" id="is_default" name="is_default"
                         class="w-4 h-4 text-Ocean rounded focus:ring-Ocean focus:ring-2">
                     <label for="is_default" class="ml-2 text-sm font-medium text-gray-700">
-                        Set as default address
+                        {{ __('admin.profile.address_modal.set_as_default') }}
                     </label>
                 </div>
             </div>
@@ -159,11 +159,11 @@
             <div class="mt-8 flex justify-end space-x-3">
                 <button type="button" onclick="hideAddressModal()"
                     class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-xl transition-colors duration-300">
-                    Cancel
+                    {{ __('admin.profile.address_modal.cancel') }}
                 </button>
                 <button type="submit" id="addressSubmitBtn"
                     class="px-4 py-2 bg-gradient-to-r from-Ocean to-Ocean/80 text-white rounded-xl hover:shadow-lg transition-all duration-300">
-                    Save Address
+                    {{ __('admin.profile.address_modal.save_address') }}
                 </button>
             </div>
         </form>

@@ -238,6 +238,7 @@ return [
         
         'table' => [
             'all_categories' => 'All Categories',
+            'all_admin_categories' => 'All Categories',
             'manage_organize' => 'Manage and organize your product categories',
             'arrange_order' => 'Arrange Order',
             'search_placeholder' => 'Search by name, description, or slug...',
@@ -264,6 +265,7 @@ return [
             'showing' => 'Showing',
             'of' => 'of',
             'categories_count' => 'categories',
+            
         ],
         
         'sort' => [
@@ -1521,4 +1523,212 @@ return [
             'export_format_required' => 'Please select export format',
         ],
     ],
+    'profile' => [
+        'title' => 'Admin Profile',
+        'subtitle' => 'Manage your administrator account',
+        'edit_profile' => 'Edit Profile',
+    
+    // Profile Card
+    'profile_card' => [
+        'days_active' => 'Days Active',
+        'points' => 'Points',
+        'profile_complete' => 'Profile Complete',
+        'fields_completed' => ':filled of :total fields completed',
+        'account_stats' => 'Account Stats',
+        'user_role' => 'User Role',
+        'status' => 'Status',
+        'verified' => 'Verified',
+        'email_verified' => 'Email Verified',
+        'active' => 'Active',
+        'inactive' => 'Inactive',
+        'yes' => 'Yes',
+        'no' => 'No',
+    ],
+    
+    // Personal Information
+    'personal_info' => [
+        'title' => 'Personal Information',
+        'full_name' => 'Full Name',
+        'email_address' => 'Email Address',
+        'phone_number' => 'Phone Number',
+        'address' => 'Address',
+        'date_of_birth' => 'Date of Birth',
+        'gender' => 'Gender',
+        'not_provided' => 'Not provided',
+        'not_specified' => 'Not specified',
+        'verified' => 'Verified',
+        'member_since' => 'Member Since',
+        'account_updated' => 'Account Updated',
+    ],
+    
+    // Account Settings
+    'account_settings' => [
+        'title' => 'Account Settings',
+        'language_preference' => 'Language Preference',
+        'language_subtitle' => 'Switch between languages',
+        'newsletter_subscription' => 'Newsletter Subscription',
+        'newsletter_subtitle' => 'Receive admin updates and notifications',
+        'password_security' => 'Password Security',
+        'last_changed' => 'Last changed :time',
+        'change_password' => 'Change Password',
+    ],
+    
+    // Addresses
+    'addresses' => [
+        'title' => 'My Addresses',
+        'add_address' => 'Add Address',
+        'add_first_address' => 'Add Your First Address',
+        'no_addresses' => 'No Addresses Yet',
+        'no_addresses_desc' => 'Add your first address to get started',
+        'shipping' => 'Shipping',
+        'billing' => 'Billing',
+        'default' => 'Default',
+        'set_as_default' => 'Set as Default',
+        'edit' => 'Edit',
+        'delete' => 'Delete',
+    ],
+    
+    // Edit Profile Modal
+    'edit_modal' => [
+        'title' => 'Edit Profile',
+        'subtitle' => 'Update your personal information',
+        'full_name' => 'Full Name',
+        'email_address' => 'Email Address',
+        'phone_number' => 'Phone Number',
+        'phone_placeholder' => '+1 (555) 123-4567',
+        'date_of_birth' => 'Date of Birth',
+        'gender' => 'Gender',
+        'select_gender' => 'Select Gender',
+        'male' => 'Male',
+        'female' => 'Female',
+        'other' => 'Other',
+        'address_line1' => 'Address Line 1',
+        'address_line1_placeholder' => 'Street address, P.O. box, etc.',
+        'address_line2' => 'Address Line 2',
+        'address_line2_placeholder' => 'Apartment, suite, unit, building, floor, etc.',
+        'city' => 'City',
+        'state' => 'State',
+        'zip_code' => 'ZIP Code',
+        'country' => 'Country',
+        'select_country' => 'Select Country',
+        'profile_picture' => 'Profile Picture',
+        'upload_new_photo' => 'Upload New Photo',
+        'remove_current_photo' => 'Remove current photo',
+        'max_file_size' => 'Max file size: 5MB. Allowed: JPG, PNG, GIF, WEBP',
+        'preview' => 'Preview:',
+        'newsletter_opt_in' => 'Subscribe to newsletter updates',
+        'cancel' => 'Cancel',
+        'save_changes' => 'Save Changes',
+        'verified' => 'Verified',
+        'required' => '*',
+    ],
+    
+    // Password Modal
+    'password_modal' => [
+        'title' => 'Change Password',
+        'subtitle' => 'Update your account password',
+        'current_password' => 'Current Password',
+        'new_password' => 'New Password',
+        'confirm_password' => 'Confirm New Password',
+        'password_hint' => 'Must be at least 8 characters',
+        'cancel' => 'Cancel',
+        'update_password' => 'Update Password',
+        'required' => '*',
+    ],
+    
+    // Address Modal
+    'address_modal' => [
+        'add_title' => 'Add New Address',
+        'edit_title' => 'Edit Address',
+        'subtitle' => 'Fill in your address details',
+        'address_type' => 'Address Type',
+        'shipping_address' => 'Shipping Address',
+        'shipping_desc' => 'For product deliveries',
+        'billing_address' => 'Billing Address',
+        'billing_desc' => 'For invoices and payments',
+        'address_nickname' => 'Address Nickname (Optional)',
+        'nickname_placeholder' => 'e.g., Home, Office',
+        'full_name' => 'Full Name',
+        'phone_number' => 'Phone Number',
+        'address_line1' => 'Address Line 1',
+        'address_line2' => 'Address Line 2 (Optional)',
+        'city' => 'City',
+        'state' => 'State',
+        'zip_code' => 'ZIP Code',
+        'country' => 'Country',
+        'set_as_default' => 'Set as default address',
+        'cancel' => 'Cancel',
+        'save_address' => 'Save Address',
+        'required' => '*',
+    ],
+    
+    // Activity Log Modal
+    'activity_modal' => [
+        'title' => 'Activity Log',
+        'subtitle' => 'Recent account activities',
+        'no_activity' => 'No Activity Yet',
+        'no_activity_desc' => 'Your activities will appear here',
+        'security_note' => 'Activities are logged for security purposes',
+        'close' => 'Close',
+    ],
+    
+    // Activity Types
+    'activities' => [
+        'profile_updated' => 'Profile Updated',
+        'password_changed' => 'Password Changed',
+        'login' => 'Login',
+        'dashboard_access' => 'Dashboard Access',
+        'newsletter_update' => 'Newsletter Update',
+        'system_activity' => 'System Activity',
+    ],
+    
+    // Security Settings Modal
+    'security_modal' => [
+        'title' => 'Security Settings',
+        'subtitle' => 'Manage your account security',
+        'two_factor_auth' => 'Two-Factor Authentication',
+        'two_factor_desc' => 'Add an extra layer of security',
+        'login_notifications' => 'Login Notifications',
+        'login_notifications_desc' => 'Get alerts for new logins',
+        'session_timeout' => 'Session Timeout (minutes)',
+        'auto_logout_hint' => 'Automatically log out after inactivity',
+        'password_info' => 'Password Information',
+        'last_changed' => 'Last changed: :time',
+        'cancel' => 'Cancel',
+        'save_settings' => 'Save Settings',
+        '15_minutes' => '15 minutes',
+        '30_minutes' => '30 minutes (Default)',
+        '1_hour' => '1 hour',
+        '2_hours' => '2 hours',
+        '8_hours' => '8 hours',
+    ],
+    
+    // Messages
+    'messages' => [
+        'profile_updated' => 'Profile updated successfully!',
+        'password_updated' => 'Password updated successfully!',
+        'address_added' => 'Address added successfully!',
+        'address_updated' => 'Address updated successfully!',
+        'address_deleted' => 'Address deleted successfully!',
+        'default_address_set' => 'Default address updated successfully!',
+        'newsletter_subscribed' => 'Subscribed to newsletter!',
+        'newsletter_unsubscribed' => 'Unsubscribed from newsletter',
+        'update_failed' => 'Update failed',
+        'error_occurred' => 'An error occurred. Please try again.',
+        'processing' => 'Processing...',
+        'confirm_delete_address' => 'Are you sure you want to delete this address?',
+    ],
+    
+    // Countries
+    'countries' => [
+        'cambodia' => 'Cambodia',
+        'united_states' => 'United States',
+        'canada' => 'Canada',
+        'united_kingdom' => 'United Kingdom',
+        'australia' => 'Australia',
+        'germany' => 'Germany',
+        'france' => 'France',
+        'japan' => 'Japan',
+    ],
+],
 ];
