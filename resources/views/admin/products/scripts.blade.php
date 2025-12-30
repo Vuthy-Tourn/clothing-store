@@ -675,14 +675,14 @@
         open: function(type, id, name) {
             // Use SafeSwal instead of Swal
             SafeSwal.fire({
-                title: 'Are you sure?',
+                title: '{{ __('admin.products.delete.title') }}',
                 text: `You are about to delete "${name}". This action cannot be undone!`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel'
+                confirmButtonText: '{{ __('admin.categories.delete.button_no_products') }}',
+                cancelButtonText: '{{ __('admin.products.delete.cancel') }}'
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Create form and submit

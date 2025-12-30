@@ -923,17 +923,17 @@
             // Delete function with SweetAlert2
             function deleteCarousel(id, title) {
                 Swal.fire({
-                    title: 'Delete Banner?',
+                    title: '{{ __('admin.carousels.delete.title') }}',
                     html: `<div class="text-left">
                 <p class="text-gray-900 font-semibold text-lg mb-2">"${title}"</p>
-                <p class="text-gray-700">This banner will be permanently removed from your store. This action cannot be undone.</p>
+                <p class="text-gray-700">{{ __('admin.carousels.delete.message') }}</p>
             </div>`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#dc2626',
                     cancelButtonColor: '#6b7280',
-                    confirmButtonText: 'Yes, delete it',
-                    cancelButtonText: 'Cancel',
+                    confirmButtonText: '{{ __('admin.carousels.delete.yes_delete') }}',
+                    cancelButtonText: '{{ __('admin.carousels.delete.cancel') }}',
                     reverseButtons: true,
                     customClass: {
                         popup: 'rounded-2xl',

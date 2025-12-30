@@ -233,7 +233,7 @@
                 <div class="relative">
                     <input type="text" id="search-subscribers"
                         class="border border-gray-300 rounded-lg px-4 py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-64"
-                        placeholder="Search subscribers...">
+                        placeholder="{{ __('admin.emails.list.search_placeholder') }}">
                     <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                 </div>
                 <button onclick="exportSubscribers()"
@@ -542,15 +542,15 @@
             if (!subject || !message) {
                 Swal.fire({
                     icon: 'warning',
-                    title: 'Missing Content',
-                    text: 'Please fill in subject and message fields',
+                    title: '{{ __('admin.emails.messages.missing_content') }}',
+                    text: '{{ __('admin.emails.messages.missing_content_desc') }}',
                     confirmButtonColor: '#3b82f6'
                 });
                 return;
             }
 
             Swal.fire({
-                title: 'Email Preview',
+                title: '{{ __('admin.emails.modals.preview.title') }}',
                 html: `
                 <div style="text-align: left; max-height: 60vh; overflow-y: auto; font-family: sans-serif;">
                     <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
@@ -573,8 +573,8 @@
         // Clear form
         function clearForm() {
             Swal.fire({
-                title: 'Clear Form?',
-                text: 'This will clear all entered content',
+                title: '{{ __('admin.emails.modals.clear_form.title') }}',
+                text: '{{ __('admin.emails.modals.clear_form.text') }}',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#ef4444',
@@ -703,7 +703,7 @@
         // Send test email modal
         function showTestEmailModal() {
             Swal.fire({
-                title: 'Send Test Email',
+                title: '{{ __('admin.emails.modals.test_email.title') }}',
                 html: `
                 <div class="text-left space-y-4">
                     <div>
@@ -714,13 +714,13 @@
                                value="{{ auth()->user()->email ?? '' }}">
                     </div>
                     <div class="text-sm text-gray-500">
-                        <p>This will send a test email with the content from the form above.</p>
+                        <p>{{ __('admin.emails.modals.test_email.description') }}</p>
                     </div>
                 </div>
             `,
                 showCancelButton: true,
-                confirmButtonText: 'Send Test',
-                cancelButtonText: 'Cancel',
+                confirmButtonText: '{{ __('admin.emails.modals.test_email.send') }}',
+                cancelButtonText: '{{ __('admin.emails.modals.test_email.cancel') }}',
                 confirmButtonColor: '#3b82f6',
                 preConfirm: () => {
                     const email = document.getElementById('test-email').value;
@@ -822,14 +822,14 @@
             }
 
             Swal.fire({
-                title: 'Send Test Email?',
+                title: '{{ __('admin.emails.confirmations.send_test.title') }}',
                 html: `Send test to <strong>${email}</strong>?`,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3b82f6',
                 cancelButtonColor: '#6b7280',
-                confirmButtonText: 'Send Test',
-                cancelButtonText: 'Cancel'
+                confirmButtonText: '{{ __('admin.emails.confirmations.send_test.confirm') }}',
+                cancelButtonText: '{{ __('admin.emails.confirmations.send_test.cancel') }}'
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
@@ -876,14 +876,14 @@
         // Export subscribers
         async function exportSubscribers() {
             const result = await Swal.fire({
-                title: 'Export Format',
-                text: 'Choose export format',
+                title: '{{ __('admin.emails.confirmations.export.title') }}',
+                text: '{{ __('admin.emails.confirmations.export.message') }}',
                 icon: 'question',
                 showCancelButton: true,
                 showDenyButton: true,
                 confirmButtonText: 'CSV',
                 denyButtonText: 'Excel',
-                cancelButtonText: 'Cancel',
+                cancelButtonText: '{{ __('admin.emails.confirmations.export.cancel') }}',
                 confirmButtonColor: '#10b981',
                 denyButtonColor: '#3b82f6'
             });
@@ -921,14 +921,14 @@
         // Remove subscriber with confirmation
         async function confirmRemoveSubscriber(id, email) {
             const result = await Swal.fire({
-                title: 'Remove Subscriber?',
+                title: '{{ __('admin.emails.confirmations.remove_subscriber.title') }}',
                 html: `Are you sure you want to remove <strong>${email}</strong> from the newsletter?<br><br><small class="text-gray-500">They will be marked as unsubscribed.</small>`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#ef4444',
                 cancelButtonColor: '#6b7280',
-                confirmButtonText: 'Yes, remove!',
-                cancelButtonText: 'Cancel',
+                confirmButtonText: '{{ __('admin.emails.confirmations.remove_subscriber.confirm') }}',
+                cancelButtonText: '{{ __('admin.emails.confirmations.remove_subscriber.cancel') }}',
                 reverseButtons: true
             });
 
@@ -1058,7 +1058,7 @@
         // Add subscriber modal
         function showAddSubscriberModal() {
             Swal.fire({
-                title: 'Add Subscriber',
+                title: '{{ __('admin.emails.modals.add_subscriber.title') }}',
                 html: `
                 <div class="text-left space-y-4">
                     <div>
@@ -1083,8 +1083,8 @@
                 </div>
             `,
                 showCancelButton: true,
-                confirmButtonText: 'Add Subscriber',
-                cancelButtonText: 'Cancel',
+                confirmButtonText: '{{ __('admin.emails.modals.add_subscriber.add') }}',
+                cancelButtonText: '{{ __('admin.emails.modals.add_subscriber.cancel') }}',
                 confirmButtonColor: '#3b82f6',
                 preConfirm: () => {
                     const email = document.getElementById('new-email').value;
@@ -1092,12 +1092,12 @@
                     const sendWelcome = document.getElementById('send-welcome').checked;
 
                     if (!email) {
-                        Swal.showValidationMessage('Please enter an email address');
+                        Swal.showValidationMessage('{{ __('admin.emails.messages.enter_email') }}');
                         return false;
                     }
 
                     if (!/^\S+@\S+\.\S+$/.test(email)) {
-                        Swal.showValidationMessage('Please enter a valid email address');
+                        Swal.showValidationMessage('{{ __('admin.emails.messages.valid_email') }}');
                         return false;
                     }
 
@@ -1168,7 +1168,7 @@
             const user = row.querySelector('td:nth-child(4)').textContent.trim();
 
             Swal.fire({
-                title: 'Subscriber Details',
+                title: '{{ __('admin.emails.modals.subscriber_info.title') }}',
                 html: `
                 <div class="text-left space-y-4">
                     <div class="flex items-center space-x-3">
@@ -1184,25 +1184,25 @@
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="bg-gray-50 p-3 rounded-lg">
-                            <p class="text-sm text-gray-500">Subscribed</p>
+                            <p class="text-sm text-gray-500">{{ __('admin.emails.modals.subscriber_info.subscribed') }}</p>
                             <p class="font-medium">${date}</p>
                             <p class="text-sm text-gray-500">${time}</p>
                         </div>
                         <div class="bg-gray-50 p-3 rounded-lg">
-                            <p class="text-sm text-gray-500">User</p>
+                            <p class="text-sm text-gray-500">{{ __('admin.emails.modals.subscriber_info.user') }}</p>
                             <p class="font-medium">${user}</p>
                         </div>
                     </div>
                     <div class="bg-blue-50 p-3 rounded-lg">
-                        <p class="text-sm font-medium text-blue-800 mb-2">Quick Actions</p>
+                        <p class="text-sm font-medium text-blue-800 mb-2">{{ __('admin.emails.modals.subscriber_info.quick_actions') }}</p>
                         <div class="flex space-x-2">
-                            <button onclick="sendTestToSubscriber('${email}')" class="text-sm bg-blue-600 text-white hover:bg-blue-700 px-3 py-1 rounded">Send Test</button>
-                            <button onclick="confirmRemoveSubscriber('${id}', '${email}')" class="text-sm bg-red-600 text-white hover:bg-red-700 px-3 py-1 rounded">Remove</button>
+                            <button onclick="sendTestToSubscriber('${email}')" class="text-sm bg-blue-600 text-white hover:bg-blue-700 px-3 py-1 rounded">{{ __('admin.emails.modals.subscriber_info.send_test') }}</button>
+                            <button onclick="confirmRemoveSubscriber('${id}', '${email}')" class="text-sm bg-red-600 text-white hover:bg-red-700 px-3 py-1 rounded">{{ __('admin.emails.modals.subscriber_info.remove') }}</button>
                         </div>
                     </div>
                 </div>
             `,
-                confirmButtonText: 'Close',
+                confirmButtonText: '{{ __('admin.emails.modals.subscriber_info.close') }}',
                 confirmButtonColor: '#3b82f6'
             });
         }

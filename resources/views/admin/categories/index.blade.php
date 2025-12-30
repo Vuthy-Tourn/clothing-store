@@ -919,7 +919,7 @@
                 }
 
                 Swal.fire({
-                    title: productCount > 0 ? 'Category in Use!' : 'Delete Category?',
+                    title: productCount > 0 ? '{{ __('admin.categories.delete.title_in_use') }}' : '{{ __('admin.categories.delete.title') }}',
                     html: `<div class="text-left">
                 <div class="w-16 h-16 rounded-full ${productCount > 0 ? 'bg-gradient-to-br from-red-50 to-red-100' : 'bg-gradient-to-br from-yellow-50 to-yellow-100'} flex items-center justify-center mx-auto mb-4">
                     <i class="fas fa-trash ${productCount > 0 ? 'text-red-500' : 'text-yellow-500'} text-2xl"></i>
@@ -932,8 +932,8 @@
                     showCancelButton: true,
                     confirmButtonColor: productCount > 0 ? '#dc2626' : '#6b7280',
                     cancelButtonColor: '#6b7280',
-                    confirmButtonText: productCount > 0 ? 'Move Products & Delete' : 'Yes, delete it',
-                    cancelButtonText: 'Cancel',
+                    confirmButtonText: productCount > 0 ? '{{ __('admin.categories.delete.moving_products') }}' : '{{ __('admin.categories.delete.button_no_products') }}',
+                    cancelButtonText: '{{ __('admin.categories.delete.cancel') }}',
                     reverseButtons: true,
                     customClass: {
                         popup: 'rounded-2xl',
