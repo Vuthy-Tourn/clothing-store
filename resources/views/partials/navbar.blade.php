@@ -15,10 +15,8 @@
                     $menCategories = $categories->where('gender', 'men')->sortBy('sort_order');
                 @endphp
                 @if ($menCategories->count() > 0)
-                    <div class="relative group" id="menCategory" x-data="{ open: false }" 
-                         @mouseenter="open = true" 
-                         @mouseleave="open = false"
-                         @keydown.escape="open = false">
+                    <div class="relative group" id="menCategory" x-data="{ open: false }" @mouseenter="open = true"
+                        @mouseleave="open = false" @keydown.escape="open = false">
                         <a href="{{ url('men') }}"
                             class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10 {{ request()->is('men') || request()->is('men/*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">
                             {{ __('messages.men') }}
@@ -26,16 +24,14 @@
                         <!-- Mega Dropdown with invisible spacer -->
                         <div class="absolute left-0 w-full h-4" style="top: 100%;"></div>
                         <!-- Mega Dropdown -->
-                        <div x-show="open" 
-                             x-cloak
-                             x-transition:enter="transition ease-out duration-200"
-                             x-transition:enter-start="opacity-0 translate-y-1"
-                             x-transition:enter-end="opacity-100 translate-y-0"
-                             x-transition:leave="transition ease-in duration-150"
-                             x-transition:leave-start="opacity-100 translate-y-0"
-                             x-transition:leave-end="opacity-0 translate-y-1"
-                             class="absolute left-0 mt-4 w-screen max-w-6xl bg-white shadow-lg rounded-lg z-50 border border-gray-100 ml-48"
-                             style="left: 50%; transform: translateX(-50%);">
+                        <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 translate-y-1"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 translate-y-1"
+                            class="absolute left-0 mt-4 w-screen max-w-6xl bg-white shadow-lg rounded-lg z-50 border border-gray-100 ml-48"
+                            style="left: 50%; transform: translateX(-50%);">
                             <div class="px-8 py-6 grid grid-cols-3 gap-8">
                                 <!-- Clothing Section -->
                                 <div>
@@ -126,10 +122,8 @@
                     $womenCategories = $categories->where('gender', 'women')->sortBy('sort_order');
                 @endphp
                 @if ($womenCategories->count() > 0)
-                    <div class="relative group" id="womenCategory" x-data="{ open: false }" 
-                         @mouseenter="open = true" 
-                         @mouseleave="open = false"
-                         @keydown.escape="open = false">
+                    <div class="relative group" id="womenCategory" x-data="{ open: false }" @mouseenter="open = true"
+                        @mouseleave="open = false" @keydown.escape="open = false">
                         <a href="{{ url('women') }}"
                             class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10 {{ request()->is('women') || request()->is('women/*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">
                             {{ __('messages.women') }}
@@ -137,16 +131,14 @@
                         <!-- Invisible spacer to bridge the gap -->
                         <div class="absolute left-0 w-full h-4" style="top: 100%;"></div>
                         <!-- Mega Dropdown -->
-                        <div x-show="open" 
-                             x-cloak
-                             x-transition:enter="transition ease-out duration-200"
-                             x-transition:enter-start="opacity-0 translate-y-1"
-                             x-transition:enter-end="opacity-100 translate-y-0"
-                             x-transition:leave="transition ease-in duration-150"
-                             x-transition:leave-start="opacity-100 translate-y-0"
-                             x-transition:leave-end="opacity-0 translate-y-1"
-                             class="absolute left-0 mt-4 w-screen max-w-6xl bg-white shadow-lg rounded-lg z-50 border border-gray-100 ml-36"
-                             style="left: 50%; transform: translateX(-50%);">
+                        <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 translate-y-1"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 translate-y-1"
+                            class="absolute left-0 mt-4 w-screen max-w-6xl bg-white shadow-lg rounded-lg z-50 border border-gray-100 ml-36"
+                            style="left: 50%; transform: translateX(-50%);">
                             <div class="px-8 py-6 grid grid-cols-3 gap-8">
                                 <!-- Clothing Section -->
                                 <div>
@@ -237,10 +229,8 @@
                     $kidsCategories = $categories->where('gender', 'unisex')->sortBy('sort_order');
                 @endphp
                 @if ($kidsCategories->count() > 0)
-                    <div class="relative group" id="kidsCategory" x-data="{ open: false }" 
-                         @mouseenter="open = true" 
-                         @mouseleave="open = false"
-                         @keydown.escape="open = false">
+                    <div class="relative group" id="kidsCategory" x-data="{ open: false }" @mouseenter="open = true"
+                        @mouseleave="open = false" @keydown.escape="open = false">
                         <a href="{{ url('kids') }}"
                             class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10 {{ request()->is('kids') || request()->is('kids/*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">
                             {{ __('messages.kids') }}
@@ -248,16 +238,14 @@
                         <!-- Invisible spacer to bridge the gap -->
                         <div class="absolute left-0 w-full h-4" style="top: 100%;"></div>
                         <!-- Mega Dropdown -->
-                        <div x-show="open" 
-                             x-cloak
-                             x-transition:enter="transition ease-out duration-200"
-                             x-transition:enter-start="opacity-0 translate-y-1"
-                             x-transition:enter-end="opacity-100 translate-y-0"
-                             x-transition:leave="transition ease-in duration-150"
-                             x-transition:leave-start="opacity-100 translate-y-0"
-                             x-transition:leave-end="opacity-0 translate-y-1"
-                             class="absolute left-0 mt-4 w-screen max-w-6xl bg-white shadow-lg rounded-lg z-50 border border-gray-100  ml-36"
-                             style="left: 50%; transform: translateX(-50%);">
+                        <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 translate-y-1"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 translate-y-1"
+                            class="absolute left-0 mt-4 w-screen max-w-6xl bg-white shadow-lg rounded-lg z-50 border border-gray-100  ml-36"
+                            style="left: 50%; transform: translateX(-50%);">
                             <div class="px-8 py-6 grid grid-cols-3 gap-8">
                                 <!-- Boys Section -->
                                 <div>
@@ -432,9 +420,9 @@
                                 {{ __('messages.my_orders') }}
                             </a>
                             <div class="border-t border-gray-100 mt-1">
-                                <form method="POST" action="{{ route('logout') }}">
+                                <form method="POST" action="{{ route('logout') }}" id="logoutForm">
                                     @csrf
-                                    <button type="submit"
+                                    <button type="button" onclick="confirmLogout(event)"
                                         class="flex items-center w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200 group">
                                         <i
                                             class="fas fa-sign-out-alt mr-3 text-gray-400 group-hover:text-gray-600 transition-colors duration-200"></i>
@@ -529,10 +517,10 @@
                                 class="block text-sm text-gray-700 hover:text-gray-900 py-1">
                                 <i class="fas fa-shopping-bag mr-2 text-gray-400"></i> {{ __('messages.my_orders') }}
                             </a>
-                            <form method="POST" action="{{ route('logout') }}">
+                            <form method="POST" action="{{ route('logout') }}" id="logoutFormMobile">
                                 @csrf
-                                <button type="submit"
-                                    class="block w-full text-left text-sm text-gray-700 hover:text-gray-900 py-1">
+                                <button type="button" onclick="confirmLogout(event)"
+                                    class="block w-full text-left text-sm text-gray-700 hover:text-gray-900 py-2">
                                     <i class="fas fa-sign-out-alt mr-2 text-gray-400"></i> {{ __('messages.sign_out') }}
                                 </button>
                             </form>
@@ -727,13 +715,13 @@
     [x-cloak] {
         display: none !important;
     }
-    
+
     /* Fix dropdown positioning */
     .relative.group .absolute {
         left: 50% !important;
         transform: translateX(-50%) !important;
     }
-    
+
     /* Ensure smooth transitions */
     .navbar {
         will-change: transform;
@@ -741,6 +729,8 @@
         -webkit-font-smoothing: antialiased;
     }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     // User dropdown functionality
@@ -1359,21 +1349,22 @@
         // FIX: Close all dropdowns before page navigation to prevent flickering
         document.querySelectorAll('a[href]').forEach(link => {
             link.addEventListener('click', function(e) {
-                if (this.getAttribute('href').startsWith('/') && !this.getAttribute('href').startsWith('#')) {
+                if (this.getAttribute('href').startsWith('/') && !this.getAttribute('href')
+                    .startsWith('#')) {
                     // Close all mega dropdowns
                     document.querySelectorAll('[x-data]').forEach(el => {
                         if (el.__x && el.__x.$data && el.__x.$data.open !== undefined) {
                             el.__x.$data.open = false;
                         }
                     });
-                    
+
                     // Close user dropdown
                     const userDropdown = document.getElementById('userDropdown');
                     if (userDropdown && !userDropdown.classList.contains('hidden')) {
                         userDropdown.classList.add('hidden');
                         userDropdown.classList.remove('animate-fadeIn');
                     }
-                    
+
                     // Close mobile menu
                     const mobileMenu = document.getElementById('mobileMenu');
                     if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
@@ -1561,4 +1552,57 @@
         `;
         document.head.appendChild(style);
     });
+
+    // Logout confirmation with SweetAlert2 - form version
+    window.confirmLogout = async function(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        const result = await Swal.fire({
+            title: '{{ __('messages.confirm_logout') }}',
+            text: '{{ __('messages.are_you_sure_logout') }}',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: '{{ __('messages.yes_logout') }}',
+            cancelButtonText: '{{ __('messages.cancel') }}',
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#6b7280',
+            reverseButtons: true,
+            customClass: {
+                popup: 'rounded-xl shadow-2xl',
+                confirmButton: 'px-4 py-2 rounded-lg',
+                cancelButton: 'px-4 py-2 rounded-lg'
+            }
+        });
+
+        if (result.isConfirmed) {
+            // Find and submit the appropriate form
+            let form;
+            if (window.innerWidth >= 768) {
+                form = document.getElementById('logoutForm');
+            } else {
+                form = document.getElementById('logoutFormMobile');
+            }
+
+            if (form) {
+                form.submit();
+            } else {
+                // Fallback: create and submit form
+                const newForm = document.createElement('form');
+                newForm.method = 'POST';
+                newForm.action = '{{ route('logout') }}';
+
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = '{{ csrf_token() }}';
+
+                newForm.appendChild(csrfToken);
+                document.body.appendChild(newForm);
+                newForm.submit();
+            }
+        }
+    };
 </script>

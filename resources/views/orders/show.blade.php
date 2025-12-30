@@ -122,7 +122,6 @@
                                             <span class="bg-white px-3 py-1 rounded-full border">{{ __('messages.size') }}: {{ $size }}</span>
                                             <span class="bg-white px-3 py-1 rounded-full border">{{ __('messages.color') }}: {{ $color }}</span>
                                             <span class="bg-white px-3 py-1 rounded-full border">{{ __('messages.quantity') }}: {{ $item->quantity }}</span>
-                                            <span class="bg-white px-3 py-1 rounded-full border">{{ __('messages.sku') }}: {{ $sku }}</span>
                                         </div>
                                     </div>
                                     <div class="text-right">

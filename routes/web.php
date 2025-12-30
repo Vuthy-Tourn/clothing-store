@@ -108,10 +108,20 @@ Route::middleware(['auth'])->group(function () {
         ->name('order.invoice.download');
     
     // Profile Routes
-    Route::prefix('profile')->name('profile.')->group(function () {
+   Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'show'])->name('show');
         Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
-        Route::post('/update', [ProfileController::class, 'update'])->name('update');
+        Route::put('/update', [ProfileController::class, 'update'])->name('update');
+        Route::put('/update-password', [ProfileController::class, 'updatePassword'])->name('update.password');
+        Route::put('/update-email', [ProfileController::class, 'updateEmail'])->name('update.email');
+        Route::put('/update-newsletter', [ProfileController::class, 'updateNewsletter'])->name('update.newsletter');
+        
+        // Address Routes - use POST with _method for AJAX compatibility
+        Route::get('/address/{id}', [ProfileController::class, 'getAddress'])->name('address.get');
+        Route::post('/address/add', [ProfileController::class, 'addAddress'])->name('address.add');
+        Route::put('/address/{id}/update', [ProfileController::class, 'updateAddress'])->name('address.update');
+        Route::delete('/address/{id}/delete', [ProfileController::class, 'deleteAddress'])->name('address.delete');
+        Route::put('/address/{id}/set-default', [ProfileController::class, 'setDefaultAddress'])->name('address.set-default');
     });
     
     // Email Subscription Management

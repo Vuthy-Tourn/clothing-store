@@ -703,4 +703,32 @@ return [
     'otp_resent' => 'A new OTP has been sent to your email.',
     'resend_failed' => 'Failed to resend OTP.',
     'resend_error' => 'Error resending OTP.',
+
+    'confirm_logout' => 'Confirm Logout',
+    'are_you_sure_logout' => 'Are you sure you want to sign out?',
+    'yes_logout' => 'Yes, Logout',
+    'cancel' => 'Cancel',
+
+
+    // Footer translations
+    'footer_tagline' => 'Your everyday fashion destination. Discover the latest trends and timeless styles for every occasion.',
+    'shop' => 'Shop',
+    'all_products' => 'All Products',
+    'new_arrivals' => 'New Arrivals',
+    'support' => 'Support',
+    'contact_us' => 'Contact Us',
+    'shipping_info' => 'Shipping Info',
+    'returns' => 'Returns & Exchanges',
+    'faq' => 'FAQ',
+    'stay_connected' => 'Stay Connected',
+    'newsletter_description' => 'Subscribe to get notified about our latest collections and exclusive offers.',
+    'subscribed' => 'You\'re subscribed!',
+    'unsubscribe' => 'Unsubscribe',
+    'subscribe' => 'Subscribe',
+    'enter_email' => 'Enter your email',
+    'login_to_subscribe' => 'Login to Subscribe',
+    'all_rights_reserved' => 'All rights reserved.',
+    'privacy_policy' => 'Privacy Policy',
+    'terms_of_service' => 'Terms of Service',
+    'cookie_policy' => 'Cookie Policy',
 ];
