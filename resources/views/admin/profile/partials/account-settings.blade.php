@@ -52,11 +52,7 @@
                     class="px-4 py-2 bg-gradient-to-r from-Ocean to-Ocean/80 text-white rounded-lg hover:shadow-lg transition-all duration-300">
                     {{ __('admin.profile.account_settings.change_password') }}
                 </button>
-            </div>
-
-            
-
-            
+            </div>       
         </div>
     </div>
 </div>

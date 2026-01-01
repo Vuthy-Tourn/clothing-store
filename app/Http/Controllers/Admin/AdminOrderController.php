@@ -276,28 +276,6 @@ class AdminOrderController extends Controller
             ], 500);
         }
     }
-
-    /**
-     * Generate invoice PDF.
-     */
-    public function invoice($id)
-    {
-        try {
-            $order = Order::with([
-                'user', 
-                'shippingAddress', 
-                'billingAddress',
-                'items.variant.product'
-            ])->findOrFail($id);
-            
-            $pdf = Pdf::loadView('admin.orders.invoice', compact('order'));
-            
-            return $pdf->download('Invoice_' . $order->order_number . '.pdf');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to generate invoice.');
-        }
-    }
-
    
     /**
      * Export orders.
@@ -399,5 +377,26 @@ class AdminOrderController extends Controller
         $filename = 'orders_export_' . $fromDate . '_to_' . $toDate . '.pdf';
         
         return $pdf->download($filename);
+    }
+
+    /**
+     * Download invoice for an order
+     */
+    public function downloadInvoice($id)
+    {
+        try {
+            $order = Order::with([
+                'user', 
+                'shippingAddress', 
+                'billingAddress',
+                'items.variant.product'
+            ])->findOrFail($id);
+            
+            $pdf = Pdf::loadView('orders.invoice', compact('order'));
+            
+            return $pdf->download('Invoice_' . $order->order_number . '.pdf');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to generate invoice.');
+        }
     }
 }

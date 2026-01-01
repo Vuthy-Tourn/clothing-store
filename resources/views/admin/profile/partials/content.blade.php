@@ -6,7 +6,8 @@
 
     <!-- Right Column - Details -->
     <div class="lg:col-span-2 space-y-8">
+      
         @include('admin.profile.partials.personal-info')
-        @include('admin.profile.partials.account-settings')
+          @include('admin.profile.partials.account-settings')
     </div>
 </div>

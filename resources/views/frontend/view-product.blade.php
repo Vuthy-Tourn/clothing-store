@@ -924,8 +924,8 @@
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        @foreach ($relatedProducts as $related)
-                            <div
+                        @foreach ($relatedProducts as $product)
+                            {{-- <div
                                 class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
                                 <a href="{{ route('product.view', $related->slug) }}" class="block">
                                     <div class="relative overflow-hidden bg-gray-100 aspect-[3/4]">
@@ -988,8 +988,9 @@
                                         @endif
                                     </div>
                                 </a>
-                            </div>
-                        @endforeach
+                            </div> --}}
+                                <x-product-card :product="$product" />
+                        @endforeach 
                     </div>
                 </div>
             @endif
