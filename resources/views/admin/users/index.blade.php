@@ -251,7 +251,7 @@
     <div id="createUserModal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4"
         data-aos="zoom-in">
         <div
-            class="modal-content bg-white rounded-2xl shadow-2xl w-full max-w-2xl transform transition-all duration-300 scale-95 opacity-0 max-h-[90vh] overflow-y-auto">
+            class="modal-content modal-scroll bg-white rounded-2xl shadow-2xl w-full max-w-2xl transform transition-all duration-300 scale-95 opacity-0 max-h-[90vh] overflow-y-auto">
             <div class="p-6">
                 <div class="flex items-center justify-between mb-6">
                     <div>
