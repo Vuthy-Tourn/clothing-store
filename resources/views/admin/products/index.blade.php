@@ -10,8 +10,8 @@
             </div>
             <div class="flex items-center gap-3">
                 <button onclick="ProductModal.openAdd()"
-                    class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-3 rounded-xl font-medium transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                    <i class="fas fa-plus"></i>
+                    class="flex items-center space-x-2 px-4 py-2.5 bg-gradient-to-r from-Ocean to-Ocean/80 text-white rounded-xl transition-all duration-300 hover:from-Ocean/90 hover:to-Ocean/70 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    <i class="fas fa-plus mr-2"></i>
                     {{ __('admin.products.actions.add_product') }}
                 </button>
 

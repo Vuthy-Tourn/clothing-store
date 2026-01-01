@@ -62,10 +62,73 @@ return [
         'sales_volume' => 'បរិមាណលក់',
         'product_name' => 'ឈ្មោះផលិតផល',
         'quantity_sold' => 'បរិមាណលក់',
+
+        'days' => [
+        'monday' => 'ថ្ងៃច័ន្ទ',
+        'tuesday' => 'ថ្ងៃអង្គារ',
+        'wednesday' => 'ថ្ងៃពុធ',
+        'thursday' => 'ថ្ងៃព្រហស្បតិ៍',
+        'friday' => 'ថ្ងៃសុក្រ',
+        'saturday' => 'ថ្ងៃសៅរ៍',
+        'sunday' => 'ថ្ងៃអាទិត្យ',
+    ],
+    
+    'days_short' => [
+        'mon' => 'ច',
+        'tue' => 'អ',
+        'wed' => 'ព',
+        'thu' => 'ព្រ',
+        'fri' => 'សុ',
+        'sat' => 'ស',
+        'sun' => 'អា',
+    ],
+    
+    'months' => [
+        'january' => 'មករា',
+        'february' => 'កុម្ភៈ',
+        'march' => 'មីនា',
+        'april' => 'មេសា',
+        'may' => 'ឧសភា',
+        'june' => 'មិថុនា',
+        'july' => 'កក្កដា',
+        'august' => 'សីហា',
+        'september' => 'កញ្ញា',
+        'october' => 'តុលា',
+        'november' => 'វិច្ឆិកា',
+        'december' => 'ធ្នូ',
+    ],
+    
+    'months_short' => [
+        'jan' => 'មក',
+        'feb' => 'កុ',
+        'mar' => 'មី',
+        'apr' => 'មេ',
+        'may' => 'ឧ',
+        'jun' => 'មិ',
+        'jul' => 'ក',
+        'aug' => 'សី',
+        'sep' => 'កញ',
+        'oct' => 'តុ',
+        'nov' => 'វិ',
+        'dec' => 'ធ',
+    ],
+    
+    'week_number' => 'សប្តាហ៍ទី:number',
+    'date_range' => ':start - :end :month',
+    
+    'revenue' => 'ចំណូល',
+    'sales' => 'ការលក់',
+    'orders' => 'ការបញ្ជាទិញ',
+    
+    'periods' => [
+        'week' => 'ប្រចាំសប្តាហ៍',
+        'month' => 'ប្រចាំខែ',
+        'year' => 'ប្រចាំឆ្នាំ',
+    ],
     ],
     
     'store_health' => [
-        'title' => 'សុខភាពហាង',
+        'title' => 'ស្ថានភាពហាង',
         'inventory_status' => 'ស្ថានភាពស្តុក',
         'low_stock' => 'ស្តុកទាប',
         'out_of_stock' => 'អស់ស្តុក',
@@ -77,6 +140,10 @@ return [
         'items' => 'ទំនិញ',
         'minutes' => 'នាទី',
         'ms' => 'មីលីវិនាទី',
+         'pending_orders' => 'ការបញ្ជាទិញដែលកំពុងរង់ចាំ',
+    'today_revenue' => "ប្រាក់ចំណូលថ្ងៃនេះ",
+    'low_stock' => 'ទំនិញមានស្តុកតិច',
+    'out_of_stock' => 'អស់ស្តុក',
     ],
     
     'performance' => [
@@ -1268,7 +1335,7 @@ return [
             'order_id' => 'លេខសម្គាល់ការកម្មង់',
             'order_number' => 'ការកម្មង់ #',
             'customer' => 'អតិថិជន',
-            'amount' => 'ចំនួនទឹកប្រាក់',
+            'amount' => 'ទឹកប្រាក់',
             'status' => 'ស្ថានភាព',
             'payment' => 'ការទូទាត់',
             'date' => 'កាលបរិច្ឆេទ',

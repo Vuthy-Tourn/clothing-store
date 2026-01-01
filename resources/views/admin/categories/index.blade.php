@@ -8,7 +8,7 @@
                 <p class="text-gray-700">{{ __('admin.categories.subtitle') }}</p>
             </div>
             <button onclick="CategoryModal.openAdd()"
-                class="mt-4 md:mt-0 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 group shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                class="flex items-center space-x-2 px-4 py-2.5 bg-gradient-to-r from-Ocean to-Ocean/80 text-white rounded-xl transition-all duration-300 hover:from-Ocean/90 hover:to-Ocean/70 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                 <i class="fas fa-plus mr-2 group-hover:rotate-90 transition-transform duration-300"></i>{{ __('admin.categories.add_new') }}
             </button>
         </div>

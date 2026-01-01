@@ -3,7 +3,7 @@
 @section('title', 'User Management')
 
 @section('content')
-    <div class="container-fluid px-4 md:px-8 py-6">
+    <div class="container-fluid">
         <!-- Header with animation -->
         <div class="mb-8" data-aos="fade-up">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">

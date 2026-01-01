@@ -31,9 +31,9 @@
 </div>
 
 <!-- Performance & Recent Activity Section -->
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+<div class="grid grid-cols-1 gap-6 mb-8">
     <!-- Performance Metrics (1 column) -->
-    @include('admin.dashboard.partials.performance-metrics')
+    {{-- @include('admin.dashboard.partials.performance-metrics') --}}
 
     <!-- Recent Orders (2 columns) -->
     <div class="lg:col-span-2 card p-6" data-aos="fade-up" data-aos-delay="100">
@@ -121,4 +121,16 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="{{ asset('assets/js/dashboard.js') }}"></script>
+<script>
+// Pass all translations at once
+window.statusTranslations = {
+    pending: "{{ __('admin.orders.status.pending') }}",
+    confirmed: "{{ __('admin.orders.status.confirmed') }}",
+    processing: "{{ __('admin.orders.status.processing') }}",
+    shipped: "{{ __('admin.orders.status.shipped') }}",
+    delivered: "{{ __('admin.orders.status.delivered') }}",
+    cancelled: "{{ __('admin.orders.status.cancelled') }}",
+    refunded: "{{ __('admin.orders.status.refunded') }}"
+};
+</script>
 @endpush

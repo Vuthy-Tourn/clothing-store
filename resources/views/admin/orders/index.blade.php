@@ -9,7 +9,7 @@
             </div>
             <div class="flex items-center gap-4 mt-4 md:mt-0">
                 <button onclick="showExportModal()"
-                    class="bg-blue-600 text-white hover:bg-blue-700 px-5 py-3 rounded-xl font-medium transition-all duration-300 flex items-center group shadow-md hover:shadow-lg">
+                    class="flex items-center space-x-2 px-4 py-2.5 bg-gradient-to-r from-Ocean to-Ocean/80 text-white rounded-xl transition-all duration-300 hover:from-Ocean/90 hover:to-Ocean/70 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                     <i class="fas fa-download mr-2 group-hover:rotate-180 transition-transform duration-500"></i>
                     <span
                         class="group-hover:scale-105 transition-transform duration-300">{{ __('admin.orders.actions.export_orders') }}</span>
@@ -192,9 +192,8 @@
                                     </div>
                                     <div>
                                         <span
-                                            class="font-mono font-bold text-gray-800 block">{{ $order->order_number }}</span>
-                                        <span
-                                            class="text-gray-500 text-xs">{{ $order->created_at->format('M d, Y') }}</span>
+                                            class="font-mono font-bold text-gray-800">{{ $order->order_number }}</span>
+                                       
                                     </div>
                                 </div>
                             </td>

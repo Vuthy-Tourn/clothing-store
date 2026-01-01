@@ -1,8 +1,8 @@
 @forelse ($orders as $order)
-    <tr class="hover:bg-Lace/50 transition-all duration-200 cursor-pointer order-row" 
+    <tr class="hover:bg-Lace/50 transition-all duration-200 cursor-pointer" 
         onclick="viewOrderDetails({{ $order->id }})"
         data-aos="fade-in" data-aos-delay="{{ $loop->index * 50 }}">
-        <td class="py-4 px-6">
+        <td class="py-4 px-4">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-Ocean/20 to-Ocean/10 flex items-center justify-center">
                     <i class="fas fa-receipt text-Ocean"></i>

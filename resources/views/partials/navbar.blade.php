@@ -339,12 +339,12 @@
                         {{ __('messages.orders') }}
                     </a>
 
-                    @if (auth()->user()->user_type === 'admin')
+                    {{-- @if (auth()->user()->user_type === 'admin')
                         <a href="{{ route('admin.dashboard') }}"
                             class="nav-link text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200 {{ request()->routeIs('admin.*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">
                             {{ __('messages.admin') }}
                         </a>
-                    @endif
+                    @endif --}}
                 @endauth
             </div>
 
@@ -483,11 +483,11 @@
                     <a href="{{ route('orders.index') }}" class="block py-2 text-gray-700 hover:text-gray-900">
                         {{ __('messages.orders') }}
                     </a>
-                    @if (auth()->user()->user_type === 'admin')
+                    {{-- @if (auth()->user()->user_type === 'admin')
                         <a href="{{ route('admin.dashboard') }}" class="block py-2 text-gray-700 hover:text-gray-900">
                             {{ __('messages.admin') }}
                         </a>
-                    @endif
+                    @endif --}}
 
                     <!-- Mobile User Info -->
                     <div class="px-3 py-2 border-t border-gray-200 mt-2 pt-3">

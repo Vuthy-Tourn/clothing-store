@@ -498,20 +498,32 @@ function createFallbackSalesChart(canvas) {
 
 // Function to change period and update chart
 async function changePeriod(period) {
+    console.log('changePeriod called with:', period);
+    
+    // Only accept valid periods
+    const validPeriods = ['week', 'month', 'year'];
+    if (!validPeriods.includes(period)) {
+        console.error('Invalid period:', period, '- ignoring');
+        return;
+    }
+    
+    // Rest of your code...
+    if (currentPeriod === period) return;
+    
     currentPeriod = period;
     
-    // Update active button state
+    // Update buttons
     document.querySelectorAll('.period-btn').forEach(btn => {
-        if (btn.textContent.trim().toLowerCase() === period) {
-            btn.classList.add('active', 'bg-blue-500', 'text-white');
-            btn.classList.remove('text-gray-700', 'hover:bg-gray-100');
+        const btnPeriod = btn.dataset.period;
+        if (btnPeriod === period) {
+            btn.classList.add('bg-blue-500', 'text-white');
+            btn.classList.remove('bg-gray-50', 'text-gray-700', 'hover:bg-gray-100');
         } else {
-            btn.classList.remove('active', 'bg-blue-500', 'text-white');
-            btn.classList.add('text-gray-700', 'hover:bg-gray-100');
+            btn.classList.remove('bg-blue-500', 'text-white');
+            btn.classList.add('bg-gray-50', 'text-gray-700', 'hover:bg-gray-100');
         }
     });
     
-    // Update chart with new period
     await initSalesChart();
 }
 
@@ -941,10 +953,10 @@ async function loadRecentOrders() {
 
 function getModernStatusBadge(status) {
     const classes = creativePaletteOfOrderStatus.badgeColors[status] || "bg-gray-100 text-gray-700";
-
-    // Capitalize first letter
-    const label = status.charAt(0).toUpperCase() + status.slice(1);
-
+    
+    // Get the translated label using the status key
+    const label = window.statusTranslations?.[status] || status.charAt(0).toUpperCase() + status.slice(1);
+    
     return `<span class="px-3 py-1 text-xs font-semibold rounded-full ${classes}">${label}</span>`;
 }
 

@@ -8,7 +8,7 @@
                 <p class="text-gray-600 text-lg">{{ __('admin.emails.subtitle') }}</p>
             </div>
             <button onclick="showTestEmailModal()"
-                class="bg-purple-600 text-white hover:bg-purple-700 px-4 py-2 rounded-lg font-medium transition-colors flex items-center">
+                    class="flex items-center space-x-2 px-4 py-2.5 bg-gradient-to-r from-Ocean to-Ocean/80 text-white rounded-xl transition-all duration-300 hover:from-Ocean/90 hover:to-Ocean/70 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                 <i class="fas fa-envelope mr-2"></i> {{ __('admin.emails.send_test') }}
             </button>
         </div>
@@ -84,7 +84,7 @@
     <!-- Send Newsletter Section -->
     <div class="bg-white border border-gray-200 rounded-xl shadow-lg mb-8 overflow-hidden" data-aos="fade-up"
         data-aos-delay="300">
-        <div class="bg-gradient-to-r from-gray-900 to-gray-800 p-6">
+        <div class="bg-gradient-to-r from-gray-700 to-gray-600 p-6">
             <h2 class="text-xl font-bold text-white flex items-center">
                 <i class="fas fa-paper-plane mr-3 text-blue-300"></i>{{ __('admin.emails.compose.title') }}
             </h2>

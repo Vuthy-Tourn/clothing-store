@@ -12,13 +12,15 @@
             <div class="flex items-center gap-3 mt-4 md:mt-0">
                 @if ($carousels->count() > 1)
                     <button onclick="showSortOrder()"
-                        class="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 group shadow-lg hover:shadow-xl">
-                        <i class="fas fa-sort mr-2 group-hover:rotate-180 transition-transform duration-300"></i> {{ __('admin.carousels.arrange_order') }}
+                        class="bg-gradient-to-r from-gray-900 to-black hover:from-gray-800 hover:to-gray-900 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 group shadow-lg hover:shadow-xl"
+                        <i class="fas fa-sort mr-2 group-hover:rotate-180 transition-transform duration-300"></i>
+                        {{ __('admin.carousels.arrange_order') }}
                     </button>
                 @endif
                 <button onclick="CarouselModal.openAdd()"
-                    class="bg-gradient-to-r from-gray-900 to-black hover:from-gray-800 hover:to-gray-900 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 group shadow-lg hover:shadow-xl">
-                    <i class="fas fa-plus mr-2 group-hover:rotate-90 transition-transform duration-300"></i> {{ __('admin.carousels.add_new') }}
+                    class="flex items-center space-x-2 px-4 py-2.5 bg-gradient-to-r from-Ocean to-Ocean/80 text-white rounded-xl transition-all duration-300 hover:from-Ocean/90 hover:to-Ocean/70 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    <i class="fas fa-plus mr-2 group-hover:rotate-90 transition-transform duration-300"></i>
+                    {{ __('admin.carousels.add_new') }}
                 </button>
             </div>
         </div>
@@ -145,7 +147,8 @@
             <p class="text-gray-700 mb-8 max-w-md mx-auto">{{ __('admin.carousels.no_banners_desc') }}</p>
             <button onclick="CarouselModal.openAdd()"
                 class="bg-gradient-to-r from-gray-900 to-black hover:from-gray-800 hover:to-gray-900 text-white px-10 py-4 rounded-xl font-medium transition-all duration-200 group text-lg shadow-lg hover:shadow-xl">
-                <i class="fas fa-plus mr-3 group-hover:rotate-90 transition-transform duration-300"></i>{{ __('admin.carousels.no_banners_button') }}
+                <i
+                    class="fas fa-plus mr-3 group-hover:rotate-90 transition-transform duration-300"></i>{{ __('admin.carousels.no_banners_button') }}
             </button>
         </div>
     @else
@@ -265,7 +268,7 @@
                             <div>
                                 <label class="text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-heading mr-2 text-gray-700"></i>
-                                {{ __('admin.carousels.modal.banner_title') }} *
+                                    {{ __('admin.carousels.modal.banner_title') }} *
                                 </label>
                                 <input type="text" name="title" value="{{ old('title') }}" required
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-gray-900 focus:ring-0 transition-all duration-200 shadow-sm"
@@ -297,7 +300,8 @@
                                     value="{{ old('sort_order', $carousels->count()) }}" min="0"
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-gray-900 focus:ring-0 transition-all duration-200 shadow-sm"
                                     placeholder="{{ __('admin.carousels.modal.display_order_placeholder') }}">
-                                <p class="text-gray-700 text-xs mt-2">{{ __('admin.carousels.modal.display_order_desc') }}</p>
+                                <p class="text-gray-700 text-xs mt-2">{{ __('admin.carousels.modal.display_order_desc') }}
+                                </p>
                                 @error('sort_order')
                                     <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                                 @enderror
@@ -344,8 +348,10 @@
                                         <div
                                             class="p-4 border-2 border-gray-200 rounded-xl text-center peer-checked:border-green-500 peer-checked:bg-green-50 transition-all duration-200 hover:bg-gray-50 shadow-sm">
                                             <i class="fas fa-check-circle text-green-600 mb-2"></i>
-                                            <p class="font-medium text-gray-900">{{ __('admin.carousels.modal.status_active') }}</p>
-                                            <p class="text-gray-700 text-sm">{{ __('admin.carousels.modal.status_active_desc') }}</p>
+                                            <p class="font-medium text-gray-900">
+                                                {{ __('admin.carousels.modal.status_active') }}</p>
+                                            <p class="text-gray-700 text-sm">
+                                                {{ __('admin.carousels.modal.status_active_desc') }}</p>
                                         </div>
                                     </label>
                                     <label class="relative cursor-pointer">
@@ -353,8 +359,10 @@
                                         <div
                                             class="p-4 border-2 border-gray-200 rounded-xl text-center peer-checked:border-red-500 peer-checked:bg-red-50 transition-all duration-200 hover:bg-gray-50 shadow-sm">
                                             <i class="fas fa-eye-slash text-red-600 mb-2"></i>
-                                            <p class="font-medium text-gray-900">{{ __('admin.carousels.modal.status_inactive') }}</p>
-                                            <p class="text-gray-700 text-sm">{{ __('admin.carousels.modal.status_inactive_desc') }}</p>
+                                            <p class="font-medium text-gray-900">
+                                                {{ __('admin.carousels.modal.status_inactive') }}</p>
+                                            <p class="text-gray-700 text-sm">
+                                                {{ __('admin.carousels.modal.status_inactive_desc') }}</p>
                                         </div>
                                     </label>
                                 </div>
@@ -377,7 +385,8 @@
                                                 <i
                                                     class="fas fa-cloud-upload-alt text-gray-700 group-hover/upload:text-white text-2xl transition-all duration-200"></i>
                                             </div>
-                                            <p class="text-gray-900 font-medium mb-2">{{ __('admin.carousels.modal.image_upload') }}</p>
+                                            <p class="text-gray-900 font-medium mb-2">
+                                                {{ __('admin.carousels.modal.image_upload') }}</p>
                                             <p class="text-gray-700 text-sm">Recommended: 1920×800px • Max 2MB</p>
                                             <p class="text-gray-700 text-sm">JPG, PNG, WebP formats</p>
                                         </label>
@@ -397,7 +406,8 @@
                                                     <i class="fas fa-times"></i>
                                                 </button>
                                             </div>
-                                            <p class="text-gray-700 text-xs text-center mt-3">{{ __('admin.carousels.modal.image_preview') }}</p>
+                                            <p class="text-gray-700 text-xs text-center mt-3">
+                                                {{ __('admin.carousels.modal.image_preview') }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -483,7 +493,8 @@
                                 </label>
                                 <input type="number" name="sort_order" id="editSortOrder" min="0"
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-gray-900 focus:ring-0 transition-all duration-200 shadow-sm">
-                                <p class="text-gray-700 text-xs mt-2">{{ __('admin.carousels.modal.display_order_desc') }}</p>
+                                <p class="text-gray-700 text-xs mt-2">{{ __('admin.carousels.modal.display_order_desc') }}
+                                </p>
                             </div>
                         </div>
 
@@ -519,8 +530,10 @@
                                         <div
                                             class="p-4 border-2 border-gray-200 rounded-xl text-center peer-checked:border-green-500 peer-checked:bg-green-50 transition-all duration-200 hover:bg-gray-50 shadow-sm">
                                             <i class="fas fa-check-circle text-green-600 mb-2"></i>
-                                            <p class="font-medium text-gray-900">{{ __('admin.carousels.modal.status_active') }}</p>
-                                            <p class="text-gray-700 text-sm">{{ __('admin.carousels.modal.status_active_desc') }}</p>
+                                            <p class="font-medium text-gray-900">
+                                                {{ __('admin.carousels.modal.status_active') }}</p>
+                                            <p class="text-gray-700 text-sm">
+                                                {{ __('admin.carousels.modal.status_active_desc') }}</p>
                                         </div>
                                     </label>
                                     <label class="relative cursor-pointer">
@@ -529,8 +542,10 @@
                                         <div
                                             class="p-4 border-2 border-gray-200 rounded-xl text-center peer-checked:border-red-500 peer-checked:bg-red-50 transition-all duration-200 hover:bg-gray-50 shadow-sm">
                                             <i class="fas fa-eye-slash text-red-600 mb-2"></i>
-                                            <p class="font-medium text-gray-900">{{ __('admin.carousels.modal.status_inactive') }}</p>
-                                            <p class="text-gray-700 text-sm">{{ __('admin.carousels.modal.status_inactive_desc') }}</p>
+                                            <p class="font-medium text-gray-900">
+                                                {{ __('admin.carousels.modal.status_inactive') }}</p>
+                                            <p class="text-gray-700 text-sm">
+                                                {{ __('admin.carousels.modal.status_inactive_desc') }}</p>
                                         </div>
                                     </label>
                                 </div>
@@ -550,7 +565,8 @@
                                             <img id="editCurrentImage" src=""
                                                 class="absolute inset-0 w-full h-full object-cover">
                                         </div>
-                                        <p class="text-gray-700 text-xs text-center mt-3">{{ __('admin.carousels.modal.current_image') }}</p>
+                                        <p class="text-gray-700 text-xs text-center mt-3">
+                                            {{ __('admin.carousels.modal.current_image') }}</p>
                                     </div>
 
                                     <!-- Change Image -->
@@ -565,8 +581,10 @@
                                                     <i
                                                         class="fas fa-sync-alt text-gray-700 group-hover/change:text-white transition-all duration-200"></i>
                                                 </div>
-                                                <p class="text-gray-900 font-medium mb-1">{{ __('admin.carousels.modal.change_image') }}</p>
-                                                <p class="text-gray-700 text-sm">{{ __('admin.carousels.modal.change_image_optional') }}</p>
+                                                <p class="text-gray-900 font-medium mb-1">
+                                                    {{ __('admin.carousels.modal.change_image') }}</p>
+                                                <p class="text-gray-700 text-sm">
+                                                    {{ __('admin.carousels.modal.change_image_optional') }}</p>
                                             </label>
                                         </div>
 
@@ -584,7 +602,8 @@
                                                         <i class="fas fa-times"></i>
                                                     </button>
                                                 </div>
-                                                <p class="text-gray-700 text-xs text-center mt-3">{{ __('admin.carousels.modal.new_image_preview') }}</p>
+                                                <p class="text-gray-700 text-xs text-center mt-3">
+                                                    {{ __('admin.carousels.modal.new_image_preview') }}</p>
                                             </div>
                                         </div>
                                     </div>
