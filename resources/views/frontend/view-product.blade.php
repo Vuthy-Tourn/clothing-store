@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>{{ $product->name ?? __('messages.products') }} - Outfit 818</title>
+    <title>{{ $product->name ?? __('messages.products') }} - Nova Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -1234,7 +1234,7 @@
                         activeClasses = 'border-gray-900 bg-gray-900 text-white';
                     } else {
                         baseClasses =
-                        'border-gray-200 hover:border-gray-900 hover:bg-gray-50 text-gray-900';
+                            'border-gray-200 hover:border-gray-900 hover:bg-gray-50 text-gray-900';
                     }
 
                     sizesHTML += `
@@ -1259,35 +1259,35 @@
                     
                     <!-- Discount Badge (if applicable) -->
                     ${hasVariantDiscount && !isOutOfStock ? `
-                            <div class="text-xs font-bold ${isChecked ? 'text-purple-300' : 'text-purple-600'}">
-                                <i class="fas fa-tag"></i> -${variant.discount_percentage}%
-                            </div>
-                        ` : ''}
+                                <div class="text-xs font-bold ${isChecked ? 'text-purple-300' : 'text-purple-600'}">
+                                    <i class="fas fa-tag"></i> -${variant.discount_percentage}%
+                                </div>
+                            ` : ''}
                     
                     <!-- Stock Warning (if low stock) -->
                     ${isLowStock && !isOutOfStock ? `
-                            <div class="text-xs ${isChecked ? 'text-yellow-300' : 'text-yellow-600'} mt-1">
-                                <i class="fas fa-exclamation-triangle"></i> ${variant.stock} left
-                            </div>
-                        ` : ''}
+                                <div class="text-xs ${isChecked ? 'text-yellow-300' : 'text-yellow-600'} mt-1">
+                                    <i class="fas fa-exclamation-triangle"></i> ${variant.stock} left
+                                </div>
+                            ` : ''}
                     
                     <!-- Out of Stock Badge -->
                     ${isOutOfStock ? `
-                            <div class="text-xs text-gray-400 mt-1">
-                                <i class="fas fa-times-circle"></i> Out of Stock
-                            </div>
-                        ` : ''}
+                                <div class="text-xs text-gray-400 mt-1">
+                                    <i class="fas fa-times-circle"></i> Out of Stock
+                                </div>
+                            ` : ''}
                 </div>
                 
                 <!-- Tooltip on hover showing price -->
                 ${!isOutOfStock ? `
-                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
-                            ${hasVariantDiscount ? 
-                                `$${variant.final_price.toFixed(2)} <span class="line-through opacity-60">$${variant.price.toFixed(2)}</span>` : 
-                                `$${variant.price.toFixed(2)}`
-                            }
-                        </div>
-                    ` : ''}
+                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                                ${hasVariantDiscount ? 
+                                    `$${variant.final_price.toFixed(2)} <span class="line-through opacity-60">$${variant.price.toFixed(2)}</span>` : 
+                                    `$${variant.price.toFixed(2)}`
+                                }
+                            </div>
+                        ` : ''}
             </label>
         `;
                 });

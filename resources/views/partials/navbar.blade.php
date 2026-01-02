@@ -3,9 +3,51 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
             <!-- Logo -->
-            <div class="shrink-0">
-                <a href="/" class="text-2xl font-bold text-gray-900 tracking-tight">OUTFIT 818</a>
+              <div
+            class="px-4 py-1.5 border-b border-gray-200/50 bg-gradient-to-r from-white to-Ocean/5 relative overflow-hidden">
+            <!-- Background accent -->
+            <div class="absolute -right-8 -top-8 w-24 h-24 bg-Ocean/5 rounded-full blur-xl"></div>
+
+            <div class="flex items-center space-x-4 relative">
+                <!-- logo container -->
+                <div class="logo-container relative group">
+                    <!-- Logo with multiple animations -->
+                    <div class="logo-glow relative overflow-hidden rounded-lg p-1.5">
+                        <a href="/">
+                        <img src="{{ asset('assets/images/logo1.png') }}" alt="Nova Studio"
+                            class="h-7 w-auto object-contain transition-all duration-500 group-hover:scale-105"
+                            style="filter: drop-shadow(0 4px 8px rgba(88, 104, 121, 0.15));" />
+                            </a>
+    
+                    </div>
+
+                    <!-- "STUDIO" text with animation -->
+                    <div class="absolute -bottom-5 left-1/2 transform -translate-x-1/2 w-full">
+                        <div
+                            class="studio-text text-center text-[10px] font-semibold uppercase tracking-[0.15em] text-gray-500/80 opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:translate-y-0 translate-y-1">
+                            STUDIO
+                            <!-- Underline animation -->
+                            <div
+                                class="h-px bg-gradient-to-r from-transparent via-Ocean/30 to-transparent w-0 group-hover:w-full transition-all duration-700 mx-auto mt-0.5">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Floating particles animation -->
+                    <div
+                        class="absolute -inset-2 -z-10 opacity-0 group-hover:opacity-30 transition-opacity duration-700">
+                        <div class="absolute top-1/4 left-1/4 w-1 h-1 bg-Ocean/30 rounded-full animate-float-1"></div>
+                        <div class="absolute top-1/3 right-1/4 w-0.5 h-0.5 bg-Ocean/20 rounded-full animate-float-2">
+                        </div>
+                    </div>
+                </div>
+                <!-- Close button with hover animation -->
+                <button id="closeSidebar"
+                    class="lg:hidden text-gray-500 hover:text-Ocean p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 group">
+                    <i class="fas fa-times text-lg group-hover:rotate-90 transition-transform duration-300"></i>
+                </button>
             </div>
+        </div>
 
             <!-- Desktop Navigation -->
             <div class="hidden md:flex items-center space-x-8">

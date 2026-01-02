@@ -1,100 +1,105 @@
-# OUTFIT-818 🛍️
+# OUTFIT 🛍️
 
 A fully functional e-commerce clothing website built with Laravel PHP Framework, featuring modern design and comprehensive shopping functionalities.
 
 ## ✨ Features
 
-- **Payment Gateway Integration** - Secure payments powered by Stripe
-- **Shopping Cart** - Add to cart functionality with seamless checkout
-- **CSV Import** - Bulk product import via CSV files
-- **Stock Management** - Real-time inventory tracking and management
-- **Bill Generation** - Automated invoice generation for orders
-- **Advanced Filtering & Sorting** - Easy product discovery
-- **Email Notifications** - Automated order confirmations and updates
-- **Outfit of the Day** - Curated daily fashion recommendations
-- **Admin Dashboard** - Complete control panel for store management
+-   **Payment Gateway Integration** - Secure payments powered by Stripe
+-   **Shopping Cart** - Add to cart functionality with seamless checkout
+-   **CSV Import** - Bulk product import via CSV files
+-   **Stock Management** - Real-time inventory tracking and management
+-   **Bill Generation** - Automated invoice generation for orders
+-   **Advanced Filtering & Sorting** - Easy product discovery
+-   **Email Notifications** - Automated order confirmations and updates
+-   **Outfit of the Day** - Curated daily fashion recommendations
+-   **Admin Dashboard** - Complete control panel for store management
 
 ## 🚀 Tech Stack
 
-- **Backend:** Laravel (PHP Framework)
-- **Frontend Styling:** Tailwind CSS (CDN)
-- **Animations:** AOS (Animate On Scroll)
-- **Icons:** Font Awesome 6.4.0
-- **Payment Gateway:** Stripe
+-   **Backend:** Laravel (PHP Framework)
+-   **Frontend Styling:** Tailwind CSS (CDN)
+-   **Animations:** AOS (Animate On Scroll)
+-   **Icons:** Font Awesome 6.4.0
+-   **Payment Gateway:** Stripe
 
 ## 📋 Prerequisites
 
-- PHP >= 8.0
-- Composer
-- MySQL
-- Web Server (Apache/Nginx)
+-   PHP >= 8.0
+-   Composer
+-   MySQL
+-   Web Server (Apache/Nginx)
 
 ## 🔧 Installation
 
 1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Vuthy-Tourn/clothing-store.git
-   cd clothing-store
-   ```
+
+    ```bash
+    git clone https://github.com/Vuthy-Tourn/clothing-store.git
+    cd clothing-store
+    ```
 
 2. **Install dependencies**
-   ```bash
-   composer install
-   ```
+
+    ```bash
+    composer install
+    ```
 
 3. **Environment Configuration**
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   ```
+
+    ```bash
+    cp .env.example .env
+    php artisan key:generate
+    ```
 
 4. **Configure .env file**
-   
-   Update the following variables in your `.env` file:
-   
-   ```env
-   # Database Configuration
-   DB_CONNECTION=mysql
-   DB_HOST=127.0.0.1
-   DB_PORT=3306
-   DB_DATABASE=outfit_818
-   DB_USERNAME=your_username
-   DB_PASSWORD=your_password
-   
-   # Mail Configuration
-   MAIL_MAILER=smtp
-   MAIL_HOST=smtp.gmail.com
-   MAIL_PORT=587
-   MAIL_USERNAME=your_email@gmail.com
-   MAIL_PASSWORD=your_app_password
-   MAIL_ENCRYPTION=tls
-   MAIL_FROM_ADDRESS=your_email@gmail.com
-   
-   # Cashfree Payment Gateway
-   STRIPE_KEY=your_stripe_app_id
-   STRIPE_SECRET=your_stripe_secret_key
-   ```
+
+    Update the following variables in your `.env` file:
+
+    ```env
+    # Database Configuration
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=outfit_818
+    DB_USERNAME=your_username
+    DB_PASSWORD=your_password
+
+    # Mail Configuration
+    MAIL_MAILER=smtp
+    MAIL_HOST=smtp.gmail.com
+    MAIL_PORT=587
+    MAIL_USERNAME=your_email@gmail.com
+    MAIL_PASSWORD=your_app_password
+    MAIL_ENCRYPTION=tls
+    MAIL_FROM_ADDRESS=your_email@gmail.com
+
+    # Cashfree Payment Gateway
+    STRIPE_KEY=your_stripe_app_id
+    STRIPE_SECRET=your_stripe_secret_key
+    ```
 
 5. **Import Database**
-   
-   Import the provided SQL file:
-   ```bash
-   mysql -u your_username -p outfit_818 < outfit_818.sql
-   ```
-   
-   Or use phpMyAdmin/MySQL Workbench to import `outfit_818.sql`
+
+    Import the provided SQL file:
+
+    ```bash
+    mysql -u your_username -p outfit_818 < outfit_818.sql
+    ```
+
+    Or use phpMyAdmin/MySQL Workbench to import `outfit_818.sql`
 
 6. **Run the application**
-   ```bash
-   php artisan serve
-   ```
-   
-   Visit: `http://localhost:8000`
+
+    ```bash
+    php artisan serve
+    ```
+
+    Visit: `http://localhost:8000`
 
 ## 👤 Admin Access
 
-- **Email:** team.818x@gmail.com
-- **Password:** Team@818
+-   **Email:** team.818x@gmail.com
+-   **Password:** Team@818
 
 ## 📧 Email Setup Guide
 
@@ -102,9 +107,9 @@ To enable email notifications:
 
 1. Enable 2-Factor Authentication in your Gmail account
 2. Generate an App Password:
-   - Go to Google Account Settings
-   - Security → 2-Step Verification → App Passwords
-   - Generate password for "Mail"
+    - Go to Google Account Settings
+    - Security → 2-Step Verification → App Passwords
+    - Generate password for "Mail"
 3. Use the generated 16-character password in your `.env` file
 
 ## 💳 Payment Gateway Setup
@@ -116,7 +121,7 @@ To enable email notifications:
 ## 📁 Project Structure
 
 ```
-OUTFIT-818/
+OUTFIT/
 ├── app/              # Application logic
 ├── public/           # Public assets
 ├── resources/        # Views, CSS, JS
@@ -128,9 +133,9 @@ OUTFIT-818/
 
 ## 🎨 Frontend Libraries (CDN)
 
-- **Tailwind CSS:** `https://cdn.tailwindcss.com`
-- **AOS:** `https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css`
-- **Font Awesome:** `https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css`
+-   **Tailwind CSS:** `https://cdn.tailwindcss.com`
+-   **AOS:** `https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css`
+-   **Font Awesome:** `https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css`
 
 ## ⚠️ Disclaimer
 

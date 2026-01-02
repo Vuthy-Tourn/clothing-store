@@ -14,15 +14,39 @@
             <div class="absolute -right-8 -top-8 w-24 h-24 bg-Ocean/5 rounded-full blur-xl"></div>
 
             <div class="flex items-center space-x-4 relative">
-                <!-- Animated logo container -->
-                <div
-                    class="w-12 h-12 bg-gradient-to-br from-Ocean to-Ocean/80 rounded-xl flex items-center justify-center shadow-lg group hover:shadow-xl hover:scale-105 transition-all duration-300">
-                    <i
-                        class="fas fa-crown text-white text-lg group-hover:scale-110 transition-transform duration-300"></i>
-                </div>
-                <div class="flex-1">
-                    <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Moeww</h1>
-                    <p class="text-gray-600 text-sm font-medium tracking-wide">STUDIO</p>
+                <!-- logo container -->
+                <div class="logo-container relative group">
+                    <!-- Logo with multiple animations -->
+                    <div class="logo-glow relative overflow-hidden rounded-lg p-1.5 ml-3">
+                        <img src="{{ asset('assets/images/logo1.png') }}" alt="Nova Studio"
+                            class="h-7 w-auto object-contain transition-all duration-500 group-hover:scale-105"
+                            style="filter: drop-shadow(0 4px 8px rgba(88, 104, 121, 0.15));" />
+
+                        <!-- Subtle shine effect -->
+                        <div
+                            class="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-shine">
+                        </div>
+                    </div>
+
+                    <!-- "STUDIO" text with animation -->
+                    <div class="absolute -bottom-5 left-1/2 transform -translate-x-1/2 w-full">
+                        <div
+                            class="studio-text text-center text-[10px] font-semibold uppercase tracking-[0.15em] text-gray-500/80 opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:translate-y-0 translate-y-1">
+                            STUDIO
+                            <!-- Underline animation -->
+                            <div
+                                class="h-px bg-gradient-to-r from-transparent via-Ocean/30 to-transparent w-0 group-hover:w-full transition-all duration-700 mx-auto mt-0.5">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Floating particles animation -->
+                    <div
+                        class="absolute -inset-2 -z-10 opacity-0 group-hover:opacity-30 transition-opacity duration-700">
+                        <div class="absolute top-1/4 left-1/4 w-1 h-1 bg-Ocean/30 rounded-full animate-float-1"></div>
+                        <div class="absolute top-1/3 right-1/4 w-0.5 h-0.5 bg-Ocean/20 rounded-full animate-float-2">
+                        </div>
+                    </div>
                 </div>
                 <!-- Close button with hover animation -->
                 <button id="closeSidebar"
@@ -548,101 +572,102 @@
         highlightActiveMenu();
     });
 
-      // Logout confirmation with SweetAlert2
-        async function confirmLogoutAdmin(event) {
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
+    // Logout confirmation with SweetAlert2
+    async function confirmLogoutAdmin(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
 
-            const result = await Swal.fire({
-                title: '{{ __('messages.confirm_logout') }}',
-                text: '{{ __('messages.are_you_sure_logout') }}',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: '{{ __('messages.yes_logout') }}',
-                cancelButtonText: '{{ __('messages.cancel') }}',
-                confirmButtonColor: '#dc2626',
-                cancelButtonColor: '#6b7280',
-                reverseButtons: true,
-                customClass: {
-                    popup: 'rounded-xl shadow-2xl',
-                    confirmButton: 'px-4 py-2 rounded-lg',
-                    cancelButton: 'px-4 py-2 rounded-lg'
+        const result = await Swal.fire({
+            title: '{{ __('messages.confirm_logout') }}',
+            text: '{{ __('messages.are_you_sure_logout') }}',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: '{{ __('messages.yes_logout') }}',
+            cancelButtonText: '{{ __('messages.cancel') }}',
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#6b7280',
+            reverseButtons: true,
+            customClass: {
+                popup: 'rounded-xl shadow-2xl',
+                confirmButton: 'px-4 py-2 rounded-lg',
+                cancelButton: 'px-4 py-2 rounded-lg'
+            }
+        });
+
+        if (result.isConfirmed) {
+            // Show loading animation
+            Swal.fire({
+                title: '{{ __('admin.sidebar.logging_out') }}',
+                text: '{{ __('messages.please_wait') }}',
+                icon: 'info',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                willOpen: () => {
+                    Swal.showLoading();
                 }
             });
 
-            if (result.isConfirmed) {
-                // Show loading animation
-                Swal.fire({
-                    title: '{{ __('admin.sidebar.logging_out') }}',
-                    text: '{{ __('messages.please_wait') }}',
-                    icon: 'info',
-                    allowOutsideClick: false,
-                    showConfirmButton: false,
-                    willOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
+            // Submit the appropriate form
+            let form;
+            const logoutForm = document.getElementById('logoutForm');
+            const dropdownLogout = document.querySelector('[x-data] button[type="submit"]');
 
-                // Submit the appropriate form
-                let form;
-                const logoutForm = document.getElementById('logoutForm');
-                const dropdownLogout = document.querySelector('[x-data] button[type="submit"]');
+            if (logoutForm) {
+                form = logoutForm;
+            } else if (dropdownLogout) {
+                // Submit the dropdown logout form
+                dropdownLogout.closest('form').submit();
+            } else {
+                // Create a new form
+                form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route('logout') }}';
 
-                if (logoutForm) {
-                    form = logoutForm;
-                } else if (dropdownLogout) {
-                    // Submit the dropdown logout form
-                    dropdownLogout.closest('form').submit();
-                } else {
-                    // Create a new form
-                    form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = '{{ route('logout') }}';
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = '{{ csrf_token() }}';
 
-                    const csrfToken = document.createElement('input');
-                    csrfToken.type = 'hidden';
-                    csrfToken.name = '_token';
-                    csrfToken.value = '{{ csrf_token() }}';
-
-                    form.appendChild(csrfToken);
-                    document.body.appendChild(form);
-                }
-
-                // Submit after a short delay
-                setTimeout(() => {
-                    if (form) {
-                        form.submit();
-                    }
-                }, 500);
+                form.appendChild(csrfToken);
+                document.body.appendChild(form);
             }
-        }
 
-        // Apply to sidebar logout button
-        if (logoutButton) {
-            logoutButton.addEventListener('click', confirmLogoutAdmin);
+            // Submit after a short delay
+            setTimeout(() => {
+                if (form) {
+                    form.submit();
+                }
+            }, 500);
         }
+    }
 
-       // Remove the duplicate event listeners and use this cleaner approach:
-document.addEventListener('DOMContentLoaded', function() {
-    // Single handler for all logout buttons in sidebar
-    document.addEventListener('click', function(e) {
-        const target = e.target;
-        
-        // Check if it's a logout button
-        const isLogoutButton = 
-            target.id === 'logoutButton' ||
-            (target.closest('[x-data]') && target.type === 'submit' && target.closest('form[action*="logout"]')) ||
-            target.onclick?.toString().includes('confirmLogoutAdmin');
-        
-        if (isLogoutButton && !window.isLogoutInProgress) {
-            e.preventDefault();
-            e.stopPropagation();
-            confirmLogoutAdmin(e);
-        }
+    // Apply to sidebar logout button
+    if (logoutButton) {
+        logoutButton.addEventListener('click', confirmLogoutAdmin);
+    }
+
+    // Remove the duplicate event listeners and use this cleaner approach:
+    document.addEventListener('DOMContentLoaded', function() {
+        // Single handler for all logout buttons in sidebar
+        document.addEventListener('click', function(e) {
+            const target = e.target;
+
+            // Check if it's a logout button
+            const isLogoutButton =
+                target.id === 'logoutButton' ||
+                (target.closest('[x-data]') && target.type === 'submit' && target.closest(
+                    'form[action*="logout"]')) ||
+                target.onclick?.toString().includes('confirmLogoutAdmin');
+
+            if (isLogoutButton && !window.isLogoutInProgress) {
+                e.preventDefault();
+                e.stopPropagation();
+                confirmLogoutAdmin(e);
+            }
+        });
     });
-});
 
     // Add ripple animation to CSS
     const style = document.createElement('style');

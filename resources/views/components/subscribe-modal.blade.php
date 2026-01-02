@@ -1,5 +1,5 @@
 @auth
-<!-- Subscribe Confirmation Modal -->
+    <!-- Subscribe Confirmation Modal -->
     <div id="subscribeModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
         <div class="relative mx-4 rounded-2xl p-6 border max-w-md h-auto shadow-lg bg-white">
             <div class="mt-3 text-center">
@@ -57,7 +57,7 @@
                 <h3 class="text-lg leading-6 font-medium text-gray-900 mt-2">Unsubscribe from Updates</h3>
                 <div class="mt-2 px-7 py-3">
                     <p class="text-sm text-gray-500">
-                        Are you sure you want to unsubscribe from Outfit 818 updates?
+                        Are you sure you want to unsubscribe from Nova Studio updates?
                         You'll no longer receive exclusive fashion news and special offers.
                     </p>
                 </div>
@@ -73,7 +73,7 @@
                         @method('DELETE')
                         <button type="submit"
                             class="w-full px-4 py-2 bg-red-600 text-white text-base font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors duration-200">
-                           Unsubscribe
+                            Unsubscribe
                         </button>
                     </form>
                 </div>
@@ -81,38 +81,40 @@
         </div>
     </div>
 
-<!-- JS: toggle logic -->
-@push('scripts')
-<script>
-    function showSubscribeModal() {
-        document.getElementById('subscribeModal').classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-    }
-    function hideSubscribeModal() {
-        document.getElementById('subscribeModal').classList.add('hidden');
-        document.body.style.overflow = 'auto';
-    }
+    <!-- JS: toggle logic -->
+    @push('scripts')
+        <script>
+            function showSubscribeModal() {
+                document.getElementById('subscribeModal').classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
 
-    function showUnsubscribeModal() {
-        document.getElementById('unsubscribeModal').classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-    }
-    function hideUnsubscribeModal() {
-        document.getElementById('unsubscribeModal').classList.add('hidden');
-        document.body.style.overflow = 'auto';
-    }
+            function hideSubscribeModal() {
+                document.getElementById('subscribeModal').classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
 
-    // Close when clicking outside or pressing ESC
-    document.addEventListener('click', e => {
-        if (e.target.id === 'subscribeModal') hideSubscribeModal();
-        if (e.target.id === 'unsubscribeModal') hideUnsubscribeModal();
-    });
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') {
-            hideSubscribeModal();
-            hideUnsubscribeModal();
-        }
-    });
-</script>
-@endpush
+            function showUnsubscribeModal() {
+                document.getElementById('unsubscribeModal').classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function hideUnsubscribeModal() {
+                document.getElementById('unsubscribeModal').classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+
+            // Close when clicking outside or pressing ESC
+            document.addEventListener('click', e => {
+                if (e.target.id === 'subscribeModal') hideSubscribeModal();
+                if (e.target.id === 'unsubscribeModal') hideUnsubscribeModal();
+            });
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape') {
+                    hideSubscribeModal();
+                    hideUnsubscribeModal();
+                }
+            });
+        </script>
+    @endpush
 @endauth

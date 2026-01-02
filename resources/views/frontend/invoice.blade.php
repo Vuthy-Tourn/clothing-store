@@ -45,14 +45,13 @@
         </thead>
         <tbody>
             @foreach ($order->items as $item)
-            <tr>
-    <td>{{ $item->product_name }}</td>
-    <td>{{ $item->size }}</td>
-    <td>{{ $item->quantity }}</td>
-    <td>INR {{ number_format($item->price, 2) }}</td>
-    <td>INR {{ number_format($item->price * $item->quantity, 2) }}</td>
-</tr>
-
+                <tr>
+                    <td>{{ $item->product_name }}</td>
+                    <td>{{ $item->size }}</td>
+                    <td>{{ $item->quantity }}</td>
+                    <td>INR {{ number_format($item->price, 2) }}</td>
+                    <td>INR {{ number_format($item->price * $item->quantity, 2) }}</td>
+                </tr>
             @endforeach
         </tbody>
     </table>

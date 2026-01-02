@@ -30,7 +30,7 @@ class CustomPasswordResetMail extends Mailable
         //     'email' => $this->user->email,
         // ]);
 
-        return $this->subject('Reset Your Outfit 818 Password')
+        return $this->subject('Reset Your Nova Studio Password')
             ->view('emails.custom-password-reset')
             ->with([
                 'resetUrl' => $resetUrl,

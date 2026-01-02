@@ -23,8 +23,8 @@ return [
     'new_arrivals_title' => 'New Arrivals',
     
     // About Brand Section
-    'about_brand' => 'About Outfit 818',
-    'about_description' => 'At Outfit 818, we believe fashion is more than just clothing — it\'s confidence, creativity, and comfort. Our mission is to blend timeless designs with modern trends to create something truly unique for every individual.',
+    'about_brand' => 'About Nova Studio',
+    'about_description' => 'At Nova Studio, we believe fashion is more than just clothing — it\'s confidence, creativity, and comfort. Our mission is to blend timeless designs with modern trends to create something truly unique for every individual.',
     'brand_quote' => 'Dress well. Feel unstoppable.',
     
     // Featured Product
@@ -46,7 +46,7 @@ return [
     
     // Email Opt-in
     'get_styled' => 'Get Styled, Stay Updated.',
-    'subscribe_description' => 'Be the first to know about exclusive drops, latest arrivals, and limited-time offers from Outfit 818.',
+    'subscribe_description' => 'Be the first to know about exclusive drops, latest arrivals, and limited-time offers from Nova Studio.',
     'enter_email' => 'Enter your email address',
     'subscribe' => 'Subscribe',
     'subscribed_message' => 'You\'re subscribed to our updates!',
@@ -332,7 +332,7 @@ return [
     
     // Mission
     'our_mission' => 'Our Mission',
-    'mission_text' => 'At Outfit Store, we believe in empowering everyone to express their unique style through sustainable, high-quality fashion. Join us in redefining what it means to look and feel your best!',
+    'mission_text' => 'At Nova Studio, we believe in empowering everyone to express their unique style through sustainable, high-quality fashion. Join us in redefining what it means to look and feel your best!',
 
      // Cart Page
     'shopping_cart' => 'Shopping Cart',
@@ -624,7 +624,7 @@ return [
     'check_email' => 'Check your email for the reset link',
     'email_verified' => 'Email verified',
     'invalid_email' => 'Please enter a valid email address',
-    'support_email' => 'support@outfit818.com',
+    'support_email' => 'support@novastudio.com',
     'reset_success' => 'Reset link sent successfully',
     'reset_error' => 'Error sending reset link',
     'set_new_password' => 'Set New Password',

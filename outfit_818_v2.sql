@@ -1,4 +1,4 @@
--- Enhanced Database Schema for Outfit 818 (Fresh Installation)
+-- Enhanced Database Schema for Nova Studio (Fresh Installation)
 -- phpMyAdmin compatible version without information_schema access
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -383,7 +383,7 @@ INSERT INTO `categories` (`name`, `slug`, `image`, `description`, `status`, `cre
 ('Kids', 'kids', 'category-kids.jpg', 'Clothing for children', 'active', NOW(), NOW());
 
 INSERT INTO `users` (`name`, `email`, `password`, `account_type`, `phone`, `is_verified`, `created_at`, `updated_at`) VALUES
-('Admin User', 'admin@outfit818.com', '$2y$12$YourHashedPasswordHere', 'admin', '1234567890', 1, NOW(), NOW()),
+('Admin User', 'admin@novastudio.com', '$2y$12$YourHashedPasswordHere', 'admin', '1234567890', 1, NOW(), NOW()),
 ('John Customer', 'john@example.com', '$2y$12$YourHashedPasswordHere', 'customer', '9876543210', 1, NOW(), NOW());
 
 INSERT INTO `carousels` (`title`, `description`, `image_path`, `button_text`, `button_link`, `is_active`, `sort_order`, `created_at`, `updated_at`) VALUES
