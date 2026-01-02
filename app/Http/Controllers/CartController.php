@@ -109,7 +109,8 @@ class CartController extends Controller
         $subtotal = 0;
         foreach ($items as $item) {
             if ($item->variant) {
-                $item->unit_price = $item->variant->sale_price ?? $item->variant->price;
+                // Get final price with discount already applied from variant
+                $item->unit_price = $item->variant->final_price;
                 $item->total_price = $item->unit_price * $item->quantity;
                 $subtotal += $item->total_price;
                 
@@ -118,18 +119,19 @@ class CartController extends Controller
                 $item->product_image = $item->variant->product->images->first()->image_path ?? 'products/placeholder.jpg';
                 $item->size = $item->variant->size;
                 $item->color = $item->variant->color;
+                $item->color_code = $item->variant->color_code;
+                $item->sku = $item->variant->sku;
+                
+                // Discount information (already applied in final_price)
+                $item->has_discount = $item->variant->has_discount;
+                $item->discount_value = $item->variant->discount_value;
             }
         }
 
-        // Calculate shipping and taxes
-        $shipping = 10.00; // Example flat rate
-        $tax = $subtotal * 0.08; // Example 8% tax
-        $grandTotal = $subtotal + $shipping + $tax;
-
-        return view('frontend.cart', compact('items', 'subtotal', 'shipping', 'tax', 'grandTotal'));
+        return view('frontend.cart', compact('items', 'subtotal'));
     }
 
-    // New method for AJAX quantity updates
+    // AJAX quantity updates
     public function update(Request $request)
     {
         $request->validate([
@@ -162,19 +164,25 @@ class CartController extends Controller
         // Update quantity
         $cartItem->update(['quantity' => $request->quantity]);
 
-        // Calculate updated totals
-        $itemTotal = ($cartItem->variant ? ($cartItem->variant->sale_price ?? $cartItem->variant->price) : 0) * $cartItem->quantity;
+        // Calculate item total with discount already applied
+        $itemTotal = 0;
+        if ($cartItem->variant) {
+            // final_price already includes discounts
+            $itemTotal = $cartItem->variant->final_price * $cartItem->quantity;
+        }
+
+        // Calculate updated cart total
         $cartTotal = $this->calculateCartTotal();
 
         return response()->json([
             'success' => true,
             'message' => 'Quantity updated successfully.',
             'item_total' => $itemTotal,
-            'cart_total' => $cartTotal
+            'cart_total' => $cartTotal,
+            'grand_total' => $cartTotal + ($cartTotal * 0.08) // Include tax
         ]);
     }
 
-    // Helper method to calculate cart total
     private function calculateCartTotal()
     {
         $items = CartItem::with(['variant'])
@@ -184,7 +192,8 @@ class CartController extends Controller
         $total = 0;
         foreach ($items as $item) {
             if ($item->variant) {
-                $price = $item->variant->sale_price ?? $item->variant->price;
+                // final_price already includes discounts
+                $price = $item->variant->final_price;
                 $total += $price * $item->quantity;
             }
         }

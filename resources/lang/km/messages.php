@@ -34,7 +34,7 @@ return [
     'key_features' => 'លក្ខណៈពិសេស៖',
     'premium_quality' => 'សម្ភារៈគុណភាពខ្ពស់',
     'extended_warranty' => 'មានការធានារួមបញ្ចូល',
-    'free_personalization' => 'ការផ្ទាល់ខ្លួនឥតគិតថ្លៃ',
+    'free_delivery' => 'ដឹកជញ្ជូនឥតគិតថ្លៃ',
     'price_includes' => 'តម្លៃរួមមានពន្ធទាំងអស់ ការផ្តល់ហិរញ្ញវត្ថុមាន',
     'special_price' => 'តម្លៃពិសេសសម្រាប់ថ្ងៃនេះប៉ុណ្ណោះ',
     'purchase_now' => 'ទិញឥឡូវនេះ',
@@ -896,4 +896,11 @@ return [
     'file_too_large' => 'ឯកសារធំពេក។ ទំហំអតិបរមាគឺ 2MB ។',
     'invalid_date_format' => 'ទម្រង់កាលបរិច្ឆេទមិនត្រឹមត្រូវ។',
     'phone_already_taken' => 'លេខទូរស័ព្ទត្រូវបានគេយករួចហើយ។',
+
+    'order_message' => [
+        'success' => 'ការកម្មង់ជោគជ័យ!',
+        'thank_you' => 'សូមអរគុណ!',
+        'confirmed' => 'ការកម្មង់លេខ #:order_number បានបញ្ជាក់ហើយ!',
+        'auto_close' => 'សារនេះនឹងបិទដោយស្វ័យប្រវត្តិក្នុងរយៈពេល :seconds វិនាទី',
+    ],
 ];

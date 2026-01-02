@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 
@@ -15,6 +14,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset(path: 'assets/css/style.css') }}">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             AOS.init({
@@ -26,7 +27,7 @@
 </head>
 
 <body>
-    
+
     @include('partials.navbar')
 
     <x-toast />
@@ -41,7 +42,7 @@
 
     <script src="{{ asset('assets/js/index.js') }}"></script>
     <script src="{{ asset('assets/js/filter-system.js') }}"></script>
-    
+
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script>
         document.addEventListener('alpine:init', () => {
@@ -117,6 +118,9 @@
     </script>
 
     @stack('styles')
+    @push('styles')
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    @endpush
     @stack('scripts')
 
     @if (session('success'))

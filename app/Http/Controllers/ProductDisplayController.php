@@ -142,6 +142,9 @@ class ProductDisplayController extends Controller
         ->where('status', 'active')
         ->firstOrFail();
 
+        // Load variants with accessors
+    $product->load('variants');
+
         // Check if reviews table exists and load reviews if it does
         if (Schema::hasTable('product_reviews')) {
             $product->load(['reviews' => function($query) {

@@ -99,7 +99,8 @@
                                         <div class="text-center py-8 border-2 border-dashed border-gray-300 rounded-xl">
                                             <i class="fas fa-map-marker-alt text-gray-400 text-4xl mb-3"></i>
                                             <p class="text-gray-600">{{ __('messages.no_saved_addresses') }}</p>
-                                            <p class="text-gray-500 text-sm mt-1">{{ __('messages.add_new_address_below') }}</p>
+                                            <p class="text-gray-500 text-sm mt-1">
+                                                {{ __('messages.add_new_address_below') }}</p>
                                         </div>
                                     @endif
                                 </div>
@@ -113,7 +114,8 @@
                                     <!-- Save Address Option -->
                                     <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
                                         <div>
-                                            <p class="font-medium text-gray-900">{{ __('messages.save_address_for_future') }}</p>
+                                            <p class="font-medium text-gray-900">
+                                                {{ __('messages.save_address_for_future') }}</p>
                                             <p class="text-sm text-gray-600">{{ __('messages.save_address_description') }}
                                             </p>
                                         </div>
@@ -172,7 +174,8 @@
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all @error('phone') border-red-500 @enderror"
                                                 value="{{ old('phone', auth()->user()->phone ?? '') }}"
                                                 placeholder="{{ __('messages.phone_placeholder') }}">
-                                            <p class="text-xs text-gray-500 mt-1">{{ __('messages.cambodia_phone_format') }}</p>
+                                            <p class="text-xs text-gray-500 mt-1">
+                                                {{ __('messages.cambodia_phone_format') }}</p>
                                             @error('phone')
                                                 <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                                             @enderror
@@ -184,7 +187,8 @@
                                             </label>
                                             <input type="text" id="city" name="city" required
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all @error('city') border-red-500 @enderror"
-                                                value="{{ old('city') }}" placeholder="{{ __('messages.your_city') }}">
+                                                value="{{ old('city') }}"
+                                                placeholder="{{ __('messages.your_city') }}">
                                             @error('city')
                                                 <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                                             @enderror
@@ -196,7 +200,8 @@
                                             </label>
                                             <input type="text" id="state" name="state" required
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all @error('state') border-red-500 @enderror"
-                                                value="{{ old('state') }}" placeholder="{{ __('messages.your_state_province') }}">
+                                                value="{{ old('state') }}"
+                                                placeholder="{{ __('messages.your_state_province') }}">
                                             @error('state')
                                                 <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                                             @enderror
@@ -233,7 +238,8 @@
                                             </label>
                                             <input type="text" id="address2" name="address2"
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
-                                                value="{{ old('address2') }}" placeholder="{{ __('messages.address_line_2_placeholder') }}">
+                                                value="{{ old('address2') }}"
+                                                placeholder="{{ __('messages.address_line_2_placeholder') }}">
                                         </div>
 
                                         <div class="md:col-span-2">
@@ -246,14 +252,17 @@
                                                     {{ old('country', 'United States') == 'United States' ? 'selected' : '' }}>
                                                     {{ __('messages.united_states') }}</option>
                                                 <option value="Cambodia"
-                                                    {{ old('country') == 'Cambodia' ? 'selected' : '' }}>{{ __('messages.cambodia') }}</option>
+                                                    {{ old('country') == 'Cambodia' ? 'selected' : '' }}>
+                                                    {{ __('messages.cambodia') }}</option>
                                                 <option value="Canada" {{ old('country') == 'Canada' ? 'selected' : '' }}>
                                                     {{ __('messages.canada') }}</option>
                                                 <option value="United Kingdom"
-                                                    {{ old('country') == 'United Kingdom' ? 'selected' : '' }}>{{ __('messages.united_kingdom') }}
+                                                    {{ old('country') == 'United Kingdom' ? 'selected' : '' }}>
+                                                    {{ __('messages.united_kingdom') }}
                                                 </option>
                                                 <option value="Australia"
-                                                    {{ old('country') == 'Australia' ? 'selected' : '' }}>{{ __('messages.australia') }}
+                                                    {{ old('country') == 'Australia' ? 'selected' : '' }}>
+                                                    {{ __('messages.australia') }}
                                                 </option>
                                             </select>
                                         </div>
@@ -264,13 +273,15 @@
                                                 <input type="checkbox" name="different_billing" value="1"
                                                     class="w-5 h-5 text-gray-900 rounded focus:ring-gray-900"
                                                     id="different_billing_toggle">
-                                                <span class="text-gray-900 font-medium">{{ __('messages.different_billing_address') }}</span>
+                                                <span
+                                                    class="text-gray-900 font-medium">{{ __('messages.different_billing_address') }}</span>
                                             </label>
 
                                             <!-- Billing Address Fields (Initially Hidden) -->
                                             <div id="billing_address_fields"
                                                 class="hidden space-y-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
-                                                <h3 class="font-semibold text-gray-900 mb-3">{{ __('messages.billing_address') }}</h3>
+                                                <h3 class="font-semibold text-gray-900 mb-3">
+                                                    {{ __('messages.billing_address') }}</h3>
 
                                                 <div>
                                                     <label for="billing_name"
@@ -279,7 +290,8 @@
                                                     </label>
                                                     <input type="text" id="billing_name" name="billing_name"
                                                         class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
-                                                        value="{{ old('billing_name') }}" placeholder="{{ __('messages.name_on_card') }}">
+                                                        value="{{ old('billing_name') }}"
+                                                        placeholder="{{ __('messages.name_on_card') }}">
                                                 </div>
 
                                                 <div>
@@ -300,7 +312,8 @@
                                                         </label>
                                                         <input type="text" id="billing_city" name="billing_city"
                                                             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
-                                                            value="{{ old('billing_city') }}" placeholder="{{ __('messages.city') }}">
+                                                            value="{{ old('billing_city') }}"
+                                                            placeholder="{{ __('messages.city') }}">
                                                     </div>
 
                                                     <div>
@@ -310,7 +323,8 @@
                                                         </label>
                                                         <input type="text" id="billing_state" name="billing_state"
                                                             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
-                                                            value="{{ old('billing_state') }}" placeholder="{{ __('messages.state') }}">
+                                                            value="{{ old('billing_state') }}"
+                                                            placeholder="{{ __('messages.state') }}">
                                                     </div>
 
                                                     <div>
@@ -330,11 +344,15 @@
                                                         </label>
                                                         <select id="billing_country" name="billing_country"
                                                             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all">
-                                                            <option value="United States">{{ __('messages.united_states') }}</option>
-                                                            <option value="Cambodia">{{ __('messages.cambodia') }}</option>
+                                                            <option value="United States">
+                                                                {{ __('messages.united_states') }}</option>
+                                                            <option value="Cambodia">{{ __('messages.cambodia') }}
+                                                            </option>
                                                             <option value="Canada">{{ __('messages.canada') }}</option>
-                                                            <option value="United Kingdom">{{ __('messages.united_kingdom') }}</option>
-                                                            <option value="Australia">{{ __('messages.australia') }}</option>
+                                                            <option value="United Kingdom">
+                                                                {{ __('messages.united_kingdom') }}</option>
+                                                            <option value="Australia">{{ __('messages.australia') }}
+                                                            </option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -347,7 +365,8 @@
                                                 <input type="checkbox" name="make_default" value="1"
                                                     class="w-5 h-5 text-gray-900 rounded focus:ring-gray-900"
                                                     {{ old('make_default') ? 'checked' : '' }}>
-                                                <span class="text-gray-900 font-medium">{{ __('messages.set_as_default_shipping') }}</span>
+                                                <span
+                                                    class="text-gray-900 font-medium">{{ __('messages.set_as_default_shipping') }}</span>
                                             </label>
                                         </div>
 
@@ -360,7 +379,8 @@
                                             <textarea id="customer_notes" name="customer_notes" rows="2"
                                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
                                                 placeholder="{{ __('messages.order_notes_placeholder') }}">{{ old('customer_notes') }}</textarea>
-                                            <p class="text-xs text-gray-500 mt-1">{{ __('messages.order_notes_description') }}</p>
+                                            <p class="text-xs text-gray-500 mt-1">
+                                                {{ __('messages.order_notes_description') }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -390,10 +410,13 @@
                                             <i class="fas fa-credit-card text-gray-600"></i>
                                         </div>
                                         <div>
-                                            <p class="font-semibold text-gray-900">{{ __('messages.online_payment_stripe') }}</p>
-                                            <p class="text-sm text-gray-500">{{ __('messages.pay_securely_with_card') }}</p>
+                                            <p class="font-semibold text-gray-900">
+                                                {{ __('messages.online_payment_stripe') }}</p>
+                                            <p class="text-sm text-gray-500">{{ __('messages.pay_securely_with_card') }}
+                                            </p>
                                             <p class="text-xs text-gray-400 mt-1">
-                                                <i class="fas fa-globe-americas"></i> {{ __('messages.usd_khr_conversion') }}
+                                                <i class="fas fa-globe-americas"></i>
+                                                {{ __('messages.usd_khr_conversion') }}
                                             </p>
                                         </div>
                                     </div>
@@ -410,31 +433,191 @@
                         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-8">
                             <h2 class="text-xl font-bold text-gray-900 mb-6">{{ __('messages.order_summary') }}</h2>
 
+                            @php
+                                // RE-CALCULATE TOTALS BASED ON ACTUAL PRICES
+                                $calculatedSubtotal = 0;
+                                $calculatedTotalSavings = 0;
+                                $calculatedOriginalSubtotal = 0;
+
+                                foreach ($items as $item) {
+                                    $variant = $item->variant ?? null;
+
+                                    if ($variant) {
+                                        // Get final price using same logic as cart
+                                        $finalPrice = 0;
+                                        $hasDiscount = false;
+
+                                        if (method_exists($variant, 'getFinalPriceAttribute')) {
+                                            $finalPrice = $variant->final_price;
+                                        } elseif (isset($variant->sale_price) && $variant->sale_price > 0) {
+                                            $finalPrice = $variant->sale_price;
+                                            $hasDiscount = true;
+                                        } elseif (isset($variant->discount_price) && $variant->discount_price > 0) {
+                                            $finalPrice = $variant->discount_price;
+                                            $hasDiscount = true;
+                                        } elseif (isset($variant->discount_value) && $variant->discount_value > 0) {
+                                            $finalPrice = $variant->price * (1 - $variant->discount_value / 100);
+                                            $hasDiscount = true;
+                                        } else {
+                                            $finalPrice = $variant->price;
+                                        }
+
+                                        // Calculate totals
+                                        $itemTotal = $finalPrice * $item->quantity;
+                                        $originalItemTotal = $variant->price * $item->quantity;
+
+                                        $calculatedSubtotal += $itemTotal;
+                                        $calculatedOriginalSubtotal += $originalItemTotal;
+
+                                        if ($hasDiscount) {
+                                            $calculatedTotalSavings += $originalItemTotal - $itemTotal;
+                                        }
+                                    }
+                                }
+
+                                // Use calculated values instead of controller variables
+                                $displaySubtotal = $calculatedSubtotal;
+                                $displayTotalSavings = $calculatedTotalSavings;
+                                $displayOriginalSubtotal = $calculatedOriginalSubtotal;
+                                $displayTax = $displaySubtotal * 0.08;
+                                $displayGrandTotal = $displaySubtotal + $displayTax; // Shipping is 0
+                            @endphp
+
+                            <!-- Total Savings Display -->
+                            @if ($displayTotalSavings > 0)
+                                <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <div
+                                                class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                                                <i class="fas fa-tags text-green-600"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-bold text-green-800">
+                                                    {{ __('messages.total_savings') }}</p>
+                                                <p class="text-xs text-green-600">{{ __('messages.discounts_applied') }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <span
+                                            class="text-lg font-bold text-green-700">-${{ number_format($displayTotalSavings, 2) }}</span>
+                                    </div>
+                                </div>
+                            @endif
+
                             <!-- Order Items -->
                             <div class="space-y-4 mb-6 max-h-96 overflow-y-auto">
                                 @foreach ($items as $item)
+                                    @php
+                                        // Get variant and product info
+                                        $variant = $item->variant ?? null;
+                                        $product = $variant->product ?? null;
+
+                                        // Get the FINAL price - use same logic as cart
+                                        $finalPrice = 0;
+                                        $hasDiscount = $variant->has_discount ?? false;
+                                        $discountPercentage = (int) $variant->discount_value ?? 0;
+
+                                        if ($variant) {
+                                            // Method 1: Check if variant has a discount method
+                                            if (method_exists($variant, 'getFinalPriceAttribute')) {
+                                                $finalPrice = $variant->final_price;
+                                            }
+                                            // Method 2: Check if there's a sale_price or discounted_price
+                                            elseif (isset($variant->sale_price) && $variant->sale_price > 0) {
+                                                $finalPrice = $variant->sale_price;
+                                                $hasDiscount = true;
+                                                $discountPercentage = round(
+                                                    (($variant->price - $variant->sale_price) / $variant->price) * 100,
+                                                );
+                                            }
+                                            // Method 3: Check if variant has any discount field
+                                            elseif (isset($variant->discount_price) && $variant->discount_price > 0) {
+                                                $finalPrice = $variant->discount_price;
+                                                $hasDiscount = true;
+                                                $discountPercentage = round(
+                                                    (($variant->price - $variant->discount_price) / $variant->price) *
+                                                        100,
+                                                );
+                                            }
+                                            // Method 4: Check for discount percentage
+                                            elseif (isset($variant->discount_value) && $variant->discount_value > 0) {
+                                                $finalPrice = $variant->price * (1 - $variant->discount_value / 100);
+                                                $hasDiscount = true;
+                                                $discountPercentage = $variant->discount_value;
+                                            }
+                                            // Method 5: Last resort - use regular price
+                                            else {
+                                                $finalPrice = $variant->price;
+                                            }
+                                        }
+
+                                        // Calculate item totals
+                                        $originalItemTotal = ($variant->price ?? 0) * $item->quantity;
+                                        $finalItemTotal = $finalPrice * $item->quantity;
+                                        $itemSavings = $hasDiscount ? $originalItemTotal - $finalItemTotal : 0;
+                                    @endphp
+
                                     <div class="flex items-center gap-4 pb-4 border-b border-gray-100">
                                         @if (isset($item->product_image) && $item->product_image)
-                                            <img src="{{ Str::startsWith($item->product_image, ['http://', 'https://'])
-                                                ? $item->product_image
-                                                : asset('storage/' . $item->product_image) }}"
-                                                alt="{{ $item->product_name ?? __('messages.product') }}"
-                                                class="w-16 h-16 object-cover rounded-xl">
+                                            <div class="relative">
+                                                <img src="{{ Str::startsWith($item->product_image, ['http://', 'https://'])
+                                                    ? $item->product_image
+                                                    : asset('storage/' . $item->product_image) }}"
+                                                    alt="{{ $item->product_name ?? __('messages.product') }}"
+                                                    class="w-16 h-16 object-cover rounded-xl">
+                                                @if ($hasDiscount)
+                                                    <!-- Discount Badge -->
+                                                    <span
+                                                        class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full z-10">
+                                                        -{{ $discountPercentage }}%
+                                                    </span>
+                                                @endif
+                                            </div>
                                         @else
-                                            <div class="w-16 h-16 bg-gray-200 rounded-xl flex items-center justify-center">
-                                                <i class="fas fa-tshirt text-gray-400"></i>
+                                            <div class="relative">
+                                                <div
+                                                    class="w-16 h-16 bg-gray-200 rounded-xl flex items-center justify-center">
+                                                    <i class="fas fa-tshirt text-gray-400"></i>
+                                                </div>
+                                                @if ($hasDiscount)
+                                                    <!-- Discount Badge -->
+                                                    <div
+                                                        class="absolute -top-1 -left-1 w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center z-10">
+                                                        <i class="fas fa-tag text-xs"></i>
+                                                    </div>
+                                                @endif
                                             </div>
                                         @endif
+
                                         <div class="flex-1 min-w-0">
                                             <h3 class="font-semibold text-gray-900 text-sm line-clamp-1">
                                                 {{ $item->product_name ?? __('messages.product') }}</h3>
-                                            <p class="text-sm text-gray-500">{{ __('messages.size') }}: {{ $item->size ?? __('messages.na') }}</p>
-                                            <p class="text-sm text-gray-500">{{ __('messages.color') }}: {{ $item->color ?? __('messages.na') }}</p>
-                                            <p class="text-sm text-gray-500">{{ __('messages.quantity') }}: {{ $item->quantity }}</p>
+                                            <div class="mt-1">
+                                                @if ($hasDiscount && $itemSavings > 0)
+                                                    <p
+                                                        class="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full inline-block mt-1">
+                                                        <i class="fas fa-piggy-bank mr-1"></i>
+                                                        Save ${{ number_format($itemSavings, 2) }}
+                                                    </p>
+                                                @endif
+                                            </div>
+                                            <p class="text-sm text-gray-500 mt-1">{{ __('messages.size') }}:
+                                                {{ $item->size ?? __('messages.na') }}</p>
+                                            <p class="text-sm text-gray-500">{{ __('messages.color') }}:
+                                                {{ $item->color ?? __('messages.na') }}</p>
+                                            <p class="text-sm text-gray-500">{{ __('messages.quantity') }}:
+                                                {{ $item->quantity }}</p>
                                         </div>
                                         <div class="text-right">
+                                            @if ($hasDiscount && $itemSavings > 0)
+                                                <p class="text-xs text-gray-500 line-through mb-1">
+                                                    ${{ number_format($originalItemTotal, 2) }}
+                                                </p>
+                                            @endif
                                             <p class="font-semibold text-gray-900">
-                                                ${{ number_format($item->total_price ?? 0, 2) }}</p>
+                                                ${{ number_format($finalItemTotal, 2) }}
+                                            </p>
                                         </div>
                                     </div>
                                 @endforeach
@@ -442,32 +625,49 @@
 
                             <!-- Order Totals -->
                             <div class="space-y-3 mb-6">
+                                @if ($displayTotalSavings > 0)
+                                    <div class="flex justify-between text-gray-600">
+                                        <span>{{ __('messages.original_subtotal') }}</span>
+                                        <span>${{ number_format($displayOriginalSubtotal, 2) }}</span>
+                                    </div>
+                                    <div class="flex justify-between text-green-600">
+                                        <span>{{ __('messages.discount') }}</span>
+                                        <span class="font-semibold">-${{ number_format($displayTotalSavings, 2) }}</span>
+                                    </div>
+                                @endif
+
                                 <div class="flex justify-between text-gray-600">
-                                    <span>{{ __('messages.subtotal') }}</span>
-                                    <span>${{ number_format($subtotal, 2) }}</span>
+                                    <span>{{ __('messages.subtotal') }} ({{ $items->count() }}
+                                        {{ __('messages.items') }})</span>
+                                    <span id="subtotal">${{ number_format($displaySubtotal, 2) }}</span>
                                 </div>
                                 <div class="flex justify-between text-gray-600">
                                     <span>{{ __('messages.shipping') }}</span>
-                                    <span class="{{ $shipping == 0 ? 'text-green-600 font-semibold' : 'text-gray-900' }}">
-                                        {{ $shipping == 0 ? __('messages.free') : '$' . number_format($shipping, 2) }}
-                                    </span>
+                                    <span class="text-green-600">{{ __('messages.free') }}</span>
                                 </div>
                                 <div class="flex justify-between text-gray-600">
                                     <span>{{ __('messages.tax') }} (8%)</span>
-                                    <span>${{ number_format($tax, 2) }}</span>
+                                    <span id="tax">${{ number_format($displayTax, 2) }}</span>
                                 </div>
                                 <div class="border-t border-gray-200 pt-3">
                                     <div class="flex justify-between text-lg font-bold text-gray-900">
                                         <span>{{ __('messages.total') }}</span>
-                                        <span>${{ number_format($grandTotal, 2) }}</span>
+                                        <span id="grand-total">${{ number_format($displayGrandTotal, 2) }}</span>
                                     </div>
                                     @php
                                         $exchangeRate = 4000;
-                                        $grandTotalKHR = $grandTotal * $exchangeRate;
+                                        $grandTotalKHR = $displayGrandTotal * $exchangeRate;
+                                        $savingsKHR = $displayTotalSavings * $exchangeRate;
                                     @endphp
                                     <p class="text-xs text-gray-500 text-right mt-1">
                                         ≈ ៛{{ number_format($grandTotalKHR, 0) }} KHR
                                     </p>
+                                    @if ($displayTotalSavings > 0)
+                                        <p class="text-xs text-green-600 text-right mt-1">
+                                            <i class="fas fa-shopping-bag mr-1"></i>
+                                            You saved ៛{{ number_format($savingsKHR, 0) }} KHR
+                                        </p>
+                                    @endif
                                 </div>
                             </div>
 
@@ -498,9 +698,15 @@
 
                             <!-- Submit Button -->
                             <button type="submit"
-                                class="w-full bg-gray-900 text-white py-4 px-6 rounded-xl font-semibold hover:bg-gray-800 transition-all duration-300 hover:scale-105 shadow-lg flex items-center justify-center gap-3 checkout-btn">
+                                class="w-full bg-gray-900 text-white py-4 px-6 rounded-xl font-semibold hover:bg-gray-800 transition-all duration-300 hover:scale-105 shadow-lg flex items-center justify-center gap-3 checkout-btn relative">
                                 <i class="fa-solid fa-cart-shopping"></i>
-                                {{ __('messages.pay') }} ${{ number_format($grandTotal, 2) }}
+                                @if ($displayTotalSavings > 0)
+                                    <div
+                                        class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center animate-pulse">
+                                        <i class="fas fa-tag text-xs"></i>
+                                    </div>
+                                @endif
+                                {{ __('messages.pay') }} ${{ number_format($displayGrandTotal, 2) }}
                             </button>
 
                             <!-- Continue Shopping -->
@@ -512,8 +718,8 @@
                                 </a>
                             </div>
                         </div>
-                        </form>
                     </div>
+                    </form>
                 </div>
             @else
                 <!-- Empty Cart State -->
@@ -837,7 +1043,7 @@
                     // Validate saved address selection
                     if (!savedAddressIdInput.value) {
                         e.preventDefault();
-                        alert('{{ __("messages.select_saved_address") }}');
+                        alert('{{ __('messages.select_saved_address') }}');
                         // Switch to saved address tab if not already there
                         if (!tabs[0].classList.contains('active')) {
                             tabs[0].click();
@@ -862,14 +1068,15 @@
 
                     if (!isValid) {
                         e.preventDefault();
-                        alert('{{ __("messages.fill_required_fields") }}');
+                        alert('{{ __('messages.fill_required_fields') }}');
                         return false;
                     }
                 }
 
                 // Disable button and show loading state
                 checkoutBtn.disabled = true;
-                checkoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> {{ __("messages.processing") }}...';
+                checkoutBtn.innerHTML =
+                    '<i class="fas fa-spinner fa-spin"></i> {{ __('messages.processing') }}...';
             });
         });
     </script>

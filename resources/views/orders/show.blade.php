@@ -441,5 +441,70 @@
                 closePopup();
             }
         });
+
+        
     </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check URL for success parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const success = urlParams.get('success');
+        const checkout = urlParams.get('checkout');
+        
+        if (success === '1' || checkout === 'success') {
+            // Clear URL parameters without refresh
+            window.history.replaceState({}, document.title, window.location.pathname);
+            
+            // Show SweetAlert2 with auto-close after 4 seconds
+            Swal.fire({
+                title: '🎉 {{ __("messages.order_message.success") }}',
+                html: `
+                    <div class="text-center">
+                        <h3 class="text-xl font-bold text-gray-600 mb-2">{{ __("messages.order_message.thank_you") }}</h3>
+                        <p class="text-gray-600 mb-1">{{ __("messages.order_message.confirmed", ['order_number' => $order->order_number]) }}</p>
+                    </div>
+                `,
+                icon: 'success',
+                background: '#fff',
+                backdrop: 'rgba(0, 0, 0, 0.5)',
+                allowOutsideClick: true,
+                showConfirmButton: false,
+                showCloseButton: false,
+                timer: 4000,
+                timerProgressBar: true,
+                didOpen: () => {
+                    // Add confetti when modal opens
+                    if (typeof confetti === 'function') {
+                        confetti({
+                            particleCount: 100,
+                            spread: 70,
+                            origin: { y: 0.6 }
+                        });
+                    }
+                },
+                willClose: () => {
+                    console.log('Modal auto-closed');
+                }
+            }).then((result) => {
+                if (result.dismiss === Swal.DismissReason.timer) {
+                    console.log('Closed by timer');
+                }
+            });
+        }
+        
+        // Your existing animations
+        const orderItems = document.querySelectorAll('.bg-gray-50.rounded-xl');
+        orderItems.forEach((item, index) => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateX(-20px)';
+
+            setTimeout(() => {
+                item.style.transition = 'all 0.5s ease';
+                item.style.opacity = '1';
+                item.style.transform = 'translateX(0)';
+            }, index * 100);
+        });
+    });
+</script>
 @endsection

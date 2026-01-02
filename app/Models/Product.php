@@ -486,4 +486,132 @@ public function getRouteKeyName()
     {
         return $this->hasMany(ProductReview::class)->where('is_approved', false);
     }
+
+    // In Product.php model, add these methods:
+
+/**
+ * Get the final price for display
+ */
+public function getFinalPriceAttribute()
+{
+    // First check if product has an active discount
+    if ($this->isDiscountActive()) {
+        return $this->discounted_price;
+    }
+    
+    // Then check if any variant has discount
+    if ($this->variants()->where('has_discount', true)->exists()) {
+        $minVariantPrice = $this->variants()
+            ->where('has_discount', true)
+            ->where('is_active', true)
+            ->where('stock', '>', 0)
+            ->min('discounted_price');
+            
+        if ($minVariantPrice) {
+            return $minVariantPrice;
+        }
+    }
+    
+    // Return regular price
+    return $this->price;
+}
+
+/**
+ * Get display price with discounts applied
+ */
+public function getDisplayPriceAttribute()
+{
+    if ($this->hasVariants()) {
+        // For products with variants, show price range
+        $minPrice = $this->variants()
+            ->where('is_active', true)
+            ->where('stock', '>', 0)
+            ->min('final_price');
+            
+        $maxPrice = $this->variants()
+            ->where('is_active', true)
+            ->where('stock', '>', 0)
+            ->max('final_price');
+            
+        if ($minPrice == $maxPrice) {
+            return '$' . number_format($minPrice, 2);
+        }
+        
+        return '$' . number_format($minPrice, 2) . ' - $' . number_format($maxPrice, 2);
+    }
+    
+    // For products without variants
+    return '$' . number_format($this->final_price, 2);
+}
+
+/**
+ * Check if product or any variant has discount
+ */
+public function hasAnyDiscount()
+{
+    return $this->isDiscountActive() || 
+           $this->variants()->where('has_discount', true)->exists();
+}
+
+/**
+ * Get maximum discount percentage
+ */
+public function getMaxDiscountPercentageAttribute()
+{
+    $maxDiscount = 0;
+    
+    // Check product-level discount
+    if ($this->isDiscountActive()) {
+        $maxDiscount = max($maxDiscount, $this->discount_percentage);
+    }
+    
+    // Check variant discounts
+    $variantDiscounts = $this->variants()
+        ->where('has_discount', true)
+        ->where('is_active', true)
+        ->where('stock', '>', 0)
+        ->get()
+        ->map(function($variant) {
+            return $variant->discount_percentage;
+        })
+        ->max();
+    
+    return max($maxDiscount, $variantDiscounts);
+}
+// In your Product model
+public function getBestVariantDiscountAttribute()
+{
+    if (!$this->relationLoaded('variants')) {
+        $this->load('variants');
+    }
+    
+    return $this->variants->max('discount_percentage') ?? 0;
+}
+
+public function getHasVariantDiscountAttribute()
+{
+    if (!$this->relationLoaded('variants')) {
+        $this->load('variants');
+    }
+    
+    return $this->variants->contains('is_discounted', true);
+}
+
+public function getMinFinalPriceAttribute()
+{
+    if (!$this->relationLoaded('variants')) {
+        $this->load('variants');
+    }
+    
+    return $this->variants->min('final_price') ?? $this->min_price;
+}
+
+public function getMaxFinalPriceAttribute()
+{
+    if (!$this->relationLoaded('variants')) {
+        $this->load('variants');
+    }
+    
+    return $this->variants->max('final_price') ?? $this->max_price;
+}
 }

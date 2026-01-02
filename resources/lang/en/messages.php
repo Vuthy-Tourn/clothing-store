@@ -34,7 +34,7 @@ return [
     'key_features' => 'Key Features:',
     'premium_quality' => 'Premium quality materials',
     'extended_warranty' => 'Extended warranty included',
-    'free_personalization' => 'Free personalization available',
+    'free_delivery' => 'Free delivery',
     'price_includes' => 'Price includes all taxes. Financing available.',
     'special_price' => 'Special price today only',
     'purchase_now' => 'Purchase Now',
@@ -896,4 +896,11 @@ return [
     'file_too_large' => 'File is too large. Maximum size is 2MB.',
     'invalid_date_format' => 'Invalid date format.',
     'phone_already_taken' => 'Phone number is already taken.',
+
+    'order_message' => [
+        'success' => 'Order Successful!',
+        'thank_you' => 'Thank You!',
+        'confirmed' => 'Order #:order_number confirmed!',
+        'auto_close' => 'This message will auto-close in :seconds seconds',
+    ],
 ];
