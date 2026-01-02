@@ -1,4 +1,4 @@
-# OUTFIT 🛍️
+# NOVA STUDIO 🛍️
 
 A fully functional e-commerce clothing website built with Laravel PHP Framework, featuring modern design and comprehensive shopping functionalities.
 
@@ -60,7 +60,7 @@ A fully functional e-commerce clothing website built with Laravel PHP Framework,
     DB_CONNECTION=mysql
     DB_HOST=127.0.0.1
     DB_PORT=3306
-    DB_DATABASE=outfit_818
+    DB_DATABASE=nova_studio
     DB_USERNAME=your_username
     DB_PASSWORD=your_password
 
@@ -83,10 +83,10 @@ A fully functional e-commerce clothing website built with Laravel PHP Framework,
     Import the provided SQL file:
 
     ```bash
-    mysql -u your_username -p outfit_818 < outfit_818.sql
+    mysql -u your_username -p nova_studio < nova_studio.sql
     ```
 
-    Or use phpMyAdmin/MySQL Workbench to import `outfit_818.sql`
+    Or use phpMyAdmin/MySQL Workbench to import `nova_studio.sql`
 
 6. **Run the application**
 
@@ -98,7 +98,7 @@ A fully functional e-commerce clothing website built with Laravel PHP Framework,
 
 ## 👤 Admin Access
 
--   **Email:** team.818x@gmail.com
+-   **Email:** team.novastudio@gmail.com
 -   **Password:** Team@818
 
 ## 📧 Email Setup Guide
@@ -127,7 +127,7 @@ OUTFIT/
 ├── resources/        # Views, CSS, JS
 ├── routes/           # Route definitions
 ├── database/         # Migrations & seeders
-├── outfit_818.sql    # Database file
+├── nova_studio.sql    # Database file
 └── .env.example      # Environment template
 ```
 
@@ -136,6 +136,8 @@ OUTFIT/
 -   **Tailwind CSS:** `https://cdn.tailwindcss.com`
 -   **AOS:** `https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css`
 -   **Font Awesome:** `https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css`
+-   **Toast (Toast Notifications):** `https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css`
+-   **SweetAlert2:** `https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css`
 
 ## ⚠️ Disclaimer
 
