@@ -1,6 +1,7 @@
 # NOVA STUDIO 🛍️
 ![Logo](https://iili.io/fOy7qqx.png)
-A fully functional e-commerce clothing website built with Laravel PHP Framework, featuring modern design and comprehensive shopping functionalities.
+
+**NOVA STUDIO** is a fully functional e-commerce clothing website built with Laravel PHP Framework, featuring modern design and comprehensive shopping functionalities.
 
 ## ✨ Features
 
