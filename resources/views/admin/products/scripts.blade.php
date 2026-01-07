@@ -947,7 +947,9 @@
         // Configuration
         maxAdditionalImages: 5,
         maxFileSize: 5 * 1024 * 1024, // 5MB
-        allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'],
+        allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml',
+            'image/avif'
+        ],
 
         // State
         currentImageIndex: 1,
@@ -1452,11 +1454,14 @@
     };
 
     // ========== EDIT MODAL IMAGE MANAGEMENT ==========
+    // ========== EDIT MODAL IMAGE MANAGEMENT ==========
     const EditImageManager = {
         // Configuration
         maxNewImages: 10,
         maxFileSize: 5 * 1024 * 1024, // 5MB
-        allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'],
+        allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml',
+            'image/avif'
+        ],
 
         // State
         currentNewImageIndex: 1,
@@ -1540,11 +1545,11 @@
 
             if (!images || images.length === 0) {
                 container.innerHTML = `
-            <div class="text-center py-6 border-2 border-dashed border-gray-300 rounded-lg">
-                <i class="fas fa-image text-3xl text-gray-400 mb-2"></i>
-                <p class="text-gray-500">No images found</p>
-            </div>
-        `;
+                <div class="text-center py-6 border-2 border-dashed border-gray-300 rounded-lg">
+                    <i class="fas fa-image text-3xl text-gray-400 mb-2"></i>
+                    <p class="text-gray-500">No images found</p>
+                </div>
+            `;
                 return;
             }
 
@@ -1554,7 +1559,7 @@
             });
         },
 
-        // Create current image card HTML - SIMPLIFIED VERSION
+        // Create current image card HTML
         createCurrentImageCard: function(image, index) {
             const isPrimary = image.is_primary || false;
             const imageId = image.id;
@@ -1563,72 +1568,70 @@
             const altText = image.alt_text || `Product Image ${index + 1}`;
 
             return document.createRange().createContextualFragment(`
-        <div class="current-image-card border border-gray-200 rounded-lg p-4 bg-white transition-shadow duration-200 relative" id="current-image-${imageId}">
-            <!-- SIMPLIFIED Deletion Overlay (just a red diagonal line) -->
-            <div id="deletion-overlay-${imageId}" class="hidden absolute inset-0 z-20 pointer-events-none">
-                <!-- Red diagonal line across the entire card -->
-                <div class="absolute inset-0 bg-red-500/10 rounded-lg border-2 border-red-400"></div>
-              
-            </div>
-            
-            <div class="flex items-start justify-between mb-3 relative z-10">
-                <div class="flex items-center space-x-3">
-                    <div class="relative">
-                        <img src="${imageUrl}" 
-                             alt="${altText}"
-                             class="w-20 h-20 object-cover rounded-lg border border-gray-200"
-                             onerror="this.src='/storage/products/placeholder.jpg'">
+            <div class="current-image-card border border-gray-200 rounded-lg p-4 bg-white transition-shadow duration-200 relative" id="current-image-${imageId}">
+                <!-- Deletion Overlay -->
+                <div id="deletion-overlay-${imageId}" class="hidden absolute inset-0 z-20 pointer-events-none">
+                    <div class="absolute inset-0 bg-red-500/10 rounded-lg border-2 border-red-400"></div>
+                </div>
+                
+                <div class="flex items-start justify-between mb-3 relative z-10">
+                    <div class="flex items-center space-x-3">
+                        <div class="relative">
+                            <img src="${imageUrl}" 
+                                 alt="${altText}"
+                                 class="w-20 h-20 object-cover rounded-lg border border-gray-200"
+                                 onerror="this.src='/storage/products/placeholder.jpg'">
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">Image ${index + 1}</p>
+                        </div>
                     </div>
-                    <div>
-                        <p class="text-sm font-medium text-gray-900">Image ${index + 1}</p>
+                    
+                    <div class="flex items-center space-x-2">
+                        <!-- Primary Radio -->
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="radio" 
+                                   name="primary_image" 
+                                   value="${imageId}"
+                                   ${isPrimary ? 'checked' : ''}
+                                   class="rounded-full border-gray-300 text-blue-600 focus:ring-blue-500"
+                                   onchange="EditImageManager.updatePrimaryImage(${imageId})">
+                            <span class="ml-2 text-xs text-gray-700">Primary</span>
+                        </label>
+                        
+                        <!-- Delete Button -->
+                        <button type="button" 
+                                onclick="EditImageManager.markImageForDeletion(${imageId})" 
+                                class="text-red-600 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors"
+                                title="Delete Image">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
                 </div>
                 
-                <div class="flex items-center space-x-2">
-                    <!-- Primary Radio -->
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" 
-                               name="primary_image" 
-                               value="${imageId}"
-                               ${isPrimary ? 'checked' : ''}
-                               class="rounded-full border-gray-300 text-blue-600 focus:ring-blue-500"
-                               onchange="EditImageManager.updatePrimaryImage(${imageId})">
-                        <span class="ml-2 text-xs text-gray-700">Primary</span>
-                    </label>
-                    
-                    <!-- Delete Button -->
-                    <button type="button" 
-                            onclick="EditImageManager.markImageForDeletion(${imageId})" 
-                            class="text-red-600 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors"
-                            title="Delete Image">
-                        <i class="fas fa-trash"></i>
-                    </button>
+                <!-- Deletion Status Indicator -->
+                <div id="deletion-status-${imageId}" class="hidden mt-2">
+                    <div class="flex items-center p-2 bg-red-50 border border-red-200 rounded-lg">
+                        <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>
+                        <span class="text-xs font-medium text-red-700">Will be deleted when saved</span>
+                        <button type="button" 
+                                onclick="EditImageManager.restoreImage(${imageId})"
+                                class="ml-auto text-xs text-blue-600 hover:text-blue-800 font-medium">
+                            <i class="fas fa-undo mr-1"></i> Undo
+                        </button>
+                    </div>
                 </div>
+                
+                <!-- Hidden fields for existing images -->
+                <input type="hidden" name="existing_images[${index}][id]" value="${imageId}">
+                <input type="hidden" name="existing_images[${index}][alt_text]" value="${image.alt_text || ''}">
+                <input type="hidden" name="existing_images[${index}][sort_order]" value="${image.sort_order || index}">
+                <input type="hidden" name="existing_images[${index}][is_primary]" value="${isPrimary ? '1' : '0'}">
             </div>
-            
-            <!-- Deletion Status Indicator -->
-            <div id="deletion-status-${imageId}" class="hidden mt-2">
-                <div class="flex items-center p-2 bg-red-50 border border-red-200 rounded-lg">
-                    <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>
-                    <span class="text-xs font-medium text-red-700">Will be deleted when saved</span>
-                    <button type="button" 
-                            onclick="EditImageManager.restoreImage(${imageId})"
-                            class="ml-auto text-xs text-blue-600 hover:text-blue-800 font-medium">
-                        <i class="fas fa-undo mr-1"></i> Undo
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Hidden fields for existing images -->
-            <input type="hidden" name="existing_images[${index}][id]" value="${imageId}">
-            <input type="hidden" name="existing_images[${index}][alt_text]" value="${image.alt_text || ''}">
-            <input type="hidden" name="existing_images[${index}][sort_order]" value="${image.sort_order || index}">
-            <input type="hidden" name="existing_images[${index}][is_primary]" value="${isPrimary ? '1' : '0'}">
-        </div>
-    `);
+        `);
         },
 
-        // Mark image for deletion - SIMPLIFIED VERSION
+        // Mark image for deletion
         markImageForDeletion: function(imageId) {
             SafeSwal.fire({
                 title: 'Delete Image?',
@@ -1660,7 +1663,7 @@
                         imageCard.classList.add('border-red-400', 'bg-red-50/30');
                         imageCard.classList.remove('border-gray-200', 'bg-white', 'hover:shadow-md');
 
-                        // Show simplified deletion overlay
+                        // Show deletion overlay
                         const deletionOverlay = document.getElementById(`deletion-overlay-${imageId}`);
                         if (deletionOverlay) {
                             deletionOverlay.classList.remove('hidden');
@@ -1723,7 +1726,7 @@
             });
         },
 
-        // Restore image - SIMPLIFIED VERSION
+        // Restore image
         restoreImage: function(imageId) {
             // Remove from deleted images array
             if (window.deletedImages) {
@@ -1799,19 +1802,29 @@
         // Update deletion status header above images
         updateDeletionStatusHeader: function() {
             const deletionCount = window.deletedImages ? window.deletedImages.length : 0;
+            const statusHeader = document.getElementById('deletionStatusHeader');
 
-            // Find or create deletion status header
-            let statusHeader = document.getElementById('deletionStatusHeader');
-            const currentImagesContainer = document.getElementById('currentImages');
-
-            if (!statusHeader && currentImagesContainer) {
-                statusHeader = document.createElement('div');
-                statusHeader.id = 'deletionStatusHeader';
-
-                // Insert before the current images container
-                const parent = currentImagesContainer.parentElement;
-                if (parent) {
-                    parent.insertBefore(statusHeader, currentImagesContainer);
+            if (statusHeader) {
+                if (deletionCount > 0) {
+                    statusHeader.innerHTML = `
+                    <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                        <div class="flex items-center">
+                            <i class="fas fa-exclamation-triangle text-red-500 mr-2"></i>
+                            <span class="text-sm font-medium text-red-700">
+                                ${deletionCount} image${deletionCount !== 1 ? 's' : ''} marked for deletion
+                            </span>
+                            <button type="button" 
+                                    onclick="EditImageManager.restoreAllImages()"
+                                    class="ml-auto text-xs text-blue-600 hover:text-blue-800 font-medium">
+                                <i class="fas fa-undo mr-1"></i> Restore All
+                            </button>
+                        </div>
+                    </div>
+                `;
+                    statusHeader.classList.remove('hidden');
+                } else {
+                    statusHeader.innerHTML = '';
+                    statusHeader.classList.add('hidden');
                 }
             }
         },
@@ -1870,15 +1883,31 @@
 
         // Update primary image selection
         updatePrimaryImage: function(imageId) {
-            // Uncheck all other primary radio buttons
-            const allRadios = document.querySelectorAll('input[name="primary_image"]');
-            allRadios.forEach(radio => {
+            // Uncheck all other existing primary radios
+            const existingRadios = document.querySelectorAll('input[name="primary_image"]');
+            existingRadios.forEach(radio => {
                 if (parseInt(radio.value) !== imageId) {
                     radio.checked = false;
                 }
             });
 
-            // Update hidden is_primary fields
+            // Uncheck all new primary radios
+            const newPrimaryRadios = document.querySelectorAll('input[name="new_primary_image"]');
+            newPrimaryRadios.forEach(radio => {
+                radio.checked = false;
+                // Update hidden is_primary field for this new image
+                const rowIndex = radio.value;
+                const row = document.querySelector(`[data-index="${rowIndex}"]`);
+                if (row) {
+                    const hiddenInput = row.querySelector(
+                        `input[name="new_images[${rowIndex}][is_primary]"]`);
+                    if (hiddenInput) {
+                        hiddenInput.value = '0';
+                    }
+                }
+            });
+
+            // Update hidden is_primary fields for existing images
             const currentImageCards = document.querySelectorAll('.current-image-card');
             currentImageCards.forEach(card => {
                 const cardImageId = card.id.replace('current-image-', '');
@@ -1887,6 +1916,95 @@
                     isPrimaryInput.value = cardImageId === imageId.toString() ? '1' : '0';
                 }
             });
+        },
+
+        // Handle new primary image selection
+        handleNewPrimaryChange: function(newImageIndex) {
+            // Uncheck all other new primary radios
+            const allNewPrimaryRadios = document.querySelectorAll('input[name="new_primary_image"]');
+            allNewPrimaryRadios.forEach(radio => {
+                if (radio.value !== newImageIndex.toString()) {
+                    radio.checked = false;
+                }
+            });
+
+            // Uncheck all existing primary radios
+            const existingPrimaryRadios = document.querySelectorAll('input[name="primary_image"]');
+            existingPrimaryRadios.forEach(radio => {
+                radio.checked = false;
+                // Update hidden is_primary field for existing image
+                const imageId = radio.value;
+                const card = document.getElementById(`current-image-${imageId}`);
+                if (card) {
+                    const isPrimaryInput = card.querySelector('input[name$="[is_primary]"]');
+                    if (isPrimaryInput) {
+                        isPrimaryInput.value = '0';
+                    }
+                }
+            });
+
+            // Update hidden is_primary fields for all new images
+            const newImageRows = document.querySelectorAll('.new-image-row');
+            newImageRows.forEach(row => {
+                const rowIndex = row.dataset.index;
+                let hiddenInput = row.querySelector(
+                `input[name="new_images[${rowIndex}][is_primary]"]`);
+
+                if (!hiddenInput) {
+                    // Create hidden input if it doesn't exist
+                    hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = `new_images[${rowIndex}][is_primary]`;
+                    row.appendChild(hiddenInput);
+                }
+                // Set to 1 if this is the primary, 0 otherwise
+                hiddenInput.value = rowIndex === newImageIndex.toString() ? '1' : '0';
+            });
+        },
+
+        // Consolidate primary image data before form submission
+        preparePrimaryImageData: function() {
+            // Check for existing primary image
+            const existingPrimary = document.querySelector('input[name="primary_image"]:checked');
+            if (existingPrimary) {
+                // Ensure all new images have is_primary set to 0
+                const newImageRows = document.querySelectorAll('.new-image-row');
+                newImageRows.forEach(row => {
+                    const rowIndex = row.dataset.index;
+                    let hiddenInput = row.querySelector(
+                        `input[name="new_images[${rowIndex}][is_primary]"]`);
+                    if (!hiddenInput) {
+                        hiddenInput = document.createElement('input');
+                        hiddenInput.type = 'hidden';
+                        hiddenInput.name = `new_images[${rowIndex}][is_primary]`;
+                        hiddenInput.value = '0';
+                        row.appendChild(hiddenInput);
+                    } else {
+                        hiddenInput.value = '0';
+                    }
+                });
+                return;
+            }
+
+            // Check for new primary image
+            const newPrimary = document.querySelector('input[name="new_primary_image"]:checked');
+            if (newPrimary) {
+                const newIndex = newPrimary.value;
+                // Ensure hidden input exists and is set to 1
+                const row = document.querySelector(`[data-index="${newIndex}"]`);
+                if (row) {
+                    let hiddenInput = row.querySelector(`input[name="new_images[${newIndex}][is_primary]"]`);
+                    if (!hiddenInput) {
+                        hiddenInput = document.createElement('input');
+                        hiddenInput.type = 'hidden';
+                        hiddenInput.name = `new_images[${newIndex}][is_primary]`;
+                        hiddenInput.value = '1';
+                        row.appendChild(hiddenInput);
+                    } else {
+                        hiddenInput.value = '1';
+                    }
+                }
+            }
         },
 
         // Add new image row in edit modal
@@ -1907,92 +2025,98 @@
             newRow.className = 'new-image-row border border-gray-200 rounded-lg p-4 bg-gray-50';
             newRow.dataset.index = rowIndex;
 
+            // Create hidden is_primary input from the start
+            const hiddenPrimaryInput = document.createElement('input');
+            hiddenPrimaryInput.type = 'hidden';
+            hiddenPrimaryInput.name = `new_images[${rowIndex}][is_primary]`;
+            hiddenPrimaryInput.value = '0';
+
             newRow.innerHTML = `
-        <div class="flex justify-between items-center mb-3">
-            <span class="text-sm font-medium text-gray-900">New Image ${rowIndex}</span>
-            <button type="button" onclick="EditImageManager.removeNewImageRow(this.closest('.new-image-row'))" 
-                    class="text-red-600 hover:text-red-700 text-sm">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
-        <!-- File Upload Area -->
-        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-blue-400 transition-colors duration-200 bg-white relative mb-3">
-            <input type="file" 
-                   name="new_images[${rowIndex}][image]" 
-                   accept="image/*"
-                   class="file-input absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                   onchange="EditImageManager.handleNewImageUpload(event, ${rowIndex})">
-            
-            <div id="newUploadContent-${rowIndex}" class="upload-content text-center py-4">
-                <div class="mx-auto w-12 h-12 mb-2 rounded-full bg-gray-100 flex items-center justify-center">
-                    <i class="fas fa-cloud-upload-alt text-gray-400"></i>
-                </div>
-                <p class="text-sm font-medium text-gray-700">Click to upload new image</p>
-                <p class="text-xs text-gray-500">JPG, PNG, GIF, WebP, SVG up to 5MB</p>
+            <div class="flex justify-between items-center mb-3">
+                <span class="text-sm font-medium text-gray-900">New Image ${rowIndex}</span>
+                <button type="button" onclick="EditImageManager.removeNewImageRow(this.closest('.new-image-row'))" 
+                        class="text-red-600 hover:text-red-700 text-sm">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             
-            <!-- Preview Container -->
-            <div id="newPreview-${rowIndex}" class="hidden">
-                <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200">
-                    <div class="w-12 h-12 rounded overflow-hidden bg-gray-200 flex items-center justify-center">
-                        <img id="newPreviewImg-${rowIndex}" class="w-full h-full object-cover"
-                             src="" alt="New Image Preview">
+            <!-- File Upload Area -->
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-blue-400 transition-colors duration-200 bg-white relative mb-3">
+                <input type="file" 
+                       name="new_images[${rowIndex}][image]" 
+                       accept="image/*"
+                       class="file-input absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                       onchange="EditImageManager.handleNewImageUpload(this, ${rowIndex})">
+                
+                <div id="newUploadContent-${rowIndex}" class="upload-content text-center py-4">
+                    <div class="mx-auto w-12 h-12 mb-2 rounded-full bg-gray-100 flex items-center justify-center">
+                        <i class="fas fa-cloud-upload-alt text-gray-400"></i>
                     </div>
-                    <div class="flex-1 min-w-0 text-left">
-                        <p id="newFileName-${rowIndex}" class="text-sm font-medium text-gray-900 truncate"></p>
-                        <p id="newFileSize-${rowIndex}" class="text-xs text-gray-500"></p>
-                    </div>
-                    <button type="button" onclick="EditImageManager.clearNewImageInput(${rowIndex})"
-                            class="text-gray-400 hover:text-red-500">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Additional Fields -->
-        <div class="space-y-3">
-            <div>
-                <label class="block text-sm font-medium text-gray-900 mb-1">
-                    Alt Text <span class="text-gray-400 text-xs">(optional)</span>
-                </label>
-                <input type="text" 
-                       name="new_images[${rowIndex}][alt_text]" 
-                       class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
-                       placeholder="Describe the image for accessibility"
-                       maxlength="125"
-                       oninput="EditImageManager.validateNewAltText(this)">
-            </div>
-            
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-sm font-medium text-gray-900 mb-1">
-                        Display Order
-                    </label>
-                    <input type="number" 
-                           name="new_images[${rowIndex}][sort_order]" 
-                           value="${rowIndex}"
-                           min="1"
-                           class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                    <p class="text-sm font-medium text-gray-700">Click to upload new image</p>
+                    <p class="text-xs text-gray-500">JPG, PNG, GIF, WebP, SVG up to 5MB</p>
                 </div>
                 
-                <div>
-                    <label class="block text-sm font-medium text-gray-900 mb-1">
-                        Set as Primary?
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" 
-                               name="new_images[${rowIndex}][is_primary]" 
-                               value="1"
-                               class="rounded border-gray-300">
-                        <span class="ml-2 text-sm text-gray-700">Primary Image</span>
-                    </label>
+                <!-- Preview Container -->
+                <div id="newPreview-${rowIndex}" class="hidden">
+                    <div class="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200">
+                        <div class="w-12 h-12 rounded overflow-hidden bg-gray-200 flex items-center justify-center">
+                            <img id="newPreviewImg-${rowIndex}" class="w-full h-full object-cover"
+                                 src="" alt="New Image Preview">
+                        </div>
+                        <div class="flex-1 min-w-0 text-left">
+                            <p id="newFileName-${rowIndex}" class="text-sm font-medium text-gray-900 truncate"></p>
+                            <p id="newFileSize-${rowIndex}" class="text-xs text-gray-500"></p>
+                        </div>
+                        <button type="button" onclick="EditImageManager.clearNewImageInput(${rowIndex})"
+                                class="text-gray-400 hover:text-red-500">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-    `;
+            
+            <!-- Additional Fields -->
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-sm font-medium text-gray-900 mb-1">
+                        Alt Text <span class="text-gray-400 text-xs">(optional)</span>
+                    </label>
+                    <input type="text" 
+                           name="new_images[${rowIndex}][alt_text]" 
+                           class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                           placeholder="Describe the image for accessibility"
+                           maxlength="125"
+                           oninput="EditImageManager.validateNewAltText(this)">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-900 mb-1">
+                            Display Order
+                        </label>
+                        <input type="number" 
+                               name="new_images[${rowIndex}][sort_order]" 
+                               value="${rowIndex}"
+                               min="1"
+                               class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                    </div>
+                    
+                    <div>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" 
+                                   name="new_primary_image" 
+                                   value="${rowIndex}"
+                                   class="rounded-full border-gray-300 text-blue-600 focus:ring-blue-500"
+                                   onchange="EditImageManager.handleNewPrimaryChange(${rowIndex})">
+                            <span class="ml-2 text-sm text-gray-700">Set as Primary</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        `;
 
+            // Append the hidden input
+            newRow.appendChild(hiddenPrimaryInput);
             container.appendChild(newRow);
             this.updateNewImageCount();
 
@@ -2000,12 +2124,12 @@
         },
 
         // Handle new image upload in edit modal
-        handleNewImageUpload: function(event, index) {
-            const file = event.target.files[0];
+        handleNewImageUpload: function(fileInput, index) {
+            const file = fileInput.files[0];
             if (!file) return;
 
             if (!this.validateFile(file)) {
-                event.target.value = '';
+                fileInput.value = '';
                 return;
             }
 
@@ -2075,14 +2199,20 @@
             const uploadContent = document.getElementById(`newUploadContent-${index}`);
             const altText = row.querySelector('input[name*="alt_text"]');
             const sortOrder = row.querySelector('input[name*="sort_order"]');
-            const isPrimary = row.querySelector('input[name*="is_primary"]');
+            const primaryRadio = row.querySelector('input[name="new_primary_image"]');
 
             if (fileInput) fileInput.value = '';
             if (previewContainer) previewContainer.classList.add('hidden');
             if (uploadContent) uploadContent.classList.remove('hidden');
             if (altText) altText.value = '';
             if (sortOrder) sortOrder.value = index;
-            if (isPrimary) isPrimary.checked = false;
+            if (primaryRadio) primaryRadio.checked = false;
+
+            // Also update hidden is_primary input
+            const hiddenInput = row.querySelector(`input[name="new_images[${index}][is_primary]"]`);
+            if (hiddenInput) {
+                hiddenInput.value = '0';
+            }
         },
 
         // Remove new image row
@@ -2125,7 +2255,6 @@
             const container = document.getElementById('newImagesContainer');
             const count = container ? container.querySelectorAll('.new-image-row').length : 0;
 
-            // You can update a counter element if you have one
             const counterElement = document.getElementById('newImagesCount');
             if (counterElement) {
                 counterElement.textContent = count;
@@ -2162,9 +2291,9 @@
             notification.className =
                 `image-notification fixed top-20 right-4 ${colors[type]} text-white px-4 py-3 rounded-lg shadow-lg z-50 flex items-center animate-slideIn`;
             notification.innerHTML = `
-        <i class="${icons[type]} mr-2"></i>
-        <span>${message}</span>
-    `;
+            <i class="${icons[type]} mr-2"></i>
+            <span>${message}</span>
+        `;
 
             document.body.appendChild(notification);
 
@@ -2180,24 +2309,68 @@
             }, 3000);
         },
 
+        // Auto-select primary if none exists
+        autoSelectPrimaryIfNeeded: function() {
+            const primaryImageSelected = document.querySelector('input[name="primary_image"]:checked');
+            const newPrimarySelected = document.querySelector('input[name="new_primary_image"]:checked');
+
+            if (!primaryImageSelected && !newPrimarySelected) {
+                // Find first current image not marked for deletion
+                const firstValidCurrent = document.querySelector(
+                    '.current-image-card:not(.border-red-400) input[name="primary_image"]');
+                if (firstValidCurrent) {
+                    firstValidCurrent.checked = true;
+                    this.updatePrimaryImage(firstValidCurrent.value);
+                    return;
+                }
+
+                // Or check new images
+                const newImageRows = document.querySelectorAll('.new-image-row');
+                if (newImageRows.length > 0) {
+                    const firstNewImage = newImageRows[0].querySelector('input[name="new_primary_image"]');
+                    if (firstNewImage) {
+                        firstNewImage.checked = true;
+                        this.handleNewPrimaryChange(firstNewImage.value);
+                    }
+                }
+            }
+        },
+
         // Validate all images before form submission
         validateEditImages: function() {
+            // Auto-select primary if needed
+            this.autoSelectPrimaryIfNeeded();
+
+            // Prepare primary image data
+            this.preparePrimaryImageData();
+
             let isValid = true;
             const errors = [];
 
-            // Check if primary image will exist after deletions
-            const primaryImageSelected = document.querySelector('input[name="primary_image"]:checked');
-            const currentPrimaryCards = document.querySelectorAll('.current-image-card:not(.border-red-400)');
-            const newImagesWithPrimary = document.querySelectorAll('input[name*="[is_primary]"]:checked');
+            // Count total images that will exist after save
+            const currentImagesNotDeleted = document.querySelectorAll(
+                '.current-image-card:not(.border-red-400)');
+            const newImageRows = document.querySelectorAll('.new-image-row');
+            const newImagesWithFiles = Array.from(newImageRows).filter(row => {
+                const fileInput = row.querySelector('input[type="file"]');
+                return fileInput && fileInput.files && fileInput.files[0];
+            });
 
-            if (!primaryImageSelected && currentPrimaryCards.length === 0 && newImagesWithPrimary.length ===
-                0) {
-                errors.push('At least one image must be set as primary');
-                isValid = false;
+            const totalImagesAfterSave = currentImagesNotDeleted.length + newImagesWithFiles.length;
+
+            // Only require a primary if we have images
+            if (totalImagesAfterSave > 0) {
+                // Check if we have a primary image selected
+                const existingPrimary = document.querySelector('input[name="primary_image"]:checked');
+                const newPrimary = document.querySelector('input[name="new_primary_image"]:checked');
+
+                if (!existingPrimary && !newPrimary) {
+                    errors.push('At least one image must be set as primary');
+                    isValid = false;
+                }
             }
 
             // Validate new images
-            const newImageRows = document.querySelectorAll('.new-image-row');
             newImageRows.forEach(row => {
                 const fileInput = row.querySelector('input[type="file"]');
                 const altText = row.querySelector('input[name*="alt_text"]');

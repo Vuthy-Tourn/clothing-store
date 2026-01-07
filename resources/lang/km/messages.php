@@ -581,7 +581,7 @@ return [
     'join_community' => 'ចូលរួមក្លឹបសម្លៀកបំពាក់របស់យើង',
     'style_quote' => 'រចនាប័ទ្មគឺជាមធ្យោបាយនិយាយថាអ្នកជានរណាដោយមិនចាំបាច់និយាយ។',
     'full_name' => 'ឈ្មោះពេញ',
-    'name_placeholder' => 'លោក ស៊ីន',
+    'name_placeholder' => 'John Doe',
     'email' => 'អ៊ីមែល',
     'email_placeholder' => 'john@example.com',
     'phone_number' => 'លេខទូរស័ព្ទ',

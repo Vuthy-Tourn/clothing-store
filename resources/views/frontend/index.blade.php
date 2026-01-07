@@ -219,7 +219,6 @@
         <h2 style="font-weight: 900;">{{ __('messages.new_arrivals_title') }}</h2>
 
         <div class="carousel-wrapper">
-            <button class="carousel-btn prev" id="new-arrivals-prev">&#10094;</button>
 
             <div class="carousel-track" id="new-arrivals-carousel">
                 @forelse ($arrivals as $arrival)
@@ -230,8 +229,6 @@
                     </div>
                 @endforelse
             </div>
-
-            <button class="carousel-btn next" id="new-arrivals-next">&#10095;</button>
         </div>
     </section>
     @endif
@@ -657,9 +654,9 @@
             fadeEffect: {
                 crossFade: true
             },
-            speed: 1200,
+            speed: 1000,
             autoplay: {
-                delay: 5000,
+                delay: 3000,
                 disableOnInteraction: false,
             },
             loop: true,

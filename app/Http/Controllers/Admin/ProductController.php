@@ -17,88 +17,169 @@ use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
-public function index(Request $request)
-{
-    $query = Product::with(['category', 'variants', 'images' => function($query) {
-        $query->orderBy('is_primary', 'desc')->orderBy('sort_order');
-    }]);
-    
-    // Get all categories for the filter dropdown
-    $categories = Category::orderBy('name')->get();
-    
-    // Search functionality
-    if ($request->has('search') && !empty($request->search)) {
-        $searchTerm = $request->search;
-        $query->where(function($q) use ($searchTerm) {
-            $q->where('name', 'like', '%' . $searchTerm . '%')
-              ->orWhere('brand', 'like', '%' . $searchTerm . '%')
-              ->orWhere('material', 'like', '%' . $searchTerm . '%')
-              ->orWhere('description', 'like', '%' . $searchTerm . '%')
-              ->orWhereHas('category', function($q) use ($searchTerm) {
-                  $q->where('name', 'like', '%' . $searchTerm . '%');
-              })
-              ->orWhereHas('variants', function($q) use ($searchTerm) {
-                  $q->where('color', 'like', '%' . $searchTerm . '%')
-                    ->orWhere('size', 'like', '%' . $searchTerm . '%');
-              });
-        });
-    }
-    
-    // Add filters
-    if ($request->has('category') && !empty($request->category)) {
-        $query->where('category_id', $request->category);
-    }
-    
-    if ($request->has('status') && !empty($request->status)) {
-        $query->where('status', $request->status);
-    }
-    
-    if ($request->has('stock_status') && !empty($request->stock_status)) {
-        if ($request->stock_status === 'in_stock') {
-            $query->whereHas('variants', function($q) {
-                $q->where('stock', '>', 0);
-            });
-        } elseif ($request->stock_status === 'out_of_stock') {
-            $query->whereHas('variants', function($q) {
-                $q->where('stock', '<=', 0);
+    public function index(Request $request)
+    {
+        $query = Product::with(['category', 'variants', 'images' => function($query) {
+            $query->orderBy('is_primary', 'desc')->orderBy('sort_order');
+        }]);
+        
+        // Get all categories for the filter dropdown
+        $categories = Category::orderBy('name')->get();
+        
+        // Search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('name', 'like', '%' . $searchTerm . '%')
+                ->orWhere('brand', 'like', '%' . $searchTerm . '%')
+                ->orWhere('material', 'like', '%' . $searchTerm . '%')
+                ->orWhere('description', 'like', '%' . $searchTerm . '%')
+                ->orWhereHas('category', function($q) use ($searchTerm) {
+                    $q->where('name', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('gender', 'like', '%' . $searchTerm . '%');
+                })
+                ->orWhereHas('variants', function($q) use ($searchTerm) {
+                    $q->where('color', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('size', 'like', '%' . $searchTerm . '%');
+                });
             });
         }
+        
+        // Add filters
+        if ($request->has('category') && !empty($request->category)) {
+            $query->where('category_id', $request->category);
+        }
+        
+        // NEW: Gender filter (filter by category's gender)
+        if ($request->has('gender') && !empty($request->gender)) {
+            $query->whereHas('category', function($q) use ($request) {
+                $q->where('gender', $request->gender);
+            });
+        }
+        
+        if ($request->has('status') && !empty($request->status)) {
+            $query->where('status', $request->status);
+        }
+        
+        if ($request->has('stock_status') && !empty($request->stock_status)) {
+            if ($request->stock_status === 'in_stock') {
+                $query->whereHas('variants', function($q) {
+                    $q->where('stock', '>', 0);
+                });
+            } elseif ($request->stock_status === 'out_of_stock') {
+                $query->whereHas('variants', function($q) {
+                    $q->where('stock', '<=', 0);
+                });
+            }
+        }
+        
+        // Get total counts for stats (unfiltered)
+        $totalProducts = Product::count();
+        $totalActiveProducts = Product::where('status', 'active')->count();
+        $categoriesCount = $categories->count();
+        
+        // Calculate total stock and low stock count from database (unfiltered)
+        $totalStock = Product::with('variants')->get()->sum(function($product) {
+            return $product->variants->sum('stock');
+        });
+        
+        $lowStockCount = Product::with('variants')->get()->filter(function($product) {
+            return $product->variants->sum('stock') <= 10;
+        })->count();
+        
+        // Get available genders for filter dropdown
+        $availableGenders = Category::select('gender')
+            ->whereNotNull('gender')
+            ->where('gender', '!=', '')
+            ->distinct()
+            ->orderBy('gender')
+            ->pluck('gender');
+        
+        // Paginate results (10 per page)
+        $perPage = $request->get('per_page', 10);
+        $products = $query->paginate($perPage)->withQueryString();
+        
+        // For AJAX requests
+        if ($request->ajax()) {
+            // Get filtered counts for AJAX updates
+            $filteredQuery = Product::query();
+            
+            // Apply same filters to count query
+            if ($request->has('search') && !empty($request->search)) {
+                $searchTerm = $request->search;
+                $filteredQuery->where(function($q) use ($searchTerm) {
+                    $q->where('name', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('brand', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('material', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('description', 'like', '%' . $searchTerm . '%')
+                    ->orWhereHas('category', function($q) use ($searchTerm) {
+                        $q->where('name', 'like', '%' . $searchTerm . '%')
+                            ->orWhere('gender', 'like', '%' . $searchTerm . '%');
+                    });
+                });
+            }
+            
+            if ($request->has('category') && !empty($request->category)) {
+                $filteredQuery->where('category_id', $request->category);
+            }
+            
+            // NEW: Gender filter for AJAX
+            if ($request->has('gender') && !empty($request->gender)) {
+                $filteredQuery->whereHas('category', function($q) use ($request) {
+                    $q->where('gender', $request->gender);
+                });
+            }
+            
+            if ($request->has('status') && !empty($request->status)) {
+                $filteredQuery->where('status', $request->status);
+            }
+            
+            if ($request->has('stock_status') && !empty($request->stock_status)) {
+                if ($request->stock_status === 'in_stock') {
+                    $filteredQuery->whereHas('variants', function($q) {
+                        $q->where('stock', '>', 0);
+                    });
+                } elseif ($request->stock_status === 'out_of_stock') {
+                    $filteredQuery->whereHas('variants', function($q) {
+                        $q->where('stock', '<=', 0);
+                    });
+                }
+            }
+            
+            $filteredTotal = $filteredQuery->count();
+            $filteredActiveCount = $filteredQuery->where('status', 'active')->count();
+            $filteredCategoriesCount = $categories->count();
+            
+            return response()->json([
+                'success' => true,
+                'html' => view('admin.products.partials.table', [
+                    'products' => $products
+                ])->render(),
+                'pagination' => view('admin.products.partials.pagination', [
+                    'products' => $products
+                ])->render(),
+                'stats' => [
+                    'total' => $filteredTotal,
+                    'active' => $filteredActiveCount,
+                    'categories' => $filteredCategoriesCount,
+                    'low_stock' => $lowStockCount
+                ],
+                'count' => $products->count(),
+                'totalCount' => $filteredTotal
+            ]);
+        }
+
+        return view('admin.products.index', compact(
+            'products', 
+            'categories', 
+            'availableGenders',
+            'totalProducts', 
+            'totalActiveProducts',
+            'categoriesCount',
+            'totalStock',
+            'lowStockCount'
+        ));
     }
-    
-    // Get filtered products
-    $filteredProducts = $query->orderBy('created_at', 'desc')->get();
-    
-    // Get total counts (unfiltered) for stats comparison
-    $totalProducts = Product::count();
-    $totalActiveProducts = Product::where('status', 'active')->count();
-    
-    // Calculate filtered counts for AJAX updates
-    $filteredCount = $filteredProducts->count();
-    $filteredActiveCount = $filteredProducts->where('status', 'active')->count();
-    $filteredInStockCount = $filteredProducts->filter(function($product) {
-        return $product->variants->sum('stock') > 0;
-    })->count();
-
-    // Handle AJAX requests
-    if ($request->ajax()) {
-        return response()->json([
-            'success' => true,
-            'html' => view('admin.products.partials.table', ['products' => $filteredProducts])->render(),
-            'stats' => [
-                'total' => $filteredCount,
-                'active' => $filteredActiveCount,
-                'in_stock' => $filteredInStockCount,
-                'categories' => $categories->count()
-            ],
-            'count' => $filteredCount
-        ]);
-    }
-
-    // For initial page load, use filtered products if filters are applied
-    $products = $filteredProducts;
-
-    return view('admin.products.index', compact('products', 'categories', 'totalProducts', 'totalActiveProducts'));
-}
         
     public function search(Request $request)
     {
@@ -362,7 +443,7 @@ public function index(Request $request)
         }
     }
 
-  public function edit($id)
+public function edit($id)
 {
     try {
         $product = Product::with(['category', 'variants', 'images' => function($query) {
@@ -450,7 +531,7 @@ public function index(Request $request)
     }
 }
 
-   public function update(Request $request, $id)
+public function update(Request $request, $id)
 {
     $product = Product::with(['variants', 'images'])->findOrFail($id);
 
@@ -464,8 +545,32 @@ public function index(Request $request)
     // Check if it's an AJAX request
     $isAjax = $request->ajax() || $request->wantsJson() || $request->header('X-Requested-With') == 'XMLHttpRequest';
     Log::info('Is AJAX request: ' . ($isAjax ? 'YES' : 'NO'));
+    
+    // Log all request data for debugging
+    Log::info('=== ALL REQUEST DATA ===');
+    Log::info('Request method: ' . $request->method());
+    Log::info('Content-Type: ' . $request->header('Content-Type'));
+    Log::info('Request keys: ' . implode(', ', array_keys($request->all())));
+    
+    // Specifically check for image-related fields
+    Log::info('=== IMAGE FIELD CHECK ===');
+    Log::info('primary_image: ' . ($request->input('primary_image') ?? 'NOT SET'));
+    Log::info('deleted_images_json: ' . ($request->input('deleted_images_json') ?? 'NOT SET'));
+    Log::info('Has new_images: ' . ($request->has('new_images') ? 'YES' : 'NO'));
+    
+    if ($request->has('new_images')) {
+        Log::info('new_images count: ' . count($request->new_images));
+        foreach ($request->new_images as $index => $imageData) {
+            Log::info("New image {$index}:");
+            Log::info("  - Has file: " . (isset($imageData['image']) ? 'YES' : 'NO'));
+            Log::info("  - Alt text: " . ($imageData['alt_text'] ?? 'NOT SET'));
+            Log::info("  - Sort order: " . ($imageData['sort_order'] ?? 'NOT SET'));
+            Log::info("  - Is primary: " . ($imageData['is_primary'] ?? 'NOT SET'));
+            Log::info("  - Is primary type: " . gettype($imageData['is_primary'] ?? 'NOT SET'));
+        }
+    }
 
-    // UPDATED VALIDATION WITH DISCOUNT FIELDS
+    // UPDATED VALIDATION WITH DISCOUNT FIELDS AND NEW_IMAGES.IS_PRIMARY
     $validator = Validator::make($request->all(), [
         'name'               => 'required|string|max:255',
         'category_id'        => 'nullable|exists:categories,id',
@@ -510,13 +615,18 @@ public function index(Request $request)
         'new_images.*.image'           => 'nullable|image|mimes:jpg,jpeg,png,webp,avif|max:2048',
         'new_images.*.alt_text'        => 'nullable|string|max:255',
         'new_images.*.sort_order'      => 'nullable|integer|min:0',
+        'new_images.*.is_primary'      => 'nullable|in:0,1', // ADDED THIS LINE
         
         'deleted_images_json'          => 'nullable|string',
+    ], [
+        'new_images.*.is_primary.in' => 'The is_primary field must be either 0 or 1.',
     ]);
 
     // If AJAX request and validation fails, return JSON errors
     if ($validator->fails()) {
         Log::info('Validation failed');
+        Log::info('Validation errors: ' . json_encode($validator->errors()->toArray()));
+        
         if ($isAjax) {
             return response()->json([
                 'success' => false,
@@ -688,16 +798,51 @@ public function index(Request $request)
                 ->delete();
         }
 
-        // Handle primary image
-        if (!empty($validated['primary_image'])) {
-            ProductImage::where('product_id', $product->id)
-                ->update(['is_primary' => false]);
-                
-            ProductImage::where('id', $validated['primary_image'])
-                ->update(['is_primary' => true]);
-            Log::info('Updated primary image to ID: ' . $validated['primary_image']);
+        // ========== UPDATED PRIMARY IMAGE HANDLING ==========
+        Log::info('=== STARTING IMAGE PROCESSING ===');
+        
+        // Check if we should set a new primary image from new_images
+        $shouldSetNewPrimary = false;
+        $newPrimaryImageData = null;
+        $newPrimaryImageIndex = null;
+        
+        if ($request->has('new_images') && is_array($request->new_images)) {
+            foreach ($request->new_images as $index => $imageData) {
+                if (isset($imageData['is_primary']) && $imageData['is_primary'] == '1') {
+                    $shouldSetNewPrimary = true;
+                    $newPrimaryImageData = $imageData;
+                    $newPrimaryImageIndex = $index;
+                    Log::info("Found new image marked as primary at index: {$index}");
+                    break;
+                }
+            }
         }
+        
+        // Determine the primary image ID (could be existing or new)
+        $primaryImageId = null;
+        
+        if ($shouldSetNewPrimary) {
+            // New image will be primary, so we need to clear all existing primaries
+            Log::info('New image will be primary, clearing existing primary images');
+            ProductImage::where('product_id', $product->id)->update(['is_primary' => false]);
+        } else if (!empty($validated['primary_image'])) {
+            // Existing image is primary
+            $primaryImageId = $validated['primary_image'];
+            Log::info('Existing image will be primary, ID: ' . $primaryImageId);
+            
+            // Clear all existing primaries first
+            ProductImage::where('product_id', $product->id)->update(['is_primary' => false]);
+            
+            // Set the selected existing image as primary
+            ProductImage::where('id', $primaryImageId)
+                ->where('product_id', $product->id)
+                ->update(['is_primary' => true]);
+        } else {
+            Log::info('No primary image specified in request');
+        }
+        // ========== END PRIMARY IMAGE HANDLING ==========
 
+        // ========== UPDATED NEW IMAGES HANDLING ==========
         // Add new images
         if ($request->has('new_images') && is_array($request->new_images)) {
             Log::info('Processing new_images array. Count: ' . count($request->new_images));
@@ -709,21 +854,35 @@ public function index(Request $request)
                 if (isset($imageData['image']) && $imageData['image']->isValid()) {
                     $imagePath = $imageData['image']->store('products/images', 'public');
                     
+                    // Determine if this image should be primary
+                    $isPrimary = false;
+                    
+                    if ($shouldSetNewPrimary && $index == $newPrimaryImageIndex) {
+                        $isPrimary = true;
+                        Log::info("Setting new image as primary: {$imagePath}");
+                    } else if (!$primaryImageId && !$shouldSetNewPrimary && $index == 0) {
+                        // If no primary set at all, make first new image primary
+                        $isPrimary = true;
+                        Log::info("Setting first new image as primary (no other primary selected)");
+                    }
+                    
                     ProductImage::create([
                         'product_id' => $product->id,
                         'image_path' => $imagePath,
                         'alt_text'   => $imageData['alt_text'] ?? null,
-                        'is_primary' => false,
+                        'is_primary' => $isPrimary,
                         'sort_order' => $imageData['sort_order'] ?? $index,
                     ]);
-                    Log::info("New image uploaded: {$imagePath}");
+                    Log::info("New image uploaded: {$imagePath}, is_primary: " . ($isPrimary ? 'YES' : 'NO'));
                 } else {
                     Log::warning("Image at index {$index} is invalid or missing");
+                    Log::warning("Image data: " . json_encode($imageData));
                 }
             }
         } else {
             Log::info('No new_images in request');
         }
+        // ========== END NEW IMAGES HANDLING ==========
 
         // Handle deleted images from JSON
         Log::info('Checking deleted_images_json field...');
@@ -757,6 +916,24 @@ public function index(Request $request)
             }
         } else {
             Log::info('No deleted_images_json field in request');
+        }
+
+        // Verify primary image status after all operations
+        $primaryImage = ProductImage::where('product_id', $product->id)
+            ->where('is_primary', true)
+            ->first();
+            
+        if ($primaryImage) {
+            Log::info('Final primary image: ID ' . $primaryImage->id . ', Path: ' . $primaryImage->image_path);
+        } else {
+            Log::warning('No primary image found after update!');
+            
+            // Try to set a primary image if none exists
+            $firstImage = ProductImage::where('product_id', $product->id)->first();
+            if ($firstImage) {
+                $firstImage->update(['is_primary' => true]);
+                Log::info('Set first image as primary: ID ' . $firstImage->id);
+            }
         }
 
         // Log remaining images for verification

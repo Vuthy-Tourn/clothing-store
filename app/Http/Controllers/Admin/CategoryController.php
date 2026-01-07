@@ -88,48 +88,53 @@ class CategoryController extends Controller
     return view('admin.categories.index', compact('categories'));
 }
 
-   public function store(Request $request)
-{
-    $request->validate([
-        'name'     => 'required|string|max:255',
-        'gender'   => 'required|in:men,women,unisex,kids',
-        'image'    => 'required|image|max:2048',
-        'status'   => 'required|in:active,inactive',
-        'parent_id' => 'nullable|exists:categories,id',
-        'sort_order' => 'nullable|integer|min:0',
-        'description' => 'nullable|string|max:1000',
-    ]);
-
-    try {
-        $slug = Str::slug($request->name);
-        $slug = $this->generateUniqueSlug($slug);
-
-        $path = $request->file('image')->store('categories', 'public');
-
-        Category::create([
-            'name'        => $request->name,
-            'gender'      => $request->gender,
-            'slug'        => $slug,
-            'image'       => $path,
-            'description' => $request->description,
-            'parent_id'   => $request->parent_id,
-            'status'      => $request->status,
-            'sort_order'  => $request->sort_order ?? Category::count(),
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'gender'   => 'required|in:men,women,unisex,kids',
+            'image'    => 'nullable|image|max:2048', // Changed to nullable
+            'status'   => 'required|in:active,inactive',
+            'parent_id' => 'nullable|exists:categories,id',
+            'sort_order' => 'nullable|integer|min:0',
+            'description' => 'nullable|string|max:1000',
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Category created successfully.',
-            'redirect' => route('admin.categories.index')
-        ]);
+        try {
+            $slug = Str::slug($request->name);
+            $slug = $this->generateUniqueSlug($slug);
 
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Error creating category: ' . $e->getMessage()
-        ], 500);
+            $categoryData = [
+                'name'        => $request->name,
+                'gender'      => $request->gender,
+                'slug'        => $request->slug,
+                'description' => $request->description,
+                'parent_id'   => $request->parent_id,
+                'status'      => $request->status,
+                'sort_order'  => $request->sort_order ?? Category::count(),
+            ];
+
+            // Handle image upload only if provided
+            if ($request->hasFile('image')) {
+                $path = $request->file('image')->store('categories', 'public');
+                $categoryData['image'] = $path;
+            }
+
+            Category::create($categoryData);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Category created successfully.',
+                'redirect' => route('admin.categories.index')
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error creating category: ' . $e->getMessage()
+            ], 500);
+        }
     }
-}
 
     public function update(Request $request, $id)
 {
@@ -162,6 +167,7 @@ class CategoryController extends Controller
         }
 
         $category->name        = $request->name;
+        $category->slug        = $request->slug;
         $category->gender      = $request->gender;
         $category->description = $request->description;
         $category->parent_id   = $request->parent_id;

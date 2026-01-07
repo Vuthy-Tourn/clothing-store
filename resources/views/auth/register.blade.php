@@ -140,6 +140,10 @@
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
                         <i class="fas fa-lock text-gray-light"></i>
                     </div>
+                      <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                        onclick="toggleConfirmPassword('password_confirmation')">
+                        <i class="fas fa-eye text-gray-light hover:text-secondary-black transition-colors"></i>
+                    </button>
                 </div>
             </div>
         </div>

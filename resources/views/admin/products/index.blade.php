@@ -14,28 +14,12 @@
                     <i class="fas fa-plus mr-2"></i>
                     {{ __('admin.products.actions.add_product') }}
                 </button>
-
-                <!-- Optional: Add more header actions -->
-                <button onclick="showImportModal()"
-                    class="inline-flex items-center gap-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-3 rounded-xl font-medium transition-all duration-300">
-                    <i class="fas fa-upload"></i>
-                    {{ __('admin.products.actions.import') }}
-                </button>
             </div>
         </div>
     </div>
 
     <!-- Stats Overview with Gradient Design -->
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
-        @php
-            $totalProducts = $products->count();
-            $activeProducts = $products->where('status', 'active')->count();
-            $inactiveProducts = $products->where('status', '!=', 'active')->count();
-            $categoriesCount = $categories->count();
-            $totalStock = $products->sum('stock');
-            $lowStockCount = $products->where('stock', '<=', 10)->count();
-        @endphp
-
         <div class="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 p-6 rounded-xl shadow-sm transform hover:-translate-y-1 transition-transform duration-300"
             data-aos="fade-up" data-aos-delay="100">
             <div class="flex items-center justify-between">
@@ -57,10 +41,10 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-green-600 text-sm font-medium">{{ __('admin.products.stats.active_products') }}</p>
-                    <p class="text-3xl font-bold text-gray-900 mt-1" id="activeProducts">{{ $activeProducts }}</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-1" id="activeProducts">{{ $totalActiveProducts }}</p>
                     <p class="text-green-500 text-xs mt-2 flex items-center">
                         <i class="fas fa-check-circle mr-1"></i>
-                        {{ __('admin.products.stats.active_percent', ['percent' => number_format(($activeProducts / $totalProducts) * 100, 0)]) }}
+                        {{ __('admin.products.stats.active_percent', ['percent' => number_format(($totalActiveProducts / $totalProducts) * 100, 0)]) }}
                     </p>
                 </div>
                 <div class="w-12 h-12 rounded-lg bg-green-500 flex items-center justify-center">
@@ -112,8 +96,47 @@
                 </div>
 
                 <div class="flex flex-col md:flex-row items-start md:items-center gap-4 w-full md:w-auto">
-                    <!-- Filters Row -->
-                    <div class="flex flex-wrap items-center gap-3 mb-3 md:mb-0">
+                  
+
+                    <!-- Search Input -->
+                    <div class="relative w-full md:w-auto">
+                        <input type="text" id="searchInput"
+                            placeholder="{{ __('admin.products.table.search_placeholder') }}"
+                            class="border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-2 pl-10 pr-10 focus:ring-2 focus:ring-blue-500 text-sm w-full md:w-64"
+                            value="{{ request('search') ?? '' }}">
+                        <i class="fas fa-search absolute left-3 top-2.5 text-gray-400 text-sm"></i>
+
+                        <!-- Loading Spinner -->
+                        <div id="searchLoading" class="absolute right-3 top-3 hidden">
+                            <i class="fas fa-spinner fa-spin text-blue-500"></i>
+                        </div>
+
+                        <!-- Clear Button -->
+                        <button id="clearSearchBtn" type="button"
+                            class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 {{ request('search') ? '' : 'hidden' }}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+              <!-- Filters Row -->
+                    <div class="flex flex-wrap items-center gap-3 mb-3 md:mb-0 mt-5">
+                        <!-- Gender Filter -->
+                        <div class="relative">
+                            <select id="genderFilter"
+                                class="border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer w-40">
+                                <option value="">{{ __('admin.categories.table.all_genders') }}</option>
+                                @foreach ($availableGenders as $gender)
+                                    <option value="{{ $gender }}"
+                                        {{ request('gender') == $gender ? 'selected' : '' }}>
+                                        {{ ucfirst($gender) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <i
+                                class="fas fa-chevron-down absolute right-3 top-3 text-gray-400 text-sm pointer-events-none"></i>
+                        </div>
+
                         <!-- Category Filter -->
                         <div class="relative">
                             <select id="categoryFilter"
@@ -167,33 +190,12 @@
                         </div>
 
                         <!-- Clear All Filters Button -->
-                        <button id="clearFiltersBtn" type="button" onclick="clearFilters()"
-                            class="hidden inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-300">
+                        <button id="clearFiltersBtn" type="button"
+                            class="hidden items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-300">
                             <i class="fas fa-times"></i>
                             {{ __('admin.products.filters.clear_all') }}
                         </button>
                     </div>
-
-                    <!-- Search Input -->
-                    <div class="relative w-full md:w-auto">
-                        <input type="text" id="searchInput" placeholder="{{ __('admin.products.table.search_placeholder') }}"
-                            class="border border-gray-200 bg-white text-gray-900 rounded-lg px-4 py-2 pl-10 pr-10 focus:ring-2 focus:ring-blue-500 text-sm w-full md:w-64"
-                            value="{{ request('search') ?? '' }}">
-                        <i class="fas fa-search absolute left-3 top-2.5 text-gray-400 text-sm"></i>
-
-                        <!-- Loading Spinner -->
-                        <div id="searchLoading" class="absolute right-3 top-3 hidden">
-                            <i class="fas fa-spinner fa-spin text-blue-500"></i>
-                        </div>
-
-                        <!-- Clear Button -->
-                        <button id="clearSearchBtn" type="button"
-                            class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 {{ request('search') ? '' : 'hidden' }}">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="overflow-x-auto">
@@ -230,6 +232,11 @@
                     @include('admin.products.partials.table', ['products' => $products])
                 </tbody>
             </table>
+
+            <!-- Pagination Section -->
+            <div id="paginationSection">
+                @include('admin.products.partials.pagination', ['products' => $products])
+            </div>
 
             <!-- Empty State -->
             <div id="emptyState" class="hidden p-12 text-center">
@@ -296,6 +303,60 @@
             border-color: #3b82f6;
             background-color: #eff6ff;
         }
+
+        /* Pagination Styles */
+        nav[aria-label="Pagination"] {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .pagination-link {
+            min-width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .pagination-link:hover {
+            transform: translateY(-1px);
+        }
+
+        .pagination-active {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+        }
+
+        .pagination-disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Shake animation for delete button */
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(10deg);
+            }
+
+            75% {
+                transform: rotate(-10deg);
+            }
+        }
+
+        .group-hover\/delete:shake {
+            animation: shake 0.3s ease-in-out;
+        }
     </style>
 
     <script>
@@ -317,6 +378,7 @@
             return {
                 search: document.getElementById('searchInput').value.trim(),
                 category: document.getElementById('categoryFilter').value,
+                gender: document.getElementById('genderFilter').value,
                 status: document.getElementById('statusFilter').value,
                 stock_status: document.getElementById('stockFilter').value,
                 price_range: document.getElementById('priceFilter') ? document.getElementById('priceFilter').value : ''
@@ -358,18 +420,82 @@
             }
         }
 
-        // Function to apply all filters
-        function applyFilters() {
-            const filters = getCurrentFilters();
+        // Function to scroll to top smoothly
+        function scrollToTop() {
+            const tableContainer = document.querySelector('.overflow-x-auto');
+            if (tableContainer) {
+                tableContainer.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            } else {
+                // Fallback: scroll to top of page
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+        }
 
-            // Update UI
-            updateFilterUI(filters);
-
-            // Show loading
+        // Function to load a specific page
+        function loadPage(url) {
             showTableLoading();
-            document.getElementById('searchLoading')?.classList.remove('hidden');
 
-            // Build query string - remove empty filters
+            // Get current filters
+            const filters = getCurrentFilters();
+            const cleanFilters = {};
+            Object.keys(filters).forEach(key => {
+                if (filters[key] !== '' && filters[key] !== null && filters[key] !== undefined) {
+                    cleanFilters[key] = filters[key];
+                }
+            });
+
+            // Get per page value
+            const perPage = document.getElementById('perPageSelect')?.value || 10;
+            cleanFilters.per_page = perPage;
+
+            // Extract page number from URL or use default
+            const urlObj = new URL(url, window.location.origin);
+            const page = urlObj.searchParams.get('page') || 1;
+            cleanFilters.page = page;
+
+            const queryString = new URLSearchParams(cleanFilters).toString();
+            const fetchUrl = `/admin/products?${queryString}&ajax=1`;
+
+            // Update URL without reloading
+            window.history.pushState({}, '', `/admin/products?${queryString}`);
+
+            fetch(fetchUrl, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        updateTableAndUI(data);
+                        // Scroll to top after content is loaded
+                        setTimeout(scrollToTop, 100);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading page:', error);
+                    // Fallback: reload the page
+                    window.location.href = url;
+                })
+                .finally(() => {
+                    hideTableLoading();
+                });
+        }
+
+        // Function to change items per page
+        function changePerPage(perPage) {
+            // Update URL with per_page parameter and reset to page 1
+            const filters = getCurrentFilters();
+            filters.per_page = perPage;
+            filters.page = 1;
+
             const cleanFilters = {};
             Object.keys(filters).forEach(key => {
                 if (filters[key] !== '' && filters[key] !== null && filters[key] !== undefined) {
@@ -380,9 +506,62 @@
             const queryString = new URLSearchParams(cleanFilters).toString();
             const url = `/admin/products?${queryString}&ajax=1`;
 
-            // Update URL without reloading page
-            const newUrl = queryString ? `/admin/products?${queryString}` : '/admin/products';
-            window.history.pushState({}, '', newUrl);
+            // Update URL
+            window.history.pushState({}, '', `/admin/products?${queryString}`);
+
+            // Fetch with new per page setting
+            showTableLoading();
+            fetch(url, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        updateTableAndUI(data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error changing per page:', error);
+                    // Reload page
+                    window.location.href = `/admin/products?${queryString}`;
+                })
+                .finally(() => {
+                    hideTableLoading();
+                });
+        }
+
+        // Function to apply all filters (main function)
+        function applyFilters() {
+            const filters = getCurrentFilters();
+            filters.page = 1; // Reset to first page when filters change
+
+            // Update UI
+            updateFilterUI(filters);
+
+            // Show loading
+            showTableLoading();
+            document.getElementById('searchLoading')?.classList.remove('hidden');
+
+            // Build query string
+            const cleanFilters = {};
+            Object.keys(filters).forEach(key => {
+                if (filters[key] !== '' && filters[key] !== null && filters[key] !== undefined) {
+                    cleanFilters[key] = filters[key];
+                }
+            });
+
+            // Add per page
+            const perPage = document.getElementById('perPageSelect')?.value || 10;
+            cleanFilters.per_page = perPage;
+
+            const queryString = new URLSearchParams(cleanFilters).toString();
+            const url = `/admin/products?${queryString}&ajax=1`;
+
+            // Update URL
+            window.history.pushState({}, '', `/admin/products?${queryString}`);
 
             // Fetch filtered products
             fetch(url, {
@@ -391,56 +570,65 @@
                         'Accept': 'application/json'
                     }
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
-                    const tableBody = document.getElementById('productsTableBody');
-                    const emptyState = document.getElementById('emptyState');
-
                     if (data.success) {
-                        // Update table body
-                        if (data.html && data.html.trim() !== '') {
-                            tableBody.innerHTML = data.html;
-                            tableBody.classList.remove('hidden');
-                            emptyState.classList.add('hidden');
-                        } else {
-                            // Show empty state
-                            tableBody.innerHTML = '';
-                            tableBody.classList.add('hidden');
-                            emptyState.classList.remove('hidden');
-                        }
-
-                        // Update stats
-                        if (data.stats) {
-                            updateStats(data.stats);
-                        }
-
-                        // Update product count in header
-                        const productCount = document.getElementById('productCount');
-                        if (productCount) {
-                            productCount.textContent = `(${data.count || 0})`;
-                        }
-
-                        // Reinitialize AOS animations for new content
-                        if (typeof AOS !== 'undefined') {
-                            AOS.refresh();
-                        }
+                        updateTableAndUI(data);
                     }
                 })
                 .catch(error => {
                     console.error('Error fetching products:', error);
-                    // Fallback: reload page normally
-                    window.location.href = newUrl;
+                    // Fallback: reload page
+                    window.location.href = `/admin/products?${queryString}`;
                 })
                 .finally(() => {
-                    // Hide loading
                     document.getElementById('searchLoading')?.classList.add('hidden');
                     hideTableLoading();
                 });
+        }
+
+        // Helper function to update table and UI
+        function updateTableAndUI(data) {
+            const tableBody = document.getElementById('productsTableBody');
+            const emptyState = document.getElementById('emptyState');
+            const paginationSection = document.getElementById('paginationSection');
+
+            if (data.html && data.html.trim() !== '') {
+                tableBody.innerHTML = data.html;
+                tableBody.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+
+                // Update pagination if exists
+                if (paginationSection && data.pagination) {
+                    paginationSection.innerHTML = data.pagination;
+                    paginationSection.classList.remove('hidden');
+                }
+            } else {
+                tableBody.innerHTML = '';
+                tableBody.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+
+                // Hide pagination when no results
+                if (paginationSection) {
+                    paginationSection.classList.add('hidden');
+                }
+            }
+
+            // Update stats
+            if (data.stats) {
+                updateStats(data.stats);
+            }
+
+            // Update product count
+            const productCount = document.getElementById('productCount');
+            if (productCount) {
+                productCount.textContent = `(${data.totalCount || 0})`;
+            }
+
+            // Reinitialize animations
+            if (typeof AOS !== 'undefined') {
+                AOS.refresh();
+            }
         }
 
         // Function to clear all filters
@@ -490,6 +678,7 @@
             // Set filter dropdowns
             const filterMap = {
                 'category': 'categoryFilter',
+                'gender': 'genderFilter',
                 'status': 'statusFilter',
                 'stock_status': 'stockFilter',
                 'price_range': 'priceFilter'
@@ -503,6 +692,14 @@
                     }
                 }
             });
+
+            // Set per page select
+            if (urlParams.has('per_page')) {
+                const perPageSelect = document.getElementById('perPageSelect');
+                if (perPageSelect) {
+                    perPageSelect.value = urlParams.get('per_page');
+                }
+            }
         }
 
         // Initialize on page load
@@ -517,7 +714,7 @@
 
             // Apply filters on page load if there are any URL parameters
             const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.toString()) {
+            if (urlParams.toString() && urlParams.get('ajax') !== '1') {
                 // Small delay to ensure DOM is fully loaded
                 setTimeout(() => {
                     applyFilters();
@@ -580,11 +777,11 @@
                     overlay.className =
                         'table-loading-overlay absolute inset-0 bg-white/80 flex items-center justify-center z-10';
                     overlay.innerHTML = `
-                    <div class="text-center">
-                        <i class="fas fa-spinner fa-spin text-blue-500 text-3xl mb-3"></i>
-                        <p class="text-gray-700 font-medium">{{ __('admin.products.table.loading') }}</p>
-                    </div>
-                `;
+                <div class="text-center">
+                    <i class="fas fa-spinner fa-spin text-blue-500 text-3xl mb-3"></i>
+                    <p class="text-gray-700 font-medium">{{ __('admin.products.table.loading') }}</p>
+                </div>
+            `;
                     tableContainer.classList.add('relative');
                     tableContainer.appendChild(overlay);
                 }
@@ -599,34 +796,13 @@
             }
         }
 
-        // Function to show import modal (placeholder)
-        function showImportModal() {
-            Swal.fire({
-                title: '{{ __("admin.products.import.title") }}',
-                html: `
-                    <div class="text-left">
-                        <p class="text-gray-600 mb-4">{{ __("admin.products.import.subtitle") }}</p>
-                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                            <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
-                            <p class="text-gray-600 mb-2">{{ __("admin.products.import.upload") }}</p>
-                            <p class="text-sm text-gray-500 mb-4">{{ __("admin.products.import.file_formats") }} • {{ __("admin.products.import.max_size") }}</p>
-                            <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium">
-                                {{ __("admin.products.import.download_template") }}
-                            </button>
-                        </div>
-                    </div>
-                `,
-                showCancelButton: true,
-                confirmButtonText: '{{ __("admin.products.import.import") }}',
-                cancelButtonText: '{{ __("admin.products.import.cancel") }}',
-                confirmButtonColor: '#3b82f6',
-                width: '600px'
-            });
-        }
+
 
         // Make functions globally available
         window.applyFilters = applyFilters;
         window.clearFilters = clearFilters;
         window.showImportModal = showImportModal;
+        window.loadPage = loadPage;
+        window.changePerPage = changePerPage;
     </script>
 @endsection

@@ -170,35 +170,6 @@ class ProductDisplayController extends Controller
 
         return view('frontend.view-product', compact('product', 'relatedProducts'));
     }
-    // New arrival products
-    public function newArrivals()
-    {
-        $arrivals = Product::with(['images' => function($query) {
-            $query->orderBy('is_primary', 'desc')->limit(1);
-        }, 'variants'])
-        ->where('is_new', true)
-        ->where('status', 'active')
-        ->orderBy('created_at', 'desc')
-        ->take(20)
-        ->get();
-
-        return view('frontend.new-arrivals', compact('arrivals'));
-    }
-
-    // Featured products
-    public function featured()
-    {
-        $featured = Product::with(['images' => function($query) {
-            $query->orderBy('is_primary', 'desc')->limit(1);
-        }, 'variants'])
-        ->where('is_featured', true)
-        ->where('status', 'active')
-        ->orderBy('created_at', 'desc')
-        ->take(20)
-        ->get();
-
-        return view('frontend.featured-products', compact('featured'));
-    }
 
     // Category products
     public function category($categorySlug)
@@ -215,7 +186,7 @@ class ProductDisplayController extends Controller
         ->orderBy('created_at', 'desc')
         ->paginate(30);
 
-        return view('frontend.category-products', compact('products', 'category'));
+        return view('frontend.category-page', compact('products', 'category'));
     }
 
     // Search products
@@ -419,4 +390,5 @@ private function updateProductRating(Product $product)
         'review_count' => $reviewCount,
     ]);
 }
+
 }

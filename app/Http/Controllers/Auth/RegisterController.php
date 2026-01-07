@@ -21,7 +21,11 @@ class RegisterController extends Controller
 
         'email' => 'required|string|email|max:255|unique:users',
 
-        'phone' => ['required', 'regex:/^(?:\+855|0)(10|11|12|15|16|17|18|19|20|23|24|25|26|27|28|29)\d{6}$/', 'unique:users',],
+        'phone' => [
+            'required',
+            'regex:/^(?:0(10|11|12|15|16|17|18|19|20|23|24|25|26|27|28|29)\d{6}|\+855(10|11|12|15|16|17|18|19|20|23|24|25|26|27|28|29)\d{6})$/',
+            'unique:users',
+        ],
 
         'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
 
@@ -47,7 +51,7 @@ class RegisterController extends Controller
     ], [
         'email.unique' => 'An account with this email already exists.',
         'phone.unique' => 'This phone number is already registered.',
-        'phone.regex' => 'Phone must be 10 digits.',
+        'phone.regex' => 'Phone must be more than 9 digits.',
         'dob.before' => 'Date of birth must be before today.',
         'password.confirmed' => 'Passwords do not match.',
         'password.regex' => 'Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number.',

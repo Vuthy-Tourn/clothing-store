@@ -287,6 +287,26 @@
                 if (icon) icon.className = 'fas fa-eye text-gray-light';
             }
         }
+        function toggleConfirmPassword(fieldId = null) {
+            let passwordField;
+            let icon;
+
+            if (fieldId) {
+                passwordField = document.getElementById(fieldId);
+                icon = document.querySelector(`button[onclick="toggleConfirmPassword('${fieldId}')"] i`);
+            } else {
+                passwordField = document.querySelector('input[type="password"]');
+                icon = document.querySelector('button[onclick="toggleConfirmPassword()"] i');
+            }
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                if (icon) icon.className = 'fas fa-eye-slash text-secondary-black';
+            } else {
+                passwordField.type = 'password';
+                if (icon) icon.className = 'fas fa-eye text-gray-light';
+            }
+        }
 
         // Toggle additional info
         function toggleAdditionalInfo() {

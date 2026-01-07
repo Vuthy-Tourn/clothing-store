@@ -763,7 +763,7 @@ return [
     'address_name_optional' => 'Optional',
     'full_name_star' => 'Full Name ',
     'phone_number_star' => 'Phone Number ',
-    'phone_placeholder' => '+1 (123) 456-7890',
+    'phone_placeholder' => '+855 (12) 345-678',
     'address_details' => 'Address Details',
     'address_line1_star' => 'Address Line 1 ',
     'address_line1_placeholder' => 'Street address, P.O. box',

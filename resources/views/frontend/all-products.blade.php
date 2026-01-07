@@ -52,7 +52,7 @@
                                     <h2 class="text-base font-medium text-gray-900 tracking-wide">{{ __('messages.search') }}</h2>
                                     <div class="relative">
                                         <input type="text" id="searchInput" value="{{ request('search') }}"
-                                            placeholder="{{ __('messages.find_your_style') }}"
+                                            placeholder="{{ __('messages.search') }}"
                                             class="w-full px-0 py-3 bg-transparent border-0 border-b border-gray-300 focus:border-black focus:ring-0 transition-all text-sm placeholder:text-gray-400 rounded-none">
                                         <div class="absolute right-0 top-1/2 -translate-y-1/2">
                                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"

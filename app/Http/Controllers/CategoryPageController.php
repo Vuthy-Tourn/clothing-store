@@ -9,50 +9,51 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class CategoryPageController extends Controller
 {
-    public function show(Request $request, $slug)
-    {
-        $category = Category::where('slug', $slug)
-            ->where('status', 'active')
-            ->firstOrFail();
-            
-        $categories = Category::where('status', 'active')->get();
+   public function show(Request $request, $slug)
+{
+    $category = Category::where('slug', $slug)
+        ->where('status', 'active')
+        ->firstOrFail();
+        
+    $categories = Category::where('status', 'active')->get();
 
-        // Start building the query with proper relationships
-        $query = Product::with(['category', 'variants', 'images' => function($query) {
-            $query->where('is_primary', true)->orWhere('sort_order', 0)->limit(1);
-        }])
-        ->where('category_id', $category->id)
-        ->where('status', 'active'); // Only show active products
+    // Start building the query with proper relationships
+    $query = Product::with(['category', 'variants', 'images' => function($query) {
+        $query->where('is_primary', true)->orWhere('sort_order', 0)->limit(1);
+    }])
+    ->where('category_id', $category->id)
+    ->where('status', 'active');
 
-        // Apply all filters
-        $query = $this->applyFilters($query, $request);
+    // Apply all filters
+    $query = $this->applyFilters($query, $request);
 
-        // Get products with sorting
-        $products = $query->get();
+    // Get products with sorting
+    $products = $query->get();
 
-        // Apply sorting
-        $products = $this->applySorting($products, $request);
+    // Apply sorting
+    $products = $this->applySorting($products, $request);
 
-        // Manual pagination
-        $paginator = $this->paginateProducts($products, $request);
+    // Manual pagination
+    $paginator = $this->paginateProducts($products, $request);
 
-        // Get available filters for sidebar
-        $availableSizes = $this->getAvailableSizes($category->id);
-        $availableColors = $this->getAvailableColors($category->id);
-        $availableBrands = $this->getAvailableBrands($category->id);
-        $priceRange = $this->getPriceRange($category->id);
+    // Get available filters for sidebar
+    $availableSizes = $this->getAvailableSizes($category->id);
+    $availableColors = $this->getAvailableColors($category->id);
+    $availableBrands = $this->getAvailableBrands($category->id);
+    $priceRange = $this->getPriceRange($category->id);
 
-        return view('frontend.category-page', [
-            'category' => $category,
-            'categories' => $categories,
-            'products' => $paginator,
-            'availableSizes' => $availableSizes,
-            'availableColors' => $availableColors,
-            'availableBrands' => $availableBrands,
-            'priceRange' => $priceRange,
-            'filters' => $request->all()
-        ]);
-    }
+    return view('frontend.category-page', [
+        'category' => $category,
+        'categories' => $categories,
+        'products' => $paginator,
+        'availableSizes' => $availableSizes,
+        'availableColors' => $availableColors,
+        'availableBrands' => $availableBrands,
+        'priceRange' => $priceRange,
+        'filters' => $request->all(),
+        'gender' => $category->gender ?? null, // ADD THIS LINE
+    ]);
+}
 
     public function showByGender(Request $request, $gender)
     {
@@ -60,7 +61,7 @@ class CategoryPageController extends Controller
         $genderMap = [
             'men' => 'men',
             'women' => 'women',
-            'kids' => 'unisex'
+            'kids' => 'kids'
         ];
         
         $dbGender = $genderMap[$gender] ?? $gender;
@@ -88,9 +89,7 @@ class CategoryPageController extends Controller
         // Build query for ALL products of this gender (across all categories)
         $categoryIds = $genderCategories->pluck('id')->toArray();
         
-        $query = Product::with(['category', 'variants', 'images' => function($query) {
-            $query->where('is_primary', true)->orWhere('sort_order', 0)->limit(1);
-        }])
+        $query = Product::with(['category', 'variants', 'images'])
         ->whereIn('category_id', $categoryIds)
         ->where('status', 'active'); // Only show active products
 

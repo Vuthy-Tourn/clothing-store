@@ -355,6 +355,7 @@ return [
         'edit_subtitle' => 'អាប់ដេតព័ត៌មានលម្អិតប្រភេទ',
         'name' => 'ឈ្មោះប្រភេទ',
         'name_placeholder' => 'ឧទាហរណ៍៖ សម្លៀកបំពាក់បុរស',
+         'slug_label' => 'ប្រភេទ Slug',
         'gender_label' => 'ភេទ',
         'gender_men' => 'បុរស',
         'gender_women' => 'ស្ត្រី',

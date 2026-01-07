@@ -1,6 +1,5 @@
 @forelse($products as $product)
-    <tr class="hover:bg-gray-50 transition-colors duration-150" data-aos="fade-up"
-        data-aos-delay="{{ $loop->index * 50 }}">
+    <tr class="hover:bg-gray-50 transition-colors duration-150">
         <td class="py-4 px-6">
             <span class="text-sm font-mono text-gray-500">#{{ $product->id }}</span>
         </td>
@@ -49,9 +48,9 @@
             @endphp
             <div class="flex items-center">
                 <span class="font-medium mr-2">{{ $totalStock }}</span>
-                <span class="text-sm text-gray-500">
+                {{-- <span class="text-sm text-gray-500">
                     {{ $product->variants->count() }} {{ __('admin.products.table.variants') }}
-                </span>
+                </span> --}}
             </div>
         </td>
         <td class="py-4 px-6 text-center">
@@ -87,8 +86,6 @@
                     title="{{ __('admin.products.table.delete') }}">
                     <i class="fas fa-trash text-sm group-hover/delete:shake transition-transform duration-300"></i>
                 </button>
-
-
             </div>
         </td>
     </tr>

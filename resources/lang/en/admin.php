@@ -361,6 +361,7 @@ return [
             'edit_subtitle' => 'Update category details',
             'name' => 'Category Name',
             'name_placeholder' => 'e.g., Men\'s Clothing',
+            'slug_label' => 'Category Slug',
             'gender_label' => 'Gender',
             'gender_men' => 'Men',
             'gender_women' => 'Women',
