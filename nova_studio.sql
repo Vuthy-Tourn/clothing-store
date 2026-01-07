@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jan 02, 2026 at 12:12 PM
+-- Generation Time: Jan 07, 2026 at 02:20 PM
 -- Server version: 8.0.40
 -- PHP Version: 8.3.14
 
@@ -17,9 +17,9 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
---
--- Database: `outfit_818_v2`
---
+-- Database
+CREATE DATABASE IF NOT EXISTS nova_studio_db;
+USE nova_studio_db;
 
 -- --------------------------------------------------------
 
@@ -87,14 +87,6 @@ CREATE TABLE `cart_items` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `cart_items`
---
-
-INSERT INTO `cart_items` (`id`, `user_id`, `product_variant_id`, `quantity`, `created_at`, `updated_at`) VALUES
-(16, 3, 3, 2, '2026-01-01 17:22:00', '2026-01-02 00:01:04'),
-(17, 3, 5, 1, '2026-01-01 17:22:05', '2026-01-01 17:22:05');
-
 -- --------------------------------------------------------
 
 --
@@ -106,7 +98,7 @@ CREATE TABLE `categories` (
   `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `gender` enum('men','women','unisex','kids') COLLATE utf8mb4_general_ci DEFAULT 'unisex',
   `slug` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `image` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `description` text COLLATE utf8mb4_general_ci,
   `parent_id` bigint UNSIGNED DEFAULT NULL,
   `status` enum('active','inactive') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'active',
@@ -122,30 +114,18 @@ CREATE TABLE `categories` (
 INSERT INTO `categories` (`id`, `name`, `gender`, `slug`, `image`, `description`, `parent_id`, `status`, `sort_order`, `created_at`, `updated_at`) VALUES
 (6, 'Pants', 'men', 'mens-pants', 'pants-men.jpg', NULL, NULL, 'active', 10, '2025-12-20 09:57:37', '2025-12-21 06:48:42'),
 (7, 'Shirts', 'men', 'mens-shirts', 'shirts-men.jpg', NULL, NULL, 'active', 9, '2025-12-20 09:57:44', '2025-12-21 06:48:42'),
-(8, 'T-Shirts', 'unisex', 'womens-t-shirts', 'tshirts-women.jpg', NULL, NULL, 'active', 7, '2025-12-20 09:58:07', '2025-12-21 06:48:42'),
+(8, 'T-Shirts', 'kids', 'womens-t-shirts', 'tshirts-women.jpg', NULL, NULL, 'active', 7, '2025-12-20 09:58:07', '2026-01-07 07:56:06'),
 (9, 'Dresses', 'women', 'womens-dresses', 'dresses-women.jpg', NULL, NULL, 'active', 8, '2025-12-20 09:57:51', '2025-12-21 06:48:42'),
-(10, 'Tops', 'women', 'womens-tops', 'tops-women.jpg', NULL, 10, 'active', 6, '2025-12-20 09:57:58', '2025-12-21 06:48:42');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `featured_products`
---
-
-CREATE TABLE `featured_products` (
-  `id` bigint UNSIGNED NOT NULL,
-  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `tagline` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `original_price` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `discounted_price` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT '1',
-  `button_text` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `button_link` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+(10, 'Tops', 'women', 'womens-tops', 'tops-women.jpg', NULL, 10, 'active', 6, '2025-12-20 09:57:58', '2025-12-21 06:48:42'),
+(11, 'Jackets', 'men', 'mens-jackets', 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800', 'Stylish jackets and outerwear for men', NULL, 'active', 5, '2026-01-06 02:00:00', '2026-01-06 02:00:00'),
+(13, 'Skirts', 'women', 'womens-skirts', 'https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?w=800', 'Elegant and casual skirts for women', NULL, 'active', 3, '2026-01-06 02:10:00', '2026-01-06 02:10:00'),
+(15, 'Sweaters', 'men', 'sweaters', 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800', 'Cozy sweaters and knitwear', NULL, 'active', 1, '2026-01-06 02:20:00', '2026-01-06 16:42:14'),
+(16, 'Shorts', 'men', 'shorts', 'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=800', 'Comfortable shorts for casual wear', NULL, 'active', 0, '2026-01-06 02:25:00', '2026-01-06 16:17:37'),
+(17, 'Shorts', 'women', 'shorts-1', 'categories/22salKcpwqebDcivHe3EQJolXMqFs4Y88llXefNx.webp', NULL, NULL, 'active', 11, '2026-01-06 16:43:15', '2026-01-06 16:43:15'),
+(18, 'Jackets', 'women', 'jackets', NULL, NULL, NULL, 'active', 12, '2026-01-07 07:48:23', '2026-01-07 07:48:23'),
+(19, 'Sweaters', 'kids', 'kids-sweaters', NULL, NULL, NULL, 'active', 13, '2026-01-07 07:54:34', '2026-01-07 09:15:48'),
+(20, 'Shirts', 'kids', 'shirts', NULL, NULL, NULL, 'active', 14, '2026-01-07 08:00:33', '2026-01-07 08:00:33'),
+(21, 'Jackets', 'kids', 'kids-jackets', NULL, NULL, NULL, 'active', 15, '2026-01-07 09:21:13', '2026-01-07 09:22:48');
 
 -- --------------------------------------------------------
 
@@ -252,16 +232,9 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `user_id`, `order_number`, `order_status`, `subtotal`, `tax_amount`, `shipping_amount`, `discount_amount`, `total_amount`, `payment_method`, `payment_status`, `payment_id`, `payment_date`, `shipping_method`, `tracking_number`, `estimated_delivery`, `delivered_at`, `shipping_address_id`, `billing_address_id`, `customer_notes`, `admin_notes`, `created_at`, `updated_at`) VALUES
-(1, 3, 'ORD-20251213-693D469B91D33', 'pending', 220.00, 17.60, 10.00, 0.00, 247.60, 'stripe', 'pending', NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, '2025-12-13 09:27:31', '2025-12-13 09:27:31'),
-(2, 3, 'ORD-20251213-693D4702E90AF', 'pending', 220.00, 17.60, 10.00, 0.00, 247.60, 'stripe', 'pending', NULL, NULL, NULL, NULL, NULL, NULL, 2, 2, NULL, NULL, '2025-12-13 09:29:14', '2025-12-13 09:29:14'),
 (3, 3, 'ORD-20251213-693D47609625E', 'pending', 220.00, 17.60, 10.00, 0.00, 247.60, 'stripe', 'pending', 'cs_test_b15RNDIxD5LnmWgGeVKlnV4vzb3QDR7XI3O8IlfE9BOss0WFfc4MM1gTcm', NULL, NULL, NULL, NULL, NULL, 3, 3, NULL, NULL, '2025-12-13 09:30:48', '2025-12-13 09:30:49'),
 (4, 3, 'ORD-20251213-693D487B3BF24', 'confirmed', 220.00, 17.60, 10.00, 0.00, 247.60, 'stripe', 'paid', 'cs_test_b1eZlFJrEAkB5roBaHT1h1snu9Un6ToFy8W4d2aXjsYR5mvxN1QsePr2wp', '2025-12-13 09:38:54', NULL, NULL, NULL, NULL, 4, 4, NULL, NULL, '2025-12-13 09:35:31', '2025-12-20 06:22:18'),
-(5, 3, 'ORD-20251223-694A1C4CB6643', 'pending', 60.00, 4.80, 10.00, 0.00, 74.80, 'stripe', 'pending', 'cs_test_b1ZfTojauUuGyZwXgpSbk9ehmuhHTPlsoUa5eAYrfVWYCpzVfPa4W9QpfQ', NULL, NULL, NULL, NULL, NULL, 5, 5, 'Anim placeat volupt', NULL, '2025-12-23 03:06:28', '2025-12-23 03:06:29'),
 (6, 3, 'ORD-20251223-694A1C57A99B0', 'pending', 60.00, 4.80, 10.00, 0.00, 74.80, 'stripe', 'pending', 'cs_test_b19HGzkuhP5wxmR2w40cL5x9s9raudhmE0OQrkgQtVLR2ZvJLGRzPNfCjs', NULL, NULL, NULL, NULL, NULL, 1, 1, 'Anim placeat volupt', NULL, '2025-12-23 03:06:39', '2025-12-23 03:06:40'),
-(7, 3, 'ORD-20251223-694A1C584FE0F', 'pending', 60.00, 4.80, 10.00, 0.00, 74.80, 'stripe', 'pending', 'cs_test_b1ACbPV3LLlWqanIWamPdJtvbPlB5cmH6utDuDRzeifMuw5LE3lBAINs0l', NULL, NULL, NULL, NULL, NULL, 1, 1, 'Anim placeat volupt', NULL, '2025-12-23 03:06:40', '2025-12-23 03:06:40'),
-(8, 3, 'ORD-20251223-694A1C58EAC3A', 'pending', 60.00, 4.80, 10.00, 0.00, 74.80, 'stripe', 'pending', 'cs_test_b1WZKt3hzrmfKBl8oWgPvxcL2YnWWHHLTbFz8aPErK5VDlilRo7YTgnfXs', NULL, NULL, NULL, NULL, NULL, 1, 1, 'Anim placeat volupt', NULL, '2025-12-23 03:06:40', '2025-12-23 03:06:41'),
-(9, 3, 'ORD-20251223-694A1C599C64D', 'pending', 60.00, 4.80, 10.00, 0.00, 74.80, 'stripe', 'pending', 'cs_test_b1D5ngd8Xl1YHalnuJYBqblUUte9kc5u1ztbtiUCieAGVekU2OOoYT9Z88', NULL, NULL, NULL, NULL, NULL, 1, 1, 'Anim placeat volupt', NULL, '2025-12-23 03:06:41', '2025-12-23 03:06:42'),
-(10, 3, 'ORD-20251223-694A1C5A4CF53', 'pending', 60.00, 4.80, 10.00, 0.00, 74.80, 'stripe', 'pending', 'cs_test_b1hvAc1RqKqoxzFvtsSyPQ124J3C6dMO362RArRSNwXRyQXjga8yEyRBCl', NULL, NULL, NULL, NULL, NULL, 1, 1, 'Anim placeat volupt', NULL, '2025-12-23 03:06:42', '2025-12-23 03:06:42'),
 (11, 3, 'ORD-20251223-694A1D4DD0E16', 'confirmed', 60.00, 4.80, 10.00, 0.00, 74.80, 'stripe', 'paid', 'cs_test_b1IhXPTXK4H7t7GQUUydQOmxTskbPndYCXVzJd2JNNmtsdEZJQ1RPzeJ64', '2026-01-01 10:02:48', NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, '2025-12-23 03:10:45', '2026-01-01 10:02:48'),
 (12, 3, 'ORD-20260102-695721005A714', 'pending', 208.00, 16.64, 0.00, 0.00, 224.64, 'stripe', 'pending', 'cs_test_b1pKughhhL98dpcpUaAkHGZXh4RrC5P8GZJj9Bvt4vD8GlZ6r8kf0c15n3', NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, '2026-01-02 00:06:00', '2026-01-02 00:06:01');
 
@@ -289,16 +262,9 @@ CREATE TABLE `order_items` (
 --
 
 INSERT INTO `order_items` (`id`, `order_id`, `product_variant_id`, `product_name`, `variant_details`, `quantity`, `unit_price`, `total_price`, `created_at`, `updated_at`) VALUES
-(1, 1, 2, 'Cruz Hendrix', '\"{\\\"size\\\":\\\"L\\\",\\\"color\\\":\\\"White\\\",\\\"sku\\\":\\\"Quia esse sed libero-V1\\\"}\"', 1, 220.00, 220.00, '2025-12-13 09:27:31', '2025-12-13 09:27:31'),
-(2, 2, 2, 'Cruz Hendrix', '\"{\\\"size\\\":\\\"L\\\",\\\"color\\\":\\\"White\\\",\\\"sku\\\":\\\"Quia esse sed libero-V1\\\"}\"', 1, 220.00, 220.00, '2025-12-13 09:29:14', '2025-12-13 09:29:14'),
 (3, 3, 2, 'Cruz Hendrix', '\"{\\\"size\\\":\\\"L\\\",\\\"color\\\":\\\"White\\\",\\\"sku\\\":\\\"Quia esse sed libero-V1\\\"}\"', 1, 220.00, 220.00, '2025-12-13 09:30:48', '2025-12-13 09:30:48'),
 (4, 4, 2, 'Cruz Hendrix', '\"{\\\"size\\\":\\\"L\\\",\\\"color\\\":\\\"White\\\",\\\"sku\\\":\\\"Quia esse sed libero-V1\\\"}\"', 1, 220.00, 220.00, '2025-12-13 09:35:31', '2025-12-13 09:35:31'),
-(5, 5, 5, 'Janna Mcfarland', '\"{\\\"size\\\":\\\"S\\\",\\\"color\\\":\\\"White\\\",\\\"sku\\\":\\\"Non culpa do iste qu-S-WHI\\\"}\"', 1, 60.00, 60.00, '2025-12-23 03:06:28', '2025-12-23 03:06:28'),
 (6, 6, 5, 'Janna Mcfarland', '\"{\\\"size\\\":\\\"S\\\",\\\"color\\\":\\\"White\\\",\\\"sku\\\":\\\"Non culpa do iste qu-S-WHI\\\"}\"', 1, 60.00, 60.00, '2025-12-23 03:06:39', '2025-12-23 03:06:39'),
-(7, 7, 5, 'Janna Mcfarland', '\"{\\\"size\\\":\\\"S\\\",\\\"color\\\":\\\"White\\\",\\\"sku\\\":\\\"Non culpa do iste qu-S-WHI\\\"}\"', 1, 60.00, 60.00, '2025-12-23 03:06:40', '2025-12-23 03:06:40'),
-(8, 8, 5, 'Janna Mcfarland', '\"{\\\"size\\\":\\\"S\\\",\\\"color\\\":\\\"White\\\",\\\"sku\\\":\\\"Non culpa do iste qu-S-WHI\\\"}\"', 1, 60.00, 60.00, '2025-12-23 03:06:40', '2025-12-23 03:06:40'),
-(9, 9, 5, 'Janna Mcfarland', '\"{\\\"size\\\":\\\"S\\\",\\\"color\\\":\\\"White\\\",\\\"sku\\\":\\\"Non culpa do iste qu-S-WHI\\\"}\"', 1, 60.00, 60.00, '2025-12-23 03:06:41', '2025-12-23 03:06:41'),
-(10, 10, 5, 'Janna Mcfarland', '\"{\\\"size\\\":\\\"S\\\",\\\"color\\\":\\\"White\\\",\\\"sku\\\":\\\"Non culpa do iste qu-S-WHI\\\"}\"', 1, 60.00, 60.00, '2025-12-23 03:06:42', '2025-12-23 03:06:42'),
 (11, 11, 5, 'Janna Mcfarland', '\"{\\\"size\\\":\\\"S\\\",\\\"color\\\":\\\"White\\\",\\\"sku\\\":\\\"Non culpa do iste qu-S-WHI\\\"}\"', 1, 60.00, 60.00, '2025-12-23 03:10:45', '2025-12-23 03:10:45'),
 (12, 12, 3, 'Janna Mcfarland', '\"{\\\"size\\\":\\\"L\\\",\\\"color\\\":\\\"White\\\",\\\"sku\\\":\\\"Non culpa do iste qu-V1\\\",\\\"original_price\\\":\\\"77.00\\\",\\\"discounted_price\\\":77,\\\"savings\\\":0,\\\"has_discount\\\":false,\\\"discount_percentage\\\":0}\"', 2, 77.00, 154.00, '2026-01-02 00:06:00', '2026-01-02 00:06:00'),
 (13, 12, 5, 'Janna Mcfarland', '\"{\\\"size\\\":\\\"S\\\",\\\"color\\\":\\\"White\\\",\\\"sku\\\":\\\"Non culpa do iste qu-S-WHI\\\",\\\"original_price\\\":\\\"60.00\\\",\\\"discounted_price\\\":54,\\\"savings\\\":6,\\\"has_discount\\\":true,\\\"discount_percentage\\\":10}\"', 1, 54.00, 54.00, '2026-01-02 00:06:00', '2026-01-02 00:06:00');
@@ -356,8 +322,33 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `slug`, `category_id`, `description`, `brand`, `material`, `status`, `is_featured`, `is_new`, `discount_type`, `discount_value`, `discount_start`, `discount_end`, `has_discount`, `rating_cache`, `review_count`, `view_count`, `created_at`, `updated_at`) VALUES
-(2, 'Cruz Hendrix', 'cruz-hendrix', 7, 'Dolorem suscipit acc', 'Aperiam iste autem v', NULL, 'active', 0, 1, NULL, NULL, NULL, NULL, 0, 5.00, 1, 152, '2025-12-13 07:16:08', '2026-01-02 01:11:00'),
-(3, 'Janna Mcfarland', 'janna-mcfarland', 7, 'Perferendis quod rei', 'Adipisicing voluptat', 'cotton', 'active', 1, 0, NULL, NULL, NULL, NULL, 0, 0.00, 0, 206, '2025-12-13 11:12:42', '2026-01-02 10:27:40');
+(2, 'Cruz Hendrix', 'cruz-hendrix', 7, 'Dolorem suscipit acc', 'ZARA', NULL, 'active', 0, 1, NULL, NULL, NULL, NULL, 0, 5.00, 1, 157, '2025-12-13 07:16:08', '2026-01-07 12:16:10'),
+(3, 'Janna Mcfarland', 'janna-mcfarland', 7, 'Perferendis quod rei', 'ZARA', 'cotton', 'active', 1, 0, NULL, NULL, NULL, NULL, 0, 0.00, 0, 213, '2025-12-13 11:12:42', '2026-01-07 12:15:33'),
+(4, 'Classic Denim Jeans', 'classic-denim-jeans', 6, 'Comfortable straight-fit denim jeans perfect for everyday wear', 'Urban Style Co', 'denim', 'active', 1, 0, NULL, NULL, NULL, NULL, 0, 4.50, 12, 342, '2026-01-06 01:00:00', '2026-01-07 11:52:25'),
+(5, 'Slim Fit Chinos', 'slim-fit-chinos', 6, 'Modern slim-fit chinos in versatile colors', 'Premium Threads', 'cotton-blend', 'active', 0, 1, NULL, NULL, NULL, NULL, 0, 4.20, 8, 158, '2026-01-06 01:05:00', '2026-01-07 11:41:14'),
+(6, 'Oxford Button-Down Shirt', 'oxford-button-down-shirt', 20, 'Classic oxford shirt with button-down collar', 'Gentleman\'s Choice', 'cotton', 'active', 1, 0, NULL, NULL, NULL, NULL, 0, 4.80, 15, 423, '2026-01-06 01:10:00', '2026-01-07 08:16:26'),
+(7, 'Striped Polo Shirt', 'striped-polo-shirt', 20, 'Casual polo shirt with horizontal stripes', 'SportLine', 'cotton-polyester', 'active', 0, 1, NULL, NULL, NULL, NULL, 0, 4.30, 6, 189, '2026-01-06 01:15:00', '2026-01-07 08:00:43'),
+(8, 'Graphic Print T-Shirt', 'graphic-print-t-shirt', 8, 'Trendy graphic print t-shirt for casual occasions', 'StreetWear Hub', 'cotton', 'active', 0, 1, NULL, NULL, NULL, NULL, 0, 4.10, 9, 267, '2026-01-06 01:20:00', '2026-01-07 07:58:07'),
+(9, 'Basic Cotton Tee', 'basic-cotton-tee', 8, 'Essential cotton t-shirt in solid colors', 'Basics Daily', 'cotton', 'active', 1, 0, NULL, NULL, NULL, NULL, 0, 4.60, 24, 513, '2026-01-06 01:25:00', '2026-01-07 07:37:08'),
+(10, 'Floral Summer Dress', 'floral-summer-dress', 9, 'Light and breezy floral print dress for summer', 'Blossom Fashion', 'rayon', 'active', 0, 1, NULL, NULL, NULL, NULL, 0, 4.70, 18, 399, '2026-01-06 01:30:00', '2026-01-07 09:07:22'),
+(11, 'Elegant Evening Dress', 'elegant-evening-dress', 9, 'Sophisticated evening dress for special occasions', 'Luxe Couture', 'silk-blend', 'active', 1, 0, NULL, NULL, NULL, NULL, 0, 4.90, 7, 235, '2026-01-06 01:35:00', '2026-01-07 07:28:18'),
+(12, 'ZIP-UP MIDI DRESS', 'zip-up-midi-dress', 9, 'Comfortable tank top for layering or solo wear', 'EasyWear', 'cotton-spandex', 'active', 0, 1, NULL, NULL, NULL, NULL, 0, 4.00, 11, 178, '2026-01-06 01:40:00', '2026-01-07 07:25:50'),
+(13, 'Ruffled Blouse', 'ruffled-blouse', 10, 'Feminine blouse with elegant ruffle details', 'Chic Style', 'polyester', 'active', 0, 0, NULL, NULL, NULL, NULL, 0, 4.40, 13, 301, '2026-01-06 01:45:00', '2026-01-07 07:22:11'),
+(14, 'Leather Bomber Jacket', 'leather-bomber-jacket', 18, 'Classic bomber jacket in genuine leather', 'Heritage Leather', 'leather', 'active', 1, 0, NULL, NULL, NULL, NULL, 0, 4.80, 22, 567, '2026-01-06 02:00:00', '2026-01-07 07:53:32'),
+(15, 'Denim Jacket', 'denim-jacket', 11, 'Versatile denim jacket for all seasons', 'Blue Vintage', 'denim', 'active', 0, 1, NULL, NULL, NULL, NULL, 0, 4.40, 14, 291, '2026-01-06 02:02:00', '2026-01-07 12:12:53'),
+(16, 'Windbreaker', 'windbreaker', 18, 'Lightweight windbreaker for outdoor activities', 'ActiveSport', 'nylon', 'active', 0, 1, NULL, NULL, NULL, NULL, 0, 4.10, 9, 178, '2026-01-06 02:03:00', '2026-01-07 07:53:49'),
+(20, 'Pleated Midi Skirt', 'pleated-midi-skirt', 13, 'Elegant pleated skirt in midi length', 'Feminine Touch', 'polyester', 'active', 0, 1, NULL, NULL, NULL, NULL, 0, 4.50, 16, 423, '2026-01-06 02:10:00', '2026-01-07 07:03:40'),
+(21, 'Denim Mini Skirt', 'denim-mini-skirt', 13, 'Casual denim mini skirt', 'Casual Chic', 'denim', 'active', 0, 1, NULL, NULL, NULL, NULL, 0, 4.20, 12, 268, '2026-01-06 02:11:00', '2026-01-07 10:06:15'),
+(22, 'Pencil Skirt', 'pencil-skirt', 13, 'Professional pencil skirt for office wear', 'Office Elegance', 'cotton-blend', 'active', 0, 0, NULL, NULL, NULL, NULL, 0, 4.40, 20, 389, '2026-01-06 02:12:00', '2026-01-06 02:12:00'),
+(26, 'Cable Knit Sweater', 'cable-knit-sweater', 19, 'Classic cable knit sweater', 'Knit Masters', 'wool-blend', 'active', 0, 0, NULL, NULL, NULL, NULL, 0, 4.80, 28, 678, '2026-01-06 02:20:00', '2026-01-07 07:54:53'),
+(27, 'Cardigan', 'cardigan', 15, 'Comfortable button-up cardigan', 'Comfort Knits', 'cotton-acrylic', 'active', 0, 1, NULL, NULL, NULL, NULL, 0, 4.40, 17, 414, '2026-01-06 02:21:00', '2026-01-07 12:47:47'),
+(28, 'HIGH NECK JUMPER', 'high-neck-jumper', 15, 'Elegant turtleneck sweater', 'ZARA', 'merino-wool', 'active', 0, 1, NULL, NULL, NULL, NULL, 0, 4.60, 21, 524, '2026-01-06 02:22:00', '2026-01-06 17:12:10'),
+(29, 'Cargo Shorts', 'cargo-shorts', 16, 'Practical cargo shorts with multiple pockets', 'Outdoor Gear', 'cotton-canvas', 'active', 0, 1, NULL, NULL, NULL, NULL, 0, 4.20, 15, 346, '2026-01-06 02:25:00', '2026-01-06 17:04:55'),
+(31, 'Denim Shorts', 'denim-shorts', 16, 'Classic denim shorts for summer', 'Summer Vibes', 'denim', 'active', 0, 1, NULL, NULL, NULL, NULL, 0, 4.30, 19, 495, '2026-01-06 02:27:00', '2026-01-07 12:08:01'),
+(33, 'Denim Jacket kids', 'denim-jacket-kids', 21, 'Versatile denim jacket for all seasons', 'Blue Vintage', 'denim', 'active', 1, 0, NULL, NULL, NULL, NULL, 0, 4.40, 14, 289, '2026-01-06 02:02:00', '2026-01-07 09:45:57'),
+(34, 'Windbreaker-Kid', 'windbreaker-kid', 21, 'Lightweight windbreaker for outdoor activities', 'ActiveSport', 'nylon', 'active', 0, 1, NULL, NULL, NULL, NULL, 0, 4.10, 9, 178, '2026-01-06 02:03:00', '2026-01-07 09:41:56'),
+(36, 'STRIPED CHUNKY KNIT CARDIGAN', 'striped-chunky-knit-cardigan', 19, 'Comfortable button-up cardigan', 'Comfort Knits', 'cotton-acrylic', 'active', 0, 1, NULL, NULL, NULL, NULL, 0, 4.40, 17, 412, '2026-01-06 02:21:00', '2026-01-07 09:47:42'),
+(37, 'Turtleneck Sweater', 'turtleneck-sweater', 19, 'Elegant turtleneck sweater', 'Sophisticate', 'merino-wool', 'active', 0, 1, NULL, NULL, NULL, NULL, 0, 4.60, 21, 523, '2026-01-06 02:22:00', '2026-01-07 09:37:43');
 
 -- --------------------------------------------------------
 
@@ -381,11 +372,86 @@ CREATE TABLE `product_images` (
 --
 
 INSERT INTO `product_images` (`id`, `product_id`, `image_path`, `alt_text`, `is_primary`, `sort_order`, `created_at`, `updated_at`) VALUES
-(20, 3, 'products/images/69UaOWYV0fqbVpwbHceBw5A4mDFFH8eXIjiJWLio.webp', NULL, 1, 1, '2025-12-28 12:08:50', '2026-01-02 01:07:43'),
-(21, 3, 'products/images/4Cvtv0aX2zZUf851pSvpg7LyNBiFAosMLBWRXNUJ.webp', NULL, 0, 1, '2025-12-28 12:09:07', '2026-01-02 01:07:43'),
-(22, 3, 'products/images/8VkN5wBiH7OkmnXXjGmR7NrIHMA2365chMgBGvul.webp', NULL, 0, 2, '2025-12-28 12:09:07', '2026-01-02 01:07:43'),
-(23, 2, 'products/images/nlgTaoSS6zBgCyYvoZfzM1i2HR5XnTdRIjPMJHkt.webp', NULL, 1, 1, '2025-12-28 12:18:01', '2026-01-02 01:11:00'),
-(28, 2, 'products/images/HFiUjOB5JHn29Zkf9ML90b9uUy2bF2np4INURQUI.webp', NULL, 0, 1, '2026-01-02 01:11:00', '2026-01-02 01:11:00');
+(20, 3, 'products/images/69UaOWYV0fqbVpwbHceBw5A4mDFFH8eXIjiJWLio.webp', NULL, 0, 1, '2025-12-28 12:08:50', '2026-01-07 12:15:54'),
+(21, 3, 'products/images/4Cvtv0aX2zZUf851pSvpg7LyNBiFAosMLBWRXNUJ.webp', NULL, 0, 1, '2025-12-28 12:09:07', '2026-01-07 12:15:54'),
+(22, 3, 'products/images/8VkN5wBiH7OkmnXXjGmR7NrIHMA2365chMgBGvul.webp', NULL, 0, 2, '2025-12-28 12:09:07', '2026-01-07 12:15:54'),
+(23, 2, 'products/images/nlgTaoSS6zBgCyYvoZfzM1i2HR5XnTdRIjPMJHkt.webp', NULL, 0, 1, '2025-12-28 12:18:01', '2026-01-07 12:16:34'),
+(94, 31, 'products/images/zEj9m6yxCujhVzJu2th0BmX76E07it6IclmzoIRW.jpg', NULL, 1, 1, '2026-01-06 16:05:57', '2026-01-07 10:06:47'),
+(95, 31, 'products/images/qZPSCZqrjMgEWkv3mO9OV4E0S9QMjIDInh0L4Wse.webp', NULL, 0, 1, '2026-01-06 16:17:56', '2026-01-07 10:06:47'),
+(96, 31, 'products/images/PKlYmwRNoGuOqM1IKs3LQcDSsLLF165TfCLxTYo2.webp', NULL, 0, 2, '2026-01-06 16:17:56', '2026-01-07 10:06:47'),
+(97, 29, 'products/images/KCrUTCD2AZ34ji2s8wsgP3BkN0Cu4MWe0MfBbQR6.webp', NULL, 1, 1, '2026-01-06 16:24:55', '2026-01-06 16:25:03'),
+(98, 29, 'products/images/mLH1iAMBbQowp9ENwxhcdTRkAAOyEApoX4VtRnbT.webp', NULL, 0, 2, '2026-01-06 16:24:55', '2026-01-06 16:25:03'),
+(99, 29, 'products/images/SZSz9iVbbRAPJj6YmRVAn1SR1xFgLcF1CLoEcqkF.webp', NULL, 0, 3, '2026-01-06 16:24:55', '2026-01-06 16:25:03'),
+(100, 28, 'products/images/a9koKKS0FgUJWKahP3JOVg7GBq3JF5DuDjUlMNtS.jpg', NULL, 1, 1, '2026-01-06 16:40:35', '2026-01-06 17:11:31'),
+(101, 28, 'products/images/27Nxoz2H1lrPnrDXU4ugLVeVC3Wq2rm970Do1odo.jpg', NULL, 0, 2, '2026-01-06 16:40:35', '2026-01-06 17:11:31'),
+(102, 28, 'products/images/vwWJoSNN5AQaPpbuPygTQKQLPrpBsryA4uSO0Qhe.jpg', NULL, 0, 3, '2026-01-06 16:40:35', '2026-01-06 17:11:31'),
+(103, 2, 'products/images/AmFkVznmzl1nYtih830Ug67txboNmB3d7s5pDsBN.webp', NULL, 0, 1, '2026-01-06 16:57:37', '2026-01-07 12:16:34'),
+(104, 2, 'products/images/x1rKG4QwomiMuwbKwo24V8jNroGQ2RFW7VeUhnBe.jpg', NULL, 1, 1, '2026-01-06 17:03:06', '2026-01-07 12:16:34'),
+(105, 3, 'products/images/6mtIEWFdoBSpmY8ygIyScwEailPVgMWuYdncegoS.jpg', NULL, 1, 1, '2026-01-06 17:04:00', '2026-01-07 12:15:54'),
+(106, 27, 'products/images/CCjFOq8gSmrt0MAC3gar2U0wXQfWHjZVcYMLuz1d.jpg', NULL, 1, 1, '2026-01-07 06:40:40', '2026-01-07 06:40:51'),
+(107, 27, 'products/images/cbChJtrCYuizocY6jGKsgb044L0x6HWhYECiA4AA.jpg', NULL, 0, 2, '2026-01-07 06:40:40', '2026-01-07 06:40:51'),
+(108, 27, 'products/images/9W7VMEZmAOw202nODqAUWv1PVecSzRPZZFxcEAOf.jpg', NULL, 0, 3, '2026-01-07 06:40:40', '2026-01-07 06:40:51'),
+(109, 26, 'products/images/GIUZCwlOsKZ5PuY8TqQ1XVxAuII8dd9xuiooXSzV.jpg', NULL, 1, 1, '2026-01-07 06:50:41', '2026-01-07 07:54:53'),
+(110, 26, 'products/images/LrP2xSXpzgQVsq9UjGc4XvPj8PlINl45KKcAuvSU.jpg', NULL, 0, 2, '2026-01-07 06:50:41', '2026-01-07 07:54:53'),
+(111, 26, 'products/images/NgWp1xh2naChBxMjNb4iXn93MmDEJ40qHO7d0uYK.jpg', NULL, 0, 3, '2026-01-07 06:50:41', '2026-01-07 07:54:53'),
+(112, 22, 'products/images/2EoppE2zQGBbnXUqFwLO5c50VH8lMEWAw5fpWwn8.jpg', NULL, 1, 1, '2026-01-07 06:59:00', '2026-01-07 06:59:08'),
+(113, 22, 'products/images/J3yDXFk5jLJsYtkcKq3WutZzk9PTAH9i9jZA5Ykh.jpg', NULL, 0, 2, '2026-01-07 06:59:00', '2026-01-07 06:59:08'),
+(114, 22, 'products/images/shZnHs12kQpRhcy3FalaShCYWKI7Dj8qFd3mlkOz.jpg', NULL, 0, 3, '2026-01-07 06:59:00', '2026-01-07 06:59:08'),
+(115, 21, 'products/images/skuoin8ThLg7Mxs5RDZzHgrTKg3LeNyiMfiuMspy.jpg', NULL, 1, 1, '2026-01-07 07:01:07', '2026-01-07 07:01:15'),
+(116, 21, 'products/images/Z9iT6jX9EQeAVQyS1ejiiEW4kIkH41zTcV7Nd9oF.jpg', NULL, 0, 2, '2026-01-07 07:01:07', '2026-01-07 07:01:15'),
+(117, 21, 'products/images/42XkIcDWUDKtC1D7iXvQyYbndMvJYupGw6rwHBHD.jpg', NULL, 0, 3, '2026-01-07 07:01:07', '2026-01-07 07:01:15'),
+(118, 20, 'products/images/OczxxsPR3OrqKTghCNaMuvgh51fwfGXCXgguoxxg.jpg', NULL, 1, 1, '2026-01-07 07:03:40', '2026-01-07 07:03:48'),
+(119, 20, 'products/images/r7cGrLSeSMIZdWqMi15GTkRBSLgpTulPQmYNTRMH.jpg', NULL, 0, 2, '2026-01-07 07:03:40', '2026-01-07 07:03:48'),
+(120, 20, 'products/images/oqMqFbswcWeDSX0Sad8EHQWUeOdRW2sT9Gayk3a7.jpg', NULL, 0, 3, '2026-01-07 07:03:40', '2026-01-07 07:03:48'),
+(121, 15, 'products/images/P11Bk2zzNvQuatUNDBk1ONaotov2BKLg3kuwflEx.jpg', NULL, 1, 1, '2026-01-07 07:06:11', '2026-01-07 07:06:36'),
+(122, 15, 'products/images/AXhCekG2CsIyqyuLGGwfmDPhaITGxq60K6dBeBoV.jpg', NULL, 0, 2, '2026-01-07 07:06:11', '2026-01-07 07:06:36'),
+(123, 15, 'products/images/2ka7xSkU7ImbyQqPOd4TN0qhEcrFglZ8s3be7x6V.jpg', NULL, 0, 3, '2026-01-07 07:06:11', '2026-01-07 07:06:36'),
+(124, 14, 'products/images/ajGgYvUXS3Bekk7g6AMMoelnp4ZC6Ll6fUoYqtZX.jpg', NULL, 1, 1, '2026-01-07 07:13:12', '2026-01-07 07:53:32'),
+(125, 14, 'products/images/KoePusZ4viPxlXHe9VY9KByp5sV4TOBNFDh7beQo.jpg', NULL, 0, 2, '2026-01-07 07:13:12', '2026-01-07 07:53:32'),
+(126, 14, 'products/images/GfuYr2NH0oRKxBLbWGPQpfen9fHEI5FQAx06luFt.jpg', NULL, 0, 3, '2026-01-07 07:13:12', '2026-01-07 07:53:32'),
+(127, 13, 'products/images/dPzqWrvSHW5Tv4P9WREdpKFGH1a6yz2XHdqM1HfJ.jpg', NULL, 1, 1, '2026-01-07 07:22:11', '2026-01-07 07:22:19'),
+(128, 13, 'products/images/WVNzUoHnmLV8UOfLQ7YB5T0dcns7vNFIkpM1PIyQ.jpg', NULL, 0, 2, '2026-01-07 07:22:11', '2026-01-07 07:22:19'),
+(129, 13, 'products/images/AN0rfCQgAATdKAMyvy6L5b6JKDEsYapj2BQ7M1gJ.jpg', NULL, 0, 3, '2026-01-07 07:22:11', '2026-01-07 07:22:19'),
+(130, 12, 'products/images/8asBthO9cgIBRECktIuU8pdSMAR6TxYSc7XUAIKl.jpg', NULL, 1, 1, '2026-01-07 07:25:50', '2026-01-07 07:25:50'),
+(131, 12, 'products/images/BM6uSStMytloeZcEl6PgcVAvYTT3dmKJMga5s40X.jpg', NULL, 0, 2, '2026-01-07 07:25:50', '2026-01-07 07:25:50'),
+(132, 12, 'products/images/dTtgmok0sod3ghKrNK5DOhmIIvxJRjLiIA4Wya56.jpg', NULL, 0, 3, '2026-01-07 07:25:50', '2026-01-07 07:25:50'),
+(133, 11, 'products/images/izl92YZJEEDucVWhiOK3D99JmwRFjL99FyqhND07.jpg', NULL, 1, 1, '2026-01-07 07:28:18', '2026-01-07 07:28:18'),
+(134, 11, 'products/images/r66rTR35qC41q9j1eR73JzNb7T32ZuZamIIx4Rq7.jpg', NULL, 0, 2, '2026-01-07 07:28:18', '2026-01-07 07:28:18'),
+(135, 11, 'products/images/nPEruttKWycSmC4Udn3nTbA98ozbSad5rL22xiPz.jpg', NULL, 0, 3, '2026-01-07 07:28:18', '2026-01-07 07:28:18'),
+(136, 10, 'products/images/yhqP04AexyPSNblR6M5reYBVlGhQ9Gad359eE7wO.jpg', NULL, 1, 1, '2026-01-07 07:34:41', '2026-01-07 09:07:22'),
+(137, 10, 'products/images/ad2CwkOONYm7Y85fOCjAyftzqqvkqKxYRxhK8K9L.jpg', NULL, 0, 2, '2026-01-07 07:34:41', '2026-01-07 09:07:22'),
+(138, 10, 'products/images/CIw47Prt4vcjQocBBvezIyPYbvBlm8Scwq2w3zHz.jpg', NULL, 0, 3, '2026-01-07 07:34:41', '2026-01-07 09:07:22'),
+(139, 9, 'products/images/CoKVsl81inlJsn8pVacjfYpfHiPKEdIUcrulXP6T.jpg', NULL, 1, 1, '2026-01-07 07:37:08', '2026-01-07 07:37:08'),
+(140, 9, 'products/images/0C7aWnLx1Mb5F1xMF8U4pmX6nVcsV9VK4likLWtB.jpg', NULL, 0, 2, '2026-01-07 07:37:08', '2026-01-07 07:37:08'),
+(141, 9, 'products/images/ngb0TiUfqiqZPa90PljhhaBxfaZlDY1yD5ZG1Dau.jpg', NULL, 0, 3, '2026-01-07 07:37:08', '2026-01-07 07:37:08'),
+(142, 16, 'products/images/THWeI97H7QfzxL777t1HuosDYk9YTBEPixkt7UMU.jpg', NULL, 1, 1, '2026-01-07 07:42:11', '2026-01-07 07:53:49'),
+(143, 16, 'products/images/nQSJpafpLgywhiyWN3qPIAqJYcHWg86GX6z424b1.jpg', NULL, 0, 2, '2026-01-07 07:42:11', '2026-01-07 07:53:49'),
+(144, 16, 'products/images/7iP5BGNEmx0HyPd01vKVEbkqXtRUgnnd00eveygG.jpg', NULL, 0, 3, '2026-01-07 07:42:11', '2026-01-07 07:53:49'),
+(145, 8, 'products/images/8fcG5V5yyLS5qjZ8kQ3lvKuaNTysJ2dgJM9cuxhG.jpg', NULL, 1, 1, '2026-01-07 07:58:07', '2026-01-07 07:58:07'),
+(146, 8, 'products/images/hR7L62ethoBBy5Er9ief8NI560IA8fumbeFcysGZ.jpg', NULL, 0, 2, '2026-01-07 07:58:07', '2026-01-07 07:58:07'),
+(147, 7, 'products/images/fEPUKDim1xQLXY9w3oqFXWCPjTqilgEpFSaE2WQU.jpg', NULL, 1, 1, '2026-01-07 08:00:01', '2026-01-07 08:00:44'),
+(148, 7, 'products/images/ZV1HPFrGQzVIKo447eMQ40HdNt4vcdV1Lz3NEvzy.jpg', NULL, 0, 2, '2026-01-07 08:00:01', '2026-01-07 08:00:44'),
+(149, 7, 'products/images/JYYeq2JdtYJ9WTYnU3Hs6dipqTR11KRXiQMdmBhV.jpg', NULL, 0, 3, '2026-01-07 08:00:01', '2026-01-07 08:00:44'),
+(150, 6, 'products/images/hCz05qzC6ORxN3U4X4KIQjX10iYDklcAPx3ENiUj.jpg', NULL, 1, 1, '2026-01-07 08:02:48', '2026-01-07 08:16:26'),
+(151, 6, 'products/images/Cdwvasj5N1pIjVFsX0hcVecpCQkVVMwBiYo8d1ji.jpg', NULL, 0, 2, '2026-01-07 08:02:48', '2026-01-07 08:16:26'),
+(152, 6, 'products/images/LeOnerwQZQdcxTwNxtws45zt4iyoGvVwgWa8fZ4y.jpg', NULL, 0, 3, '2026-01-07 08:02:48', '2026-01-07 08:16:26'),
+(153, 5, 'products/images/ddjEmKvWqQxTXqwiMK0PJAnISpPo1GAvSN6SPAIW.jpg', NULL, 1, 1, '2026-01-07 08:59:57', '2026-01-07 08:59:57'),
+(154, 5, 'products/images/Rhsh9mZwgTJ9xGQyH7RPObKlG1TnKq2vUYVxvHXX.jpg', NULL, 0, 2, '2026-01-07 08:59:57', '2026-01-07 08:59:57'),
+(155, 5, 'products/images/sPIlBSWqodXZC4QOVuUzRlKicsvrjqz4iGOzpEeQ.jpg', NULL, 0, 3, '2026-01-07 08:59:57', '2026-01-07 08:59:57'),
+(156, 4, 'products/images/FuB4qrcQHVgmrKS0nemtgEDpSV0a6A5VoSGvqa2Q.jpg', NULL, 1, 1, '2026-01-07 09:01:41', '2026-01-07 09:01:41'),
+(157, 4, 'products/images/6GDE0bNkWVsFSMtiqMd3edhlIphQTRWg3emX2jiz.jpg', NULL, 0, 2, '2026-01-07 09:01:41', '2026-01-07 09:01:41'),
+(158, 4, 'products/images/gMm0wyIM9LhW4DxaGn9xzaMvp1RXKRWLnMECwFCl.jpg', NULL, 0, 3, '2026-01-07 09:01:41', '2026-01-07 09:01:41'),
+(159, 37, 'products/images/SdFGiYoxRI9856XMtmyKJzqYVQOS0rQCx7NhhGSK.jpg', NULL, 1, 1, '2026-01-07 09:37:35', '2026-01-07 09:37:43'),
+(160, 37, 'products/images/3sIzaZxz1Pnk9WJalal0DI6Q1uqIE1TlkvbgzVA1.jpg', NULL, 0, 2, '2026-01-07 09:37:35', '2026-01-07 09:37:43'),
+(161, 37, 'products/images/7PDu8gVu2Ba9AxKFlbqZKSmShOO1DvYxc8qPclvX.jpg', NULL, 0, 3, '2026-01-07 09:37:35', '2026-01-07 09:37:43'),
+(162, 34, 'products/images/eDMfunq7aR4pIWyx5gqobZ5NdU9ZoxODIA3yCCnV.jpg', NULL, 1, 1, '2026-01-07 09:42:24', '2026-01-07 09:42:24'),
+(163, 34, 'products/images/2bBAaMv7PwiTX5jVsATDH4KFub5MtB3JCZYriFaP.jpg', NULL, 0, 2, '2026-01-07 09:42:24', '2026-01-07 09:42:24'),
+(164, 33, 'products/images/ICQOm3JpcN7thWWRgtTnALHX2xVGpLj1AHACd36V.jpg', NULL, 1, 1, '2026-01-07 09:45:57', '2026-01-07 09:45:57'),
+(165, 33, 'products/images/RGPw78UYLKUmiscmQ2kJAw0gjoPWqr6Vvg7LUh9L.jpg', NULL, 0, 2, '2026-01-07 09:45:57', '2026-01-07 09:45:57'),
+(166, 33, 'products/images/IsGqXYjQZFmUtHUWLvBsMd9PGDnYRRwElxqTTNq0.jpg', NULL, 0, 3, '2026-01-07 09:45:57', '2026-01-07 09:45:57'),
+(167, 36, 'products/images/ii5EdGmzCSYFYz5FMKZyR4Od8o9OkDvVvqCmTmVN.jpg', NULL, 1, 1, '2026-01-07 09:47:42', '2026-01-07 09:47:42'),
+(168, 36, 'products/images/gCyqtVhPKECI5Q0dBz9gs90zaKRP5jzJcta059dN.jpg', NULL, 0, 2, '2026-01-07 09:47:42', '2026-01-07 09:47:42'),
+(169, 36, 'products/images/f7E0cGWr6aM44g90SQSSibwYyNtEvXAvTCq0zxdD.jpg', NULL, 0, 3, '2026-01-07 09:47:42', '2026-01-07 09:47:42');
 
 -- --------------------------------------------------------
 
@@ -448,10 +514,78 @@ CREATE TABLE `product_variants` (
 --
 
 INSERT INTO `product_variants` (`id`, `product_id`, `sku`, `size`, `color`, `color_code`, `price`, `sale_price`, `discount_type`, `discount_value`, `discount_start`, `discount_end`, `cost_price`, `stock`, `stock_alert`, `weight`, `is_active`, `created_at`, `updated_at`, `has_discount`) VALUES
-(2, 2, 'Quia esse sed libero-V1', 'L', 'White', '#000000', 220.00, NULL, NULL, NULL, NULL, NULL, NULL, 9, 10, NULL, 1, '2025-12-13 07:16:08', '2026-01-01 08:27:11', 0),
+(2, 2, 'Quia esse sed libero-V1', 'L', 'White', '#000000', 119.97, NULL, NULL, NULL, NULL, NULL, NULL, 11, 10, NULL, 1, '2025-12-13 07:16:08', '2026-01-07 12:16:34', 0),
 (3, 3, 'Non culpa do iste qu-V1', 'L', 'Black', '#000000', 77.00, NULL, NULL, NULL, NULL, NULL, NULL, 27, 10, NULL, 1, '2025-12-13 11:12:42', '2026-01-02 01:06:59', 0),
 (4, 3, 'Non culpa do iste qu-V2', 'XL', 'White', '#ffffff', 80.00, NULL, NULL, NULL, NULL, NULL, NULL, 10, 10, NULL, 1, '2025-12-13 11:12:42', '2026-01-02 01:06:59', 0),
-(5, 3, 'Non culpa do iste qu-S-WHI', 'S', 'Black', '#000000', 60.00, NULL, 'percentage', 10.00, '2025-12-29 14:31:00', '2026-01-11 14:31:00', NULL, 20, 10, NULL, 1, '2025-12-13 11:36:55', '2026-01-02 01:07:43', 1);
+(5, 3, 'Non culpa do iste qu-S-WHI', 'S', 'Black', '#000000', 60.00, NULL, 'percentage', 10.00, '2025-12-28 10:31:00', '2026-01-10 10:31:00', NULL, 25, 10, NULL, 1, '2025-12-13 11:36:55', '2026-01-07 12:15:54', 1),
+(6, 4, 'CDJ-M-BLUE', 'M', 'Blue', '#1e3a8a', 89.99, NULL, 'percentage', 15.00, '2025-12-31 17:00:00', '2026-01-31 16:59:00', NULL, 25, 10, 0.65, 1, '2026-01-06 01:00:00', '2026-01-07 09:01:41', 1),
+(7, 4, 'CDJ-L-BLUE', 'L', 'Blue', '#1e3a8a', 89.99, NULL, 'percentage', 15.00, '2025-12-31 17:00:00', '2026-01-31 16:59:00', NULL, 30, 10, 0.68, 1, '2026-01-06 01:00:00', '2026-01-07 09:01:41', 1),
+(8, 4, 'CDJ-XL-BLACK', 'XL', 'Black', '#000000', 89.99, NULL, 'percentage', 15.00, '2025-12-31 17:00:00', '2026-01-31 16:59:00', NULL, 18, 10, 0.70, 1, '2026-01-06 01:00:00', '2026-01-07 09:01:41', 1),
+(9, 5, 'SFC-M-KHAKI', 'M', 'Khaki', '#c3b091', 69.99, NULL, NULL, NULL, NULL, NULL, NULL, 22, 10, 0.55, 1, '2026-01-06 01:05:00', '2026-01-07 08:59:57', 0),
+(10, 5, 'SFC-L-KHAKI', 'L', 'Khaki', '#c3b091', 69.99, NULL, NULL, NULL, NULL, NULL, NULL, 28, 10, 0.58, 1, '2026-01-06 01:05:00', '2026-01-07 08:59:57', 0),
+(11, 5, 'SFC-L-NAVY', 'L', 'Navy', '#000080', 69.99, NULL, NULL, NULL, NULL, NULL, NULL, 20, 10, 0.58, 1, '2026-01-06 01:05:00', '2026-01-07 08:59:57', 0),
+(12, 6, 'OBD-M-WHITE', 'M', 'White', '#ffffff', 54.99, NULL, NULL, NULL, NULL, NULL, NULL, 35, 10, 0.30, 1, '2026-01-06 01:10:00', '2026-01-07 08:02:48', 0),
+(13, 6, 'OBD-L-WHITE', 'L', 'White', '#ffffff', 54.99, NULL, NULL, NULL, NULL, NULL, NULL, 40, 10, 0.32, 1, '2026-01-06 01:10:00', '2026-01-07 08:02:48', 0),
+(14, 6, 'OBD-L-BLUE', 'L', 'Light Blue', '#add8e6', 54.99, NULL, NULL, NULL, NULL, NULL, NULL, 32, 10, 0.32, 1, '2026-01-06 01:10:00', '2026-01-07 08:02:48', 0),
+(16, 7, 'SPS-M-RED', 'M', 'Red/White', '#dc143c', 39.99, NULL, 'fixed', 5.00, '2026-01-04 10:00:00', '2026-01-20 09:59:00', NULL, 45, 10, 0.28, 1, '2026-01-06 01:15:00', '2026-01-07 08:00:43', 1),
+(17, 7, 'SPS-L-BLUE', 'L', 'Blue/White', '#0000ff', 39.99, NULL, 'fixed', 5.00, '2026-01-04 10:00:00', '2026-01-20 09:59:00', NULL, 38, 10, 0.30, 1, '2026-01-06 01:15:00', '2026-01-07 08:00:44', 1),
+(18, 7, 'SPS-XL-GREEN', 'XL', 'Green/White', '#008000', 39.99, NULL, 'fixed', 5.00, '2026-01-04 10:00:00', '2026-01-20 09:59:00', NULL, 25, 10, 0.32, 1, '2026-01-06 01:15:00', '2026-01-07 08:00:44', 1),
+(19, 8, 'GPT-S-BLACK', 'S', 'Black', '#000000', 29.99, NULL, NULL, NULL, NULL, NULL, NULL, 50, 10, 0.20, 1, '2026-01-06 01:20:00', '2026-01-07 07:58:07', 0),
+(20, 8, 'GPT-M-BLACK', 'M', 'Black', '#000000', 29.99, NULL, NULL, NULL, NULL, NULL, NULL, 60, 10, 0.22, 1, '2026-01-06 01:20:00', '2026-01-07 07:58:07', 0),
+(21, 8, 'GPT-L-WHITE', 'L', 'White', '#ffffff', 29.99, NULL, NULL, NULL, NULL, NULL, NULL, 42, 10, 0.22, 1, '2026-01-06 01:20:00', '2026-01-07 07:58:07', 0),
+(22, 9, 'BCT-S-GRAY', 'S', 'White', '#ffffff', 19.99, NULL, 'percentage', 20.00, '2025-12-31 17:00:00', '2026-01-15 16:59:00', NULL, 100, 10, 0.18, 1, '2026-01-06 01:25:00', '2026-01-07 07:37:08', 1),
+(23, 9, 'BCT-M-GRAY', 'M', 'Gray', '#808080', 19.99, NULL, 'percentage', 20.00, '2025-12-31 17:00:00', '2026-01-15 16:59:00', NULL, 120, 10, 0.20, 1, '2026-01-06 01:25:00', '2026-01-07 07:37:08', 1),
+(24, 9, 'BCT-L-BLACK', 'L', 'Black', '#000000', 19.99, NULL, 'percentage', 20.00, '2025-12-31 17:00:00', '2026-01-15 16:59:00', NULL, 90, 10, 0.20, 1, '2026-01-06 01:25:00', '2026-01-07 07:37:08', 1),
+(25, 9, 'BCT-XL-WHITE', 'XL', 'White', '#ffffff', 19.99, NULL, 'percentage', 20.00, '2025-12-31 17:00:00', '2026-01-15 16:59:00', NULL, 75, 10, 0.22, 1, '2026-01-06 01:25:00', '2026-01-07 07:37:08', 1),
+(26, 10, 'FSD-S-PINK', 'S', 'Pink Floral', '#ffb6c1', 79.99, NULL, NULL, NULL, NULL, NULL, NULL, 18, 10, 0.35, 1, '2026-01-06 01:30:00', '2026-01-07 07:34:41', 0),
+(27, 10, 'FSD-M-PINK', 'M', 'Pink Floral', '#ffb6c1', 79.99, NULL, NULL, NULL, NULL, NULL, NULL, 22, 10, 0.37, 1, '2026-01-06 01:30:00', '2026-01-07 07:34:41', 0),
+(28, 10, 'FSD-L-BLUE', 'L', 'Blue Floral', '#87ceeb', 79.99, NULL, NULL, NULL, NULL, NULL, NULL, 15, 10, 0.37, 1, '2026-01-06 01:30:00', '2026-01-07 07:34:41', 0),
+(29, 11, 'EED-S-BLACK', 'S', 'Black', '#000000', 149.99, NULL, 'percentage', 25.00, '2026-01-09 17:00:00', '2026-02-10 16:59:00', NULL, 8, 5, 0.45, 1, '2026-01-06 01:35:00', '2026-01-07 07:28:18', 1),
+(30, 11, 'EED-M-BLACK', 'M', 'Black', '#000000', 149.99, NULL, 'percentage', 25.00, '2026-01-09 17:00:00', '2026-02-10 16:59:00', NULL, 10, 5, 0.47, 1, '2026-01-06 01:35:00', '2026-01-07 07:28:18', 1),
+(31, 11, 'EED-M-RED', 'M', 'Red', '#ff0000', 149.99, NULL, 'percentage', 25.00, '2026-01-09 17:00:00', '2026-02-10 16:59:00', NULL, 12, 5, 0.47, 1, '2026-01-06 01:35:00', '2026-01-07 07:28:18', 1),
+(32, 12, 'CTT-S-WHITE', 'S', 'White', '#ffffff', 24.99, NULL, NULL, NULL, NULL, NULL, NULL, 65, 10, 0.15, 1, '2026-01-06 01:40:00', '2026-01-07 07:25:50', 0),
+(33, 12, 'CTT-M-BLACK', 'M', 'Black', '#000000', 24.99, NULL, NULL, NULL, NULL, NULL, NULL, 58, 10, 0.16, 1, '2026-01-06 01:40:00', '2026-01-07 07:25:50', 0),
+(34, 12, 'CTT-L-GRAY', 'L', 'Gray', '#808080', 24.99, NULL, NULL, NULL, NULL, NULL, NULL, 45, 10, 0.16, 1, '2026-01-06 01:40:00', '2026-01-07 07:25:50', 0),
+(35, 13, 'RB-S-CREAM', 'S', 'Cream', '#fffdd0', 44.99, NULL, 'fixed', 8.00, '2026-01-05 10:00:00', '2026-01-25 09:59:00', NULL, 28, 10, 0.25, 1, '2026-01-06 01:45:00', '2026-01-07 07:22:19', 1),
+(36, 13, 'RB-M-CREAM', 'M', 'Cream', '#fffdd0', 44.99, NULL, 'fixed', 8.00, '2026-01-05 10:00:00', '2026-01-25 09:59:00', NULL, 32, 10, 0.26, 1, '2026-01-06 01:45:00', '2026-01-07 07:22:19', 1),
+(37, 13, 'RB-L-LAVENDER', 'L', 'Lavender', '#e6e6fa', 44.99, NULL, 'fixed', 8.00, '2026-01-05 10:00:00', '2026-01-25 09:59:00', NULL, 20, 10, 0.26, 1, '2026-01-06 01:45:00', '2026-01-07 07:22:19', 1),
+(38, 14, 'LBJ-M-BLACK', 'M', 'Black', '#000000', 199.99, NULL, 'percentage', 30.00, '2026-01-05 03:00:00', '2026-01-31 02:59:00', NULL, 12, 5, 1.20, 1, '2026-01-06 02:00:00', '2026-01-07 07:53:32', 1),
+(39, 14, 'LBJ-L-BLACK', 'L', 'Black', '#000000', 199.99, NULL, 'percentage', 30.00, '2026-01-05 03:00:00', '2026-01-31 02:59:00', NULL, 15, 5, 1.25, 1, '2026-01-06 02:00:00', '2026-01-07 07:53:32', 1),
+(40, 14, 'LBJ-XL-BROWN', 'XL', 'Brown', '#8b4513', 199.99, NULL, 'percentage', 30.00, '2026-01-05 03:00:00', '2026-01-31 02:59:00', NULL, 8, 5, 1.30, 1, '2026-01-06 02:00:00', '2026-01-07 07:53:32', 1),
+(41, 15, 'DJ-M-BLUE', 'M', 'Blue', '#4169e1', 79.99, NULL, NULL, NULL, NULL, NULL, NULL, 28, 10, 0.85, 1, '2026-01-06 02:02:00', '2026-01-07 07:06:11', 0),
+(42, 15, 'DJ-L-BLUE', 'L', 'Blue', '#4169e1', 79.99, NULL, NULL, NULL, NULL, NULL, NULL, 32, 10, 0.90, 1, '2026-01-06 02:02:00', '2026-01-07 07:06:11', 0),
+(43, 15, 'DJ-XL-BLACK', 'XL', 'Black', '#000000', 79.99, NULL, NULL, NULL, NULL, NULL, NULL, 20, 10, 0.95, 1, '2026-01-06 02:02:00', '2026-01-07 07:06:11', 0),
+(44, 16, 'WB-M-NAVY', 'M', 'Navy', '#000080', 59.99, NULL, 'fixed', 10.00, '2026-01-04 10:00:00', '2026-01-20 09:59:00', NULL, 35, 10, 0.45, 1, '2026-01-06 02:03:00', '2026-01-07 07:53:49', 1),
+(45, 16, 'WB-L-RED', 'L', 'Red', '#ff0000', 59.99, NULL, 'fixed', 10.00, '2026-01-04 10:00:00', '2026-01-20 09:59:00', NULL, 30, 10, 0.47, 1, '2026-01-06 02:03:00', '2026-01-07 07:53:49', 1),
+(46, 16, 'WB-XL-BLACK', 'XL', 'Black', '#000000', 59.99, NULL, 'fixed', 10.00, '2026-01-04 10:00:00', '2026-01-20 09:59:00', NULL, 25, 10, 0.50, 1, '2026-01-06 02:03:00', '2026-01-07 07:53:49', 1),
+(55, 20, 'PMS-S-BLACK', 'S', 'Black', '#000000', 54.99, NULL, NULL, NULL, NULL, NULL, NULL, 30, 10, 0.35, 1, '2026-01-06 02:10:00', '2026-01-07 07:03:40', 0),
+(56, 20, 'PMS-M-NAVY', 'M', 'Navy', '#000080', 54.99, NULL, NULL, NULL, NULL, NULL, NULL, 35, 10, 0.35, 1, '2026-01-06 02:10:00', '2026-01-07 07:03:40', 0),
+(57, 20, 'PMS-L-BURGUNDY', 'L', 'Burgundy', '#800020', 54.99, NULL, NULL, NULL, NULL, NULL, NULL, 25, 10, 0.37, 1, '2026-01-06 02:10:00', '2026-01-07 07:03:40', 0),
+(58, 21, 'DMS-S-BLUE', 'S', 'Blue', '#4169e1', 39.99, NULL, 'percentage', 15.00, '2026-01-05 10:00:00', '2026-01-30 09:59:00', NULL, 40, 10, 0.30, 1, '2026-01-06 02:11:00', '2026-01-07 07:01:15', 1),
+(59, 21, 'DMS-M-BLUE', 'M', 'Blue', '#4169e1', 39.99, NULL, 'percentage', 15.00, '2026-01-05 10:00:00', '2026-01-30 09:59:00', NULL, 45, 10, 0.30, 1, '2026-01-06 02:11:00', '2026-01-07 07:01:15', 1),
+(60, 21, 'DMS-L-BLACK', 'L', 'Black', '#000000', 39.99, NULL, 'percentage', 15.00, '2026-01-05 10:00:00', '2026-01-30 09:59:00', NULL, 35, 10, 0.32, 1, '2026-01-06 02:11:00', '2026-01-07 07:01:15', 1),
+(61, 22, 'PS-S-BLACK', 'S', 'Black', '#000000', 49.99, NULL, NULL, NULL, NULL, NULL, NULL, 28, 10, 0.32, 1, '2026-01-06 02:12:00', '2026-01-07 06:59:00', 0),
+(62, 22, 'PS-M-GRAY', 'M', 'Gray', '#808080', 49.99, NULL, NULL, NULL, NULL, NULL, NULL, 32, 10, 0.32, 1, '2026-01-06 02:12:00', '2026-01-07 06:59:00', 0),
+(63, 22, 'PS-L-NAVY', 'L', 'Navy', '#000080', 49.99, NULL, NULL, NULL, NULL, NULL, NULL, 25, 10, 0.35, 1, '2026-01-06 02:12:00', '2026-01-07 06:59:00', 0),
+(72, 26, 'CKS-M-CREAM', 'M', 'Cream', '#fffdd0', 74.99, NULL, NULL, NULL, NULL, NULL, NULL, 32, 10, 0.55, 1, '2026-01-06 02:20:00', '2026-01-06 17:06:05', 0),
+(73, 26, 'CKS-L-NAVY', 'L', 'Navy', '#000080', 74.99, NULL, NULL, NULL, NULL, NULL, NULL, 28, 10, 0.58, 1, '2026-01-06 02:20:00', '2026-01-06 17:06:05', 0),
+(74, 26, 'CKS-XL-GRAY', 'XL', 'Gray', '#808080', 74.99, NULL, NULL, NULL, NULL, NULL, NULL, 22, 10, 0.60, 1, '2026-01-06 02:20:00', '2026-01-06 17:06:05', 0),
+(75, 27, 'CG-S-BEIGE', 'S', 'Beige', '#f5f5dc', 64.99, NULL, 'percentage', 20.00, '2026-01-05 10:00:00', '2026-01-28 09:59:00', NULL, 38, 10, 0.50, 1, '2026-01-06 02:21:00', '2026-01-07 06:40:51', 1),
+(76, 27, 'CG-M-BLACK', 'M', 'Black', '#000000', 64.99, NULL, 'percentage', 20.00, '2026-01-05 10:00:00', '2026-01-28 09:59:00', NULL, 42, 10, 0.52, 1, '2026-01-06 02:21:00', '2026-01-07 06:40:51', 1),
+(77, 27, 'CG-L-BURGUNDY', 'L', 'Burgundy', '#800020', 64.99, NULL, 'percentage', 20.00, '2026-01-05 10:00:00', '2026-01-28 09:59:00', NULL, 30, 10, 0.55, 1, '2026-01-06 02:21:00', '2026-01-07 06:40:51', 1),
+(78, 28, 'TNS-S-BLACK', 'S', 'Black', '#000000', 69.99, NULL, NULL, NULL, NULL, NULL, NULL, 30, 10, 0.48, 1, '2026-01-06 02:22:00', '2026-01-06 16:40:35', 0),
+(79, 28, 'TNS-M-CAMEL', 'M', 'Grey', '#8a8a8a', 69.99, NULL, NULL, NULL, NULL, NULL, NULL, 35, 10, 0.50, 1, '2026-01-06 02:22:00', '2026-01-06 16:41:15', 0),
+(80, 28, 'TNS-L-NAVY', 'L', 'Navy', '#000080', 69.99, NULL, NULL, NULL, NULL, NULL, NULL, 28, 10, 0.52, 1, '2026-01-06 02:22:00', '2026-01-06 16:40:35', 0),
+(81, 29, 'CGS-M-KHAKI', 'M', 'Khaki', '#c3b091', 44.99, NULL, NULL, NULL, NULL, NULL, NULL, 42, 10, 0.35, 1, '2026-01-06 02:25:00', '2026-01-06 16:24:55', 0),
+(82, 29, 'CGS-L-OLIVE', 'L', 'Olive', '#808000', 44.99, NULL, NULL, NULL, NULL, NULL, NULL, 38, 10, 0.37, 1, '2026-01-06 02:25:00', '2026-01-06 16:24:55', 0),
+(83, 29, 'CGS-XL-BLACK', 'XL', 'Black', '#000000', 44.99, NULL, NULL, NULL, NULL, NULL, NULL, 30, 10, 0.40, 1, '2026-01-06 02:25:00', '2026-01-06 16:24:55', 0),
+(87, 31, 'DS-S-BLUE', 'S', 'Blue', '#4169e1', 42.99, NULL, 'percentage', 15.00, '2025-12-30 20:00:00', '2026-01-31 19:59:00', NULL, 45, 10, 0.32, 1, '2026-01-06 02:27:00', '2026-01-07 10:06:47', 1),
+(88, 31, 'DS-M-BLUE', 'M', 'Blue', '#4169e1', 42.99, NULL, 'percentage', 15.00, '2025-12-30 20:00:00', '2026-01-31 19:59:00', NULL, 50, 10, 0.33, 1, '2026-01-06 02:27:00', '2026-01-07 10:06:47', 1),
+(89, 31, 'DS-L-BLACK', 'L', 'Black', '#000000', 42.99, NULL, 'percentage', 15.00, '2025-12-30 20:00:00', '2026-01-31 19:59:00', NULL, 42, 10, 0.35, 1, '2026-01-06 02:27:00', '2026-01-07 10:06:47', 1),
+(90, 37, '-M-#26', 'M', '#26121c', '#26121c', 12.00, NULL, NULL, NULL, NULL, NULL, NULL, 15, 10, 30.00, 1, '2026-01-07 09:37:35', '2026-01-07 09:37:35', 0),
+(91, 34, '-M-BLA', 'M', 'Black', '#000000', 15.00, NULL, NULL, NULL, NULL, NULL, NULL, 12, 10, 35.00, 1, '2026-01-07 09:41:56', '2026-01-07 09:41:56', 0),
+(92, 33, '-M-MID', 'M', 'Mid-blue', '#324970', 13.00, NULL, NULL, NULL, NULL, NULL, NULL, 12, 10, 24.92, 1, '2026-01-07 09:45:57', '2026-01-07 09:45:57', 0),
+(93, 36, '-X-PIN', 'XS', 'Pink', '#e2366a', 10.00, NULL, NULL, NULL, NULL, NULL, NULL, 18, 10, NULL, 1, '2026-01-07 09:47:42', '2026-01-07 09:47:42', 0);
 
 -- --------------------------------------------------------
 
@@ -473,7 +607,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('Bi4tDYXin8uATnzhXU2FCT6kwGTQ2l2E2AvNhyNL', 3, '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoid25Za2VQSGc3Rm1xbXRKQXQ0bWRMT0tuQ1VBTnlscGlhZ2lzWmtpRCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjg6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9vcmRlcnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTozO30=', 1767355678);
+('s3aTO0ZzQ5OGTgCflqCnbGelO1ADUZSfoldc6KnC', 3, '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiTElFM0VKaEJYV0piNXh1R0oxbW45VmtaS3IwcE1Fd0R2Rnk5YUpRWSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9wcm9kdWN0L2NhcmRpZ2FuIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MztzOjY6ImxvY2FsZSI7czoyOiJrbSI7fQ==', 1767795467);
 
 -- --------------------------------------------------------
 
@@ -511,8 +645,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `otp_code`, `account_type`, `user_type`, `customer_id`, `loyalty_points`, `newsletter_opt_in`, `phone`, `profile_picture`, `dob`, `gender`, `is_verified`, `is_active`, `last_login_at`, `default_address_id`, `created_at`, `updated_at`) VALUES
-(1, 'Admin User', 'team.novastudio@gmail.com', '2025-12-22 16:37:27', '$2y$12$JyHZKpSMqCCGlGJgNFVBjOFTEpvZ8HzDy.KSzL.9kukXOuTgRxg56', NULL, NULL, 'admin', 'admin', NULL, 0, 1, '1234567890', NULL, NULL, NULL, 1, 1, NULL, NULL, '2025-12-12 18:18:21', '2025-12-12 18:18:21'),
-(2, 'Leon Lii', 'xawet22315@lawior.com', '2025-12-30 16:27:25', '$2y$12$xC4R3YF0zGTX/hqWn8uAF.9f6klG6j3a6EdAspRNhxyUkaVqbnYpa', NULL, NULL, 'customer', 'user', NULL, 0, 1, '012300104', NULL, NULL, NULL, 1, 1, NULL, NULL, '2025-12-28 11:29:49', '2025-12-30 16:27:25');
+(1, 'Admin User', 'team.818x@gmail.com', '2025-12-22 16:37:27', '$2y$12$JyHZKpSMqCCGlGJgNFVBjOFTEpvZ8HzDy.KSzL.9kukXOuTgRxg56', NULL, NULL, 'admin', 'admin', NULL, 0, 1, '1234567890', NULL, NULL, NULL, 1, 1, NULL, NULL, '2025-12-12 18:18:21', '2025-12-12 18:18:21'),
+(3, 'Vuthy', 'xawet22315@lawior.com', '2025-12-28 11:40:56', '$2y$12$/QiQ.SpxYdoXgnkLFwBCl.39ATcbuLf3K/Te6yGwazFmYEBCBOG/i', NULL, NULL, 'admin', 'admin', NULL, 0, 1, '012300204', 'user/profile_pictures/GcRPV170Ux20UodfWRqlHjjVG1WcdycGCZxzjfMz.png', '1998-10-13', 'male', 1, 1, NULL, NULL, '2025-12-12 18:01:26', '2025-12-30 11:03:58'),
+(4, 'Cailin Golden', 'gedena7312@mekuron.com', '2025-12-24 10:16:45', '$2y$12$XaxjxP.1iYzGIfCRFmNzhOwrBA/4rhEvAKouNOcVqm5SmJNxVLFvC', NULL, NULL, 'customer', 'user', NULL, 0, 1, '012300107', NULL, '2000-06-13', 'female', 1, 1, NULL, NULL, '2025-12-19 08:37:31', '2025-12-28 11:19:26'),
+(5, 'Leon Lii', 'mrrvothy@gmail.com', '2025-12-30 16:27:25', '$2y$12$xC4R3YF0zGTX/hqWn8uAF.9f6klG6j3a6EdAspRNhxyUkaVqbnYpa', NULL, NULL, 'customer', 'user', NULL, 0, 1, '012300104', NULL, NULL, NULL, 1, 1, NULL, NULL, '2025-12-28 11:29:49', '2025-12-30 16:27:25');
 
 -- --------------------------------------------------------
 
@@ -753,7 +889,7 @@ ALTER TABLE `cart_items`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `jobs`
@@ -789,13 +925,13 @@ ALTER TABLE `order_items`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `product_images`
 --
 ALTER TABLE `product_images`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=170;
 
 --
 -- AUTO_INCREMENT for table `product_reviews`
@@ -807,7 +943,7 @@ ALTER TABLE `product_reviews`
 -- AUTO_INCREMENT for table `product_variants`
 --
 ALTER TABLE `product_variants`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
 
 --
 -- AUTO_INCREMENT for table `users`

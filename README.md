@@ -1,5 +1,5 @@
 # NOVA STUDIO 🛍️
-
+![Logo](https://iili.io/fOy7qqx.png)
 A fully functional e-commerce clothing website built with Laravel PHP Framework, featuring modern design and comprehensive shopping functionalities.
 
 ## ✨ Features
@@ -60,7 +60,7 @@ A fully functional e-commerce clothing website built with Laravel PHP Framework,
     DB_CONNECTION=mysql
     DB_HOST=127.0.0.1
     DB_PORT=3306
-    DB_DATABASE=nova_studio
+    DB_DATABASE=nova_studio_db
     DB_USERNAME=your_username
     DB_PASSWORD=your_password
 
