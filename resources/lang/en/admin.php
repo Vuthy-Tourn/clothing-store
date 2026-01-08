@@ -1036,6 +1036,7 @@ return [
         ],
         
         'account_types' => [
+            'customer'=>'Customer',
             'admin' => 'Admin',
             'staff' => 'Staff',
             'vendor' => 'Vendor',

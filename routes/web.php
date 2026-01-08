@@ -310,3 +310,4 @@ Route::get('/products/{product}/reviews', [ProductDisplayController::class, 'get
 Route::post('/language/set', [LanguageController::class, 'set'])->name('language.set');
 Route::post('/language/ajax', [LanguageController::class, 'ajax'])->name('language.ajax');
 Route::get('/search', [ProductDisplayController::class, 'search'])->name('products.search');
+// In web.php add:

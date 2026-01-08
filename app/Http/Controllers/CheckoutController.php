@@ -8,7 +8,9 @@ use App\Models\UserAddress;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\ProductVariant; // Make sure to import this
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log; // Add Log facade
 use Stripe\Stripe;
 use Stripe\Checkout\Session as StripeSession;
 
@@ -169,6 +171,17 @@ class CheckoutController extends Controller
             return redirect()->route('cart')->withErrors(['msg' => 'Your cart is empty.']);
         }
 
+        // Check stock availability BEFORE creating order
+        foreach ($items as $item) {
+            if ($item->variant && $item->variant->stock < $item->quantity) {
+                return redirect()->route('cart')->withErrors([
+                    'msg' => 'Insufficient stock for ' . $item->variant->product->name . 
+                            ' (Size: ' . $item->variant->size . ', Color: ' . $item->variant->color . ').' .
+                            ' Only ' . $item->variant->stock . ' items available.'
+                ]);
+            }
+        }
+
         // Calculate grand total using final_price - SAME LOGIC AS CART
         $subtotal = 0;
         $totalSavings = 0;
@@ -203,7 +216,6 @@ class CheckoutController extends Controller
             'shipping_address_id' => $shippingAddressId,
             'billing_address_id' => $billingAddressId,
             'customer_notes' => $request->customer_notes ?? null,
-            'total_savings' => $totalSavings,
         ]);
 
         // Save order items with variant info
@@ -232,7 +244,6 @@ class CheckoutController extends Controller
                     'variant_details' => json_encode($variantDetails),
                     'quantity' => $item->quantity,
                     'unit_price' => $price,
-                    'original_unit_price' => $originalPrice,
                     'total_price' => $totalPrice,
                 ]);
             }
@@ -303,8 +314,7 @@ class CheckoutController extends Controller
             'payment_method_types' => ['card'],
             'line_items' => $lineItems,
             'mode' => 'payment',
-            'success_url' => route('orders.show', ['orderNumber' => $orderNumber]) . '?success=1',
-            'cancel_url' => route('cart') . '?canceled=1',
+            'success_url' => route('orders.show', ['orderNumber' => $orderNumber]) . '?success=1',            'cancel_url' => route('cart') . '?canceled=1',
             'metadata' => array_merge([
                 'order_number' => $orderNumber,
                 'user_id' => $userId,
@@ -321,52 +331,6 @@ class CheckoutController extends Controller
         return redirect($session->url);
     }
 
-     public function thankYou($orderNumber)
-    {
-        $order = Order::with(['items.variant.product', 'shippingAddress', 'billingAddress'])
-            ->where('order_number', $orderNumber)
-            ->firstOrFail();
-
-        // Only allow the order owner
-        if ($order->user_id !== Auth::id()) {
-            abort(403);
-        }
-
-        // If payment was successful, update order status and deduct stock
-        if ($order->order_status === 'pending' && request()->has('success')) {
-            $order->update([
-                'order_status' => 'confirmed',
-                'payment_status' => 'paid',
-                'payment_date' => now(),
-            ]);
-
-            // Deduct stock from variants
-            foreach ($order->items as $item) {
-                if ($item->variant) {
-                    $item->variant->decrement('stock', $item->quantity);
-                }
-            }
-
-            // Clear cart
-            CartItem::where('user_id', Auth::id())->delete();
-        }
-
-        return view('frontend.thankyou', compact('order'));
-    }
-
-    public function show($orderNumber)
-    {
-        $order = Order::with(['items.variant.product', 'shippingAddress', 'billingAddress'])
-            ->where('order_number', $orderNumber)
-            ->firstOrFail();
-        
-        // Check if this is a success redirect
-        if (request()->has('success')) {
-            session()->flash('show_order_success', true);
-        }
-        
-        return view('orders.show', compact('order'));
-    }
 
     public function downloadInvoice($orderNumber)
     {
@@ -381,6 +345,8 @@ class CheckoutController extends Controller
     // Webhook endpoint for Stripe
     public function stripeWebhook(Request $request)
     {
+        Log::info('=== STRIPE WEBHOOK RECEIVED ===');
+        
         Stripe::setApiKey(env('STRIPE_SECRET'));
         
         $payload = $request->getContent();
@@ -391,7 +357,9 @@ class CheckoutController extends Controller
             $event = \Stripe\Webhook::constructEvent(
                 $payload, $sig_header, $endpoint_secret
             );
+            Log::info('Webhook event constructed:', ['type' => $event->type]);
         } catch (\Exception $e) {
+            Log::error('Stripe webhook error:', ['error' => $e->getMessage()]);
             return response()->json(['error' => $e->getMessage()], 400);
         }
 
@@ -399,30 +367,64 @@ class CheckoutController extends Controller
         switch ($event->type) {
             case 'checkout.session.completed':
                 $session = $event->data->object;
+                Log::info('Stripe webhook: checkout.session.completed', [
+                    'session_id' => $session->id,
+                    'payment_status' => $session->payment_status,
+                    'metadata' => $session->metadata
+                ]);
                 
-                // Update order status
-                $order = Order::where('payment_id', $session->id)->first();
-                if ($order) {
-                    $order->update([
-                        'order_status' => 'confirmed',
-                        'payment_status' => 'paid',
-                        'payment_date' => now(),
-                    ]);
-                    
-                    // Deduct stock
-                    foreach ($order->items as $item) {
-                        if ($item->variant) {
-                            $item->variant->decrement('stock', $item->quantity);
+                if ($session->payment_status === 'paid') {
+                    // Update order status
+                    $order = Order::where('payment_id', $session->id)->first();
+                    if ($order) {
+                        Log::info('Found order for webhook:', [
+                            'order_id' => $order->id,
+                            'order_number' => $order->order_number,
+                            'current_status' => $order->order_status
+                        ]);
+                        
+                        if ($order->order_status === 'pending') {
+                            // Update order status
+                            $order->update([
+                                'order_status' => 'confirmed',
+                                'payment_status' => 'paid',
+                                'payment_date' => now(),
+                            ]);
+                            
+                            Log::info('Order status updated via webhook');
+                            
+                            // Deduct stock
+                            foreach ($order->items as $item) {
+                                $variant = ProductVariant::find($item->product_variant_id);
+                                if ($variant) {
+                                    Log::info('Webhook stock deduction:', [
+                                        'variant_id' => $variant->id,
+                                        'sku' => $variant->sku,
+                                        'old_stock' => $variant->stock,
+                                        'quantity' => $item->quantity
+                                    ]);
+                                    
+                                    $variant->decrement('stock', $item->quantity);
+                                    $variant->refresh();
+                                    
+                                    Log::info('Webhook stock after deduction:', [
+                                        'variant_id' => $variant->id,
+                                        'new_stock' => $variant->stock
+                                    ]);
+                                }
+                            }
+                            
+                            // Clear cart
+                            CartItem::where('user_id', $order->user_id)->delete();
+                            Log::info('Cart cleared via webhook for user:', ['user_id' => $order->user_id]);
                         }
                     }
-                    
-                    // Clear cart
-                    CartItem::where('user_id', $order->user_id)->delete();
                 }
                 break;
                 
             case 'checkout.session.expired':
                 $session = $event->data->object;
+                Log::info('Stripe webhook: checkout.session.expired', ['session_id' => $session->id]);
                 $order = Order::where('payment_id', $session->id)->first();
                 if ($order && $order->order_status === 'pending') {
                     $order->update([

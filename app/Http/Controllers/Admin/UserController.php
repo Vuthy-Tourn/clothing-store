@@ -422,17 +422,17 @@ public function update(Request $request, User $user)
                 ->with('success', 'User deleted successfully!');
                 
         } catch (\Exception $e) {
-            DB::rollBack();
+            // DB::rollBack();
             
-            if (request()->ajax() || request()->wantsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Failed to delete user: ' . $e->getMessage()
-                ], 500);
-            }
+            // if (request()->ajax() || request()->wantsJson()) {
+            //     return response()->json([
+            //         'success' => false,
+            //         'message' => 'Failed to delete user: ' . $e->getMessage()
+            //     ], 500);
+            // }
             
-            return redirect()->back()
-                ->with('error', 'Failed to delete user: ' . $e->getMessage());
+            // return redirect()->back()
+            //     ->with('error', 'Failed to delete user: ' . $e->getMessage());
         }
     }
 

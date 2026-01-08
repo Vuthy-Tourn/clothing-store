@@ -1029,6 +1029,7 @@ return [
         ],
         
         'account_types' => [
+            'customer'=>'អតិថិជន',
             'admin' => 'អ្នកគ្រប់គ្រង',
             'staff' => 'បុគ្គលិក',
             'vendor' => 'អ្នកលក់',
