@@ -11,6 +11,7 @@ use App\Models\OrderItem;
 use App\Models\ProductVariant; // Make sure to import this
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log; // Add Log facade
+use Illuminate\Support\Str;
 use Stripe\Stripe;
 use Stripe\Checkout\Session as StripeSession;
 
@@ -22,34 +23,27 @@ class CheckoutController extends Controller
             ->where('user_id', Auth::id())
             ->get();
 
-        // Calculate totals - USE SAME LOGIC AS CART CONTROLLER
+        // Calculate totals
         $subtotal = 0;
         $totalSavings = 0;
         $originalSubtotal = 0;
         
         foreach ($items as $item) {
             if ($item->variant) {
-                // Use final_price which already includes discounts - SAME AS CART CONTROLLER
                 $item->unit_price = $item->variant->final_price;
                 $item->total_price = $item->unit_price * $item->quantity;
                 $subtotal += $item->total_price;
                 
-                // Store original price for comparison
                 $item->original_price = $item->variant->price;
-                
-                // Check if item has discount - Compare final_price with original price
                 $item->has_discount = $item->variant->final_price < $item->variant->price;
                 
-                // Calculate savings for this item
                 if ($item->has_discount) {
                     $itemSavings = ($item->original_price - $item->unit_price) * $item->quantity;
                     $totalSavings += $itemSavings;
                 }
                 
-                // Original subtotal (without discounts)
                 $originalSubtotal += $item->original_price * $item->quantity;
                 
-                // Add product info for display
                 $item->product_name = $item->variant->product->name ?? 'Product';
                 $item->product_image = $item->variant->product->images->first()->image_path ?? 'products/placeholder.jpg';
                 $item->size = $item->variant->size;
@@ -59,11 +53,10 @@ class CheckoutController extends Controller
             }
         }
 
-        $shipping = 0; // Free shipping
-        $tax = $subtotal * 0.08; // 8% tax
+        $shipping = 0;
+        $tax = $subtotal * 0.08;
         $grandTotal = $subtotal + $shipping + $tax;
 
-        // Get user's saved addresses
         $user = Auth::user();
         $savedAddresses = $user->addresses()
             ->shipping()
@@ -103,8 +96,15 @@ class CheckoutController extends Controller
                 'zip'            => ['required', 'regex:/^\d{5,6}$/'],
                 'address'        => ['required', 'string', 'min:10', 'max:255'],
                 'address2'       => ['nullable', 'string', 'max:255'],
-                'payment_method' => ['required', 'in:online'],
+                'payment_method' => ['required', 'in:stripe,qr_code'],
             ]);
+            
+            // Additional validation for QR code
+            if ($validated['payment_method'] === 'qr_code') {
+                $request->validate([
+                    'qr_bank' => ['required', 'in:aba,acleda,wing,cimb,ppcb']
+                ]);
+            }
 
             // Save shipping address
             $shippingAddress = UserAddress::create([
@@ -123,7 +123,6 @@ class CheckoutController extends Controller
             ]);
             $shippingAddressId = $shippingAddress->id;
 
-            // Check if separate billing address is needed
             if ($request->has('different_billing') && $request->different_billing === '1') {
                 $billingAddress = UserAddress::create([
                     'user_id' => $userId,
@@ -150,8 +149,15 @@ class CheckoutController extends Controller
             // Using saved address
             $validated = $request->validate([
                 'saved_address_id' => ['required', 'exists:user_addresses,id,user_id,' . $userId],
-                'payment_method' => ['required', 'in:online'],
+                'payment_method' => ['required', 'in:stripe,qr_code'],
             ]);
+            
+            // Additional validation for QR code
+            if ($validated['payment_method'] === 'qr_code') {
+                $request->validate([
+                    'qr_bank' => ['required', 'in:aba,acleda,wing,cimb,ppcb']
+                ]);
+            }
 
             $savedAddress = UserAddress::where('id', $validated['saved_address_id'])
                 ->where('user_id', $userId)
@@ -171,7 +177,7 @@ class CheckoutController extends Controller
             return redirect()->route('cart')->withErrors(['msg' => 'Your cart is empty.']);
         }
 
-        // Check stock availability BEFORE creating order
+        // Check stock availability
         foreach ($items as $item) {
             if ($item->variant && $item->variant->stock < $item->quantity) {
                 return redirect()->route('cart')->withErrors([
@@ -182,12 +188,11 @@ class CheckoutController extends Controller
             }
         }
 
-        // Calculate grand total using final_price - SAME LOGIC AS CART
+        // Calculate totals
         $subtotal = 0;
         $totalSavings = 0;
         foreach ($items as $item) {
             if ($item->variant) {
-                // Use final_price which already includes discounts
                 $price = $item->variant->final_price;
                 $originalPrice = $item->variant->price;
                 $subtotal += $price * $item->quantity;
@@ -195,37 +200,44 @@ class CheckoutController extends Controller
             }
         }
         
-        $shipping = 0; // Free shipping
+        $shipping = 0;
         $tax = $subtotal * 0.08;
         $grandTotal = $subtotal + $shipping + $tax;
 
         // Generate order number
         $orderNumber = 'ORD-' . date('Ymd') . '-' . strtoupper(uniqid());
         
+        // For QR code payments, set a reference number
+        $qrReference = null;
+        if ($request->payment_method === 'qr_code') {
+            $qrReference = 'QR-' . strtoupper(Str::random(12));
+        }
+        
         // Create order
         $order = Order::create([
             'user_id' => $userId,
             'order_number' => $orderNumber,
+            'qr_reference' => $qrReference,
             'order_status' => 'pending',
             'subtotal' => $subtotal,
             'shipping_amount' => $shipping,
             'tax_amount' => $tax,
             'total_amount' => $grandTotal,
-            'payment_method' => 'stripe',
+            'payment_method' => $request->payment_method,
             'payment_status' => 'pending',
+            'qr_bank' => $request->qr_bank ?? null,
             'shipping_address_id' => $shippingAddressId,
             'billing_address_id' => $billingAddressId,
             'customer_notes' => $request->customer_notes ?? null,
         ]);
 
-        // Save order items with variant info
+        // Save order items
         foreach ($items as $item) {
             if ($item->variant) {
                 $price = $item->variant->final_price;
                 $totalPrice = $price * $item->quantity;
                 $originalPrice = $item->variant->price;
                 
-                // Store variant details as JSON
                 $variantDetails = [
                     'size' => $item->variant->size,
                     'color' => $item->variant->color,
@@ -249,20 +261,39 @@ class CheckoutController extends Controller
             }
         }
 
-        // Stripe integration
+        // Handle payment based on method
+        if ($request->payment_method === 'stripe') {
+            return $this->processStripePayment($order, $items, $customerEmail);
+        } else {
+            // For QR code payment, redirect to payment verification page
+            return $this->processQRPayment($order, $request->qr_bank);
+        }
+    }
+
+
+    public function downloadInvoice($orderNumber)
+    {
+        $order = Order::with(['items.variant.product', 'shippingAddress', 'billingAddress'])
+            ->where('order_number', $orderNumber)
+            ->firstOrFail();
+            
+        $pdf = Pdf::loadView('frontend.invoice', compact('order'));
+        return $pdf->download('invoice_' . $orderNumber . '.pdf');
+    }
+
+    private function processStripePayment($order, $items, $customerEmail)
+    {
         Stripe::setApiKey(env('STRIPE_SECRET'));
-
-        // Exchange rate for USD → KHR
+        
         $exchangeRate = 4000;
-
         $lineItems = [];
+        
         foreach ($items as $item) {
             if ($item->variant) {
                 $price = $item->variant->final_price;
                 $originalPrice = $item->variant->price;
                 $priceKHR = $price * $exchangeRate;
                 
-                // Create description with discount info if applicable
                 $description = 'SKU: ' . $item->variant->sku;
                 if ($price < $originalPrice) {
                     $savings = $originalPrice - $price;
@@ -291,58 +322,101 @@ class CheckoutController extends Controller
             }
         }
 
-        // Get shipping info for metadata
-        $shippingInfo = [];
-        if ($request->address_option === 'new') {
-            $shippingInfo = [
-                'shipping_name' => $validated['name'] ?? '',
-                'shipping_city' => $validated['city'] ?? '',
-                'shipping_country' => $request->country ?? 'United States',
-            ];
-        } else {
-            $shippingAddress = UserAddress::find($shippingAddressId);
-            if ($shippingAddress) {
-                $shippingInfo = [
-                    'shipping_name' => $shippingAddress->full_name ?? '',
-                    'shipping_city' => $shippingAddress->city ?? '',
-                    'shipping_country' => $shippingAddress->country ?? 'United States',
-                ];
-            }
-        }
-
         $session = StripeSession::create([
             'payment_method_types' => ['card'],
             'line_items' => $lineItems,
             'mode' => 'payment',
-            'success_url' => route('orders.show', ['orderNumber' => $orderNumber]) . '?success=1',            'cancel_url' => route('cart') . '?canceled=1',
-            'metadata' => array_merge([
-                'order_number' => $orderNumber,
-                'user_id' => $userId,
-            ], $shippingInfo),
+            'success_url' => route('orders.show', ['orderNumber' => $order->order_number]) . '?success=1',
+            'cancel_url' => route('cart') . '?canceled=1',
+            'metadata' => [
+                'order_number' => $order->order_number,
+                'user_id' => Auth::id(),
+            ],
             'customer_email' => $customerEmail,
         ]);
 
-        // Save Stripe session ID to order
         $order->update([
             'payment_id' => $session->id,
         ]);
 
-        // Redirect to Stripe checkout
         return redirect($session->url);
     }
-
-
-    public function downloadInvoice($orderNumber)
+    
+    private function processQRPayment($order, $bank)
     {
-        $order = Order::with(['items.variant.product', 'shippingAddress', 'billingAddress'])
-            ->where('order_number', $orderNumber)
+        // Generate QR code data
+        $exchangeRate = 4000;
+        $amountKHR = round($order->total_amount * $exchangeRate);
+        
+        // In production, you would generate a real QR code with bank API
+        // This is a simulation for demonstration
+        
+        // For now, we'll create a payment verification page
+        return redirect()->route('checkout.qr.verify', [
+            'order' => $order->order_number,
+            'bank' => $bank
+        ]);
+    }
+    
+    public function showQRVerification($orderNumber, $bank)
+    {
+        $order = Order::where('order_number', $orderNumber)
+            ->where('user_id', Auth::id())
             ->firstOrFail();
             
-        $pdf = Pdf::loadView('frontend.invoice', compact('order'));
-        return $pdf->download('invoice_' . $orderNumber . '.pdf');
+        if ($order->payment_status !== 'pending') {
+            return redirect()->route('orders.show', $orderNumber);
+        }
+        
+        $bankNames = [
+            'aba' => 'ABA Bank',
+            'acleda' => 'ACLEDA Bank',
+            'wing' => 'Wing',
+            'cimb' => 'CIMB Bank',
+            'ppcb' => 'PPCB QR'
+        ];
+        
+        $exchangeRate = 4000;
+        $amountKHR = round($order->total_amount * $exchangeRate);
+        
+        return view('frontend.qr-verification', compact('order', 'bank', 'bankNames', 'amountKHR'));
+    }
+    
+    public function verifyQRPayment(Request $request, $orderNumber)
+    {
+        $order = Order::where('order_number', $orderNumber)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+            
+        if ($order->payment_status !== 'pending') {
+            return redirect()->route('orders.show', $orderNumber);
+        }
+        
+        // Simulate payment verification
+        // In production, you would integrate with bank APIs here
+        
+        sleep(2); // Simulate API delay
+        
+        // Mark as paid
+        $order->update([
+            'order_status' => 'confirmed',
+            'payment_status' => 'paid',
+            'payment_date' => now(),
+        ]);
+        
+        // Deduct stock
+        foreach ($order->items as $item) {
+            if ($item->variant) {
+                $item->variant->decrement('stock', $item->quantity);
+            }
+        }
+        
+        // Clear cart
+        CartItem::where('user_id', Auth::id())->delete();
+        
+        return redirect()->route('orders.show', $orderNumber)->with('success', 'QR payment verified successfully!');
     }
 
-    // Webhook endpoint for Stripe
     public function stripeWebhook(Request $request)
     {
         Log::info('=== STRIPE WEBHOOK RECEIVED ===');
@@ -363,68 +437,37 @@ class CheckoutController extends Controller
             return response()->json(['error' => $e->getMessage()], 400);
         }
 
-        // Handle the event
         switch ($event->type) {
             case 'checkout.session.completed':
                 $session = $event->data->object;
                 Log::info('Stripe webhook: checkout.session.completed', [
                     'session_id' => $session->id,
                     'payment_status' => $session->payment_status,
-                    'metadata' => $session->metadata
                 ]);
                 
                 if ($session->payment_status === 'paid') {
-                    // Update order status
                     $order = Order::where('payment_id', $session->id)->first();
-                    if ($order) {
-                        Log::info('Found order for webhook:', [
-                            'order_id' => $order->id,
-                            'order_number' => $order->order_number,
-                            'current_status' => $order->order_status
+                    if ($order && $order->order_status === 'pending') {
+                        $order->update([
+                            'order_status' => 'confirmed',
+                            'payment_status' => 'paid',
+                            'payment_date' => now(),
                         ]);
                         
-                        if ($order->order_status === 'pending') {
-                            // Update order status
-                            $order->update([
-                                'order_status' => 'confirmed',
-                                'payment_status' => 'paid',
-                                'payment_date' => now(),
-                            ]);
-                            
-                            Log::info('Order status updated via webhook');
-                            
-                            // Deduct stock
-                            foreach ($order->items as $item) {
-                                $variant = ProductVariant::find($item->product_variant_id);
-                                if ($variant) {
-                                    Log::info('Webhook stock deduction:', [
-                                        'variant_id' => $variant->id,
-                                        'sku' => $variant->sku,
-                                        'old_stock' => $variant->stock,
-                                        'quantity' => $item->quantity
-                                    ]);
-                                    
-                                    $variant->decrement('stock', $item->quantity);
-                                    $variant->refresh();
-                                    
-                                    Log::info('Webhook stock after deduction:', [
-                                        'variant_id' => $variant->id,
-                                        'new_stock' => $variant->stock
-                                    ]);
-                                }
+                        foreach ($order->items as $item) {
+                            $variant = ProductVariant::find($item->product_variant_id);
+                            if ($variant) {
+                                $variant->decrement('stock', $item->quantity);
                             }
-                            
-                            // Clear cart
-                            CartItem::where('user_id', $order->user_id)->delete();
-                            Log::info('Cart cleared via webhook for user:', ['user_id' => $order->user_id]);
                         }
+                        
+                        CartItem::where('user_id', $order->user_id)->delete();
                     }
                 }
                 break;
                 
             case 'checkout.session.expired':
                 $session = $event->data->object;
-                Log::info('Stripe webhook: checkout.session.expired', ['session_id' => $session->id]);
                 $order = Order::where('payment_id', $session->id)->first();
                 if ($order && $order->order_status === 'pending') {
                     $order->update([

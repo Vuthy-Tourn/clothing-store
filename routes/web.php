@@ -99,6 +99,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
     Route::post('/checkout/verify', [CheckoutController::class, 'verify'])->name('checkout.verify');
     Route::get('/thank-you/{orderId}', [CheckoutController::class, 'thankYou'])->name('checkout.thankyou');
+
+    // QR Code Payment Routes
+    Route::get('/checkout/qr/{order}/{bank}', [CheckoutController::class, 'showQRVerification'])
+        ->name('checkout.qr.verify');
+    
+    Route::post('/checkout/qr/{order}/verify', [CheckoutController::class, 'verifyQRPayment'])
+        ->name('checkout.qr.verify.post');
     
     // Order History & Invoices (for both regular users and admins when accessing /orders)
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
