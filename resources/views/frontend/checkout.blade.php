@@ -442,15 +442,12 @@
                                                 {{ __('messages.qr_code_payment') }}</p>
                                             <p class="text-sm text-gray-500">{{ __('messages.scan_pay_local') }}</p>
                                             <div class="flex items-center gap-2 mt-1">
-                                                <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">
-                                                    <i class="fas fa-building mr-1"></i>ABA
-                                                </span>
-                                                <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">
-                                                    <i class="fas fa-university mr-1"></i>ACLEDA
-                                                </span>
-                                                <span class="text-xs px-2 py-1 bg-purple-100 text-purple-800 rounded-full">
-                                                    <i class="fas fa-mobile-alt mr-1"></i>Wing
-                                                </span>
+                                                <img src="https://informal.digitaleconomy.gov.kh/images/ministry-icon/aba_round.png"
+                                                    alt="ABA Bank" class="w-10 h-10 object-contain p-2">
+                                                <img src="https://www.acledasecurities.com.kh/as/assets/listed_company/ABC/logo.png"
+                                                    alt="ACLEDA Bank" class="w-10 h-10 object-contain p-2">
+                                                <img src="https://api.customs.gov.kh/wp-content/uploads/2023/12/wing.png"
+                                                    alt="Wing" class="w-10 h-10 object-contain p-2">
                                             </div>
                                         </div>
                                     </div>
@@ -461,37 +458,49 @@
                                     class="hidden mt-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
                                     <h4 class="font-semibold text-gray-900 mb-3">{{ __('messages.select_bank') }}</h4>
                                     <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                        <!-- ABA Bank -->
                                         <label class="bank-option cursor-pointer">
                                             <input type="radio" name="qr_bank" value="aba" class="hidden">
                                             <div
                                                 class="bg-white p-3 rounded-lg border-2 border-transparent hover:border-blue-500 transition-all text-center">
                                                 <div
-                                                    class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-2">
-                                                    <i class="fas fa-building text-blue-600 text-xl"></i>
+                                                    class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2 overflow-hidden bg-blue-50">
+                                                    <!-- Replace src with your ABA logo image -->
+                                                    <img src="https://informal.digitaleconomy.gov.kh/images/ministry-icon/aba_round.png"
+                                                        alt="ABA Bank" class="w-full h-full object-contain p-2"
+                                                        onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHJ4PSIyNCIgZmlsbD0iI0RFRTFFNiIvPjx0ZXh0IHg9IjI0IiB5PSIyNCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjMzc0MTUxIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCI+QUJBPC90ZXh0Pjwvc3ZnPg=='">
                                                 </div>
                                                 <p class="text-sm font-medium">ABA Bank</p>
                                             </div>
                                         </label>
 
+                                        <!-- ACLEDA Bank -->
                                         <label class="bank-option cursor-pointer">
                                             <input type="radio" name="qr_bank" value="acleda" class="hidden">
                                             <div
-                                                class="bg-white p-3 rounded-lg border-2 border-transparent hover:border-green-500 transition-all text-center">
+                                                class="bg-white p-3 rounded-lg border-2 border-transparent hover:border-blue-800 transition-all text-center">
                                                 <div
-                                                    class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-2">
-                                                    <i class="fas fa-university text-green-600 text-xl"></i>
+                                                    class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2 overflow-hidden bg-green-50">
+                                                    <!-- Replace src with your ACLEDA logo image -->
+                                                    <img src="https://www.acledasecurities.com.kh/as/assets/listed_company/ABC/logo.png"
+                                                        alt="ACLEDA Bank" class="w-full h-full object-contain p-2"
+                                                        onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHJ4PSIyNCIgZmlsbD0iI0RDRkZFMSIvPjx0ZXh0IHg9IjI0IiB5PSIyNCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjMTY2NTM0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCI+QUM8L3RleHQ+PC9zdmc+'">
                                                 </div>
                                                 <p class="text-sm font-medium">ACLEDA Bank</p>
                                             </div>
                                         </label>
 
+                                        <!-- Wing -->
                                         <label class="bank-option cursor-pointer">
                                             <input type="radio" name="qr_bank" value="wing" class="hidden">
                                             <div
-                                                class="bg-white p-3 rounded-lg border-2 border-transparent hover:border-purple-500 transition-all text-center">
+                                                class="bg-white p-3 rounded-lg border-2 border-transparent hover:border-green-500 transition-all text-center">
                                                 <div
-                                                    class="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center mx-auto mb-2">
-                                                    <i class="fas fa-mobile-alt text-purple-600 text-xl"></i>
+                                                    class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2 overflow-hidden bg-purple-50">
+                                                    <!-- Replace src with your Wing logo image -->
+                                                    <img src="https://api.customs.gov.kh/wp-content/uploads/2023/12/wing.png"
+                                                        alt="Wing" class="w-full h-full object-contain p-2"
+                                                        onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHJ4PSIyNCIgZmlsbD0iI0Y1RjVGOCIvPjx0ZXh0IHg9IjI0IiB5PSIyNCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjN0MzRkZGIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCI+VzwvdGV4dD48L3N2Zz4='">
                                                 </div>
                                                 <p class="text-sm font-medium">Wing</p>
                                             </div>
@@ -825,7 +834,7 @@
         </div>
     </div>
 
-     <!-- QR Code Modal -->
+    <!-- QR Code Modal -->
     <div id="qrCodeModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 animate-scaleIn">
             <div class="flex justify-between items-center mb-6">
@@ -834,7 +843,7 @@
                     <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
-            
+
             <div class="text-center mb-6">
                 <div id="qrCodeImage" class="mx-auto mb-4">
                     <!-- QR code will be generated here -->
@@ -842,24 +851,24 @@
                         <i class="fas fa-qrcode text-gray-300 text-6xl"></i>
                     </div>
                 </div>
-                
+
                 <div class="mb-4">
                     <p class="text-sm text-gray-600">{{ __('messages.amount_to_pay') }}</p>
                     <p class="text-2xl font-bold text-gray-900" id="qrAmount">$0.00</p>
                     <p class="text-sm text-gray-500" id="qrAmountKHR">≈ ៛0 KHR</p>
                 </div>
-                
+
                 <div class="flex items-center justify-center gap-2 mb-4">
                     <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                         <i class="fas fa-building text-blue-600 text-sm" id="qrBankIcon"></i>
                     </div>
                     <p class="font-medium text-gray-900" id="qrBankName"></p>
                 </div>
-                
+
                 <p class="text-sm text-gray-600 mb-4">
                     {{ __('messages.qr_modal_instructions') }}
                 </p>
-                
+
                 <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
                     <div class="flex items-center">
                         <i class="fas fa-clock text-yellow-600 mr-2"></i>
@@ -875,14 +884,14 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="space-y-3">
-                <button onclick="simulatePayment()" 
+                <button onclick="simulatePayment()"
                     class="w-full bg-green-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-green-700 transition-all flex items-center justify-center gap-2">
                     <i class="fas fa-check-circle"></i>
                     {{ __('messages.simulate_payment') }}
                 </button>
-                <button onclick="closeQRModal()" 
+                <button onclick="closeQRModal()"
                     class="w-full border border-gray-300 text-gray-700 py-3 px-4 rounded-xl font-semibold hover:bg-gray-50 transition-all">
                     {{ __('messages.cancel_payment') }}
                 </button>
@@ -957,24 +966,25 @@
             transform: translateX(100%);
         }
 
-         /* Add animation for modal */
+        /* Add animation for modal */
         @keyframes scaleIn {
             from {
                 opacity: 0;
                 transform: scale(0.95);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1);
             }
         }
-        
+
         .animate-scaleIn {
             animation: scaleIn 0.2s ease-out;
         }
-        
+
         /* Bank option selection */
-        .bank-option input:checked + div {
+        .bank-option input:checked+div {
             border-color: #3b82f6;
             background-color: #eff6ff;
         }
@@ -1257,7 +1267,7 @@
             // Payment method selection
             const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
             const qrBankSection = document.getElementById('qr_bank_selection');
-            
+
             paymentMethods.forEach(method => {
                 method.addEventListener('change', function() {
                     if (this.value === 'qr_code') {
@@ -1272,7 +1282,7 @@
                     }
                 });
             });
-            
+
             // Bank selection
             const bankOptions = document.querySelectorAll('.bank-option');
             bankOptions.forEach(option => {
@@ -1282,22 +1292,24 @@
                         radio.checked = true;
                         // Update visual selection
                         bankOptions.forEach(opt => {
-                            opt.querySelector('div').classList.remove('border-blue-500', 'border-green-500', 'border-purple-500', 'border-red-500', 'border-yellow-500');
+                            opt.querySelector('div').classList.remove('border-blue-500',
+                                'border-green-500', 'border-purple-500',
+                                'border-red-500', 'border-yellow-500');
                         });
                         this.querySelector('div').classList.add('border-' + radio.value);
                     }
                 });
             });
-            
+
             // Form submission
             const checkoutForm = document.querySelector('form');
             const checkoutBtn = document.querySelector('.checkout-btn');
-            
+
             checkoutForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                
+
                 const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
-                
+
                 if (paymentMethod === 'qr_code') {
                     // Validate bank selection
                     const selectedBank = document.querySelector('input[name="qr_bank"]:checked');
@@ -1305,10 +1317,10 @@
                         alert('Please select a bank for QR code payment.');
                         return false;
                     }
-                    
+
                     // Show QR code modal
                     showQRModal(selectedBank.value);
-                    
+
                     // Don't submit the form - we'll handle it after QR payment
                     return false;
                 } else {
@@ -1317,30 +1329,43 @@
                 }
             });
         });
-        
+
         let countdownInterval;
         let paymentTimeout;
-        
+
         function showQRModal(bank) {
             const modal = document.getElementById('qrCodeModal');
             const grandTotal = parseFloat('{{ $displayGrandTotal }}');
             const exchangeRate = 4000;
             const totalKHR = grandTotal * exchangeRate;
-            
+
             // Set bank info
             const bankInfo = {
-                'aba': { name: 'ABA Bank', icon: 'fa-building', color: 'blue' },
-                'acleda': { name: 'ACLEDA Bank', icon: 'fa-university', color: 'green' },
-                'wing': { name: 'Wing', icon: 'fa-mobile-alt', color: 'purple' },
+                'aba': {
+                    name: 'ABA Bank',
+                    icon: 'fa-building',
+                    color: 'blue'
+                },
+                'acleda': {
+                    name: 'ACLEDA Bank',
+                    icon: 'fa-university',
+                    color: 'green'
+                },
+                'wing': {
+                    name: 'Wing',
+                    icon: 'fa-mobile-alt',
+                    color: 'purple'
+                },
             };
-            
+
             document.getElementById('qrBankName').textContent = bankInfo[bank].name;
-            document.getElementById('qrBankIcon').className = `${bankInfo[bank].icon} text-${bankInfo[bank].color}-600 text-sm`;
-            
+            document.getElementById('qrBankIcon').className =
+                `${bankInfo[bank].icon} text-${bankInfo[bank].color}-600 text-sm`;
+
             // Set amounts
             document.getElementById('qrAmount').textContent = '$' + grandTotal.toFixed(2);
             document.getElementById('qrAmountKHR').textContent = '≈ ៛' + totalKHR.toLocaleString() + ' KHR';
-            
+
             // Generate dummy QR code (in production, you'd generate a real QR code)
             const qrContainer = document.getElementById('qrCodeImage');
             qrContainer.innerHTML = `
@@ -1361,14 +1386,14 @@
                     </div>
                 </div>
             `;
-            
+
             // Start countdown
             startCountdown();
-            
+
             // Show modal
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            
+
             // Set timeout to simulate payment verification
             paymentTimeout = setTimeout(() => {
                 // Simulate payment timeout
@@ -1377,7 +1402,7 @@
                 closeQRModal();
             }, 600000); // 10 minutes
         }
-        
+
         function closeQRModal() {
             const modal = document.getElementById('qrCodeModal');
             modal.classList.add('hidden');
@@ -1385,13 +1410,13 @@
             clearInterval(countdownInterval);
             clearTimeout(paymentTimeout);
         }
-        
+
         function startCountdown() {
             let timeLeft = 600; // 10 minutes in seconds
             const countdownElement = document.getElementById('countdown');
-            
+
             clearInterval(countdownInterval);
-            
+
             countdownInterval = setInterval(() => {
                 timeLeft--;
                 if (timeLeft <= 0) {
@@ -1399,13 +1424,14 @@
                     countdownElement.textContent = '00:00';
                     return;
                 }
-                
+
                 const minutes = Math.floor(timeLeft / 60);
                 const seconds = timeLeft % 60;
-                countdownElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                countdownElement.textContent =
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             }, 1000);
         }
-        
+
         function simulatePayment() {
             // In production, this would be replaced with actual payment verification
             const checkoutForm = document.querySelector('form');
@@ -1414,29 +1440,29 @@
             paymentMethod.name = 'payment_method';
             paymentMethod.value = 'qr_code';
             checkoutForm.appendChild(paymentMethod);
-            
+
             // Add loading state
             const checkoutBtn = document.querySelector('.checkout-btn');
             checkoutBtn.disabled = true;
             checkoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying Payment...';
-            
+
             // Close modal and submit form
             closeQRModal();
-            
+
             // Simulate API call delay
             setTimeout(() => {
                 checkoutForm.submit();
             }, 1500);
         }
-        
+
         function proceedToStripe() {
             const checkoutForm = document.querySelector('form');
             const checkoutBtn = document.querySelector('.checkout-btn');
-            
+
             // Disable button and show loading state
             checkoutBtn.disabled = true;
             checkoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-            
+
             // Submit the form
             checkoutForm.submit();
         }

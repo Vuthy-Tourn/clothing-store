@@ -71,23 +71,31 @@
                             <!-- Bank Badge -->
                             <div class="absolute -bottom-3 left-1/2 transform -translate-x-1/2">
                                 <div
-                                    class="px-4 py-2 rounded-full shadow-lg 
-                                @if ($bank == 'aba') bg-blue-600 
-                                @elseif($bank == 'acleda') bg-green-600 
-                                @else bg-purple-600 @endif">
+                                    class="px-4 py-2 rounded-full shadow-lg bg-white">
                                     <div class="flex items-center gap-2">
                                         @if ($bank == 'aba')
-                                            <i class="fas fa-building text-white"></i>
+                                        <div class="flex items-center">
+                                              <img src="https://informal.digitaleconomy.gov.kh/images/ministry-icon/aba_round.png"
+                                                    alt="ABA Bank" class="w-10 h-10 object-contain p-2">
                                             <span
-                                                class="text-white font-medium text-sm">{{ __('messages.aba_bank') }}</span>
+                                                class="text-gray-900 font-medium text-sm">{{ __('messages.aba_bank') }}</span>
+                                                </div>
                                         @elseif($bank == 'acleda')
-                                            <i class="fas fa-university text-white"></i>
+                                        <div class="flex items-center">
+                                          <img src="https://www.acledasecurities.com.kh/as/assets/listed_company/ABC/logo.png"
+                                                    alt="ACLEDA Bank" class="w-10 h-10 object-contain p-2">
+                                               
+                                        
                                             <span
-                                                class="text-white font-medium text-sm">{{ __('messages.acleda_bank') }}</span>
+                                                class="text-gray-900 font-medium text-sm">{{ __('messages.acleda_bank') }}</span>
+                                                </div>
                                         @elseif($bank == 'wing')
-                                            <i class="fas fa-mobile-alt text-white"></i>
+                                         <div class="flex items-center">
+                                            <img src="https://api.customs.gov.kh/wp-content/uploads/2023/12/wing.png"
+                                                    alt="Wing" class="w-10 h-10 object-contain p-2">
                                             <span
-                                                class="text-white font-medium text-sm">{{ __('messages.wing_bank') }}</span>
+                                                class="text-gray-900 font-medium text-sm">{{ __('messages.wing_bank') }}</span>
+                                                </div>
                                         @endif
                                     </div>
                                 </div>
