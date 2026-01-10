@@ -7,11 +7,11 @@ php artisan route:cache
 php artisan view:cache
 php artisan migrate --force
 
-# Start FrankenPHP in the background
-frankenphp -c /etc/frankenphp/frankenphp.ini &
+# Start FrankenPHP in /tmp (Railway-safe)
+frankenphp -c /etc/frankenphp/frankenphp.ini -S /tmp/frankenphp.sock &
 
-# Wait a few seconds for the socket to be created
+# Wait for the socket to be ready
 sleep 3
 
 # Start Caddy
-caddy run --config /Caddyfile --adapter caddyfile
+caddy run --config Caddyfile --adapter caddyfile

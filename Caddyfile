@@ -12,7 +12,7 @@
     encode zstd gzip br
 
     # PHP handler via FrankenPHP Unix socket
-    php_fastcgi unix//run/frankenphp.sock
+    php_fastcgi unix//tmp/frankenphp.sock
 
     # Laravel routing: serve existing files or fallback to index.php
     try_files {path} /index.php?{query}
