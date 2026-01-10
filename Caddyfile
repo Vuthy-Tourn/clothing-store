@@ -1,20 +1,23 @@
 :8080 {
-    # Root folder for Laravel
+    # Laravel public folder
     root * /app/public
 
     # Hide sensitive files
-    file_server hide .env* "Caddyfile"
+    file_server {
+        hide .env*
+        hide Caddyfile
+    }
 
-    # Compress responses
+    # Enable compression
     encode zstd gzip br
 
-    # Serve PHP via FrankenPHP
+    # PHP handler for Laravel via FrankenPHP
     php_fastcgi unix//run/frankenphp.sock
 
-    # Laravel routing: try to serve file, fallback to index.php
+    # Laravel routing: serve existing files or fallback to index.php
     try_files {path} /index.php?{query}
 
-    # Optional: log to console (Railway-friendly)
+    # Logs to stdout (Railway-friendly)
     log {
         output stdout
         format console
