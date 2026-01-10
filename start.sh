@@ -7,5 +7,5 @@ php artisan route:cache
 php artisan view:cache
 php artisan migrate --force
 
-# Start FrankenPHP in the foreground on TCP port 9000
-frankenphp -c /etc/frankenphp/frankenphp.ini -S 0.0.0.0:9000
+# Run FrankenPHP as the main process on port 8080
+frankenphp -S 0.0.0.0:8080 -c /etc/frankenphp/frankenphp.ini
