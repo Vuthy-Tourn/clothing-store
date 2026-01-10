@@ -11,8 +11,8 @@
     # Enable compression
     encode zstd gzip br
 
-    # PHP handler for Laravel via FrankenPHP - using TCP instead of Unix socket
-    php_fastcgi localhost:9000
+    # PHP handler via FrankenPHP Unix socket
+    php_fastcgi unix//run/frankenphp.sock
 
     # Laravel routing: serve existing files or fallback to index.php
     try_files {path} /index.php?{query}
