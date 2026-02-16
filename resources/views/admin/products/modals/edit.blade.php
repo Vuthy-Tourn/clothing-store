@@ -92,7 +92,7 @@
             </div>
 
             <!-- Product-Level Discount Section for Edit -->
-            <div class="mb-8 border border-gray-200 rounded-lg p-6 bg-gray-50">
+            {{-- <div class="mb-8 border border-gray-200 rounded-lg p-6 bg-gray-50">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                     <i class="fas fa-tag mr-2 text-blue-600"></i> {{ __('admin.products.modal.discount_settings') }}
                 </h3>
@@ -144,7 +144,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Variants Section for Edit -->
             <div class="mb-6">

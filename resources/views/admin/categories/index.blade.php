@@ -8,8 +8,9 @@
                 <p class="text-gray-700">{{ __('admin.categories.subtitle') }}</p>
             </div>
             <button onclick="CategoryModal.openAdd()"
-                class="mt-4 md:mt-0 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 group shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                <i class="fas fa-plus mr-2 group-hover:rotate-90 transition-transform duration-300"></i>{{ __('admin.categories.add_new') }}
+                class="flex items-center space-x-2 px-4 py-2.5 bg-gradient-to-r from-Ocean to-Ocean/80 text-white rounded-xl transition-all duration-300 hover:from-Ocean/90 hover:to-Ocean/70 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                <i
+                    class="fas fa-plus mr-2 group-hover:rotate-90 transition-transform duration-300"></i>{{ __('admin.categories.add_new') }}
             </button>
         </div>
     </div>
@@ -204,6 +205,28 @@
                                 @enderror
                             </div>
 
+                            <div>
+                                <label class="block text-gray-900 font-semibold mb-3 flex items-center">
+                                    <i class="fas fa-link mr-2 text-gray-600"></i>
+                                    {{ __('admin.categories.modal.slug_label') }} *
+                                </label>
+                                <div class="relative">
+                                    <div class="flex items-center">
+                                        <input type="text" name="slug" id="slug" value="{{ old('slug') }}"
+                                            required
+                                            class="flex-1 border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 shadow-sm"
+                                            placeholder="e.g., mens-clothing">
+                                    </div>
+                                    <button type="button" onclick="generateSlug()"
+                                        class="absolute right-3 top-4 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-lg transition-all duration-200">
+                                        <i class="fas fa-sync-alt mr-1"></i> Generate
+                                    </button>
+                                </div>
+                                @error('slug')
+                                    <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+
                             <!-- Gender Selection -->
                             <div>
                                 <label class="block text-gray-900 font-semibold mb-3 flex items-center">
@@ -217,7 +240,8 @@
                                         <div
                                             class="p-3 border-2 border-gray-200 rounded-xl text-center peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-mars text-blue-600 mb-1"></i>
-                                            <p class="font-medium text-gray-900 text-sm">{{ __('admin.categories.modal.gender_men') }}</p>
+                                            <p class="font-medium text-gray-900 text-sm">
+                                                {{ __('admin.categories.modal.gender_men') }}</p>
                                         </div>
                                     </label>
                                     <label class="relative cursor-pointer">
@@ -226,7 +250,8 @@
                                         <div
                                             class="p-3 border-2 border-gray-200 rounded-xl text-center peer-checked:border-pink-500 peer-checked:bg-pink-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-venus text-pink-600 mb-1"></i>
-                                            <p class="font-medium text-gray-900 text-sm">{{ __('admin.categories.modal.gender_women') }}</p>
+                                            <p class="font-medium text-gray-900 text-sm">
+                                                {{ __('admin.categories.modal.gender_women') }}</p>
                                         </div>
                                     </label>
                                     <label class="relative cursor-pointer">
@@ -235,7 +260,8 @@
                                         <div
                                             class="p-3 border-2 border-gray-200 rounded-xl text-center peer-checked:border-green-500 peer-checked:bg-green-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-child text-green-600 mb-1"></i>
-                                            <p class="font-medium text-gray-900 text-sm">{{ __('admin.categories.modal.gender_kids') }}</p>
+                                            <p class="font-medium text-gray-900 text-sm">
+                                                {{ __('admin.categories.modal.gender_kids') }}</p>
                                         </div>
                                     </label>
                                     <label class="relative cursor-pointer">
@@ -245,7 +271,8 @@
                                         <div
                                             class="p-3 border-2 border-gray-200 rounded-xl text-center peer-checked:border-gray-500 peer-checked:bg-gray-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-venus-mars text-gray-700 mb-1"></i>
-                                            <p class="font-medium text-gray-900 text-sm">{{ __('admin.categories.modal.gender_unisex') }}</p>
+                                            <p class="font-medium text-gray-900 text-sm">
+                                                {{ __('admin.categories.modal.gender_unisex') }}</p>
                                         </div>
                                     </label>
                                 </div>
@@ -264,21 +291,9 @@
                                     value="{{ old('sort_order', $categories->count()) }}" min="0"
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200 shadow-sm"
                                     placeholder="Position in display sequence">
-                                <p class="text-gray-700 text-xs mt-2">{{ __('admin.categories.modal.display_order_desc') }}</p>
+                                <p class="text-gray-700 text-xs mt-2">
+                                    {{ __('admin.categories.modal.display_order_desc') }}</p>
                                 @error('sort_order')
-                                    <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div>
-                                <label class="block text-gray-900 font-semibold mb-3 flex items-center">
-                                    <i class="fas fa-align-left mr-2 text-indigo-600"></i>
-                                    {{ __('admin.categories.modal.description_label') }}
-                                </label>
-                                <textarea name="description" rows="4"
-                                    class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 resize-none transition-all duration-200 shadow-sm"
-                                    placeholder="{{ __('admin.categories.modal.description_placeholder') }}">{{ old('description') }}</textarea>
-                                @error('description')
                                     <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -296,19 +311,23 @@
                                         <input type="radio" name="status" value="active" checked
                                             class="sr-only peer">
                                         <div
-                                            class="p-4 border-2 border-gray-200 rounded-xl text-center peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
+                                            class="p-4 border-2 h-32 border-gray-200 rounded-xl text-center peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-check-circle text-emerald-600 mb-2"></i>
-                                            <p class="font-medium text-gray-900">{{ __('admin.categories.modal.status_active') }}</p>
-                                            <p class="text-gray-700 text-sm">{{ __('admin.categories.modal.status_active_desc') }}</p>
+                                            <p class="font-medium text-gray-900">
+                                                {{ __('admin.categories.modal.status_active') }}</p>
+                                            <p class="text-gray-700 text-sm">
+                                                {{ __('admin.categories.modal.status_active_desc') }}</p>
                                         </div>
                                     </label>
                                     <label class="relative cursor-pointer">
                                         <input type="radio" name="status" value="inactive" class="sr-only peer">
                                         <div
-                                            class="p-4 border-2 border-gray-200 rounded-xl text-center peer-checked:border-red-500 peer-checked:bg-red-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
+                                            class="p-4 border-2 h-32 border-gray-200 rounded-xl text-center peer-checked:border-red-500 peer-checked:bg-red-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-eye-slash text-red-600 mb-2"></i>
-                                            <p class="font-medium text-gray-900">{{ __('admin.categories.modal.status_inactive') }}</p>
-                                            <p class="text-gray-700 text-sm">{{ __('admin.categories.modal.status_inactive_desc') }}</p>
+                                            <p class="font-medium text-gray-900">
+                                                {{ __('admin.categories.modal.status_inactive') }}</p>
+                                            <p class="text-gray-700 text-sm">
+                                                {{ __('admin.categories.modal.status_inactive_desc') }}</p>
                                         </div>
                                     </label>
                                 </div>
@@ -317,7 +336,21 @@
                                 @enderror
                             </div>
 
+
                             <div>
+                                <label class="block text-gray-900 font-semibold mb-3 flex items-center">
+                                    <i class="fas fa-align-left mr-2 text-indigo-600"></i>
+                                    {{ __('admin.categories.modal.description_label') }}
+                                </label>
+                                <textarea name="description" rows="4"
+                                    class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 resize-none transition-all duration-200 shadow-sm"
+                                    placeholder="{{ __('admin.categories.modal.description_placeholder') }}">{{ old('description') }}</textarea>
+                                @error('description')
+                                    <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            {{-- <div>
                                 <label class="block text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-image mr-2 text-rose-600"></i>
                                     Category Image
@@ -332,7 +365,8 @@
                                             <i
                                                 class="fas fa-cloud-upload-alt text-gray-700 group-hover/upload:text-white text-2xl transition-all duration-200"></i>
                                         </div>
-                                        <p class="text-gray-900 font-medium mb-2">{{ __('admin.categories.modal.image_upload') }}</p>
+                                        <p class="text-gray-900 font-medium mb-2">
+                                            {{ __('admin.categories.modal.image_upload') }}</p>
                                         <p class="text-gray-700 text-sm">Recommended: 400×400px • Max 2MB</p>
                                         <p class="text-gray-700 text-sm">JPG, PNG, WebP formats</p>
                                     </label>
@@ -346,12 +380,13 @@
                                             <i class="fas fa-times"></i>
                                         </button>
                                     </div>
-                                    <p class="text-gray-700 text-xs text-center mt-2">{{ __('admin.categories.modal.image_preview') }}</p>
+                                    <p class="text-gray-700 text-xs text-center mt-2">
+                                        {{ __('admin.categories.modal.image_preview') }}</p>
                                 </div>
                                 @error('image')
                                     <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                                 @enderror
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
 
@@ -415,6 +450,24 @@
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 shadow-sm">
                             </div>
 
+                            <div>
+                                <label class="block text-gray-900 font-semibold mb-3 flex items-center">
+                                    <i class="fas fa-link mr-2 text-gray-600"></i>
+                                    {{ __('admin.categories.modal.slug_label') }} *
+                                </label>
+                                <div class="relative">
+                                    <div class="flex items-center">
+                                        <input type="text" name="slug" id="editSlug" required
+                                            class="flex-1 border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 shadow-sm"
+                                            placeholder="e.g., mens-clothing">
+                                    </div>
+                                    <button type="button" onclick="generateSlugForEdit()"
+                                        class="absolute right-3 top-4 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-lg transition-all duration-200">
+                                        <i class="fas fa-sync-alt mr-1"></i> Generate
+                                    </button>
+                                </div>
+                            </div>
+
                             <!-- Gender Selection -->
                             <div>
                                 <label class="block text-gray-900 font-semibold mb-3 flex items-center">
@@ -428,7 +481,8 @@
                                         <div
                                             class="p-3 border-2 border-gray-200 rounded-xl text-center peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-mars text-blue-600 mb-1"></i>
-                                            <p class="font-medium text-gray-900 text-sm">{{ __('admin.categories.modal.gender_men') }}</p>
+                                            <p class="font-medium text-gray-900 text-sm">
+                                                {{ __('admin.categories.modal.gender_men') }}</p>
                                         </div>
                                     </label>
                                     <label class="relative cursor-pointer">
@@ -437,7 +491,8 @@
                                         <div
                                             class="p-3 border-2 border-gray-200 rounded-xl text-center peer-checked:border-pink-500 peer-checked:bg-pink-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-venus text-pink-600 mb-1"></i>
-                                            <p class="font-medium text-gray-900 text-sm">{{ __('admin.categories.modal.gender_women') }}</p>
+                                            <p class="font-medium text-gray-900 text-sm">
+                                                {{ __('admin.categories.modal.gender_women') }}</p>
                                         </div>
                                     </label>
                                     <label class="relative cursor-pointer">
@@ -446,7 +501,8 @@
                                         <div
                                             class="p-3 border-2 border-gray-200 rounded-xl text-center peer-checked:border-green-500 peer-checked:bg-green-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-child text-green-600 mb-1"></i>
-                                            <p class="font-medium text-gray-900 text-sm">{{ __('admin.categories.modal.gender_kids') }}</p>
+                                            <p class="font-medium text-gray-900 text-sm">
+                                                {{ __('admin.categories.modal.gender_kids') }}</p>
                                         </div>
                                     </label>
                                     <label class="relative cursor-pointer">
@@ -455,7 +511,8 @@
                                         <div
                                             class="p-3 border-2 border-gray-200 rounded-xl text-center peer-checked:border-gray-500 peer-checked:bg-gray-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-venus-mars text-gray-700 mb-1"></i>
-                                            <p class="font-medium text-gray-900 text-sm">{{ __('admin.categories.modal.gender_unisex') }}</p>
+                                            <p class="font-medium text-gray-900 text-sm">
+                                                {{ __('admin.categories.modal.gender_unisex') }}</p>
                                         </div>
                                     </label>
                                 </div>
@@ -470,14 +527,6 @@
                                     class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200 shadow-sm">
                             </div>
 
-                            <div>
-                                <label class="block text-gray-900 font-semibold mb-3 flex items-center">
-                                    <i class="fas fa-align-left mr-2 text-indigo-600"></i>
-                                    {{ __('admin.categories.modal.description_label') }}
-                                </label>
-                                <textarea name="description" id="editDescription" rows="4"
-                                    class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 resize-none transition-all duration-200 shadow-sm"></textarea>
-                            </div>
                         </div>
 
                         <!-- Right Column -->
@@ -492,26 +541,39 @@
                                         <input type="radio" name="status" id="editStatusActive" value="active"
                                             class="sr-only peer">
                                         <div
-                                            class="p-4 border-2 border-gray-200 rounded-xl text-center peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
+                                            class="p-4 border-2 h-32 border-gray-200 rounded-xl text-center peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-check-circle text-emerald-600 mb-2"></i>
-                                            <p class="font-medium text-gray-900">{{ __('admin.categories.modal.status_active') }}</p>
-                                            <p class="text-gray-700 text-sm">{{ __('admin.categories.modal.status_active_desc') }}</p>
+                                            <p class="font-medium text-gray-900">
+                                                {{ __('admin.categories.modal.status_active') }}</p>
+                                            <p class="text-gray-700 text-sm">
+                                                {{ __('admin.categories.modal.status_active_desc') }}</p>
                                         </div>
                                     </label>
                                     <label class="relative cursor-pointer">
                                         <input type="radio" name="status" id="editStatusInactive" value="inactive"
                                             class="sr-only peer">
                                         <div
-                                            class="p-4 border-2 border-gray-200 rounded-xl text-center peer-checked:border-red-500 peer-checked:bg-red-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
+                                            class="p-4 border-2 h-32 border-gray-200 rounded-xl text-center peer-checked:border-red-500 peer-checked:bg-red-50 transition-all duration-200 hover:bg-gray-50 shadow-sm hover:shadow">
                                             <i class="fas fa-eye-slash text-red-600 mb-2"></i>
-                                            <p class="font-medium text-gray-900">{{ __('admin.categories.modal.status_inactive') }}</p>
-                                            <p class="text-gray-700 text-sm">{{ __('admin.categories.modal.status_inactive_desc') }}</p>
+                                            <p class="font-medium text-gray-900">
+                                                {{ __('admin.categories.modal.status_inactive') }}</p>
+                                            <p class="text-gray-700 text-sm">
+                                                {{ __('admin.categories.modal.status_inactive_desc') }}</p>
                                         </div>
                                     </label>
                                 </div>
                             </div>
 
                             <div>
+                                <label class="block text-gray-900 font-semibold mb-3 flex items-center">
+                                    <i class="fas fa-align-left mr-2 text-indigo-600"></i>
+                                    {{ __('admin.categories.modal.description_label') }}
+                                </label>
+                                <textarea name="description" id="editDescription" rows="4"
+                                    class="w-full border-2 border-gray-200 bg-white text-gray-900 rounded-xl px-5 py-4 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 resize-none transition-all duration-200 shadow-sm"></textarea>
+                            </div>
+
+                            {{-- <div>
                                 <label class="block text-gray-900 font-semibold mb-3 flex items-center">
                                     <i class="fas fa-image mr-2 text-rose-600"></i>
                                     {{ __('admin.categories.modal.image_label') }}
@@ -525,7 +587,8 @@
                                                 <img id="editCurrentImage" src=""
                                                     class="absolute inset-0 w-full h-full object-cover">
                                             </div>
-                                            <p class="text-gray-700 text-xs text-center mt-3">{{ __('admin.categories.modal.current_image') }}</p>
+                                            <p class="text-gray-700 text-xs text-center mt-3">
+                                                {{ __('admin.categories.modal.current_image') }}</p>
                                         </div>
                                     </div>
 
@@ -541,8 +604,10 @@
                                                 <i
                                                     class="fas fa-sync-alt text-gray-700 group-hover/change:text-white transition-all duration-200"></i>
                                             </div>
-                                            <p class="text-gray-900 font-medium mb-1">{{ __('admin.categories.modal.change_image') }}</p>
-                                            <p class="text-gray-700 text-sm">{{ __('admin.categories.modal.change_image_optional') }}</p>
+                                            <p class="text-gray-900 font-medium mb-1">
+                                                {{ __('admin.categories.modal.change_image') }}</p>
+                                            <p class="text-gray-700 text-sm">
+                                                {{ __('admin.categories.modal.change_image_optional') }}</p>
                                         </label>
                                     </div>
                                     <div id="editCategoryImagePreview" class="hidden">
@@ -558,7 +623,7 @@
                                         <p class="text-gray-700 text-xs text-center mt-2">New Image Preview</p>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
 
@@ -663,510 +728,534 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
         <script>
-            // Keep your existing JavaScript code here
-            // Image preview functions
-            function previewImage(input, previewContainerId) {
-                const previewContainer = document.getElementById(previewContainerId);
-                const previewImage = previewContainer.querySelector('img');
-
-                if (input.files && input.files[0]) {
-                    const reader = new FileReader();
-
-                    reader.onload = function(e) {
-                        previewImage.src = e.target.result;
-                        previewContainer.classList.remove('hidden');
+            // Global configuration
+            const Config = {
+                csrfToken: '{{ csrf_token() }}',
+                routes: {
+                    categories: {
+                        index: "{{ route('admin.categories.index') }}",
+                        store: "{{ route('admin.categories.store') }}",
+                        updateOrder: "{{ route('admin.categories.update-order') }}",
+                        edit: (id) => `{{ url('admin/categories') }}/${id}/edit`,
+                        update: (id) => `{{ url('admin/categories') }}/${id}`,
+                        destroy: (id) => `{{ url('admin/categories') }}/${id}`
                     }
-
-                    reader.readAsDataURL(input.files[0]);
+                },
+                assets: {
+                    base: "{{ asset('') }}"
                 }
-            }
+            };
 
-            function removePreview(previewContainerId, inputId) {
-                const previewContainer = document.getElementById(previewContainerId);
-                const input = document.getElementById(inputId);
-
-                previewContainer.classList.add('hidden');
-                input.value = '';
-            }
-
-            // Sort order functionality
-            function toggleSortOrder() {
-                const panel = document.getElementById('sortOrderPanel');
-                panel.classList.toggle('hidden');
-
-                if (!panel.classList.contains('hidden')) {
-                    initSortable();
-                }
-            }
-
-            let sortable = null;
-
-            function initSortable() {
-                const sortableList = document.getElementById('sortableList');
-                if (!sortableList) return;
-
-                sortable = new Sortable(sortableList, {
-                    animation: 150,
-                    ghostClass: 'sortable-ghost',
-                    dragClass: 'sortable-drag',
-                    handle: '.cursor-move',
-                    onUpdate: function() {
-                        updateOrderNumbers();
-                    }
-                });
-            }
-
-            function updateOrderNumbers() {
-                const items = document.querySelectorAll('.sortable-item');
-                items.forEach((item, index) => {
-                    const positionSpan = item.querySelector('span.text-sm');
-                    if (positionSpan) {
-                        positionSpan.textContent = `Position: #${index + 1}`;
-                    }
-                });
-            }
-
-            function saveSortOrder() {
-                const items = document.querySelectorAll('.sortable-item');
-                const order = Array.from(items).map(item => item.dataset.id);
-
-                Swal.fire({
-                    title: 'Saving Order...',
-                    text: 'Updating category positions',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
-
-                fetch('{{ route('admin.categories.update-order') }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({
-                            order: order
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        Swal.close();
-                        if (data.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Order Updated!',
-                                text: 'Category positions have been saved successfully.',
-                                confirmButtonColor: '#111827',
-                                timer: 2000,
-                                timerProgressBar: true
-                            }).then(() => {
-                                location.reload();
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'Failed to update order. Please try again.',
-                                confirmButtonColor: '#111827'
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Failed to update order. Please try again.',
-                            confirmButtonColor: '#111827'
-                        });
+            // Utility functions
+            const Utils = {
+                showLoading: (title = 'Loading...', text = 'Please wait') => {
+                    Swal.fire({
+                        title: title,
+                        text: text,
+                        allowOutsideClick: false,
+                        didOpen: () => Swal.showLoading()
                     });
-            }
+                },
 
-            // Category Modal
+                showSuccess: (message, title = 'Success!') => {
+                    return Swal.fire({
+                        icon: 'success',
+                        title: title,
+                        text: message,
+                        confirmButtonColor: '#10b981',
+                        timer: 2000,
+                        timerProgressBar: true
+                    });
+                },
+
+                showError: (message, title = 'Error') => {
+                    return Swal.fire({
+                        icon: 'error',
+                        title: title,
+                        text: message,
+                        confirmButtonColor: '#111827'
+                    });
+                },
+
+                handleAjaxError: (error) => {
+                    console.error('AJAX Error:', error);
+
+                    let message = 'An error occurred. Please try again.';
+                    if (error.message.includes('JSON')) {
+                        message = 'Server returned an unexpected response. Please check your network connection.';
+                    }
+
+                    Utils.showError(message);
+                },
+
+                clearValidationErrors: () => {
+                    document.querySelectorAll('.text-red-500').forEach(el => el.remove());
+                    document.querySelectorAll('.border-red-500').forEach(el => {
+                        el.classList.remove('border-red-500');
+                        el.classList.add('border-gray-200');
+                    });
+                }
+            };
+
+            // Slug generation functions
+            const SlugManager = {
+                generateFromName: function(name) {
+                    return name
+                        .toLowerCase()
+                        .replace(/[^\w\s-]/g, '')
+                        .replace(/\s+/g, '-')
+                        .replace(/--+/g, '-')
+                        .trim();
+                },
+
+                generate: function() {
+                    const nameInput = document.querySelector('input[name="name"]');
+                    const slugInput = document.getElementById('slug');
+
+                    if (nameInput && slugInput) {
+                        slugInput.value = this.generateFromName(nameInput.value);
+                    }
+                },
+
+                generateForEdit: function() {
+                    const nameInput = document.getElementById('editName');
+                    const slugInput = document.getElementById('editSlug');
+
+                    if (nameInput && slugInput) {
+                        slugInput.value = this.generateFromName(nameInput.value);
+                    }
+                }
+            };
+
+            // Make functions available globally
+            window.generateSlug = () => SlugManager.generate();
+            window.generateSlugForEdit = () => SlugManager.generateForEdit();
+
+            // Image Preview Functions
+            const ImagePreview = {
+                preview: function(input, previewContainerId) {
+                    const previewContainer = document.getElementById(previewContainerId);
+                    const previewImage = previewContainer.querySelector('img');
+
+                    if (input.files && input.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            previewImage.src = e.target.result;
+                            previewContainer.classList.remove('hidden');
+                        };
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                },
+
+                remove: function(previewContainerId, inputId) {
+                    const previewContainer = document.getElementById(previewContainerId);
+                    const input = document.getElementById(inputId);
+
+                    if (previewContainer) previewContainer.classList.add('hidden');
+                    if (input) input.value = '';
+                }
+            };
+
+            // Sortable Categories
+            const SortableManager = {
+                sortable: null,
+
+                init: function() {
+                    const sortableList = document.getElementById('sortableList');
+                    if (!sortableList) return;
+
+                    this.sortable = new Sortable(sortableList, {
+                        animation: 150,
+                        ghostClass: 'sortable-ghost',
+                        dragClass: 'sortable-drag',
+                        handle: '.cursor-move',
+                        onUpdate: () => this.updateOrderNumbers()
+                    });
+                },
+
+                togglePanel: function() {
+                    const panel = document.getElementById('sortOrderPanel');
+                    panel.classList.toggle('hidden');
+
+                    if (!panel.classList.contains('hidden')) {
+                        this.init();
+                    }
+                },
+
+                updateOrderNumbers: function() {
+                    document.querySelectorAll('.sortable-item').forEach((item, index) => {
+                        const positionSpan = item.querySelector('span.text-sm');
+                        if (positionSpan) {
+                            positionSpan.textContent = `Position: #${index + 1}`;
+                        }
+                    });
+                },
+
+                saveOrder: async function() {
+                    const items = document.querySelectorAll('.sortable-item');
+                    const order = Array.from(items).map(item => item.dataset.id);
+
+                    Utils.showLoading('Saving Order...', 'Updating category positions');
+
+                    try {
+                        const response = await fetch(Config.routes.categories.updateOrder, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': Config.csrfToken
+                            },
+                            body: JSON.stringify({
+                                order: order
+                            })
+                        });
+
+                        const data = await response.json();
+
+                        Swal.close();
+
+                        if (data.success) {
+                            await Utils.showSuccess('Category positions have been saved successfully.',
+                                'Order Updated!');
+                            location.reload();
+                        } else {
+                            Utils.showError('Failed to update order. Please try again.');
+                        }
+                    } catch (error) {
+                        Swal.close();
+                        Utils.handleAjaxError(error);
+                    }
+                }
+            };
+
+            // Category Modal Manager
             const CategoryModal = {
                 openAdd: function() {
                     document.getElementById('addCategoryModal').classList.remove('hidden');
                     document.body.style.overflow = 'hidden';
                 },
+
                 closeAdd: function() {
                     const modal = document.getElementById('addCategoryModal');
                     modal.classList.add('hidden');
                     document.body.style.overflow = '';
 
-                    // Reset form
                     const form = modal.querySelector('form');
-                    form.reset();
+                    if (form) form.reset();
 
-                    // Hide preview and reset file input
-                    removePreview('categoryImagePreview', 'categoryImageInput');
-
-                    // Clear validation errors
-                    clearValidationErrors();
+                    ImagePreview.remove('categoryImagePreview', 'categoryImageInput');
+                    Utils.clearValidationErrors();
                 },
+
                 openEdit: async function(categoryId) {
                     try {
-                        Swal.fire({
-                            title: 'Loading...',
-                            text: 'Fetching category details',
-                            allowOutsideClick: false,
-                            didOpen: () => {
-                                Swal.showLoading();
+                        Utils.showLoading('Loading...', 'Fetching category details');
+
+                        const response = await fetch(Config.routes.categories.edit(categoryId), {
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
                             }
                         });
-
-                        const url = `{{ url('admin/categories') }}/${categoryId}/edit`;
-                        console.log('Fetching from:', url);
-
-                        const response = await fetch(url);
 
                         if (!response.ok) {
                             throw new Error(`HTTP error! status: ${response.status}`);
                         }
 
                         const category = await response.json();
-                        console.log('Category data:', category);
-
                         Swal.close();
 
-                        // Populate form
-                        document.getElementById('editName').value = category.name;
-                        document.getElementById('editSortOrder').value = category.sort_order;
-                        document.getElementById('editDescription').value = category.description || '';
-
-                        // Set gender
-                        if (category.gender) {
-                            document.querySelectorAll('input[name="gender"]').forEach(radio => {
-                                if (radio.value === category.gender) {
-                                    radio.checked = true;
-                                    const parentDiv = radio.nextElementSibling;
-                                    parentDiv.classList.add('peer-checked:border-gray-900',
-                                        'peer-checked:bg-gray-50');
-                                }
-                            });
-                        }
-
-                        // Set image
-                        if (category.image) {
-                            const imagePath = category.image.startsWith('storage/') ? category.image :
-                                `storage/${category.image}`;
-                            document.getElementById('editCurrentImage').src = `{{ asset('') }}${imagePath}`;
-                            document.getElementById('currentImageContainer').classList.remove('hidden');
-                        } else {
-                            document.getElementById('currentImageContainer').classList.add('hidden');
-                        }
-
-                        // Set status
-                        if (category.status === 'active') {
-                            document.getElementById('editStatusActive').checked = true;
-                            document.querySelector('#editStatusActive').nextElementSibling.classList.add(
-                                'peer-checked:border-gray-900', 'peer-checked:bg-gray-50');
-                        } else {
-                            document.getElementById('editStatusInactive').checked = true;
-                            document.querySelector('#editStatusInactive').nextElementSibling.classList.add(
-                                'peer-checked:border-gray-900', 'peer-checked:bg-gray-50');
-                        }
-
-                        // Set form action
-                        document.getElementById('editCategoryForm').action =
-                            `{{ url('admin/categories') }}/${category.id}`;
+                        // Populate form fields
+                        this.populateEditForm(category);
 
                         // Show modal
                         document.getElementById('editCategoryModal').classList.remove('hidden');
                         document.body.style.overflow = 'hidden';
 
-                        // Hide edit preview if exists
-                        removePreview('editCategoryImagePreview', 'editCategoryImageInput');
+                        // Hide any existing preview
+                        ImagePreview.remove('editCategoryImagePreview', 'editCategoryImageInput');
 
                     } catch (error) {
-                        console.error('Error:', error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Failed to load category data. Please try again.',
-                            confirmButtonColor: '#111827',
-                        });
+                        Swal.close();
+                        console.error('Error loading category:', error);
+                        Utils.showError('Failed to load category data. Please try again.');
                     }
                 },
+
+                populateEditForm: function(category) {
+                    // Basic fields
+                    document.getElementById('editName').value = category.name || '';
+                    document.getElementById('editSlug').value = category.slug || '';
+                    document.getElementById('editSortOrder').value = category.sort_order || 0;
+                    document.getElementById('editDescription').value = category.description || '';
+
+                    // Gender
+                    document.querySelectorAll('input[name="gender"]').forEach(radio => {
+                        radio.checked = (radio.value === category.gender);
+                        this.updateRadioStyle(radio);
+                    });
+
+                    // Status
+                    document.querySelectorAll('input[name="status"]').forEach(radio => {
+                        radio.checked = (radio.value === category.status);
+                        this.updateRadioStyle(radio);
+                    });
+
+                    // Image
+                    // const currentImageContainer = document.getElementById('currentImageContainer');
+                    // const currentImage = document.getElementById('editCurrentImage');
+
+                    // if (category.image) {
+                    //     const imagePath = category.image.startsWith('storage/') ?
+                    //         category.image : `storage/${category.image}`;
+                    //     currentImage.src = `${Config.assets.base}${imagePath}`;
+                    //     currentImageContainer.classList.remove('hidden');
+                    // } else {
+                    //     currentImageContainer.classList.add('hidden');
+                    // }
+
+                    // Update form action
+                    document.getElementById('editCategoryForm').action = Config.routes.categories.update(category.id);
+                },
+
+                updateRadioStyle: function(radio) {
+                    const parentDiv = radio.nextElementSibling;
+                    if (radio.checked) {
+                        parentDiv.classList.add('peer-checked:border-gray-900', 'peer-checked:bg-gray-50');
+                    } else {
+                        parentDiv.classList.remove('peer-checked:border-gray-900', 'peer-checked:bg-gray-50');
+                    }
+                },
+
                 closeEdit: function() {
                     const modal = document.getElementById('editCategoryModal');
                     modal.classList.add('hidden');
                     document.body.style.overflow = '';
 
-                    // Hide preview and reset file input
-                    removePreview('editCategoryImagePreview', 'editCategoryImageInput');
-
-                    // Clear validation errors
-                    clearValidationErrors();
+                    ImagePreview.remove('editCategoryImagePreview', 'editCategoryImageInput');
+                    Utils.clearValidationErrors();
                 }
             };
 
-            // Delete category with SweetAlert2
-            function confirmDeleteCategory(id, name, productCount) {
-                let warningMessage = '';
-                let iconType = 'warning';
+            // Delete Category Handler
+            const DeleteHandler = {
+                confirm: function(id, name, productCount) {
+                    const hasProducts = productCount > 0;
+                    const title = hasProducts ?
+                        '{{ __('admin.categories.delete.title_in_use') }}' :
+                        '{{ __('admin.categories.delete.title') }}';
 
-                if (productCount > 0) {
-                    warningMessage = `<div class="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-lg p-4 text-sm text-gray-700 mt-3">
-                        <i class="fas fa-exclamation-triangle text-red-500 mr-2"></i>
-                        This category has <span class="font-bold">${productCount} products</span>. Deleting it will move all products to "Uncategorized" category.
-                    </div>`;
-                    iconType = 'error';
-                } else {
-                    warningMessage = `<div class="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg p-4 text-sm text-gray-700 mt-3">
-                        <i class="fas fa-info-circle text-yellow-500 mr-2"></i>
-                        This category has no products. It can be safely deleted.
-                    </div>`;
-                }
+                    const warningHtml = hasProducts ?
+                        `<div class="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-lg p-4 text-sm text-gray-700 mt-3">
+                    <i class="fas fa-exclamation-triangle text-red-500 mr-2"></i>
+                    This category has <span class="font-bold">${productCount} products</span>. 
+                    Deleting it will move all products to "Uncategorized" category.
+                </div>` :
+                        `<div class="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg p-4 text-sm text-gray-700 mt-3">
+                    <i class="fas fa-info-circle text-yellow-500 mr-2"></i>
+                    This category has no products. It can be safely deleted.
+                </div>`;
 
-                Swal.fire({
-                    title: productCount > 0 ? '{{ __('admin.categories.delete.title_in_use') }}' : '{{ __('admin.categories.delete.title') }}',
-                    html: `<div class="text-left">
-                <div class="w-16 h-16 rounded-full ${productCount > 0 ? 'bg-gradient-to-br from-red-50 to-red-100' : 'bg-gradient-to-br from-yellow-50 to-yellow-100'} flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-trash ${productCount > 0 ? 'text-red-500' : 'text-yellow-500'} text-2xl"></i>
-                </div>
-                <p class="text-gray-900 font-semibold text-lg mb-2">"${name}"</p>
-                <p class="text-gray-700 mb-3">${productCount > 0 ? 'This category contains products and cannot be directly deleted.' : 'This category will be permanently removed.'}</p>
-                ${warningMessage}
-            </div>`,
-                    icon: iconType,
-                    showCancelButton: true,
-                    confirmButtonColor: productCount > 0 ? '#dc2626' : '#6b7280',
-                    cancelButtonColor: '#6b7280',
-                    confirmButtonText: productCount > 0 ? '{{ __('admin.categories.delete.moving_products') }}' : '{{ __('admin.categories.delete.button_no_products') }}',
-                    cancelButtonText: '{{ __('admin.categories.delete.cancel') }}',
-                    reverseButtons: true,
-                    customClass: {
-                        popup: 'rounded-2xl',
-                        confirmButton: `px-6 py-3 rounded-lg font-semibold ${productCount > 0 ? 'bg-gradient-to-r from-red-600 to-red-700' : 'bg-gradient-to-r from-gray-600 to-gray-700'}`,
-                        cancelButton: 'px-6 py-3 rounded-lg font-semibold'
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Show loading
-                        Swal.fire({
-                            title: 'Deleting...',
-                            text: productCount > 0 ? 'Moving products and deleting category' :
-                                'Deleting category',
-                            allowOutsideClick: false,
-                            didOpen: () => {
-                                Swal.showLoading();
-                            }
-                        });
-
-                        // Submit delete form
-                        const form = document.createElement('form');
-                        form.method = 'POST';
-                        form.action = `{{ url('admin/categories') }}/${id}`;
-
-                        const csrfToken = document.createElement('input');
-                        csrfToken.type = 'hidden';
-                        csrfToken.name = '_token';
-                        csrfToken.value = '{{ csrf_token() }}';
-
-                        const method = document.createElement('input');
-                        method.type = 'hidden';
-                        method.name = '_method';
-                        method.value = 'DELETE';
-
-                        form.appendChild(csrfToken);
-                        form.appendChild(method);
-                        document.body.appendChild(form);
-                        form.submit();
-                    }
-                });
-            }
-
-            // AJAX form submission for Add Category
-            document.addEventListener('DOMContentLoaded', function() {
-                // Add Category Form
-                const addForm = document.querySelector('#addCategoryModal form');
-                if (addForm) {
-                    addForm.addEventListener('submit', function(e) {
-                        e.preventDefault();
-
-                        // Show loading
-                        Swal.fire({
-                            title: 'Creating Category...',
-                            text: 'Please wait',
-                            allowOutsideClick: false,
-                            didOpen: () => {
-                                Swal.showLoading();
-                            }
-                        });
-
-                        // Submit form via AJAX
-                        const formData = new FormData(this);
-
-                        fetch(this.action, {
-                                method: 'POST',
-                                body: formData,
-                                headers: {
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                Swal.close();
-
-                                if (data.success) {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Success!',
-                                        text: data.message,
-                                        confirmButtonColor: '#10b981',
-                                        timer: 2000,
-                                        timerProgressBar: true
-                                    }).then(() => {
-                                        if (data.redirect) {
-                                            window.location.href = data.redirect;
-                                        }
-                                    });
-                                } else {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error',
-                                        text: data.message || 'Failed to create category',
-                                        confirmButtonColor: '#111827'
-                                    });
-                                }
-                            })
-                            .catch(error => {
-                                Swal.close();
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: 'An error occurred. Please try again.',
-                                    confirmButtonColor: '#111827'
-                                });
-                                console.error('Error:', error);
-                            });
+                    Swal.fire({
+                        title: title,
+                        html: `<div class="text-left">
+                    <p class="text-gray-900 font-semibold text-lg mb-2">"${name}"</p>
+                    <p class="text-gray-700 mb-3">
+                        ${hasProducts ? 'This category contains products and cannot be directly deleted.' : 'This category will be permanently removed.'}
+                    </p>
+                    ${warningHtml}
+                </div>`,
+                        icon: hasProducts ? 'error' : 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: hasProducts ? '#dc2626' : '#6b7280',
+                        cancelButtonColor: '#6b7280',
+                        confirmButtonText: hasProducts ?
+                            '{{ __('admin.categories.delete.moving_products') }}' :
+                            '{{ __('admin.categories.delete.button_no_products') }}',
+                        cancelButtonText: '{{ __('admin.categories.delete.cancel') }}',
+                        reverseButtons: true,
+                        customClass: {
+                            popup: 'rounded-2xl',
+                            confirmButton: `px-6 py-3 rounded-lg font-semibold ${hasProducts ? 'bg-gradient-to-r from-red-600 to-red-700' : 'bg-gradient-to-r from-gray-600 to-gray-700'}`,
+                            cancelButton: 'px-6 py-3 rounded-lg font-semibold'
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            this.executeDelete(id, hasProducts);
+                        }
                     });
+                },
+
+                executeDelete: function(id, hasProducts) {
+                    Utils.showLoading(
+                        'Deleting...',
+                        hasProducts ? 'Moving products and deleting category' : 'Deleting category'
+                    );
+
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = Config.routes.categories.destroy(id);
+
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = Config.csrfToken;
+
+                    const method = document.createElement('input');
+                    method.type = 'hidden';
+                    method.name = '_method';
+                    method.value = 'DELETE';
+
+                    form.appendChild(csrfToken);
+                    form.appendChild(method);
+                    document.body.appendChild(form);
+                    form.submit();
                 }
+            };
 
-                // Edit Category Form
-                const editForm = document.getElementById('editCategoryForm');
-                if (editForm) {
-                    editForm.addEventListener('submit', function(e) {
+            // Form Handlers
+            const FormHandlers = {
+                initAddForm: function() {
+                    const form = document.querySelector('#addCategoryModal form');
+                    if (!form) return;
+
+                    form.addEventListener('submit', async (e) => {
                         e.preventDefault();
+                        await this.submitForm(form, 'Creating Category...');
+                    });
+                },
 
-                        // Show loading
-                        Swal.fire({
-                            title: 'Updating Category...',
-                            text: 'Please wait',
-                            allowOutsideClick: false,
-                            didOpen: () => {
-                                Swal.showLoading();
+                initEditForm: function() {
+                    const form = document.getElementById('editCategoryForm');
+                    if (!form) return;
+
+                    form.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        await this.submitForm(form, 'Updating Category...');
+                    });
+                },
+
+                submitForm: async function(form, loadingText) {
+                    Utils.showLoading(loadingText, 'Please wait');
+
+                    try {
+                        const formData = new FormData(form);
+                        const response = await fetch(form.action, {
+                            method: form.method,
+                            body: formData,
+                            headers: {
+                                'X-CSRF-TOKEN': Config.csrfToken,
+                                'Accept': 'application/json'
                             }
                         });
 
-                        // Submit form via AJAX
-                        const formData = new FormData(this);
+                        const data = await response.json();
+                        Swal.close();
 
-                        fetch(this.action, {
-                                method: 'POST',
-                                body: formData,
-                                headers: {
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                }
-                            })
-                            .then(response => {
-                                if (response.redirected) {
-                                    // Handle redirect
-                                    Swal.close();
-                                    window.location.href = response.url;
-                                    return;
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                Swal.close();
+                        if (data.success) {
+                            await Utils.showSuccess(data.message);
 
-                                if (data && data.success) {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Success!',
-                                        text: data.message,
-                                        confirmButtonColor: '#10b981',
-                                        timer: 2000,
-                                        timerProgressBar: true
-                                    }).then(() => {
-                                        if (data.redirect) {
-                                            window.location.href = data.redirect;
-                                        } else {
-                                            location.reload();
-                                        }
-                                    });
-                                } else if (data && !data.success) {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error',
-                                        text: data.message || 'Failed to update category',
-                                        confirmButtonColor: '#111827'
-                                    });
-                                }
-                            })
-                            .catch(error => {
-                                Swal.close();
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: 'An error occurred. Please try again.',
-                                    confirmButtonColor: '#111827'
-                                });
-                                console.error('Error:', error);
-                            });
-                    });
-                }
-            });
-
-            // Clear validation errors
-            function clearValidationErrors() {
-                document.querySelectorAll('.text-red-500').forEach(el => {
-                    el.remove();
-                });
-                document.querySelectorAll('.border-red-500').forEach(el => {
-                    el.classList.remove('border-red-500');
-                    el.classList.add('border-gray-200');
-                });
-            }
-
-            // Close modals on outside click
-            document.addEventListener('click', function(e) {
-                if (e.target.id === 'addCategoryModal') CategoryModal.closeAdd();
-                if (e.target.id === 'editCategoryModal') CategoryModal.closeEdit();
-            });
-
-            // Close modals on Escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    CategoryModal.closeAdd();
-                    CategoryModal.closeEdit();
-                }
-            });
-
-            // Initialize radio button styling
-            document.addEventListener('DOMContentLoaded', function() {
-                // Handle radio button styling
-                document.querySelectorAll('input[type="radio"]').forEach(radio => {
-                    radio.addEventListener('change', function() {
-                        const allRadios = this.closest('div').querySelectorAll('input[type="radio"]');
-                        allRadios.forEach(r => {
-                            const parentDiv = r.nextElementSibling;
-                            if (r.checked) {
-                                parentDiv.classList.add('peer-checked:border-gray-900',
-                                    'peer-checked:bg-gray-50');
+                            if (data.redirect) {
+                                window.location.href = data.redirect;
                             } else {
-                                parentDiv.classList.remove('peer-checked:border-gray-900',
-                                    'peer-checked:bg-gray-50');
+                                setTimeout(() => location.reload(), 500);
                             }
-                        });
+                        } else {
+                            Utils.showError(data.message || 'Operation failed');
+                        }
+                    } catch (error) {
+                        Swal.close();
+                        Utils.handleAjaxError(error);
+                    }
+                }
+            };
+
+            // Initialize Radio Button Styling
+            const RadioButtonManager = {
+                init: function() {
+                    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                        radio.addEventListener('change', (e) => this.updateStyle(e.target));
+                        this.updateStyle(radio); // Initial state
+                    });
+                },
+
+                updateStyle: function(radio) {
+                    const allRadios = radio.closest('div')?.querySelectorAll('input[type="radio"]') || [];
+                    allRadios.forEach(r => {
+                        const parentDiv = r.nextElementSibling;
+                        if (r.checked) {
+                            parentDiv.classList.add('peer-checked:border-gray-900', 'peer-checked:bg-gray-50');
+                        } else {
+                            parentDiv.classList.remove('peer-checked:border-gray-900',
+                                'peer-checked:bg-gray-50');
+                        }
+                    });
+                }
+            };
+
+            // Highlight Active Menu
+            const MenuHighlighter = {
+                highlight: function() {
+                    const currentPath = window.location.pathname;
+                    document.querySelectorAll('.nav-menu-item').forEach(item => {
+                        const href = item.getAttribute('href');
+                        if (href && currentPath.includes(href.split('/').filter(Boolean).pop())) {
+                            item.classList.add('active');
+                        } else {
+                            item.classList.remove('active');
+                        }
+                    });
+                }
+            };
+
+            // Event Listeners
+            const EventManager = {
+                init: function() {
+                    // Close modals on outside click
+                    document.addEventListener('click', (e) => {
+                        if (e.target.id === 'addCategoryModal') CategoryModal.closeAdd();
+                        if (e.target.id === 'editCategoryModal') CategoryModal.closeEdit();
                     });
 
-                    // Initialize checked state
-                    if (radio.checked) {
-                        const parentDiv = radio.nextElementSibling;
-                        parentDiv.classList.add('peer-checked:border-gray-900', 'peer-checked:bg-gray-50');
-                    }
+                    // Close modals on Escape key
+                    document.addEventListener('keydown', (e) => {
+                        if (e.key === 'Escape') {
+                            CategoryModal.closeAdd();
+                            CategoryModal.closeEdit();
+                        }
+                    });
+
+                    // Highlight active menu
+                    MenuHighlighter.highlight();
+
+                    // Initialize form handlers
+                    FormHandlers.initAddForm();
+                    FormHandlers.initEditForm();
+
+                    // Initialize radio buttons
+                    RadioButtonManager.init();
+                }
+            };
+
+            // Global exports (make functions available to onclick attributes)
+            window.previewImage = (input, containerId) => ImagePreview.preview(input, containerId);
+            window.removePreview = (containerId, inputId) => ImagePreview.remove(containerId, inputId);
+            window.toggleSortOrder = () => SortableManager.togglePanel();
+            window.saveSortOrder = () => SortableManager.saveOrder();
+            window.CategoryModal = CategoryModal;
+            window.confirmDeleteCategory = (id, name, productCount) => DeleteHandler.confirm(id, name, productCount);
+
+            // Initialize everything when DOM is ready
+            document.addEventListener('DOMContentLoaded', () => {
+                EventManager.init();
+            });
+
+            // Global error handler
+            window.addEventListener('error', (e) => {
+                console.error('Global error:', {
+                    message: e.message,
+                    filename: e.filename,
+                    lineno: e.lineno,
+                    colno: e.colno
                 });
             });
         </script>

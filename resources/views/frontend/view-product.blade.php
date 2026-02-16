@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>{{ $product->name ?? __('messages.products') }} - Outfit 818</title>
+    <title>{{ $product->name ?? __('messages.products') }} - Nova Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -84,31 +84,43 @@
                         <!-- Product Images -->
                         <div class="space-y-4">
                             <!-- Product Badges -->
-                            <div class="flex flex-wrap gap-2">
+                            <div class="flex flex-wrap gap-2 mb-4">
                                 @if ($product->is_featured)
-                                    <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full">
-                                        <i class="fas fa-star mr-1"></i> {{ __('messages.featured') }}
+                                    <span
+                                        class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1.5 rounded-full inline-flex items-center gap-1">
+                                        <i class="fas fa-star"></i>
+                                        <span>{{ __('messages.featured') }}</span>
                                     </span>
                                 @endif
 
                                 @if ($product->is_new)
-                                    <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full">
-                                        <i class="fas fa-bolt mr-1"></i>{{ __('messages.new_arrival') }}
+                                    <span
+                                        class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1.5 rounded-full inline-flex items-center gap-1">
+                                        <i class="fas fa-bolt"></i>
+                                        <span>{{ __('messages.new_arrival') }}</span>
                                     </span>
                                 @endif
 
                                 @php
-                                    $hasSale = $product->variants->whereNotNull('sale_price')->count() > 0;
+                                    // Check for any active discount (product or variant level)
+                                    $hasAnyDiscount =
+                                        $product->isDiscountActive() ||
+                                        $product->variants->where('has_active_discount', true)->count() > 0;
                                 @endphp
-                                @if ($hasSale)
-                                    <span class="bg-red-100 text-red-800 text-xs font-bold px-3 py-1 rounded-full">
-                                        <i class="fas fa-tag mr-1"></i> {{ __('messages.on_sale') }}
+
+                                @if ($hasAnyDiscount)
+                                    <span
+                                        class="bg-red-100 text-red-800 text-xs font-bold px-3 py-1.5 rounded-full inline-flex items-center gap-1">
+                                        <i class="fas fa-tag"></i>
+                                        <span>{{ __('messages.on_sale') }}</span>
                                     </span>
                                 @endif
 
                                 @if ($product->rating_cache >= 4)
-                                    <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full">
-                                        <i class="fas fa-thumbs-up mr-1"></i> {{ __('messages.top_rated') }}
+                                    <span
+                                        class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1.5 rounded-full inline-flex items-center gap-1">
+                                        <i class="fas fa-thumbs-up"></i>
+                                        <span>{{ __('messages.top_rated') }}</span>
                                     </span>
                                 @endif
                             </div>
@@ -169,6 +181,8 @@
                             @endif
                         </div>
 
+
+
                         <!-- Product Info -->
                         <div class="py-4">
                             @php
@@ -196,7 +210,7 @@
                                 // Get the first variant to show initial price and stock
                                 $firstVariant = $availableSizes->first();
 
-                                // Prepare variants data for JavaScript
+                                // Prepare variants data for JavaScript - FIXED: Use PHP variable, not JavaScript const
                                 $variantsData = $product->variants
                                     ->where('is_active', true)
                                     ->where('stock', '>', 0)
@@ -207,7 +221,9 @@
                                             'color' => $variant->color,
                                             'color_code' => $variant->color_code,
                                             'price' => $variant->price,
-                                            'sale_price' => $variant->sale_price,
+                                            'final_price' => $variant->final_price,
+                                            'has_discount' => $variant->has_active_discount,
+                                            'discount_percentage' => $variant->discount_percentage,
                                             'stock' => $variant->stock,
                                             'weight' => $variant->weight,
                                             'dimensions' => $variant->dimensions,
@@ -265,39 +281,81 @@
                                         <span class="text-gray-500">{{ $product->view_count }} views</span>
                                     </div>
                                 @endif
-
                                 <div class="flex items-center justify-between mb-6">
                                     <div>
-                                        @if ($firstVariant)
-                                            <div class="flex items-baseline gap-3 mb-2">
-                                                <p id="product-price" class="text-2xl font-bold text-gray-900">
-                                                    ${{ number_format($firstVariant->sale_price ?? $firstVariant->price, 2) }}
+                                        @php
+                                            // Get the first variant or use product price
+                                            $firstVariant = $availableSizes->first();
+                                            $hasDiscount = false;
+                                            $originalPrice = 0;
+                                            $discountedPrice = 0;
+                                            $discountPercent = 0;
+                                            $discountSource = 'none'; // 'product', 'variant', or 'none'
+
+                                            if ($firstVariant) {
+                                                // Check variant-level discount first (priority)
+                                                if ($firstVariant->has_active_discount) {
+                                                    $hasDiscount = true;
+                                                    $originalPrice = $firstVariant->price;
+                                                    $discountedPrice = $firstVariant->final_price;
+                                                    $discountPercent = $firstVariant->discount_percentage;
+                                                    $discountSource = 'variant';
+                                                }
+                                                // Then check product-level discount
+                                                elseif ($product->isDiscountActive()) {
+                                                    $hasDiscount = true;
+                                                    $originalPrice = $firstVariant->price;
+                                                    $discountedPrice = $firstVariant->final_price;
+                                                    $discountPercent = $product->discount_percentage;
+                                                    $discountSource = 'product';
+                                                }
+                                                // No discount
+                                                else {
+                                                    $hasDiscount = false;
+                                                    $originalPrice = $firstVariant->price;
+                                                    $discountedPrice = $firstVariant->price;
+                                                }
+                                            } else {
+                                                // Fallback to product-level pricing
+                                                $hasDiscount = $product->isDiscountActive();
+                                                $originalPrice = $product->price;
+                                                $discountedPrice = $hasDiscount
+                                                    ? $product->final_price
+                                                    : $product->price;
+                                                $discountPercent = $hasDiscount ? $product->discount_percentage : 0;
+                                                $discountSource = $hasDiscount ? 'product' : 'none';
+                                            }
+                                        @endphp
+
+                                        <!-- Single, Clean Price Display -->
+                                        <div class="flex items-baseline gap-3 mb-2">
+                                            <!-- Current Price (with or without discount) -->
+                                            <p id="product-price" class="text-3xl font-bold text-gray-900">
+                                                ${{ number_format($discountedPrice, 2) }}
+                                            </p>
+
+                                            <!-- Original Price (if discounted) -->
+                                            @if ($hasDiscount)
+                                                <p id="original-price" class="text-xl text-gray-400 line-through">
+                                                    ${{ number_format($originalPrice, 2) }}
                                                 </p>
-                                                @if ($firstVariant->sale_price)
-                                                    <p class="text-lg text-gray-400 line-through">
-                                                        ${{ number_format($firstVariant->price, 2) }}
-                                                    </p>
-                                                    <span
-                                                        class="bg-red-100 text-red-800 text-sm font-bold px-2 py-1 rounded">
-                                                        Save
-                                                        {{ round((($firstVariant->price - $firstVariant->sale_price) / $firstVariant->price) * 100) }}%
-                                                    </span>
-                                                @endif
-                                            </div>
+
+                                                <!-- Discount Badge -->
+                                                <span id="discount-badge"
+                                                    class="{{ $discountSource === 'variant' ? 'bg-purple-100 text-purple-800' : 'bg-red-100 text-red-800' }} text-sm font-bold px-3 py-1 rounded-full inline-flex items-center gap-1">
+                                                    <i class="fas fa-tag"></i>
+                                                    <span>Save {{ $discountPercent }}%</span>
+                                                </span>
+                                            @endif
+                                        </div>
+
+                                        <!-- Stock Display -->
+                                        @if ($firstVariant)
                                             <p id="stock-available"
                                                 class="text-sm font-medium {{ $firstVariant->stock <= 10 ? 'text-yellow-600 bg-yellow-50' : ($firstVariant->stock <= 0 ? 'text-red-600 bg-red-50' : 'text-green-600 bg-green-50') }} px-3 py-2 rounded-lg inline-flex items-center gap-2">
                                                 <i
                                                     class="fas fa-{{ $firstVariant->stock <= 10 ? 'exclamation-triangle' : ($firstVariant->stock <= 0 ? 'times-circle' : 'check-circle') }}"></i>
                                                 {{ $firstVariant->stock }} {{ __('messages.items_in_stock') }}
-                                            </p>
-                                        @else
-                                            <p id="product-price" class="text-2xl font-bold text-gray-900 mb-2">
-                                                Select Size
-                                            </p>
-                                            <p id="stock-available"
-                                                class="text-sm font-medium text-gray-600 bg-gray-50 px-3 py-2 rounded-lg inline-flex items-center gap-2">
-                                                <i class="fas fa-info-circle"></i>
-                                                {{ __('messages.no_sizes_available') }}
                                             </p>
                                         @endif
                                     </div>
@@ -359,7 +417,10 @@
                                         @foreach ($availableSizes as $variant)
                                             <label class="relative">
                                                 <input type="radio" name="variant_id" value="{{ $variant->id }}"
-                                                    data-price="{{ $variant->sale_price ?? $variant->price }}"
+                                                    data-price="{{ $variant->price }}"
+                                                    data-final-price="{{ $variant->final_price }}"
+                                                    data-has-discount="{{ $variant->has_active_discount ? 'true' : 'false' }}"
+                                                    data-discount-percentage="{{ $variant->discount_percentage }}"
                                                     data-stock="{{ $variant->stock }}"
                                                     data-size="{{ $variant->size }}"
                                                     data-weight="{{ $variant->weight }}"
@@ -368,13 +429,11 @@
                                                 <div
                                                     class="variant-option border-2 border-gray-200 rounded-lg p-3 text-center cursor-pointer transition-all hover:border-gray-900 hover:bg-gray-50 {{ $loop->first ? 'border-gray-900 bg-gray-900 text-white hover:bg-gray-900' : '' }}">
                                                     <span class="font-medium">{{ $variant->size }}</span>
-                                                    @if ($variant->sale_price && $variant->sale_price < $variant->price)
+                                                    @if ($variant->has_active_discount)
                                                         <div class="text-xs text-red-500 mt-1 font-bold">
-                                                            SAVE
-                                                            ${{ number_format($variant->price - $variant->sale_price, 2) }}
+                                                            SAVE {{ $variant->discount_percentage }}%
                                                         </div>
                                                     @endif
-
                                                 </div>
                                             </label>
                                         @endforeach
@@ -594,7 +653,8 @@
                                                         @endfor
                                                         <input type="hidden" name="rating" id="rating"
                                                             value="0" required>
-                                                        <span id="rating-text" class="ml-3 text-sm text-gray-600">{{ __('messages.select_stars') }}</span>
+                                                        <span id="rating-text"
+                                                            class="ml-3 text-sm text-gray-600">{{ __('messages.select_stars') }}</span>
                                                     </div>
                                                     @error('rating')
                                                         <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
@@ -605,7 +665,7 @@
                                                 <div class="mb-4">
                                                     <label for="title"
                                                         class="block text-sm font-medium text-gray-900 mb-2">
-                                                      {{ __('messages.review_title_placeholder') }} 
+                                                        {{ __('messages.review_title_placeholder') }}
                                                     </label>
                                                     <input type="text" name="title" id="title"
                                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
@@ -619,7 +679,8 @@
                                                 <div class="mb-6">
                                                     <label for="comment"
                                                         class="block text-sm font-medium text-gray-900 mb-2">
-                                                         {{ __('messages.your_review') }} <span class="text-red-500">*</span>
+                                                        {{ __('messages.your_review') }} <span
+                                                            class="text-red-500">*</span>
                                                     </label>
                                                     <textarea name="comment" id="comment" rows="4" required
                                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
@@ -633,15 +694,17 @@
                                                 <button type="submit"
                                                     class="bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-all flex items-center gap-2">
                                                     <i class="fas fa-paper-plane"></i>
-                                                   {{ __('messages.submit_review') }}
+                                                    {{ __('messages.submit_review') }}
                                                 </button>
                                             </form>
                                         @else
                                             <div class="bg-green-50 border border-green-200 rounded-xl p-6 text-center">
                                                 <i class="fas fa-check-circle text-green-500 text-3xl mb-3"></i>
-                                                <p class="text-green-800 font-medium"> {{ __('messages.already_reviewed') }}
+                                                <p class="text-green-800 font-medium">
+                                                    {{ __('messages.already_reviewed') }}
                                                 </p>
-                                                <p class="text-green-600 text-sm mt-1"> {{ __('messages.thank_you_for_feedback') }}</p>
+                                                <p class="text-green-600 text-sm mt-1">
+                                                    {{ __('messages.thank_you_for_feedback') }}</p>
                                             </div>
                                         @endif
                                     @else
@@ -843,25 +906,23 @@
 
                                         <!-- Price -->
                                         @php
-                                            $minPrice = $arrival->variants->min('price');
-                                            $maxPrice = $arrival->variants->max('price');
-                                            $minSalePrice = $arrival->variants
-                                                ->whereNotNull('sale_price')
-                                                ->min('sale_price');
-                                            $displayPrice = $minSalePrice ?: $minPrice;
+                                            // Use discount price if available
+                                            $hasDiscount = $arrival->isDiscountActive();
+                                            $originalPrice = $arrival->price;
+                                            $discountedPrice = $arrival->final_price;
                                         @endphp
                                         <div
                                             class="absolute top-3 left-3 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-lg shadow-sm">
-                                            @if ($minPrice == $maxPrice)
-                                                <span
-                                                    class="font-semibold text-gray-900">${{ number_format($displayPrice, 2) }}</span>
-                                            @else
-                                                <span
-                                                    class="font-semibold text-gray-900">${{ number_format($displayPrice, 2) }}</span>
-                                            @endif
-                                            @if ($minSalePrice)
+                                            @if ($hasDiscount)
+                                                <span class="font-semibold text-gray-900">
+                                                    ${{ number_format($discountedPrice, 2) }}
+                                                </span>
                                                 <span class="text-xs text-red-500 line-through ml-1">
-                                                    ${{ number_format($minPrice, 2) }}
+                                                    ${{ number_format($originalPrice, 2) }}
+                                                </span>
+                                            @else
+                                                <span class="font-semibold text-gray-900">
+                                                    ${{ number_format($originalPrice, 2) }}
                                                 </span>
                                             @endif
                                         </div>
@@ -924,71 +985,8 @@
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        @foreach ($relatedProducts as $related)
-                            <div
-                                class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
-                                <a href="{{ route('product.view', $related->slug) }}" class="block">
-                                    <div class="relative overflow-hidden bg-gray-100 aspect-[3/4]">
-                                        @if ($related->images->count() > 0)
-                                            <img src="{{ asset('storage/' . $related->images->first()->image_path) }}"
-                                                alt="{{ $related->name }}"
-                                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                        @endif
-
-                                        @if ($related->is_new)
-                                            <div
-                                                class="absolute top-3 left-3 bg-green-500 text-white px-2 py-1 rounded text-xs font-bold">
-                                                NEW
-                                            </div>
-                                        @endif
-
-                                        @if ($related->is_featured)
-                                            <div
-                                                class="absolute top-3 right-3 bg-amber-500 text-white px-2 py-1 rounded text-xs font-bold">
-                                                FEATURED
-                                            </div>
-                                        @endif
-                                    </div>
-
-                                    <div class="p-4">
-                                        <h3 class="font-semibold text-gray-900 mb-2 line-clamp-1">
-                                            {{ $related->name }}
-                                        </h3>
-                                        <div class="flex items-center justify-between">
-                                            @php
-                                                $minPrice = $related->variants->min('price');
-                                                $minSalePrice = $related->variants
-                                                    ->whereNotNull('sale_price')
-                                                    ->min('sale_price');
-                                                $displayPrice = $minSalePrice ?: $minPrice;
-                                            @endphp
-                                            <span
-                                                class="font-bold text-gray-900">${{ number_format($displayPrice, 2) }}</span>
-                                            @if ($minSalePrice)
-                                                <span
-                                                    class="text-sm text-gray-400 line-through">${{ number_format($minPrice, 2) }}</span>
-                                            @endif
-                                        </div>
-
-                                        <!-- Rating -->
-                                        @if ($related->rating_cache > 0)
-                                            <div class="flex items-center gap-1 mt-2">
-                                                <div class="flex text-amber-400 text-xs">
-                                                    @for ($i = 1; $i <= 5; $i++)
-                                                        @if ($i <= floor($related->rating_cache))
-                                                            <i class="fas fa-star"></i>
-                                                        @else
-                                                            <i class="far fa-star"></i>
-                                                        @endif
-                                                    @endfor
-                                                </div>
-                                                <span
-                                                    class="text-xs text-gray-500">({{ $related->review_count }})</span>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </a>
-                            </div>
+                        @foreach ($relatedProducts as $product)
+                            <x-product-card :product="$product" />
                         @endforeach
                     </div>
                 </div>
@@ -1185,9 +1183,10 @@
             const maxStockLabel = document.getElementById('max-stock-label');
             const productForm = document.getElementById('productForm');
 
-            // Store all variants data
+
             const allVariants = @json($variantsData);
 
+            // Function to update sizes based on selected color
             // Function to update sizes based on selected color
             function updateSizesForColor(selectedColor) {
                 const sizeContainer = document.getElementById('size-container');
@@ -1196,33 +1195,55 @@
                 if (filteredVariants.length === 0) {
                     sizeContainer.innerHTML =
                         '<div class="col-span-4 text-center py-8">' +
+                        '<i class="fas fa-exclamation-circle text-gray-400 text-3xl mb-2"></i>' +
                         '<p class="text-gray-500">{{ __('messages.no_sizes_available') }}</p>' +
                         '</div>';
+
                     // Reset price and stock display
-                    priceLabel.textContent = '{{ __('messages.select_size') }}';
-                    stockLabel.innerHTML =
-                        '<i class="fas fa-info-circle"></i> {{ __('messages.select_size_to_see_stock') }}';
-                    stockLabel.className =
-                        'text-sm font-medium text-gray-600 bg-gray-50 px-3 py-2 rounded-lg inline-flex items-center gap-2';
-                    maxStockLabel.textContent = '';
+                    const priceLabel = document.getElementById('product-price');
+                    const stockLabel = document.getElementById('stock-available');
+                    const maxStockLabel = document.getElementById('max-stock-label');
+
+                    if (priceLabel) priceLabel.textContent = '{{ __('messages.select_size') }}';
+                    if (stockLabel) {
+                        stockLabel.innerHTML =
+                            '<i class="fas fa-info-circle"></i> {{ __('messages.select_size_to_see_stock') }}';
+                        stockLabel.className =
+                            'text-sm font-medium text-gray-600 bg-gray-50 px-3 py-2 rounded-lg inline-flex items-center gap-2';
+                    }
+                    if (maxStockLabel) maxStockLabel.textContent = '';
                     return;
                 }
 
                 let sizesHTML = '';
                 filteredVariants.forEach((variant, index) => {
-                    const price = variant.sale_price || variant.price;
-                    const originalPrice = variant.price;
-                    const discount = variant.sale_price ? originalPrice - variant.sale_price : 0;
-                    const discountPercent = variant.sale_price ? Math.round((discount / originalPrice) *
-                        100) : 0;
-                    const isChecked = filteredVariants.length === 1 || index === 0;
-                    const isLowStock = variant.stock <= 10;
+                    const isChecked = index === 0;
                     const isOutOfStock = variant.stock <= 0;
+                    const isLowStock = variant.stock > 0 && variant.stock <= 10;
+                    const hasVariantDiscount = variant.has_discount;
+
+                    // Build the active class string
+                    let activeClasses = '';
+                    let baseClasses = '';
+
+                    if (isOutOfStock) {
+                        baseClasses =
+                            'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed opacity-60';
+                    } else if (isChecked) {
+                        baseClasses = 'border-gray-900 bg-gray-900 text-white hover:bg-gray-900';
+                        activeClasses = 'border-gray-900 bg-gray-900 text-white';
+                    } else {
+                        baseClasses =
+                            'border-gray-200 hover:border-gray-900 hover:bg-gray-50 text-gray-900';
+                    }
 
                     sizesHTML += `
-            <label class="relative">
+            <label class="relative group">
                 <input type="radio" name="variant_id" value="${variant.id}"
-                    data-price="${price}"
+                    data-price="${variant.price}"
+                    data-final-price="${variant.final_price}"
+                    data-has-discount="${hasVariantDiscount}"
+                    data-discount-percentage="${variant.discount_percentage}"
                     data-stock="${variant.stock}"
                     data-size="${variant.size}"
                     data-weight="${variant.weight || ''}"
@@ -1230,37 +1251,60 @@
                     class="hidden variant-radio"
                     ${isChecked ? 'checked' : ''}
                     ${isOutOfStock ? 'disabled' : ''}>
-                <div class="variant-option border-2 rounded-lg p-3 text-center cursor-pointer transition-all hover:border-gray-900 hover:bg-gray-50
-                    ${isOutOfStock ? 'border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed' : 
-                      'border-gray-200 hover:border-gray-900 hover:bg-gray-50'}
-                    ${isChecked ? (isOutOfStock ? '' : 'border-gray-900 bg-gray-900 text-white hover:bg-gray-900') : ''}">
-                    <span class="font-medium block">${variant.size}</span>
-                    ${variant.sale_price ? 
-                        `<div class="text-xs font-bold mt-1 ${isChecked ? 'text-red-300' : 'text-red-500'}">
-                                        ${'{{ __('messages.save_amount') }}'.replace(':amount', discount.toFixed(2))}
-                                    </div>` : ''}
-                    ${isLowStock && !isOutOfStock ? 
-                        `<div class="text-xs ${isChecked ? 'text-yellow-300' : 'text-yellow-600'} mt-1">
-                                        <i class="fas fa-exclamation-circle"></i> ${variant.stock} {{ __('messages.items_in_stock') }}
-                                    </div>` : ''}
-                    ${isOutOfStock ? 
-                        `<div class="text-xs text-gray-400 mt-1">
-                                        <i class="fas fa-times-circle"></i> {{ __('messages.out_of_stock') }}
-                                    </div>` : ''}
+                
+                <div class="variant-option border-2 rounded-lg p-3 text-center cursor-pointer transition-all ${baseClasses}">
+                    
+                    <!-- Size Label -->
+                    <span class="font-semibold text-base block mb-1">${variant.size}</span>
+                    
+                    <!-- Discount Badge (if applicable) -->
+                    ${hasVariantDiscount && !isOutOfStock ? `
+                                <div class="text-xs font-bold ${isChecked ? 'text-purple-300' : 'text-purple-600'}">
+                                    <i class="fas fa-tag"></i> -${variant.discount_percentage}%
+                                </div>
+                            ` : ''}
+                    
+                    <!-- Stock Warning (if low stock) -->
+                    ${isLowStock && !isOutOfStock ? `
+                                <div class="text-xs ${isChecked ? 'text-yellow-300' : 'text-yellow-600'} mt-1">
+                                    <i class="fas fa-exclamation-triangle"></i> ${variant.stock} left
+                                </div>
+                            ` : ''}
+                    
+                    <!-- Out of Stock Badge -->
+                    ${isOutOfStock ? `
+                                <div class="text-xs text-gray-400 mt-1">
+                                    <i class="fas fa-times-circle"></i> Out of Stock
+                                </div>
+                            ` : ''}
                 </div>
+                
+                <!-- Tooltip on hover showing price -->
+                ${!isOutOfStock ? `
+                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                                ${hasVariantDiscount ? 
+                                    `$${variant.final_price.toFixed(2)} <span class="line-through opacity-60">$${variant.price.toFixed(2)}</span>` : 
+                                    `$${variant.price.toFixed(2)}`
+                                }
+                            </div>
+                        ` : ''}
             </label>
-            `;
+        `;
                 });
 
                 sizeContainer.innerHTML = sizesHTML;
 
-                // Update price and stock immediately
+                // Update price and stock immediately for the first variant
                 updatePriceAndStock();
+                updateVariantVisualSelection();
 
                 // Re-attach event listeners to new variant radios
                 const newVariantRadios = document.querySelectorAll('.variant-radio');
                 newVariantRadios.forEach(radio => {
-                    radio.addEventListener('change', updatePriceAndStock);
+                    radio.addEventListener('change', function() {
+                        updatePriceAndStock();
+                        updateVariantVisualSelection();
+                    });
                 });
             }
 
@@ -1269,65 +1313,132 @@
                 const selectedVariant = document.querySelector('.variant-radio:checked');
                 if (!selectedVariant) return;
 
-                const price = selectedVariant.dataset.price;
-                const stock = selectedVariant.dataset.stock;
-                const weight = selectedVariant.dataset.weight;
-                const dimensions = selectedVariant.dataset.size;
+                const price = parseFloat(selectedVariant.dataset.price);
+                const finalPrice = parseFloat(selectedVariant.dataset.finalPrice);
+                const hasDiscount = selectedVariant.dataset.hasDiscount === 'true';
+                const discountPercentage = parseFloat(selectedVariant.dataset.discountPercentage);
+                const stock = parseInt(selectedVariant.dataset.stock);
 
-                if (price) {
-                    priceLabel.textContent = `$${parseFloat(price).toFixed(2)}`;
+                // Update main price
+                const priceElement = document.getElementById('product-price');
+                priceElement.textContent = `$${finalPrice.toFixed(2)}`;
+
+                // Handle original price and discount badge
+                let originalPriceElement = document.getElementById('original-price');
+                let discountBadge = document.getElementById('discount-badge');
+
+                if (hasDiscount) {
+                    // Show original price
+                    if (!originalPriceElement) {
+                        originalPriceElement = document.createElement('p');
+                        originalPriceElement.id = 'original-price';
+                        originalPriceElement.className = 'text-xl text-gray-400 line-through';
+                        priceElement.parentNode.insertBefore(originalPriceElement, priceElement.nextSibling);
+                    }
+                    originalPriceElement.textContent = `$${price.toFixed(2)}`;
+
+                    // Show discount badge
+                    if (!discountBadge) {
+                        discountBadge = document.createElement('span');
+                        discountBadge.id = 'discount-badge';
+                        discountBadge.className =
+                            'bg-purple-100 text-purple-800 text-sm font-bold px-3 py-1 rounded-full inline-flex items-center gap-1';
+                        discountBadge.innerHTML = '<i class="fas fa-tag"></i><span></span>';
+                        priceElement.parentNode.appendChild(discountBadge);
+                    }
+
+                    // Update badge style based on discount source
+                    const isVariantDiscount = hasDiscount && discountPercentage > 0;
+                    discountBadge.className = isVariantDiscount ?
+                        'bg-purple-100 text-purple-800 text-sm font-bold px-3 py-1 rounded-full inline-flex items-center gap-1' :
+                        'bg-red-100 text-red-800 text-sm font-bold px-3 py-1 rounded-full inline-flex items-center gap-1';
+
+                    discountBadge.querySelector('span').textContent = `Save ${discountPercentage}%`;
+                } else {
+                    // Hide original price and discount badge if no discount
+                    if (originalPriceElement) {
+                        originalPriceElement.remove();
+                    }
+                    if (discountBadge) {
+                        discountBadge.remove();
+                    }
                 }
 
-                if (stock) {
-                    stockLabel.innerHTML =
-                        `<i class="fas fa-${stock <= 10 ? 'exclamation-triangle' : (stock <= 0 ? 'times-circle' : 'check-circle')}"></i> ${stock} {{ __('messages.items_in_stock') }}`;
-                    if (stock <= 10) {
-                        stockLabel.className =
-                            'text-sm font-medium text-yellow-600 bg-yellow-50 px-3 py-2 rounded-lg inline-flex items-center gap-2';
-                    } else if (stock <= 0) {
-                        stockLabel.className =
+                // Update stock display
+                const stockLabel = document.getElementById('stock-available');
+                const maxStockLabel = document.getElementById('max-stock-label');
+
+                if (stockLabel) {
+                    let stockIcon, stockClass;
+
+                    if (stock <= 0) {
+                        stockIcon = 'times-circle';
+                        stockClass =
                             'text-sm font-medium text-red-600 bg-red-50 px-3 py-2 rounded-lg inline-flex items-center gap-2';
+                    } else if (stock <= 10) {
+                        stockIcon = 'exclamation-triangle';
+                        stockClass =
+                            'text-sm font-medium text-yellow-600 bg-yellow-50 px-3 py-2 rounded-lg inline-flex items-center gap-2';
                     } else {
-                        stockLabel.className =
+                        stockIcon = 'check-circle';
+                        stockClass =
                             'text-sm font-medium text-green-600 bg-green-50 px-3 py-2 rounded-lg inline-flex items-center gap-2';
                     }
 
-                    // Update max stock label
+                    stockLabel.className = stockClass;
+                    stockLabel.innerHTML =
+                        `<i class="fas fa-${stockIcon}"></i> ${stock} {{ __('messages.items_in_stock') }}`;
+                }
+
+                if (maxStockLabel) {
                     maxStockLabel.textContent = `{{ __('messages.max') }}: ${stock}`;
                 }
 
                 // Update quantity max
                 const quantityInput = document.getElementById('quantity');
-                quantityInput.max = stock;
-
-                // Update visual selection
-                updateVariantVisualSelection();
-            }
-
-            // Function to update variant visual selection
-            function updateVariantVisualSelection() {
-                const selectedVariant = document.querySelector('.variant-radio:checked');
-                if (!selectedVariant) return;
-
-                document.querySelectorAll('.variant-option').forEach(opt => {
-                    opt.classList.remove('border-gray-900', 'bg-gray-900', 'text-white');
-                    const parentRadio = opt.closest('label').querySelector('.variant-radio');
-                    if (parentRadio.disabled) {
-                        opt.classList.add('border-gray-100', 'bg-gray-50', 'text-gray-400');
-                    } else if (parseInt(parentRadio.dataset.stock) <= 10) {
-                        opt.classList.add('text-gray-900');
-                    } else {
-                        opt.classList.add('border-gray-200', 'text-gray-900', 'hover:text-gray-900');
+                if (quantityInput) {
+                    quantityInput.max = stock;
+                    // Reset quantity if it exceeds new max
+                    if (parseInt(quantityInput.value) > stock) {
+                        quantityInput.value = Math.max(1, stock);
                     }
-                });
-
-                if (!selectedVariant.disabled) {
-                    selectedVariant.closest('label').querySelector('.variant-option').classList.add(
-                        'border-gray-900', 'bg-gray-900', 'text-white'
-                    );
                 }
             }
 
+            // Function to update variant visual selection
+            // Function to update variant visual selection
+            function updateVariantVisualSelection() {
+                const selectedVariant = document.querySelector('.variant-radio:checked');
+
+                // Reset all variant options
+                document.querySelectorAll('.variant-option').forEach(opt => {
+                    // Clear all conditional classes
+                    opt.classList.remove(
+                        'border-gray-900', 'bg-gray-900', 'text-white',
+                        'border-gray-200', 'bg-gray-50', 'text-gray-400',
+                        'text-gray-900', 'hover:border-gray-900', 'hover:bg-gray-50'
+                    );
+
+                    // Get the associated radio button
+                    const parentRadio = opt.closest('label').querySelector('.variant-radio');
+
+                    if (parentRadio.disabled) {
+                        // Out of stock
+                        opt.classList.add('border-gray-200', 'bg-gray-50', 'text-gray-400');
+                    } else {
+                        // Available stock
+                        opt.classList.add('border-gray-200', 'text-gray-900', 'hover:border-gray-900',
+                            'hover:bg-gray-50');
+                    }
+                });
+
+                // Apply active styles to selected variant (if it's not disabled)
+                if (selectedVariant && !selectedVariant.disabled) {
+                    const selectedOption = selectedVariant.closest('label').querySelector('.variant-option');
+                    selectedOption.classList.remove('border-gray-200', 'hover:border-gray-900', 'hover:bg-gray-50');
+                    selectedOption.classList.add('border-gray-900', 'bg-gray-900', 'text-white');
+                }
+            }
             // Add event listeners to color radios
             colorRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
@@ -1363,6 +1474,7 @@
             document.addEventListener('change', function(e) {
                 if (e.target.matches('.variant-radio')) {
                     updatePriceAndStock();
+                    updateVariantVisualSelection();
                 }
             });
 

@@ -8,7 +8,7 @@
                 <p class="text-gray-600 text-lg">{{ __('admin.emails.subtitle') }}</p>
             </div>
             <button onclick="showTestEmailModal()"
-                class="bg-purple-600 text-white hover:bg-purple-700 px-4 py-2 rounded-lg font-medium transition-colors flex items-center">
+                class="flex items-center space-x-2 px-4 py-2.5 bg-gradient-to-r from-Ocean to-Ocean/80 text-white rounded-xl transition-all duration-300 hover:from-Ocean/90 hover:to-Ocean/70 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                 <i class="fas fa-envelope mr-2"></i> {{ __('admin.emails.send_test') }}
             </button>
         </div>
@@ -84,7 +84,7 @@
     <!-- Send Newsletter Section -->
     <div class="bg-white border border-gray-200 rounded-xl shadow-lg mb-8 overflow-hidden" data-aos="fade-up"
         data-aos-delay="300">
-        <div class="bg-gradient-to-r from-gray-900 to-gray-800 p-6">
+        <div class="bg-gradient-to-r from-gray-700 to-gray-600 p-6">
             <h2 class="text-xl font-bold text-white flex items-center">
                 <i class="fas fa-paper-plane mr-3 text-blue-300"></i>{{ __('admin.emails.compose.title') }}
             </h2>
@@ -183,7 +183,8 @@
                             <h4 class="font-medium text-gray-800">{{ __('admin.emails.compose.recipients') }}</h4>
                             <span class="text-sm text-gray-600 font-medium">
                                 <i class="fas fa-users mr-1"></i>
-                                <span id="recipient-count">{{ $totalActive }}</span> {{ __('admin.emails.compose.recipients_desc') }}
+                                <span id="recipient-count">{{ $totalActive }}</span>
+                                {{ __('admin.emails.compose.recipients_desc') }}
                             </span>
                         </div>
                         <p class="text-sm text-gray-600">{{ __('admin.emails.compose.recipients_desc') }}</p>
@@ -240,10 +241,10 @@
                     class="bg-green-100 text-green-700 hover:bg-green-200 px-4 py-2.5 rounded-lg font-medium transition-colors flex items-center">
                     <i class="fas fa-file-export mr-2"></i> {{ __('admin.emails.list.export') }}
                 </button>
-                <button onclick="showAddSubscriberModal()"
+                {{-- <button onclick="showAddSubscriberModal()"
                     class="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2.5 rounded-lg font-medium transition-colors flex items-center">
                     <i class="fas fa-plus mr-2"></i> {{ __('admin.emails.list.add_subscriber') }}
-                </button>
+                </button> --}}
             </div>
         </div>
 
@@ -362,7 +363,8 @@
                     </div>
                     <div class="flex items-center space-x-6">
                         <div class="text-sm text-gray-600">
-                            {{ __('admin.emails.list.showing') }} <span class="font-semibold">{{ $subscribers->count() }}</span> 
+                            {{ __('admin.emails.list.showing') }} <span
+                                class="font-semibold">{{ $subscribers->count() }}</span>
                         </div>
                     </div>
                 </div>
@@ -374,10 +376,10 @@
                 </div>
                 <h3 class="text-lg font-bold text-gray-900 mb-2">{{ __('admin.emails.empty.title') }}</h3>
                 <p class="text-gray-600 mb-4">{{ __('admin.emails.empty.message') }}</p>
-                <button onclick="showAddSubscriberModal()"
+                {{-- <button onclick="showAddSubscriberModal()"
                     class="bg-blue-600 text-white hover:bg-blue-700 px-6 py-3 rounded-lg font-medium transition-colors flex items-center mx-auto">
                     <i class="fas fa-plus mr-2"></i> {{ __('admin.emails.empty.add_first') }}
-                </button>
+                </button> --}}
             </div>
         @endif
     </div>
@@ -612,12 +614,14 @@
             e.preventDefault();
 
             const formData = new FormData(this);
-            const subject = formData.get('subject');
-            const message = formData.get('message');
-            const previewText = formData.get('preview_text');
             const sendBtn = document.getElementById('send-btn');
             const sendingText = document.getElementById('sending-text');
             const recipientCount = document.getElementById('recipient-count').textContent;
+
+            // Get values directly from fields
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            const previewText = document.getElementById('preview_text').value;
 
             if (!subject || !message) {
                 Swal.fire({
@@ -647,6 +651,7 @@
             // Show loading state
             sendBtn.disabled = true;
             sendBtn.classList.remove('hover:scale-105');
+            sendingText.textContent = 'Sending...';
             sendingText.classList.remove('hidden');
 
             try {
@@ -655,7 +660,8 @@
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
                         'Accept': 'application/json',
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest' // Add this header
                     },
                     body: JSON.stringify({
                         subject: subject,
@@ -664,7 +670,20 @@
                     })
                 });
 
+                // First check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    // If not JSON, get the text to see what's returned
+                    const text = await response.text();
+                    console.error('Non-JSON response:', text.substring(0, 200));
+                    throw new Error('Server returned an invalid response. Please try again.');
+                }
+
                 const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to send newsletter');
+                }
 
                 if (data.success) {
                     Swal.fire({
@@ -686,6 +705,7 @@
                     throw new Error(data.message);
                 }
             } catch (error) {
+                console.error('Error:', error);
                 Swal.fire({
                     icon: 'error',
                     title: 'Sending Failed',

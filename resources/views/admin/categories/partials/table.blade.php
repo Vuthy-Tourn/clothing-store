@@ -167,14 +167,14 @@
                         </div>
                         <div class="flex-1">
                             <div class="flex items-center gap-3">
-                                @if ($category->image)
-                                    <img src="{{ asset($category->image) }}" alt="{{ $category->name }}"
+                                {{-- @if ($category->image)
+                                    <img src="{{ asset("storage/".$category->image) }}" alt="{{ $category->name }}"
                                         class="w-10 h-10 rounded-lg object-cover border border-gray-200 shadow-sm">
                                 @else
                                     <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center shadow-sm">
                                         <i class="fas fa-folder text-gray-600"></i>
                                     </div>
-                                @endif
+                                @endif --}}
                                 <div>
                                     <h4 class="font-medium text-gray-900">{{ $category->name }}</h4>
                                     <p class="text-gray-700 text-xs">{{ __('admin.categories.sort_panel.products_count', ['count' => $category->products->count()]) }}</p>
@@ -226,14 +226,14 @@
                             </td>
                             <td class="py-4 px-6">
                                 <div class="flex items-center gap-3">
-                                    @if ($category->image)
-                                        <img src="{{ asset($category->image) }}" alt="{{ $category->name }}"
+                                    {{-- @if ($category->image)
+                                        <img src="{{ asset("storage/".$category->image) }}" alt="{{ $category->name }}"
                                             class="w-12 h-12 rounded-xl object-cover border border-gray-200 shadow-sm">
                                     @else
                                         <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center shadow-sm">
                                             <i class="fas fa-folder text-gray-600 text-lg"></i>
                                         </div>
-                                    @endif
+                                    @endif --}}
                                     <div>
                                         <h4 class="font-bold text-gray-900 category-name">{{ $category->name }}</h4>
                                         <p class="text-gray-700 text-xs mt-1 category-date" data-date="{{ $category->created_at->timestamp }}">

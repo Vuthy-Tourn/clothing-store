@@ -30,7 +30,9 @@
      --font-sans: 'Montserrat', sans-serif;
     --font-khmer: 'Kantumruy Pro', 'Khmer', sans-serif;
 }
-
+*{
+     scrollbar-width: none !important;
+}
 /* All other existing CSS rules below remain exactly the same */
 html {
     scroll-behavior: smooth;
@@ -183,6 +185,23 @@ html[lang="km"] body .fab {
 
 .dropdown-item:hover {
     background-color: rgba(83, 100, 81, 0.1);
+}
+
+input,
+textarea,
+select,
+button {
+  outline: none;
+}
+
+/* Hide scrollbar but keep scroll (modal only) */
+.modal-scroll {
+  -ms-overflow-style: none;  /* IE / Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.modal-scroll::-webkit-scrollbar {
+  display: none;             /* Chrome / Safari */
 }
 
 /* Mobile styles */

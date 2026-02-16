@@ -67,10 +67,74 @@ return [
         'sales_volume' => 'Sales Volume',
         'product_name' => 'Product Name',
         'quantity_sold' => 'Quantity Sold',
+
+         'days' => [
+        'monday' => 'Monday',
+        'tuesday' => 'Tuesday',
+        'wednesday' => 'Wednesday',
+        'thursday' => 'Thursday',
+        'friday' => 'Friday',
+        'saturday' => 'Saturday',
+        'sunday' => 'Sunday',
+    ],
+    
+    'days_short' => [
+        'mon' => 'Mon',
+        'tue' => 'Tue',
+        'wed' => 'Wed',
+        'thu' => 'Thu',
+        'fri' => 'Fri',
+        'sat' => 'Sat',
+        'sun' => 'Sun',
+    ],
+    
+    'months' => [
+        'january' => 'January',
+        'february' => 'February',
+        'march' => 'March',
+        'april' => 'April',
+        'may' => 'May',
+        'june' => 'June',
+        'july' => 'July',
+        'august' => 'August',
+        'september' => 'September',
+        'october' => 'October',
+        'november' => 'November',
+        'december' => 'December',
+    ],
+    
+    'months_short' => [
+        'jan' => 'Jan',
+        'feb' => 'Feb',
+        'mar' => 'Mar',
+        'apr' => 'Apr',
+        'may' => 'May',
+        'jun' => 'Jun',
+        'jul' => 'Jul',
+        'aug' => 'Aug',
+        'sep' => 'Sep',
+        'oct' => 'Oct',
+        'nov' => 'Nov',
+        'dec' => 'Dec',
+    ],
+    
+    'week_number' => 'Week :number',
+    'date_range' => ':start - :end :month',
+    
+    // For tooltips or additional labels
+    'revenue' => 'Revenue',
+    'sales' => 'Sales',
+    'orders' => 'Orders',
+    
+    'periods' => [
+        'week' => 'Weekly',
+        'month' => 'Monthly',
+        'year' => 'Yearly',
+    ],
     ],
     
     'store_health' => [
-        'title' => 'Store Health',
+        'title' => 'Store status',
         'inventory_status' => 'Inventory Status',
         'low_stock' => 'Low Stock',
         'out_of_stock' => 'Out of Stock',
@@ -82,6 +146,10 @@ return [
         'items' => 'items',
         'minutes' => 'minutes',
         'ms' => 'ms',
+           'pending_orders' => 'Pending Orders',
+    'today_revenue' => "Today's Revenue",
+    'low_stock' => 'Low Stock Items',
+    'out_of_stock' => 'Out of Stock',
     ],
     
     'performance' => [
@@ -293,6 +361,7 @@ return [
             'edit_subtitle' => 'Update category details',
             'name' => 'Category Name',
             'name_placeholder' => 'e.g., Men\'s Clothing',
+            'slug_label' => 'Category Slug',
             'gender_label' => 'Gender',
             'gender_men' => 'Men',
             'gender_women' => 'Women',
@@ -967,6 +1036,7 @@ return [
         ],
         
         'account_types' => [
+            'customer'=>'Customer',
             'admin' => 'Admin',
             'staff' => 'Staff',
             'vendor' => 'Vendor',
@@ -1239,6 +1309,7 @@ return [
             'revenue_today' => "Today's Revenue",
             'active_customers' => 'Active Customers',
         ],
+        
         
         'filters' => [
             'search_placeholder' => 'Search by order number, customer name or email...',
@@ -1522,6 +1593,15 @@ return [
             'date_range_required' => 'Please select a date range',
             'export_format_required' => 'Please select export format',
         ],
+    ],
+
+    'payments' => [
+        'status' => [
+            'pending' => 'Pending',
+            'paid' => 'Paid',
+            'failed' => 'Failed',
+            'refunded' => 'Refunded'
+        ]
     ],
     'profile' => [
         'title' => 'Admin Profile',

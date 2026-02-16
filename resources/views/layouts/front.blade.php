@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 
@@ -9,12 +8,29 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>@yield('title', 'Outfit 818')</title>
+    <meta name="description" content="Discover trendy fashion at Nova Studio. Browse clothing, accessories, and more with fast shipping and easy returns.">
+    <meta name="keywords" content="Nova Studio, online fashion, trendy clothing, affordable fashion, e-commerce">
+
+    <!-- Open Graph / Social Media Meta Tags (for sharing) -->
+    <meta property="og:title" content="Nova Studio – Trendy Fashion & Affordable Styles">
+    <meta property="og:description" content="Discover trendy fashion at Nova Studio. Browse clothing, accessories, and more.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://novastudio.great-site.net/">
+    <meta property="og:image" content="https://iili.io/fkG4iQ9.md.png">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Nova Studio – Trendy Fashion & Affordable Styles">
+    <meta name="twitter:description" content="Discover trendy fashion at Nova Studio. Browse clothing, accessories, and more.">
+    <meta name="twitter:image" content="https://iili.io/fkG4iQ9.md.png">
+    <title>@yield('title', 'Nova Studio')</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset(path: 'assets/css/style.css') }}">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             AOS.init({
@@ -26,7 +42,7 @@
 </head>
 
 <body>
-    
+
     @include('partials.navbar')
 
     <x-toast />
@@ -41,7 +57,7 @@
 
     <script src="{{ asset('assets/js/index.js') }}"></script>
     <script src="{{ asset('assets/js/filter-system.js') }}"></script>
-    
+
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script>
         document.addEventListener('alpine:init', () => {
@@ -117,6 +133,9 @@
     </script>
 
     @stack('styles')
+    @push('styles')
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    @endpush
     @stack('scripts')
 
     @if (session('success'))

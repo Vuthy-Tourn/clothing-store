@@ -8,6 +8,7 @@ use App\Models\NewsletterSubscription;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AdminBulkEmail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class EmailController extends Controller
 {
@@ -36,64 +37,63 @@ class EmailController extends Controller
     /**
      * Send bulk email to all active subscribers
      */
-    public function send(Request $request)
-    {
-        $request->validate([
-            'subject' => 'required|string|max:255',
-            'message' => 'required|string',
-            'preview_text' => 'nullable|string|max:255'
+public function send(Request $request)
+{
+    $request->validate([
+        'subject' => 'required|string|max:255',
+        'message' => 'required|string',
+        'preview_text' => 'nullable|string|max:255'
+    ]);
+
+    try {
+        // Get only active subscribers' emails
+        $activeSubscribers = NewsletterSubscription::active()
+            ->pluck('email')
+            ->toArray();
+
+        if (empty($activeSubscribers)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No active subscribers found.'
+            ], 404);
+        }
+
+        // Log for debugging
+        Log::info('Sending newsletter to subscribers:', [
+            'count' => count($activeSubscribers),
+            'subscribers' => $activeSubscribers,
+            'subject' => $request->subject
         ]);
 
-        try {
-            // Get only active subscribers' emails
-            $activeSubscribers = NewsletterSubscription::active()
-                ->pluck('email')
-                ->toArray();
-
-            if (empty($activeSubscribers)) {
-                if ($request->ajax()) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'No active subscribers found.'
-                    ], 404);
-                }
-                return redirect()->back()->with('error', 'No active subscribers found.');
-            }
-
-            // Queue emails for better performance
-            foreach ($activeSubscribers as $email) {
-                Mail::to($email)->queue(new AdminBulkEmail(
-                    $request->subject,
-                    $request->message,
-                    $request->preview_text
-                ));
-            }
-
-            // Update last sent time for subscribers
-            NewsletterSubscription::whereIn('email', $activeSubscribers)
-                ->update(['last_sent_at' => now()]);
-
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Newsletter sent successfully to ' . count($activeSubscribers) . ' subscribers!',
-                    'count' => count($activeSubscribers)
-                ]);
-            }
-
-            return redirect()->back()->with('success', 'Email sent to ' . count($activeSubscribers) . ' active subscribers.');
-
-        } catch (\Exception $e) {
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Failed to send newsletter: ' . $e->getMessage()
-                ], 500);
-            }
+        // Send emails immediately (not queued)
+        foreach ($activeSubscribers as $email) {
+            // Log each email being sent
+            Log::info('Sending email to: ' . $email);
             
-            return redirect()->back()->with('error', 'Failed to send newsletter: ' . $e->getMessage());
+            Mail::to($email)->send(new AdminBulkEmail(
+                $request->subject,
+                $request->message,
+                $request->preview_text
+            ));
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Newsletter sent successfully to ' . count($activeSubscribers) . ' subscribers!',
+            'count' => count($activeSubscribers)
+        ]);
+
+    } catch (\Exception $e) {
+        Log::error('Failed to send newsletter: ' . $e->getMessage(), [
+            'trace' => $e->getTraceAsString()
+        ]);
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to send newsletter: ' . $e->getMessage()
+        ], 500);
     }
+}
 
     /**
      * Delete a subscriber (soft delete)

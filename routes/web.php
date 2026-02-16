@@ -99,6 +99,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
     Route::post('/checkout/verify', [CheckoutController::class, 'verify'])->name('checkout.verify');
     Route::get('/thank-you/{orderId}', [CheckoutController::class, 'thankYou'])->name('checkout.thankyou');
+
+    // QR Code Payment Routes
+    Route::get('/checkout/qr/{order}/{bank}', [CheckoutController::class, 'showQRVerification'])
+        ->name('checkout.qr.verify');
+    
+    Route::post('/checkout/qr/{order}/verify', [CheckoutController::class, 'verifyQRPayment'])
+        ->name('checkout.qr.verify.post');
     
     // Order History & Invoices (for both regular users and admins when accessing /orders)
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
@@ -108,10 +115,20 @@ Route::middleware(['auth'])->group(function () {
         ->name('order.invoice.download');
     
     // Profile Routes
-    Route::prefix('profile')->name('profile.')->group(function () {
+   Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'show'])->name('show');
         Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
-        Route::post('/update', [ProfileController::class, 'update'])->name('update');
+        Route::put('/update', [ProfileController::class, 'update'])->name('update');
+        Route::put('/update-password', [ProfileController::class, 'updatePassword'])->name('update.password');
+        Route::put('/update-email', [ProfileController::class, 'updateEmail'])->name('update.email');
+        Route::put('/update-newsletter', [ProfileController::class, 'updateNewsletter'])->name('update.newsletter');
+        
+        // Address Routes - use POST with _method for AJAX compatibility
+        Route::get('/address/{id}', [ProfileController::class, 'getAddress'])->name('address.get');
+        Route::post('/address/add', [ProfileController::class, 'addAddress'])->name('address.add');
+        Route::put('/address/{id}/update', [ProfileController::class, 'updateAddress'])->name('address.update');
+        Route::delete('/address/{id}/delete', [ProfileController::class, 'deleteAddress'])->name('address.delete');
+        Route::put('/address/{id}/set-default', [ProfileController::class, 'setDefaultAddress'])->name('address.set-default');
     });
     
     // Email Subscription Management
@@ -300,3 +317,4 @@ Route::get('/products/{product}/reviews', [ProductDisplayController::class, 'get
 Route::post('/language/set', [LanguageController::class, 'set'])->name('language.set');
 Route::post('/language/ajax', [LanguageController::class, 'ajax'])->name('language.ajax');
 Route::get('/search', [ProductDisplayController::class, 'search'])->name('products.search');
+// In web.php add:

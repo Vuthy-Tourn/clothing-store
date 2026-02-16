@@ -219,7 +219,6 @@
         <h2 style="font-weight: 900;">{{ __('messages.new_arrivals_title') }}</h2>
 
         <div class="carousel-wrapper">
-            <button class="carousel-btn prev" id="new-arrivals-prev">&#10094;</button>
 
             <div class="carousel-track" id="new-arrivals-carousel">
                 @forelse ($arrivals as $arrival)
@@ -230,8 +229,6 @@
                     </div>
                 @endforelse
             </div>
-
-            <button class="carousel-btn next" id="new-arrivals-next">&#10095;</button>
         </div>
     </section>
     @endif
@@ -239,8 +236,55 @@
     <!-- About Brand -->
     <section class="about-brand" data-aos="fade-right">
         <div class="about-container">
-            <div class="about-image">
-                <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" width="200px" height="200px">
+            <div class="w-64 h-auto">
+                 <div
+            class="p-5 relative overflow-hidden">
+            <!-- Background accent -->
+            <div class="absolute -right-8 -top-8 w-24 h-24 bg-Ocean/5 rounded-full blur-xl"></div>
+
+            <div class="flex items-center space-x-4 relative">
+                <!-- logo container -->
+                <div class="logo-container relative group">
+                    <!-- Logo with multiple animations -->
+                    <div class="logo-glow relative overflow-hidden p-1.5">
+                        <img src="{{ asset('assets/images/logo1.png') }}" alt="Nova Studio"
+                            class="object-contain transition-all duration-500 group-hover:scale-105"
+                            style="filter: drop-shadow(0 4px 8px rgba(88, 104, 121, 0.15));" 
+                            width="500px" height="500px"/>
+
+                        <!-- Subtle shine effect -->
+                        <div
+                            class="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-shine">
+                        </div>
+                    </div>
+
+                    <!-- "STUDIO" text with animation -->
+                    <div class="absolute -bottom-5 left-1/2 transform -translate-x-1/2 w-full">
+                        <div
+                            class="studio-text text-center text-[10px] font-semibold uppercase tracking-[0.15em] text-gray-500/80 opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:translate-y-0 translate-y-1">
+                            STUDIO
+                            <!-- Underline animation -->
+                            <div
+                                class="h-px bg-gradient-to-r from-transparent via-Ocean/30 to-transparent w-0 group-hover:w-full transition-all duration-700 mx-auto mt-0.5">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Floating particles animation -->
+                    <div
+                        class="absolute -inset-2 -z-10 opacity-0 group-hover:opacity-30 transition-opacity duration-700">
+                        <div class="absolute top-1/4 left-1/4 w-1 h-1 bg-Ocean/30 rounded-full animate-float-1"></div>
+                        <div class="absolute top-1/3 right-1/4 w-0.5 h-0.5 bg-Ocean/20 rounded-full animate-float-2">
+                        </div>
+                    </div>
+                </div>
+                <!-- Close button with hover animation -->
+                <button id="closeSidebar"
+                    class="lg:hidden text-gray-500 hover:text-Ocean p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 group">
+                    <i class="fas fa-times text-lg group-hover:rotate-90 transition-transform duration-300"></i>
+                </button>
+            </div>
+        </div>
             </div>
             <div class="about-content">
                 <h2 style="font-weight: 900;">{{ __('messages.about_brand') }}</h2>
@@ -274,7 +318,38 @@
                                 // Get primary image or first image
                                 $primaryImage = $featured->images->where('is_primary', true)->first() 
                                     ?? $featured->images->sortBy('sort_order')->first();
+                                    
+                                // Calculate discount
+                                $activeVariants = $featured->variants->where('is_active', true)->where('stock', '>', 0);
+                                $minPrice = $activeVariants->min('price');
+                                $minFinalPrice = $activeVariants->min('final_price');
+                                $hasDiscount = $minFinalPrice < $minPrice;
+                                $discountPercent = $hasDiscount ? round((($minPrice - $minFinalPrice) / $minPrice) * 100) : 0;
                             @endphp
+                            
+                            <!-- Discount Ribbon -->
+                            @if ($hasDiscount && $discountPercent > 0)
+                                <div class="absolute top-0 left-0 z-20">
+                                    <div class="relative overflow-hidden">
+                                        <div class="bg-gradient-to-r from-red-500 via-red-600 to-red-500 text-white px-6 py-3 text-lg font-bold tracking-wider shadow-xl transform -translate-x-3 -translate-y-2 -rotate-45 origin-top-left"
+                                             style="width: 140px; text-align: center;">
+                                            <div class="flex items-center justify-center gap-2">
+                                                <i class="fas fa-fire text-white text-sm"></i>
+                                                -{{ $discountPercent }}%
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                            
+                            <!-- Featured Badge -->
+                            <div class="absolute top-0 right-0 z-10">
+                                <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-5 py-2.5 text-sm font-bold tracking-wider shadow-lg rounded-bl-lg">
+                                    <i class="fas fa-crown mr-2"></i>
+                                    {{ __('messages.featured') }}
+                                </div>
+                            </div>
+
                             <div class="relative h-full flex items-center justify-center">
                                 <img src="{{ asset('storage/' . $primaryImage->image_path) }}"
                                     alt="{{ $primaryImage->alt_text ?? $featured->name }}"
@@ -397,7 +472,7 @@
                                 </li>
                                 <li class="flex items-center gap-3 text-gray-600">
                                     <i class="fas fa-check text-green-500 text-sm"></i>
-                                    <span>{{ __('messages.free_personalization') }}</span>
+                                    <span>{{ __('messages.free_delivery') }}</span>
                                 </li>
                             </ul>
                         </div>
@@ -410,29 +485,44 @@
                             
                             // Get min prices from active variants
                             $minPrice = $activeVariants->min('price');
-                            $minSalePrice = $activeVariants->whereNotNull('sale_price')->min('sale_price');
-                            $displayPrice = $minSalePrice ? min($minPrice, $minSalePrice) : $minPrice;
+                            $minFinalPrice = $activeVariants->min('final_price');
+                            $displayPrice = $minFinalPrice;
                             $originalPrice = $minPrice;
+                            $hasDiscount = $minFinalPrice < $minPrice;
+                            $discountPercent = $hasDiscount ? round((($minPrice - $minFinalPrice) / $minPrice) * 100) : 0;
+                            $savingsAmount = $hasDiscount ? ($minPrice - $minFinalPrice) : 0;
                         @endphp
 
-                        <div class="space-y-2">
+                        <div class="space-y-4">
                             <div class="flex items-baseline gap-4">
-                                <span class="text-4xl font-light text-gray-900">
+                                <span class="text-5xl font-bold text-gray-900">
                                     ${{ number_format($displayPrice, 2) }}
                                 </span>
 
-                                @if ($minSalePrice && $minSalePrice < $originalPrice)
-                                    <span class="text-lg text-gray-400 line-through">
+                                @if ($hasDiscount)
+                                    <span class="text-2xl text-gray-400 line-through">
                                         ${{ number_format($originalPrice, 2) }}
-                                    </span>
-                                    <span class="text-sm font-medium text-amber-600">
-                                        {{ __('messages.special_price') }}
                                     </span>
                                 @endif
                             </div>
-                            <div class="text-sm text-gray-500">
-                                {{ __('messages.price_includes') }}
-                            </div>
+                            
+                            <!-- Discount Info -->
+                            @if ($hasDiscount)
+                                <div class="space-y-3">
+                                    <div class="flex items-center gap-4">
+                                        <div class="bg-gradient-to-r from-red-50 to-red-100 text-red-700 px-4 py-2 rounded-lg font-bold">
+                                            <i class="fas fa-tag mr-2"></i>
+                                            SAVE {{ $discountPercent }}%
+                                        </div>
+                                        <div class="text-lg text-green-600 font-semibold">
+                                            <i class="fas fa-piggy-bank mr-2"></i>
+                                            Save ${{ number_format($savingsAmount, 2) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                            
+                           
                         </div>
                     @endif
 
@@ -440,36 +530,36 @@
                     <div class="space-y-4 pt-4">
                         <div class="flex gap-4">
                             <a href="{{ route('product.view', $featured->slug) }}"
-                                class="flex-1 bg-gray-900 text-white px-8 py-4 text-center font-medium text-lg hover:bg-gray-800 transition-colors duration-300">
+                                class="flex-1 bg-gradient-to-r from-gray-900 to-black text-white px-8 py-4 text-center font-bold text-lg hover:from-gray-800 hover:to-gray-900 transition-all duration-300 transform hover:scale-105 rounded-xl shadow-lg">
+                                <i class="fas fa-bolt mr-2"></i>
                                 {{ __('messages.purchase_now') }}
                             </a>
-                            <button
-                                class="flex-1 border border-gray-300 text-gray-700 px-8 py-4 font-medium text-lg hover:border-gray-900 transition-colors duration-300">
+                            <button onclick="addToCartFeatured({{ $featured->id }})"
+                                class="flex-1 border-2 border-gray-900 text-gray-900 px-8 py-4 font-bold text-lg hover:bg-gray-900 hover:text-white transition-all duration-300 transform hover:scale-105 rounded-xl">
+                                <i class="fas fa-shopping-cart mr-2"></i>
                                 {{ __('messages.add_to_cart') }}
                             </button>
                         </div>
                     </div>
 
                     <!-- Additional Info -->
-                    <div class="grid grid-cols-2 gap-4 pt-6 border-t">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-                                <i class="fas fa-truck text-gray-600 text-sm"></i>
+                    <div class="grid grid-cols-2 gap-4 pt-8 border-t">
+                        <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-green-100 to-green-200 flex items-center justify-center">
+                                <i class="fas fa-truck text-green-600"></i>
                             </div>
                             <div>
-                                <div class="text-sm font-medium text-gray-900">{{ __('messages.free_shipping') }}
-                                </div>
+                                <div class="text-sm font-bold text-gray-900">{{ __('messages.free_shipping') }}</div>
                                 <div class="text-xs text-gray-500">{{ __('messages.worldwide') }}</div>
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-                                <i class="fas fa-shield-alt text-gray-600 text-sm"></i>
+                        <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-100 to-blue-200 flex items-center justify-center">
+                                <i class="fas fa-shield-alt text-blue-600"></i>
                             </div>
                             <div>
-                                <div class="text-sm font-medium text-gray-900">{{ __('messages.secure_payment') }}
-                                </div>
+                                <div class="text-sm font-bold text-gray-900">{{ __('messages.secure_payment') }}</div>
                                 <div class="text-xs text-gray-500">{{ __('messages.ssl_encrypted') }}</div>
                             </div>
                         </div>
@@ -564,9 +654,9 @@
             fadeEffect: {
                 crossFade: true
             },
-            speed: 1200,
+            speed: 1000,
             autoplay: {
-                delay: 5000,
+                delay: 3000,
                 disableOnInteraction: false,
             },
             loop: true,

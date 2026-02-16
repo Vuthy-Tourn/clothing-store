@@ -27,8 +27,9 @@
         <div class="relative h-full flex items-center justify-center">
             <div class="text-center px-4 max-w-4xl">
                 <div class="overflow-hidden mb-8">
-                    <h1 class="text-7xl md:text-9xl font-bold text-white tracking-tighter animate-[slideUp_0.8s_ease-out] py-5">
-                          {{ __('messages.' . $gender) }}
+                    <h1
+                        class="text-7xl md:text-9xl font-bold text-white tracking-tighter animate-[slideUp_0.8s_ease-out] py-5">
+                        {{ __('messages.' . $gender) }}
                     </h1>
                 </div>
                 <div class="flex items-center justify-center gap-4 text-white/80 text-sm tracking-[0.3em] uppercase">
@@ -936,9 +937,9 @@
             function buildFilterURL() {
                 const params = new URLSearchParams();
 
-                // Search
+                // Search - using name="search"
                 if (searchInput && searchInput.value) {
-                    params.append('search', searchInput.value);
+                    params.append('search', searchInput.value.trim());
                 }
 
                 // Category filter (for gender pages)

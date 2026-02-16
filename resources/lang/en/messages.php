@@ -23,8 +23,8 @@ return [
     'new_arrivals_title' => 'New Arrivals',
     
     // About Brand Section
-    'about_brand' => 'About Outfit 818',
-    'about_description' => 'At Outfit 818, we believe fashion is more than just clothing — it\'s confidence, creativity, and comfort. Our mission is to blend timeless designs with modern trends to create something truly unique for every individual.',
+    'about_brand' => 'About Nova Studio',
+    'about_description' => 'At Nova Studio, we believe fashion is more than just clothing — it\'s confidence, creativity, and comfort. Our mission is to blend timeless designs with modern trends to create something truly unique for every individual.',
     'brand_quote' => 'Dress well. Feel unstoppable.',
     
     // Featured Product
@@ -34,7 +34,7 @@ return [
     'key_features' => 'Key Features:',
     'premium_quality' => 'Premium quality materials',
     'extended_warranty' => 'Extended warranty included',
-    'free_personalization' => 'Free personalization available',
+    'free_delivery' => 'Free delivery',
     'price_includes' => 'Price includes all taxes. Financing available.',
     'special_price' => 'Special price today only',
     'purchase_now' => 'Purchase Now',
@@ -46,7 +46,7 @@ return [
     
     // Email Opt-in
     'get_styled' => 'Get Styled, Stay Updated.',
-    'subscribe_description' => 'Be the first to know about exclusive drops, latest arrivals, and limited-time offers from Outfit 818.',
+    'subscribe_description' => 'Be the first to know about exclusive drops, latest arrivals, and limited-time offers from Nova Studio.',
     'enter_email' => 'Enter your email address',
     'subscribe' => 'Subscribe',
     'subscribed_message' => 'You\'re subscribed to our updates!',
@@ -332,7 +332,7 @@ return [
     
     // Mission
     'our_mission' => 'Our Mission',
-    'mission_text' => 'At Outfit Store, we believe in empowering everyone to express their unique style through sustainable, high-quality fashion. Join us in redefining what it means to look and feel your best!',
+    'mission_text' => 'At Nova Studio, we believe in empowering everyone to express their unique style through sustainable, high-quality fashion. Join us in redefining what it means to look and feel your best!',
 
      // Cart Page
     'shopping_cart' => 'Shopping Cart',
@@ -440,7 +440,7 @@ return [
     
     // JavaScript validation messages
     'select_saved_address' => 'Please select a saved address',
-    'fill_required_fields' => 'Please fill in all required fields marked with *',
+    'fill_required_fields' => 'Please fill in all required fields marked with ',
     'processing' => 'Processing',
 
         // Product Page
@@ -624,7 +624,7 @@ return [
     'check_email' => 'Check your email for the reset link',
     'email_verified' => 'Email verified',
     'invalid_email' => 'Please enter a valid email address',
-    'support_email' => 'support@outfit818.com',
+    'support_email' => 'support@novastudio.com',
     'reset_success' => 'Reset link sent successfully',
     'reset_error' => 'Error sending reset link',
     'set_new_password' => 'Set New Password',
@@ -703,4 +703,235 @@ return [
     'otp_resent' => 'A new OTP has been sent to your email.',
     'resend_failed' => 'Failed to resend OTP.',
     'resend_error' => 'Error resending OTP.',
+
+    'confirm_logout' => 'Confirm Logout',
+    'are_you_sure_logout' => 'Are you sure you want to sign out?',
+    'yes_logout' => 'Yes, Logout',
+    'cancel' => 'Cancel',
+
+
+    // Footer translations
+    'footer_tagline' => 'Your everyday fashion destination. Discover the latest trends and timeless styles for every occasion.',
+    'shop' => 'Shop',
+    'all_products' => 'All Products',
+    'new_arrivals' => 'New Arrivals',
+    'support' => 'Support',
+    'contact_us' => 'Contact Us',
+    'shipping_info' => 'Shipping Info',
+    'returns' => 'Returns & Exchanges',
+    'faq' => 'FAQ',
+    'stay_connected' => 'Stay Connected',
+    'newsletter_description' => 'Subscribe to get notified about our latest collections and exclusive offers.',
+    'subscribed' => 'You\'re subscribed!',
+    'unsubscribe' => 'Unsubscribe',
+    'subscribe' => 'Subscribe',
+    'enter_email' => 'Enter your email',
+    'login_to_subscribe' => 'Login to Subscribe',
+    'all_rights_reserved' => 'All rights reserved.',
+    'privacy_policy' => 'Privacy Policy',
+    'terms_of_service' => 'Terms of Service',
+    'cookie_policy' => 'Cookie Policy',
+
+    // Profile page
+    'profile' => 'Profile',
+    'edit_profile' => 'Edit Profile',
+    'loyalty_points' => 'Loyalty Points',
+    'personal_information' => 'Personal Information',
+    'full_name' => 'Full Name',
+    'email_address' => 'Email Address',
+    'phone_number' => 'Phone Number',
+    'account_type' => 'Account Type',
+    'additional_details' => 'Additional Details',
+    'date_of_birth' => 'Date of Birth',
+    'gender' => 'Gender',
+    'newsletter_subscription' => 'Newsletter Subscription',
+    'account_status' => 'Account Status',
+    'addresses' => 'Addresses',
+    'add_address' => 'Add Address',
+    'edit' => 'Edit',
+    'delete' => 'Delete',
+    'default' => 'Default',
+    'set_as_default' => 'Set as Default',
+    'address_type' => 'Address Type',
+    
+    // Address modal
+    'add_new_address' => 'Add New Address',
+    'fill_address_details' => 'Fill in your address details',
+    'contact_information' => 'Contact Information',
+    'address_name' => 'Address Name',
+    'address_name_placeholder' => 'e.g., Home, Office',
+    'address_name_optional' => 'Optional',
+    'full_name_star' => 'Full Name ',
+    'phone_number_star' => 'Phone Number ',
+    'phone_placeholder' => '+855 (12) 345-678',
+    'address_details' => 'Address Details',
+    'address_line1_star' => 'Address Line 1 ',
+    'address_line1_placeholder' => 'Street address, P.O. box',
+    'address_line2_star' => 'Address Line 2 ',
+    'address_line2_placeholder' => 'Apartment, suite, unit, building, floor',
+    'city_star' => 'City ',
+    'state_star' => 'State ',
+    'zip_code_star' => 'ZIP Code ',
+    'country_star' => 'Country ',
+    'address_settings' => 'Address Settings',
+    'shipping' => 'Shipping',
+    'billing' => 'Billing',
+    'set_as_default_address' => 'Set as Default Address',
+    'use_default_address' => 'Use this address for all orders',
+    
+    // Buttons
+    'cancel' => 'Cancel',
+    'save_address' => 'Save Address',
+    'update_address' => 'Update Address',
+    'saving' => 'Saving...',
+    'updating' => 'Updating...',
+    
+    // Status messages
+    'verified' => 'Verified',
+    'unverified' => 'Unverified',
+    'not_provided' => 'Not provided',
+    'not_specified' => 'Not specified',
+    'subscribed' => 'Subscribed',
+    'not_subscribed' => 'Not Subscribed',
+    'active' => 'Active',
+    'inactive' => 'Inactive',
+    
+    // Other
+    'customer_id' => 'Customer ID',
+    'loading_address_details' => 'Loading address details...',
+    'delete_address_confirm' => 'Are you sure you want to delete this address?',
+    'address_saved_success' => 'Address saved successfully!',
+    'address_updated_success' => 'Address updated successfully!',
+    'default_address_updated' => 'Default address updated successfully!',
+    'address_deleted_success' => 'Address deleted successfully!',
+    'no_addresses' => 'No addresses added yet.',
+    'add_first_address' => 'Add Your First Address',
+
+    // Profile edit page
+    'edit_profile' => 'Edit Profile',
+    'update_personal_info' => 'Update your personal information',
+    'full_name' => 'Full Name',
+    'email_address' => 'Email Address',
+    'phone_number' => 'Phone Number',
+    'date_of_birth' => 'Date of Birth',
+    'gender' => 'Gender',
+    'newsletter_subscription' => 'Newsletter Subscription',
+    'change_email_info' => 'To change your email, please contact support or use the email change form.',
+    'select_gender' => 'Select Gender',
+    'male' => 'Male',
+    'female' => 'Female',
+    'other' => 'Other',
+    'subscribe_newsletter' => 'Subscribe to newsletter',
+    'newsletter_description' => 'Receive updates about new products and promotions.',
+    'change_photo' => 'Change Photo',
+    'max_file_size' => 'Max file size: 2MB',
+    'back_to_profile' => 'Back to Profile',
+    'save_changes' => 'Save Changes',
+    'change_password' => 'Change Password',
+    'profile_picture' => 'Profile Picture',
+
+    // Password modal
+    'update_password' => 'Update Password',
+    'current_password' => 'Current Password',
+    'enter_current_password' => 'Enter current password',
+    'new_password' => 'New Password',
+    'enter_new_password' => 'Enter new password',
+    'confirm_new_password' => 'Confirm New Password',
+    'confirm_password_placeholder' => 'Confirm new password',
+    'password_requirements' => 'Password Requirements',
+    'characters_8' => '8+ characters',
+    'one_number' => '1 number',
+    'lowercase' => 'Lowercase',
+    'uppercase' => 'Uppercase',
+    'passwords_match' => 'Passwords match',
+    'passwords_not_match' => 'Passwords do not match',
+    'cancel' => 'Cancel',
+    'update_password_btn' => 'Update Password',
+    'updating' => 'Updating...',
+    'password_updated' => 'Password updated successfully!',
+
+    // Form validation
+    'required_field' => 'This field is required',
+    'invalid_email' => 'Please enter a valid email address',
+    'invalid_phone' => 'Please enter a valid phone number',
+    'invalid_date' => 'Please enter a valid date',
+    'image_too_large' => 'Image size should be less than 2MB',
+    'invalid_image' => 'Please select a valid image file',
+    'saving' => 'Saving...',
+
+    // Success messages
+    'profile_updated' => 'Profile updated successfully',
+    'photo_selected' => 'Profile picture selected successfully',
+
+    // Error messages
+    'error_occurred' => 'An error occurred',
+    'network_error' => 'Network error. Please try again.',
+    'fix_errors' => 'Please fix the errors in the form before submitting.',
+
+    'error' => 'Error',
+    'success' => 'Success',
+    'ok' => 'OK',
+
+    // Profile update messages
+    'profile_updated' => 'Profile updated successfully!',
+    'password_updated' => 'Password updated successfully!',
+    'email_updated' => 'Email updated successfully! Please verify your new email address.',
+    'newsletter_updated' => 'Successfully :status from newsletter!',
+    'subscribed' => 'subscribed',
+    'unsubscribed' => 'unsubscribed',
+
+    // Address management messages
+    'address_added' => 'Address added successfully!',
+    'address_updated' => 'Address updated successfully!',
+    'address_deleted' => 'Address deleted successfully!',
+    'default_address_updated' => 'Default address updated successfully!',
+    'address_not_found' => 'Address not found',
+    'cannot_delete_only_address' => 'Cannot delete the only address. Add a new address first.',
+
+    // Error messages
+    'validation_failed' => 'Please fix the validation errors.',
+    'current_password_incorrect' => 'Current password is incorrect.',
+    'email_already_taken' => 'Email is already taken.',
+    'invalid_image_format' => 'Invalid image format. Please upload JPEG, PNG, JPG, or GIF.',
+    'file_too_large' => 'File is too large. Maximum size is 2MB.',
+    'invalid_date_format' => 'Invalid date format.',
+    'phone_already_taken' => 'Phone number is already taken.',
+
+    'order_message' => [
+        'success' => 'Order Successful!',
+        'thank_you' => 'Thank You!',
+        'confirmed' => 'Order #:order_number confirmed!',
+        'auto_close' => 'This message will auto-close in :seconds seconds',
+    ],
+
+    'qr_code_payment' => 'QR Code Payment',
+    'scan_pay_local' => 'Scan & Pay with local banks',
+    'select_bank' => 'Select your bank',
+    'qr_instructions' => 'Scan QR code with your bank app to pay',
+    'scan_to_pay' => 'Scan to Pay',
+    'amount_to_pay' => 'Amount to Pay',
+    'qr_modal_instructions' => 'Open your banking app, tap "Scan QR Code" and scan the QR code above to complete payment.',
+    'payment_expires_in' => 'Payment Expires In',
+    'minutes_seconds' => 'minutes : seconds',
+    'simulate_payment' => 'Simulate Payment (Demo)',
+    'cancel_payment' => 'Cancel Payment',
+    'credit_card' => 'Credit/Debit Card',
+
+    'order_number' => 'Order #',
+    'time_remaining' => 'Time remaining',
+    'khr_currency' => 'KHR',
+    'generating_qr' => 'Generating QR Code...',
+    'aba_bank' => 'ABA',
+    'acleda_bank' => 'ACLEDA',
+    'wing_bank' => 'WING',
+    'how_to_pay' => 'How to Pay',
+    'step1_qr_payment' => 'Open :bank app on your phone',
+    'step2_qr_payment' => 'Tap "Scan QR Code" or "Pay with QR"',
+    'step3_qr_payment' => 'Point camera at the QR code above',
+    'step4_qr_payment' => 'Confirm amount and complete payment',
+    'i_have_paid' => 'I have completed payment',
+    'back_to_checkout' => 'Back to Checkout',
+    'need_help_qr' => 'Need help? Contact support@novastudio.com',
+    'auto_refresh_note' => 'Page automatically refreshes payment status',
+
 ];

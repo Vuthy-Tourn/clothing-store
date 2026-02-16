@@ -9,9 +9,10 @@
             </div>
             <div class="flex items-center gap-4 mt-4 md:mt-0">
                 <button onclick="showExportModal()"
-                    class="bg-blue-600 text-white hover:bg-blue-700 px-5 py-3 rounded-xl font-medium transition-all duration-300 flex items-center group shadow-md hover:shadow-lg">
+                    class="flex items-center space-x-2 px-4 py-2.5 bg-gradient-to-r from-Ocean to-Ocean/80 text-white rounded-xl transition-all duration-300 hover:from-Ocean/90 hover:to-Ocean/70 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                     <i class="fas fa-download mr-2 group-hover:rotate-180 transition-transform duration-500"></i>
-                    <span class="group-hover:scale-105 transition-transform duration-300">{{ __('admin.orders.actions.export_orders') }}</span>
+                    <span
+                        class="group-hover:scale-105 transition-transform duration-300">{{ __('admin.orders.actions.export_orders') }}</span>
                 </button>
             </div>
         </div>
@@ -99,8 +100,8 @@
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
                 <!-- Search -->
                 <div class="relative">
-                    <input type="text" id="orderSearch" placeholder="{{ __('admin.orders.filters.search_placeholder') }}"
-                        onkeyup="filterOrders()"
+                    <input type="text" id="orderSearch"
+                        placeholder="{{ __('admin.orders.filters.search_placeholder') }}" onkeyup="filterOrders()"
                         class="pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 w-full">
                     <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                 </div>
@@ -159,13 +160,20 @@
             <table class="w-full min-w-full">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">{{ __('admin.orders.table.order_id') }}</th>
-                        <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">{{ __('admin.orders.table.customer') }}</th>
-                        <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">{{ __('admin.orders.table.amount') }}</th>
-                        <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">{{ __('admin.orders.table.status') }}</th>
-                        <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">{{ __('admin.orders.table.payment') }}</th>
-                        <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">{{ __('admin.orders.table.date') }}</th>
-                        <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">{{ __('admin.orders.table.actions') }}</th>
+                        <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">
+                            {{ __('admin.orders.table.order_id') }}</th>
+                        <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">
+                            {{ __('admin.orders.table.customer') }}</th>
+                        <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">
+                            {{ __('admin.orders.table.amount') }}</th>
+                        <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">
+                            {{ __('admin.orders.table.status') }}</th>
+                        <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">
+                            {{ __('admin.orders.table.payment') }}</th>
+                        <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">
+                            {{ __('admin.orders.table.date') }}</th>
+                        <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">
+                            {{ __('admin.orders.table.actions') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100" id="ordersTableBody">
@@ -184,9 +192,8 @@
                                     </div>
                                     <div>
                                         <span
-                                            class="font-mono font-bold text-gray-800 block">{{ $order->order_number }}</span>
-                                        <span
-                                            class="text-gray-500 text-xs">{{ $order->created_at->format('M d, Y') }}</span>
+                                            class="font-mono font-bold text-gray-800">{{ $order->order_number }}</span>
+                                       
                                     </div>
                                 </div>
                             </td>
@@ -265,21 +272,25 @@
                                             <div class="py-2">
                                                 <button onclick="updateStatus({{ $order->id }})"
                                                     class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200 flex items-center">
-                                                    <i class="fas fa-sync-alt mr-3 text-gray-400"></i> {{ __('admin.orders.actions.update_status') }}
+                                                    <i class="fas fa-sync-alt mr-3 text-gray-400"></i>
+                                                    {{ __('admin.orders.actions.update_status') }}
                                                 </button>
                                                 <button onclick="updatePayment({{ $order->id }})"
                                                     class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200 flex items-center">
-                                                    <i class="fas fa-credit-card mr-3 text-gray-400"></i> {{ __('admin.orders.actions.update_payment') }}
+                                                    <i class="fas fa-credit-card mr-3 text-gray-400"></i>
+                                                    {{ __('admin.orders.actions.update_payment') }}
                                                 </button>
                                                 <button onclick="addTracking({{ $order->id }})"
                                                     class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200 flex items-center">
-                                                    <i class="fas fa-truck mr-3 text-gray-400"></i> {{ __('admin.orders.actions.add_tracking') }}
+                                                    <i class="fas fa-truck mr-3 text-gray-400"></i>
+                                                    {{ __('admin.orders.actions.add_tracking') }}
                                                 </button>
                                                 <div class="border-t border-gray-100 my-2"></div>
                                                 <button
                                                     onclick="deleteOrder({{ $order->id }}, '{{ $order->order_number }}')"
                                                     class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200 flex items-center">
-                                                    <i class="fas fa-trash-alt mr-3"></i> {{ __('admin.orders.actions.delete') }}
+                                                    <i class="fas fa-trash-alt mr-3"></i>
+                                                    {{ __('admin.orders.actions.delete') }}
                                                 </button>
                                             </div>
                                         </div>
@@ -294,7 +305,8 @@
                                     class="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-6">
                                     <i class="fas fa-shopping-bag text-gray-400 text-3xl"></i>
                                 </div>
-                                <h3 class="text-xl font-bold text-gray-700 mb-3">{{ __('admin.orders.table.no_orders') }}</h3>
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">{{ __('admin.orders.table.no_orders') }}
+                                </h3>
                                 <p class="text-gray-500">{{ __('admin.orders.table.no_orders_message') }}</p>
                             </td>
                         </tr>
@@ -312,7 +324,7 @@
                             {{ __('admin.orders.table.showing_results', [
                                 'first' => $orders->firstItem(),
                                 'last' => $orders->lastItem(),
-                                'total' => $orders->total()
+                                'total' => $orders->total(),
                             ]) }}
                         @else
                             {{ __('admin.orders.table.no_results_found') }}
@@ -407,7 +419,8 @@
                             <i class="fas fa-receipt text-blue-600 text-xl"></i>
                         </div>
                         <div>
-                            <h2 id="modalTitle" class="text-xl font-bold text-gray-800">{{ __('admin.orders.modal.order_details') }}</h2>
+                            <h2 id="modalTitle" class="text-xl font-bold text-gray-800">
+                                {{ __('admin.orders.modal.order_details') }}</h2>
                             <p id="modalSubtitle" class="text-gray-600 text-sm"></p>
                         </div>
                     </div>
@@ -432,10 +445,10 @@
                         class="px-4 py-2 bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg font-medium transition-colors duration-200">
                         {{ __('admin.orders.actions.close') }}
                     </button>
-                    <button onclick="printOrder()"
+                    <a href="{{ route('admin.orders.invoice', $order->id) }}" target="_blank"
                         class="px-4 py-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg font-medium transition-colors duration-200">
                         <i class="fas fa-print mr-2"></i> {{ __('admin.orders.actions.print') }}
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -461,7 +474,8 @@
                 <div class="p-6">
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.orders.modal.select_status') }}</label>
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.orders.modal.select_status') }}</label>
                             <select name="order_status" id="newStatus"
                                 class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="pending">{{ __('admin.orders.status.pending') }}</option>
@@ -474,7 +488,8 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.orders.modal.notes_placeholder') }}</label>
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.orders.modal.notes_placeholder') }}</label>
                             <textarea name="admin_notes" id="statusNotes" rows="3"
                                 class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="{{ __('admin.orders.modal.notes_placeholder') }}"></textarea>
@@ -515,7 +530,8 @@
                 <div class="p-6">
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.orders.modal.payment_status') }}</label>
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.orders.modal.payment_status') }}</label>
                             <select name="payment_status" id="paymentStatus"
                                 class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="pending">{{ __('admin.orders.payment_status.pending') }}</option>
@@ -525,7 +541,8 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.orders.modal.payment_id_placeholder') }}</label>
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.orders.modal.payment_id_placeholder') }}</label>
                             <input type="text" name="payment_id"
                                 class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="{{ __('admin.orders.modal.payment_id_placeholder') }}">
@@ -566,19 +583,22 @@
                 <div class="p-6">
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.orders.modal.tracking_number') }}*</label>
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.orders.modal.tracking_number') }}*</label>
                             <input type="text" name="tracking_number" required
                                 class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="{{ __('admin.orders.modal.tracking_placeholder') }}">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.orders.modal.courier') }}</label>
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.orders.modal.courier') }}</label>
                             <input type="text" name="shipping_method"
                                 class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="{{ __('admin.orders.modal.courier_placeholder') }}">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.orders.modal.estimated_delivery') }}</label>
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.orders.modal.estimated_delivery') }}</label>
                             <input type="date" name="estimated_delivery"
                                 class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
@@ -610,7 +630,8 @@
                 <div class="p-6">
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.orders.modal.export_format') }}</label>
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.orders.modal.export_format') }}</label>
                             <div class="grid grid-cols-3 gap-3">
                                 <label class="relative cursor-pointer">
                                     <input type="radio" name="format" value="csv" checked class="sr-only peer">
@@ -618,7 +639,8 @@
                                         class="p-3 border-2 border-gray-200 rounded-lg text-center peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-200">
                                         <i class="fas fa-file-csv text-green-600 text-lg mb-1"></i>
                                         <p class="font-medium text-sm">{{ __('admin.orders.modal.csv') }}</p>
-                                        <p class="text-gray-500 text-xs">{{ __('admin.orders.modal.excel_compatible') }}</p>
+                                        <p class="text-gray-500 text-xs">{{ __('admin.orders.modal.excel_compatible') }}
+                                        </p>
                                     </div>
                                 </label>
                                 <label class="relative cursor-pointer">
@@ -627,14 +649,16 @@
                                         class="p-3 border-2 border-gray-200 rounded-lg text-center peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-200">
                                         <i class="fas fa-file-pdf text-red-600 text-lg mb-1"></i>
                                         <p class="font-medium text-sm">{{ __('admin.orders.modal.pdf') }}</p>
-                                        <p class="text-gray-500 text-xs">{{ __('admin.orders.modal.printable_format') }}</p>
+                                        <p class="text-gray-500 text-xs">{{ __('admin.orders.modal.printable_format') }}
+                                        </p>
                                     </div>
                                 </label>
                             </div>
                         </div>
 
                         <div class="space-y-2">
-                            <label class="block text-sm font-medium text-gray-700">{{ __('admin.orders.modal.date_range') }}</label>
+                            <label
+                                class="block text-sm font-medium text-gray-700">{{ __('admin.orders.modal.date_range') }}</label>
                             <div class="grid grid-cols-2 gap-3">
                                 <input type="date" name="from_date" required
                                     value="{{ \Carbon\Carbon::now()->subMonth()->format('Y-m-d') }}"
@@ -743,9 +767,7 @@
 
             // If no rows are visible, show appropriate message
             if (visibleCount === 0) {
-                // Check if there are actual orders (not just filtered out)
                 if (rows.length > 0) {
-                    // Create filter no results message
                     const filterMessage = document.createElement('tr');
                     filterMessage.id = 'filterNoOrders';
                     filterMessage.innerHTML = `
@@ -753,22 +775,20 @@
                     <div class="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-search text-gray-400 text-3xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-700 mb-3">{{ __("admin.orders.table.no_results") }}</h3>
-                    <p class="text-gray-500 mb-4">{{ __("admin.orders.table.no_results_message") }}</p>
+                    <h3 class="text-xl font-bold text-gray-700 mb-3">No Results Found</h3>
+                    <p class="text-gray-500 mb-4">Try adjusting your filters</p>
                     <button onclick="clearFilters()" 
                             class="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg font-medium transition-colors duration-200">
-                        {{ __("admin.orders.actions.clear_filters") }}
+                        Clear Filters
                     </button>
                 </td>
             `;
                     tableBody.appendChild(filterMessage);
                 }
-                // Always hide the original "no orders" row when filtering
                 if (noOrdersRow) {
                     noOrdersRow.style.display = 'none';
                 }
             } else {
-                // Show the original "no orders" row only if there are truly no orders
                 if (noOrdersRow && rows.length === 0) {
                     noOrdersRow.style.display = '';
                 } else if (noOrdersRow) {
@@ -785,39 +805,7 @@
             filterOrders();
         }
 
-        // Initialize filters on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            filterOrders(); // Apply any existing filters from page load
-
-            // Add debounce to search input for better performance
-            let searchTimeout;
-            const searchInput = document.getElementById('orderSearch');
-            if (searchInput) {
-                searchInput.addEventListener('input', function() {
-                    clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(filterOrders, 300);
-                });
-            }
-
-            // Also add event listeners to filters
-            const filters = ['statusFilter', 'paymentFilter', 'dateFilter'];
-            filters.forEach(filterId => {
-                const filterElement = document.getElementById(filterId);
-                if (filterElement) {
-                    filterElement.addEventListener('change', filterOrders);
-                }
-            });
-        });
-
-        function clearFilters() {
-            document.getElementById('orderSearch').value = '';
-            document.getElementById('statusFilter').value = '';
-            document.getElementById('paymentFilter').value = '';
-            document.getElementById('dateFilter').value = '';
-            filterOrders();
-        }
-
-        // View Order Details with AJAX
+        // View Order Details - GLOBAL FUNCTION
         async function viewOrderDetails(orderId) {
             const modal = document.getElementById('orderDetailsModal');
             modal.classList.remove('hidden');
@@ -828,31 +816,31 @@
                 const data = await response.json();
 
                 if (!data.success) {
-                    throw new Error(data.error || '{{ __("admin.orders.messages.error_occurred") }}');
+                    throw new Error(data.error || 'An error occurred');
                 }
 
                 document.getElementById('modalContent').innerHTML = data.html;
                 document.getElementById('modalTitle').textContent = `Order ${data.order_number}`;
-                document.getElementById('modalSubtitle').textContent = `{{ __("admin.orders.modal.order_details") }}`;
+                document.getElementById('modalSubtitle').textContent = 'Order Details';
 
             } catch (error) {
                 document.getElementById('modalContent').innerHTML = `
-                <div class="text-center py-12">
-                    <div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-800 mb-2">{{ __("admin.orders.modal.failed") }}</h3>
-                    <p class="text-gray-600 mb-4">${error.message || '{{ __("admin.orders.modal.failed_message") }}'}</p>
-                    <button onclick="viewOrderDetails(${orderId})"
-                            class="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg font-medium">
-                        {{ __("admin.orders.modal.try_again") }}
-                    </button>
+            <div class="text-center py-12">
+                <div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
                 </div>
-            `;
+                <h3 class="text-lg font-bold text-gray-800 mb-2">Failed to Load</h3>
+                <p class="text-gray-600 mb-4">${error.message || 'Unable to load order details'}</p>
+                <button onclick="viewOrderDetails(${orderId})"
+                        class="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg font-medium">
+                    Try Again
+                </button>
+            </div>
+        `;
             }
         }
 
-        // Toggle Actions Menu
+        // Toggle Actions Menu - GLOBAL FUNCTION
         function toggleActionsMenu(orderId) {
             const menuId = `actionsMenu-${orderId}`;
             const menu = document.getElementById(menuId);
@@ -895,7 +883,8 @@
                 const response = await fetch(`/admin/orders/${orderId}`, {
                     method: 'POST',
                     headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content'),
                         'Accept': 'application/json'
                     },
                     body: formData
@@ -909,7 +898,7 @@
 
                 Swal.fire({
                     icon: 'success',
-                    title: '{{ __("admin.orders.messages.success_status_updated") }}',
+                    title: 'Status Updated',
                     text: data.message,
                     confirmButtonColor: '#2563eb',
                     timer: 2000
@@ -934,8 +923,6 @@
                         statusBadge.className =
                             `inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${statusColors[newStatus]}`;
                         statusBadge.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
-
-                        // Update data attribute
                         row.setAttribute('data-status', newStatus);
                     }
                 }
@@ -946,8 +933,8 @@
             } catch (error) {
                 Swal.fire({
                     icon: 'error',
-                    title: '{{ __("admin.orders.messages.error_update_failed") }}',
-                    text: error.message || '{{ __("admin.orders.messages.error_occurred") }}',
+                    title: 'Update Failed',
+                    text: error.message || 'An error occurred',
                     confirmButtonColor: '#dc2626'
                 });
             }
@@ -969,7 +956,8 @@
                 const response = await fetch(`/admin/orders/${orderId}/payment`, {
                     method: 'POST',
                     headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content'),
                         'Accept': 'application/json'
                     },
                     body: formData
@@ -983,7 +971,7 @@
 
                 Swal.fire({
                     icon: 'success',
-                    title: '{{ __("admin.orders.messages.success_payment_updated") }}',
+                    title: 'Payment Updated',
                     text: data.message,
                     confirmButtonColor: '#2563eb',
                     timer: 2000
@@ -1007,8 +995,6 @@
                         paymentBadge.className =
                             `inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${paymentColors[newPayment]}`;
                         paymentBadge.textContent = newPayment.charAt(0).toUpperCase() + newPayment.slice(1);
-
-                        // Update data attribute
                         row.setAttribute('data-payment', newPayment);
                     }
                 }
@@ -1019,8 +1005,8 @@
             } catch (error) {
                 Swal.fire({
                     icon: 'error',
-                    title: '{{ __("admin.orders.messages.error_update_failed") }}',
-                    text: error.message || '{{ __("admin.orders.messages.error_occurred") }}',
+                    title: 'Update Failed',
+                    text: error.message || 'An error occurred',
                     confirmButtonColor: '#dc2626'
                 });
             }
@@ -1042,7 +1028,8 @@
                 const response = await fetch(`/admin/orders/${orderId}/tracking`, {
                     method: 'POST',
                     headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content'),
                         'Accept': 'application/json'
                     },
                     body: formData
@@ -1056,7 +1043,7 @@
 
                 Swal.fire({
                     icon: 'success',
-                    title: '{{ __("admin.orders.messages.success_tracking_added") }}',
+                    title: 'Tracking Added',
                     text: data.message,
                     confirmButtonColor: '#2563eb',
                     timer: 2000
@@ -1068,8 +1055,8 @@
             } catch (error) {
                 Swal.fire({
                     icon: 'error',
-                    title: '{{ __("admin.orders.messages.error_update_failed") }}',
-                    text: error.message || '{{ __("admin.orders.messages.error_occurred") }}',
+                    title: 'Update Failed',
+                    text: error.message || 'An error occurred',
                     confirmButtonColor: '#dc2626'
                 });
             }
@@ -1078,23 +1065,22 @@
         // Delete Order
         function deleteOrder(orderId, orderNumber) {
             Swal.fire({
-                title: '{{ __("admin.orders.delete.title") }}',
+                title: 'Delete Order?',
                 html: `Are you sure you want to delete order <strong>${orderNumber}</strong>?<br>This action cannot be undone.`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#dc2626',
                 cancelButtonColor: '#6b7280',
-                confirmButtonText: '{{ __("admin.orders.delete.confirm") }}',
-                cancelButtonText: '{{ __("admin.orders.delete.cancel") }}',
+                confirmButtonText: 'Yes, Delete',
+                cancelButtonText: 'Cancel',
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Create form data
                     const formData = new FormData();
-                    formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+                    formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute(
+                        'content'));
                     formData.append('_method', 'DELETE');
 
-                    // Make API call to delete
                     fetch(`/admin/orders/${orderId}`, {
                             method: 'POST',
                             body: formData
@@ -1102,19 +1088,17 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                // Remove row from table
                                 const row = document.querySelector(`tr[data-order-id="${orderId}"]`);
                                 if (row) {
                                     row.remove();
                                 }
-
-                                Swal.fire('{{ __("admin.orders.messages.success_deleted") }}', data.message, 'success');
+                                Swal.fire('Deleted!', data.message, 'success');
                             } else {
                                 throw new Error(data.error);
                             }
                         })
                         .catch(error => {
-                            Swal.fire('{{ __("admin.orders.messages.error_occurred") }}', error.message || '{{ __("admin.orders.messages.error_delete_failed") }}', 'error');
+                            Swal.fire('Error!', error.message || 'Failed to delete order', 'error');
                         });
                 }
             });
@@ -1131,36 +1115,30 @@
             document.body.style.overflow = 'auto';
         }
 
-        // Print order
-        function printOrder() {
-            const modalContent = document.getElementById('modalContent').innerHTML;
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <title>{{ __("admin.orders.modal.order_details") }}</title>
-                <style>
-                    body { font-family: Arial, sans-serif; padding: 20px; }
-                    .header { text-align: center; margin-bottom: 30px; }
-                    .section { margin-bottom: 20px; }
-                    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-                    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-                    th { background-color: #f5f5f5; }
-                    .total { font-weight: bold; font-size: 1.2em; }
-                </style>
-            </head>
-            <body>
-                ${modalContent}
-            </body>
-            </html>
-        `);
-            printWindow.document.close();
-            printWindow.print();
-        }
-
         // Initialize event listeners
         document.addEventListener('DOMContentLoaded', function() {
+            // Apply filters on page load
+            filterOrders();
+
+            // Add debounce to search input
+            let searchTimeout;
+            const searchInput = document.getElementById('orderSearch');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(filterOrders, 300);
+                });
+            }
+
+            // Add event listeners to filters
+            const filters = ['statusFilter', 'paymentFilter', 'dateFilter'];
+            filters.forEach(filterId => {
+                const filterElement = document.getElementById(filterId);
+                if (filterElement) {
+                    filterElement.addEventListener('change', filterOrders);
+                }
+            });
+
             // Close modals on escape
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
@@ -1185,36 +1163,43 @@
             document.querySelectorAll('input[name="format"]').forEach(radio => {
                 radio.addEventListener('change', function() {
                     document.querySelectorAll('label.relative > div').forEach(div => {
-                        div.classList.remove('peer-checked:border-blue-500', 'peer-checked:bg-blue-50');
+                        div.classList.remove('peer-checked:border-blue-500',
+                            'peer-checked:bg-blue-50');
                     });
                     if (this.nextElementSibling) {
-                        this.nextElementSibling.classList.add('peer-checked:border-blue-500', 'peer-checked:bg-blue-50');
+                        this.nextElementSibling.classList.add('peer-checked:border-blue-500',
+                            'peer-checked:bg-blue-50');
                     }
                 });
                 if (radio.checked && radio.nextElementSibling) {
-                    radio.nextElementSibling.classList.add('peer-checked:border-blue-500', 'peer-checked:bg-blue-50');
+                    radio.nextElementSibling.classList.add('peer-checked:border-blue-500',
+                        'peer-checked:bg-blue-50');
                 }
             });
-        });
 
-        // Add CSS for animations
-        const style = document.createElement('style');
-        style.textContent = `
-        @keyframes slideIn {
+            // Add CSS for animations
+            // Add CSS for animations
+            if (!document.getElementById('ordersPageStyles')) {
+                const styleEl = document.createElement('style');
+                styleEl.id = 'ordersPageStyles';
+                styleEl.textContent = `
+        @keyframes fadeInScale {
             from {
                 opacity: 0;
-                transform: translateY(-20px);
+                transform: translate(-50%, -50%) scale(0.95);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translate(-50%, -50%) scale(1);
             }
         }
         
-        .animate-slideIn {
-            animation: slideIn 0.3s ease-out;
+        .animate-fadeInScale {
+            animation: fadeInScale 0.3s ease-out;
         }
     `;
-        document.head.appendChild(style);
+                document.head.appendChild(styleEl);
+            }
+        });
     </script>
 @endpush

@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\FacadesLog;
 
 class UserController extends Controller
 {
@@ -423,17 +422,17 @@ public function update(Request $request, User $user)
                 ->with('success', 'User deleted successfully!');
                 
         } catch (\Exception $e) {
-            DB::rollBack();
+            // DB::rollBack();
             
-            if (request()->ajax() || request()->wantsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Failed to delete user: ' . $e->getMessage()
-                ], 500);
-            }
+            // if (request()->ajax() || request()->wantsJson()) {
+            //     return response()->json([
+            //         'success' => false,
+            //         'message' => 'Failed to delete user: ' . $e->getMessage()
+            //     ], 500);
+            // }
             
-            return redirect()->back()
-                ->with('error', 'Failed to delete user: ' . $e->getMessage());
+            // return redirect()->back()
+            //     ->with('error', 'Failed to delete user: ' . $e->getMessage());
         }
     }
 

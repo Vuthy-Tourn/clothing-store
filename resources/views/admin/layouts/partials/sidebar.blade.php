@@ -1,4 +1,3 @@
-
 <aside id="sidebar"
     class="w-80 bg-gradient-to-b from-white to-gray-50 min-h-screen fixed flex flex-col justify-between shadow-lg transition-all duration-500 ease-out z-40 lg:translate-x-0 -translate-x-full transform-gpu">
     <!-- Overlay for mobile -->
@@ -15,15 +14,39 @@
             <div class="absolute -right-8 -top-8 w-24 h-24 bg-Ocean/5 rounded-full blur-xl"></div>
 
             <div class="flex items-center space-x-4 relative">
-                <!-- Animated logo container -->
-                <div
-                    class="w-12 h-12 bg-gradient-to-br from-Ocean to-Ocean/80 rounded-xl flex items-center justify-center shadow-lg group hover:shadow-xl hover:scale-105 transition-all duration-300">
-                    <i
-                        class="fas fa-crown text-white text-lg group-hover:scale-110 transition-transform duration-300"></i>
-                </div>
-                <div class="flex-1">
-                    <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Moeww</h1>
-                    <p class="text-gray-600 text-sm font-medium tracking-wide">STUDIO</p>
+                <!-- logo container -->
+                <div class="logo-container relative group">
+                    <!-- Logo with multiple animations -->
+                    <div class="logo-glow relative overflow-hidden rounded-lg p-1.5 ml-3">
+                        <img src="{{ asset('assets/images/logo1.png') }}" alt="Nova Studio"
+                            class="h-7 w-auto object-contain transition-all duration-500 group-hover:scale-105"
+                            style="filter: drop-shadow(0 4px 8px rgba(88, 104, 121, 0.15));" />
+
+                        <!-- Subtle shine effect -->
+                        <div
+                            class="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-shine">
+                        </div>
+                    </div>
+
+                    <!-- "STUDIO" text with animation -->
+                    <div class="absolute -bottom-5 left-1/2 transform -translate-x-1/2 w-full">
+                        <div
+                            class="studio-text text-center text-[10px] font-semibold uppercase tracking-[0.15em] text-gray-500/80 opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:translate-y-0 translate-y-1">
+                            STUDIO
+                            <!-- Underline animation -->
+                            <div
+                                class="h-px bg-gradient-to-r from-transparent via-Ocean/30 to-transparent w-0 group-hover:w-full transition-all duration-700 mx-auto mt-0.5">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Floating particles animation -->
+                    <div
+                        class="absolute -inset-2 -z-10 opacity-0 group-hover:opacity-30 transition-opacity duration-700">
+                        <div class="absolute top-1/4 left-1/4 w-1 h-1 bg-Ocean/30 rounded-full animate-float-1"></div>
+                        <div class="absolute top-1/3 right-1/4 w-0.5 h-0.5 bg-Ocean/20 rounded-full animate-float-2">
+                        </div>
+                    </div>
                 </div>
                 <!-- Close button with hover animation -->
                 <button id="closeSidebar"
@@ -42,8 +65,7 @@
                     <i
                         class="fas fa-chart-pie text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.dashboard') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
                 </div>
-                <span
-                    class="font-medium tracking-wide">{{ __('admin.sidebar.dashboard') }}</span>
+                <span class="font-medium tracking-wide">{{ __('admin.sidebar.dashboard') }}</span>
                 <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                 </div>
@@ -64,8 +86,7 @@
                     <i
                         class="fas fa-images text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.carousels.*') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
                 </div>
-                <span
-                    class="font-medium tracking-wide">{{ __('admin.sidebar.carousels') }}</span>
+                <span class="font-medium tracking-wide">{{ __('admin.sidebar.carousels') }}</span>
                 <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                 </div>
@@ -98,8 +119,7 @@
                     <i
                         class="fas fa-tags text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.categories.*') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
                 </div>
-                <span
-                    class="font-medium tracking-wide">{{ __('admin.sidebar.categories') }}</span>
+                <span class="font-medium tracking-wide">{{ __('admin.sidebar.categories') }}</span>
                 <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                 </div>
@@ -111,8 +131,7 @@
                     <i
                         class="fas fa-box text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.products.*') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
                 </div>
-                <span
-                    class="font-medium tracking-wide">{{ __('admin.sidebar.products') }}</span>
+                <span class="font-medium tracking-wide">{{ __('admin.sidebar.products') }}</span>
                 <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                 </div>
@@ -133,8 +152,7 @@
                     <i
                         class="fas fa-shopping-bag text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.orders.*') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
                 </div>
-                <span
-                    class="font-medium tracking-wide">{{ __('admin.sidebar.orders') }}</span>
+                <span class="font-medium tracking-wide">{{ __('admin.sidebar.orders') }}</span>
                 <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                 </div>
@@ -146,8 +164,7 @@
                     <i
                         class="fas fa-envelope text-lg group-hover:scale-110 transition-transform duration-300 {{ request()->routeIs('admin.emails.*') ? 'text-Ocean' : 'text-gray-500 group-hover:text-Ocean' }}"></i>
                 </div>
-                <span
-                    class="font-medium tracking-wide">{{ __('admin.sidebar.subscribers') }}</span>
+                <span class="font-medium tracking-wide">{{ __('admin.sidebar.subscribers') }}</span>
                 <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                 </div>
@@ -247,7 +264,7 @@
                 <div class="border-t border-gray-100">
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit"
+                        <button type="submit" onclick="confirmLogoutAdmin(event)"
                             class="w-full flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-red-50 transition-colors duration-200 group">
                             <i class="fas fa-sign-out-alt text-red-400 group-hover:text-red-600 text-sm w-5"></i>
                             <span class="text-sm font-medium">{{ __('admin.sidebar.logout') }}</span>
@@ -262,7 +279,7 @@
             @csrf
         </form>
 
-        <button type="button" id="logoutButton"
+        <button type="button" onclick="confirmLogoutAdmin(event)"
             class="lg:hidden w-full card flex items-center justify-center space-x-3 py-3.5 px-4 rounded-xl text-gray-700 hover:text-Ocean bg-white/80 backdrop-blur-sm border border-gray-200/50 hover:border-Ocean/30 hover:shadow-lg hover:bg-gradient-to-r hover:from-red-50/50 hover:to-transparent transition-all duration-300 group">
             <i
                 class="fas fa-sign-out-alt group-hover:scale-110 group-hover:-translate-x-0.5 transition-transform duration-300"></i>
@@ -397,6 +414,7 @@
     }
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Load Alpine.js if not already loaded
@@ -480,70 +498,6 @@
                 setTimeout(() => ripple.remove(), 600);
             });
         });
-
-        // Logout confirmation with SweetAlert2
-        if (logoutButton) {
-            logoutButton.addEventListener('click', function(e) {
-                e.preventDefault();
-
-                // Check if SweetAlert2 is loaded
-                if (typeof Swal === 'undefined') {
-                    // Fallback to browser confirm
-                    if (confirm('Are you sure you want to logout?')) {
-                        document.getElementById('logoutForm').submit();
-                    }
-                    return;
-                }
-
-                Swal.fire({
-                    title: 'Logout Confirmation',
-                    text: 'Are you sure you want to logout from your admin account?',
-                    icon: 'question',
-                    iconColor: '#586879',
-                    showCancelButton: true,
-                    confirmButtonColor: '#586879',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, logout!',
-                    cancelButtonText: 'Cancel',
-                    background: '#ffffff',
-                    backdrop: 'rgba(0, 0, 0, 0.4)',
-                    showClass: {
-                        popup: 'animate__animated animate__fadeInDown'
-                    },
-                    hideClass: {
-                        popup: 'animate__animated animate__fadeOutUp'
-                    },
-                    customClass: {
-                        title: 'text-gray-900 font-semibold',
-                        htmlContainer: 'text-gray-700',
-                        confirmButton: 'px-6 py-2 rounded-lg font-medium hover:bg-Ocean/90 transition-colors',
-                        cancelButton: 'px-6 py-2 rounded-lg font-medium hover:bg-gray-200 transition-colors'
-                    },
-                    buttonsStyling: false,
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Show loading animation
-                        Swal.fire({
-                            title: 'Logging out...',
-                            text: 'Please wait while we secure your session',
-                            icon: 'info',
-                            allowOutsideClick: false,
-                            showConfirmButton: false,
-                            willOpen: () => {
-                                Swal.showLoading();
-                            }
-                        });
-
-                        // Submit logout form after delay
-                        setTimeout(() => {
-                            document.getElementById('logoutForm').submit();
-                        }, 1000);
-                    }
-                });
-            });
-        }
-
         // Add keyboard navigation
         document.addEventListener('keydown', (e) => {
             // Escape to close sidebar
@@ -580,7 +534,7 @@
             if (dropdownOpen && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
                 e.preventDefault();
                 const items = document.querySelectorAll(
-                '[x-data] [x-show] a, [x-data] [x-show] button');
+                    '[x-data] [x-show] a, [x-data] [x-show] button');
                 const current = document.activeElement;
                 let index = Array.from(items).indexOf(current);
 
@@ -616,6 +570,103 @@
 
         // Initialize on load
         highlightActiveMenu();
+    });
+
+    // Logout confirmation with SweetAlert2
+    async function confirmLogoutAdmin(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        const result = await Swal.fire({
+            title: '{{ __('messages.confirm_logout') }}',
+            text: '{{ __('messages.are_you_sure_logout') }}',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: '{{ __('messages.yes_logout') }}',
+            cancelButtonText: '{{ __('messages.cancel') }}',
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#6b7280',
+            reverseButtons: true,
+            customClass: {
+                popup: 'rounded-xl shadow-2xl',
+                confirmButton: 'px-4 py-2 rounded-lg',
+                cancelButton: 'px-4 py-2 rounded-lg'
+            }
+        });
+
+        if (result.isConfirmed) {
+            // Show loading animation
+            Swal.fire({
+                title: '{{ __('admin.sidebar.logging_out') }}',
+                text: '{{ __('messages.please_wait') }}',
+                icon: 'info',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                willOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            // Submit the appropriate form
+            let form;
+            const logoutForm = document.getElementById('logoutForm');
+            const dropdownLogout = document.querySelector('[x-data] button[type="submit"]');
+
+            if (logoutForm) {
+                form = logoutForm;
+            } else if (dropdownLogout) {
+                // Submit the dropdown logout form
+                dropdownLogout.closest('form').submit();
+            } else {
+                // Create a new form
+                form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route('logout') }}';
+
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = '{{ csrf_token() }}';
+
+                form.appendChild(csrfToken);
+                document.body.appendChild(form);
+            }
+
+            // Submit after a short delay
+            setTimeout(() => {
+                if (form) {
+                    form.submit();
+                }
+            }, 500);
+        }
+    }
+
+    // Apply to sidebar logout button
+    if (logoutButton) {
+        logoutButton.addEventListener('click', confirmLogoutAdmin);
+    }
+
+    // Remove the duplicate event listeners and use this cleaner approach:
+    document.addEventListener('DOMContentLoaded', function() {
+        // Single handler for all logout buttons in sidebar
+        document.addEventListener('click', function(e) {
+            const target = e.target;
+
+            // Check if it's a logout button
+            const isLogoutButton =
+                target.id === 'logoutButton' ||
+                (target.closest('[x-data]') && target.type === 'submit' && target.closest(
+                    'form[action*="logout"]')) ||
+                target.onclick?.toString().includes('confirmLogoutAdmin');
+
+            if (isLogoutButton && !window.isLogoutInProgress) {
+                e.preventDefault();
+                e.stopPropagation();
+                confirmLogoutAdmin(e);
+            }
+        });
     });
 
     // Add ripple animation to CSS

@@ -5,8 +5,11 @@
     </div>
 
     <!-- Right Column - Details -->
-    <div class="lg:col-span-2 space-y-8">
-        @include('admin.profile.partials.personal-info')
-        @include('admin.profile.partials.account-settings')
+    <div class="lg:col-span-2">
+        <div class="flex flex-col gap-10">
+            <div class="order-2">@include('admin.profile.partials.account-settings')</div>
+            <div class="order-1"> @include('admin.profile.partials.personal-info')</div>
+        </div>
+
     </div>
 </div>

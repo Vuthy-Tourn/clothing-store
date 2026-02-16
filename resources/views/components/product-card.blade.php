@@ -11,19 +11,38 @@
 ])
 
 @php
-    // Common pricing calculations
-    $minPrice = $product->variants->min('price') ?? 0;
-    $maxPrice = $product->variants->max('price') ?? 0;
-    $minSalePrice = $product->variants->whereNotNull('sale_price')->min('sale_price');
-    $displayPrice = $minSalePrice ? min($minPrice, $minSalePrice) : $minPrice;
-    $isOnSale = $minSalePrice && $minSalePrice < $minPrice;
-    $bestDiscount = $product->best_discount ?? 0;
-    $discountPercent = $isOnSale ? round((($minPrice - $minSalePrice) / $minPrice) * 100) : 0;
+    // Load variants if not loaded
+    if (!$product->relationLoaded('variants')) {
+        $product->load('variants');
+    }
+    
+    // Get variant pricing info
+    $variantMinPrice = $product->variants->min('price') ?? 0;
+    $variantMaxPrice = $product->variants->max('price') ?? 0;
+    $variantMinFinalPrice = $product->variants->min('final_price') ?? $variantMinPrice;
+    
+    // Check if any variant has discount
+    $hasVariantDiscount = $product->variants->contains('is_discounted', true);
+    
+    // Get best discount percentage from variants
+    $bestVariantDiscount = $product->variants->max('discount_percentage') ?? 0;
+    
+    // Calculate display price (use variant final price)
+    $displayPrice = $variantMinFinalPrice;
+    $isDiscounted = $hasVariantDiscount;
+    $discountPercent = $bestVariantDiscount;
+    
+    // Also check product-level sale (for backward compatibility)
+    $isOnSale = $product->IsOnSale();
+    $productDiscountPercent = $isOnSale ? round((($product->min_price - $product->sale_price) / $product->min_price) * 100) : 0;
+    
+    // Use whichever discount is higher
+    $bestDiscount = max($discountPercent, $productDiscountPercent);
+    $hasAnyDiscount = $isDiscounted || $isOnSale;
 
-    // Layout-specific classes - keep layout consistent, only width changes
+    // Layout-specific classes
     $containerClasses = match ($layout) {
-        'carousel'
-            => 'rounded-xl overflow-hidden transition-all duration-300 cursor-pointer group flex-shrink-0 w-64 sm:w-72',
+        'carousel' => 'rounded-xl overflow-hidden transition-all duration-300 cursor-pointer group flex-shrink-0 w-64 sm:w-72',
         default => 'group rounded-xl overflow-hidden transition-all duration-300 cursor-pointer',
     };
 
@@ -61,41 +80,58 @@
         <div
             class="absolute top-3 left-3 bg-white/95 backdrop-blur-sm text-gray-900 px-3 py-2 rounded-lg text-sm font-semibold shadow-sm">
             ${{ number_format($displayPrice, 2) }}
-            @if ($isOnSale)
+            @if ($hasAnyDiscount)
                 <span class="text-xs text-red-500 ml-1">{{ __('messages.sale') }}</span>
             @endif
         </div>
 
-        {{-- Status Badges --}}
-        @if ($product->is_new || $product->is_featured || $product->IsOnSale() || $product->is_out_of_stock)
-            <div class="absolute top-3 right-3 flex flex-col gap-2">
+        {{-- Top Right Badges Container --}}
+        <div class="absolute top-3 right-3 flex flex-col gap-2">
+            {{-- Discount Badge --}}
+            @if ($bestDiscount > 0)
+                <div class="bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1.5 rounded-lg text-sm font-bold shadow-lg">
+                    -{{ $bestDiscount }}%
+                </div>
+            @endif
+
+            {{-- New Badge (only show if no discount or if there's space) --}}
+            @if ($product->is_new && $bestDiscount == 0)
+                <span class="px-2 py-1 bg-black text-white text-xs font-bold tracking-widest uppercase whitespace-nowrap rounded">
+                    {{ __('messages.new') }}
+                </span>
+            @endif
+
+            {{-- Featured Badge (only show if no discount or if there's space) --}}
+            @if ($product->is_featured && $bestDiscount == 0)
+                <span class="px-2 py-1 bg-blue-600 text-white text-xs font-bold tracking-widest uppercase whitespace-nowrap rounded">
+                    {{ __('messages.featured') }}
+                </span>
+            @endif
+        </div>
+
+        {{-- Secondary Status Badges (shown below if discount exists) --}}
+        @if (($product->is_new || $product->is_featured) && $bestDiscount > 0)
+            <div class="absolute @if($bestDiscount > 0) top-14 @else top-3 @endif right-3 flex flex-col gap-2">
                 @if ($product->is_new)
-                    <span
-                        class="px-2 py-1 bg-black text-white text-xs font-bold tracking-widest uppercase whitespace-nowrap rounded">
+                    <span class="px-2 py-1 bg-black text-white text-xs font-bold tracking-widest uppercase whitespace-nowrap rounded">
                         {{ __('messages.new') }}
                     </span>
                 @endif
 
                 @if ($product->is_featured)
-                    <span
-                        class="px-2 py-1 bg-red-600 text-white text-xs font-bold tracking-widest uppercase whitespace-nowrap rounded">
+                    <span class="px-2 py-1 bg-blue-600 text-white text-xs font-bold tracking-widest uppercase whitespace-nowrap rounded">
                         {{ __('messages.featured') }}
                     </span>
                 @endif
+            </div>
+        @endif
 
-                @if ($product->IsOnSale())
-                    <span
-                        class="px-2 py-1 bg-green-600 text-white text-xs font-bold tracking-widest uppercase whitespace-nowrap rounded">
-                        {{ __('messages.save') }} {{ $discountPercent }}%
-                    </span>
-                @endif
-
-                @if ($product->is_out_of_stock)
-                    <span
-                        class="px-2 py-1 bg-gray-600 text-white text-xs font-bold tracking-widest uppercase whitespace-nowrap rounded">
-                        {{ __('messages.out_of_stock') }}
-                    </span>
-                @endif
+        {{-- Out of Stock Badge (always at bottom right) --}}
+        @if ($product->is_out_of_stock)
+            <div class="absolute @if($bestDiscount > 0) bottom-14 @else bottom-3 @endif right-3">
+                <span class="px-2 py-1 bg-gray-600 text-white text-xs font-bold tracking-widest uppercase whitespace-nowrap rounded">
+                    {{ __('messages.out_of_stock') }}
+                </span>
             </div>
         @endif
 
@@ -160,25 +196,29 @@
             </div>
         @endif
 
-        {{-- Price --}}
+        {{-- Price with Discount Details --}}
         @if ($showPriceDetails)
             <div class="flex items-center gap-3">
-                @if ($product->isOnSale())
+                @if ($hasAnyDiscount)
                     <div class="flex items-baseline gap-2">
                         <span class="text-lg font-bold text-black tracking-tight">
-                            ${{ number_format($product->sale_price ?? $product->min_price, 2) }}
+                            ${{ number_format($displayPrice, 2) }}
                         </span>
-                        <span class="text-sm text-gray-500 line-through">
-                            ${{ number_format($product->max_price, 2) }}
-                        </span>
-                        <span class="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded">
-                            {{ __('messages.save') }} {{ $discountPercent }}%
-                        </span>
+                        @if ($variantMinPrice > $displayPrice)
+                            <span class="text-sm text-gray-500 line-through">
+                                ${{ number_format($variantMinPrice, 2) }}
+                            </span>
+                        @endif
+                        @if ($bestDiscount > 0)
+                            <span class="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded">
+                                {{ __('messages.save') }} {{ $bestDiscount }}%
+                            </span>
+                        @endif
                     </div>
                 @else
-                    @if ($product->min_price == $product->max_price)
+                    @if ($variantMinPrice == $variantMaxPrice)
                         <span class="text-lg font-bold text-black tracking-tight">
-                            ${{ number_format($product->min_price, 2) }}
+                            ${{ number_format($variantMinPrice, 2) }}
                         </span>
                     @else
                         <div class="flex items-center gap-2">
@@ -186,7 +226,7 @@
                                 {{ __('messages.from') }}
                             </span>
                             <span class="text-lg font-bold text-black tracking-tight">
-                                ${{ number_format($product->min_price, 2) }}
+                                ${{ number_format($variantMinPrice, 2) }}
                             </span>
                         </div>
                     @endif

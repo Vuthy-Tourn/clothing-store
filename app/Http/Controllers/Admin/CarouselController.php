@@ -15,15 +15,16 @@ class CarouselController extends Controller
         return view('admin.carousels.index', compact('carousels'));
     }
 
-    public function store(Request $request)
+   public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'image' => 'required|image|mimes:jpg,jpeg,png,avif,webp|max:2048',
             'button_text' => 'required|string|max:255',
             'button_link' => 'required|url|max:2048',
             'is_active' => 'nullable|boolean',
+            'sort_order' => 'nullable|integer', // Add validation
         ]);
 
         $path = $request->file('image')->store('carousels', 'public');
@@ -35,6 +36,7 @@ class CarouselController extends Controller
             'button_text' => $request->button_text,
             'button_link' => $request->button_link,
             'is_active' => $request->boolean('is_active'),
+            'sort_order' => $request->sort_order ?? Carousel::count(), // Default to count if not provided
         ]);
 
         return redirect()->route('admin.carousels.index')->with('success', 'Carousel added successfully.');
@@ -51,6 +53,7 @@ class CarouselController extends Controller
             'button_link' => $carousel->button_link,
             'is_active' => $carousel->is_active,
             'image_path' => $carousel->image_path,
+            'sort_order' => $carousel->sort_order, // Add this line
         ]);
     }
 
@@ -63,6 +66,7 @@ class CarouselController extends Controller
             'button_text' => 'required|string|max:255',
             'button_link' => 'required|url|max:2048',
             'is_active' => 'nullable|boolean',
+            'sort_order' => 'nullable|integer', // Add validation
         ]);
 
         $data = [
@@ -71,6 +75,7 @@ class CarouselController extends Controller
             'button_text' => $request->button_text,
             'button_link' => $request->button_link,
             'is_active' => $request->boolean('is_active'),
+            'sort_order' => $request->sort_order ?? $carousel->sort_order, // Update sort order
         ];
 
         if ($request->hasFile('image')) {

@@ -1,4 +1,4 @@
-<title>Order #{{ $order->order_number }} - Outfit 818</title>
+<title>Order #{{ $order->order_number }} - Nova Studio</title>
 @extends('layouts.front')
 @section('content')
     <div class="min-h-screen py-12 mt-10">
@@ -32,7 +32,7 @@
                                 @elseif($order->order_status == 'cancelled') fa-times-circle
                                 @else fa-info-circle @endif mr-2">
                                 </i>
-                                @if($order->payment_status == 'paid')
+                                @if ($order->payment_status == 'paid')
                                     {{ __('messages.paid') }}
                                 @elseif($order->order_status == 'cancelled')
                                     {{ __('messages.cancelled') }}
@@ -54,7 +54,8 @@
                                         {{ $order->created_at->format('d M Y, h:i A') }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-sm font-medium text-gray-500 mb-1">{{ __('messages.payment_method') }}</p>
+                                    <p class="text-sm font-medium text-gray-500 mb-1">{{ __('messages.payment_method') }}
+                                    </p>
                                     <p class="text-lg font-semibold text-gray-900">
                                         {{ __('messages.' . $order->payment_method) }}
                                     </p>
@@ -68,10 +69,12 @@
                                 </div>
                                 <div>
                                     <p class="text-sm font-medium text-gray-500 mb-1">{{ __('messages.items') }}</p>
-                                    <p class="text-lg font-semibold text-gray-900">{{ $order->items->count() }} {{ __('messages.items_lower') }}</p>
+                                    <p class="text-lg font-semibold text-gray-900">{{ $order->items->count() }}
+                                        {{ __('messages.items_lower') }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-sm font-medium text-gray-500 mb-1">{{ __('messages.payment_status') }}</p>
+                                    <p class="text-sm font-medium text-gray-500 mb-1">{{ __('messages.payment_status') }}
+                                    </p>
                                     <p class="text-lg font-semibold text-gray-900">
                                         {{ __('messages.' . $order->payment_status) }}
                                     </p>
@@ -97,7 +100,7 @@
                                     $color = $variantDetails['color'] ?? 'N/A';
                                     $sku = $variantDetails['sku'] ?? 'N/A';
                                     $productImage = null;
-                                    
+
                                     // Get product image from variant relationship if available
                                     if ($item->variant && $item->variant->product && $item->variant->product->images) {
                                         $productImage = $item->variant->product->images->first();
@@ -105,11 +108,11 @@
                                 @endphp
                                 <div
                                     class="flex items-center gap-6 p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-300">
-                                    @if($productImage && $productImage->image_path)
+                                    @if ($productImage && $productImage->image_path)
                                         <img src="{{ Str::startsWith($productImage->image_path, ['http://', 'https://'])
                                             ? $productImage->image_path
                                             : asset('storage/' . $productImage->image_path) }}"
-                                            alt="{{ $item->product_name }}" 
+                                            alt="{{ $item->product_name }}"
                                             class="w-20 h-20 object-cover rounded-lg shadow-sm">
                                     @else
                                         <div class="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
@@ -119,16 +122,21 @@
                                     <div class="flex-1 min-w-0">
                                         <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $item->product_name }}</h3>
                                         <div class="flex items-center gap-4 text-sm text-gray-600">
-                                            <span class="bg-white px-3 py-1 rounded-full border">{{ __('messages.size') }}: {{ $size }}</span>
-                                            <span class="bg-white px-3 py-1 rounded-full border">{{ __('messages.color') }}: {{ $color }}</span>
-                                            <span class="bg-white px-3 py-1 rounded-full border">{{ __('messages.quantity') }}: {{ $item->quantity }}</span>
-                                            <span class="bg-white px-3 py-1 rounded-full border">{{ __('messages.sku') }}: {{ $sku }}</span>
+                                            <span class="bg-white px-3 py-1 rounded-full border">{{ __('messages.size') }}:
+                                                {{ $size }}</span>
+                                            <span
+                                                class="bg-white px-3 py-1 rounded-full border">{{ __('messages.color') }}:
+                                                {{ $color }}</span>
+                                            <span
+                                                class="bg-white px-3 py-1 rounded-full border">{{ __('messages.quantity') }}:
+                                                {{ $item->quantity }}</span>
                                         </div>
                                     </div>
                                     <div class="text-right">
                                         <p class="text-xl font-bold text-gray-900 mb-1">
                                             ${{ number_format($item->total_price, 2) }}</p>
-                                        <p class="text-sm text-gray-500">${{ number_format($item->unit_price, 2) }} {{ __('messages.each') }}</p>
+                                        <p class="text-sm text-gray-500">${{ number_format($item->unit_price, 2) }}
+                                            {{ __('messages.each') }}</p>
                                     </div>
                                 </div>
                             @endforeach
@@ -145,14 +153,15 @@
                                 </div>
                                 <h3 class="font-semibold text-gray-900">{{ __('messages.shipping_address') }}</h3>
                             </div>
-                            @if($order->shippingAddress)
+                            @if ($order->shippingAddress)
                                 <div class="space-y-2">
                                     <p class="font-medium text-gray-900">{{ $order->shippingAddress->full_name }}</p>
                                     <p class="text-gray-600">{{ $order->shippingAddress->address_line1 }}</p>
-                                    @if($order->shippingAddress->address_line2)
+                                    @if ($order->shippingAddress->address_line2)
                                         <p class="text-gray-600">{{ $order->shippingAddress->address_line2 }}</p>
                                     @endif
-                                    <p class="text-gray-600">{{ $order->shippingAddress->city }}, {{ $order->shippingAddress->state }} {{ $order->shippingAddress->zip_code }}</p>
+                                    <p class="text-gray-600">{{ $order->shippingAddress->city }},
+                                        {{ $order->shippingAddress->state }} {{ $order->shippingAddress->zip_code }}</p>
                                     <p class="text-gray-600">{{ $order->shippingAddress->country }}</p>
                                     <p class="text-gray-600">{{ $order->shippingAddress->phone }}</p>
                                 </div>
@@ -169,14 +178,15 @@
                                 </div>
                                 <h3 class="font-semibold text-gray-900">{{ __('messages.billing_address') }}</h3>
                             </div>
-                            @if($order->billingAddress && $order->billingAddress->id !== $order->shippingAddress->id)
+                            @if ($order->billingAddress && $order->billingAddress->id !== $order->shippingAddress->id)
                                 <div class="space-y-2">
                                     <p class="font-medium text-gray-900">{{ $order->billingAddress->full_name }}</p>
                                     <p class="text-gray-600">{{ $order->billingAddress->address_line1 }}</p>
-                                    @if($order->billingAddress->address_line2)
+                                    @if ($order->billingAddress->address_line2)
                                         <p class="text-gray-600">{{ $order->billingAddress->address_line2 }}</p>
                                     @endif
-                                    <p class="text-gray-600">{{ $order->billingAddress->city }}, {{ $order->billingAddress->state }} {{ $order->billingAddress->zip_code }}</p>
+                                    <p class="text-gray-600">{{ $order->billingAddress->city }},
+                                        {{ $order->billingAddress->state }} {{ $order->billingAddress->zip_code }}</p>
                                     <p class="text-gray-600">{{ $order->billingAddress->country }}</p>
                                     <p class="text-gray-600">{{ $order->billingAddress->phone }}</p>
                                 </div>
@@ -244,45 +254,49 @@
                                     <p class="text-sm text-gray-500">{{ $order->created_at->format('d M Y, h:i A') }}</p>
                                 </div>
                             </div>
-                            @if($order->order_status !== 'pending')
-                            <div class="flex items-start gap-3">
-                                <div
-                                    class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                    <i class="fas fa-cog text-blue-600 text-sm"></i>
+                            @if ($order->order_status !== 'pending')
+                                <div class="flex items-start gap-3">
+                                    <div
+                                        class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                        <i class="fas fa-cog text-blue-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-900">{{ __('messages.processing') }}</p>
+                                        <p class="text-sm text-gray-500">{{ __('messages.preparing_order') }}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="font-medium text-gray-900">{{ __('messages.processing') }}</p>
-                                    <p class="text-sm text-gray-500">{{ __('messages.preparing_order') }}</p>
-                                </div>
-                            </div>
                             @endif
-                            @if(in_array($order->order_status, ['shipped', 'delivered']))
-                            <div class="flex items-start gap-3">
-                                <div
-                                    class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                    <i class="fas fa-shipping-fast text-purple-600 text-sm"></i>
+                            @if (in_array($order->order_status, ['shipped', 'delivered']))
+                                <div class="flex items-start gap-3">
+                                    <div
+                                        class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                        <i class="fas fa-shipping-fast text-purple-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-900">{{ __('messages.shipped') }}</p>
+                                        @if ($order->tracking_number)
+                                            <p class="text-sm text-gray-500">{{ __('messages.tracking') }}:
+                                                {{ $order->tracking_number }}</p>
+                                        @else
+                                            <p class="text-sm text-gray-500">{{ __('messages.shipped_on') }}
+                                                {{ $order->updated_at->format('d M Y') }}</p>
+                                        @endif
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="font-medium text-gray-900">{{ __('messages.shipped') }}</p>
-                                    @if($order->tracking_number)
-                                        <p class="text-sm text-gray-500">{{ __('messages.tracking') }}: {{ $order->tracking_number }}</p>
-                                    @else
-                                        <p class="text-sm text-gray-500">{{ __('messages.shipped_on') }} {{ $order->updated_at->format('d M Y') }}</p>
-                                    @endif
-                                </div>
-                            </div>
                             @endif
-                            @if($order->order_status === 'delivered')
-                            <div class="flex items-start gap-3">
-                                <div
-                                    class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                    <i class="fas fa-home text-green-600 text-sm"></i>
+                            @if ($order->order_status === 'delivered')
+                                <div class="flex items-start gap-3">
+                                    <div
+                                        class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                        <i class="fas fa-home text-green-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-900">{{ __('messages.delivered') }}</p>
+                                        <p class="text-sm text-gray-500">
+                                            {{ $order->delivered_at?->format('d M Y, h:i A') ?? __('messages.delivered') }}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="font-medium text-gray-900">{{ __('messages.delivered') }}</p>
-                                    <p class="text-sm text-gray-500">{{ $order->delivered_at?->format('d M Y, h:i A') ?? __('messages.delivered') }}</p>
-                                </div>
-                            </div>
                             @endif
                         </div>
                     </div>
@@ -293,7 +307,7 @@
                             <i class="fas fa-headset text-2xl mb-3"></i>
                             <h3 class="font-semibold mb-2">{{ __('messages.need_help') }}</h3>
                             <p class="text-sm text-green-100 mb-4">{{ __('messages.support_team_here') }}</p>
-                            <a href="mailto:support@outfit818.com"
+                            <a href="mailto:support@novastudio.com"
                                 class="w-full inline-block bg-white text-green-600 py-2 px-4 rounded-xl font-semibold hover:bg-green-50 transition-all text-center">
                                 {{ __('messages.contact_support') }}
                             </a>
@@ -314,32 +328,34 @@
     </div>
 
     <!-- Order Confirmation Popup - Only shows once -->
-    @if(session('show_order_success'))
-    <div id="orderConfirmationPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-2xl p-8 mx-4 max-w-md w-full text-center transform transition-all duration-300 scale-95 opacity-0">
-            <!-- Bigger Success Icon -->
-            <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i class="fas fa-check text-green-600 text-4xl"></i>
-            </div>
-            
-            <!-- Bigger Thank You Text -->
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">{{ __('messages.thank_you') }}</h2>
-            <p class="text-xl text-gray-600 mb-2">{{ __('messages.order_placed_success') }}</p>
-                            <p class="text-lg text-gray-500 mb-6">{{ __('messages.preparing_items') }}</p>
-            
-            <!-- Order ID -->
-            <div class="bg-gray-50 rounded-lg p-4 mb-6">
-                <p class="text-sm text-gray-500 mb-1">{{ __('messages.order_reference') }}</p>
-                                <p class="font-semibold text-gray-900 text-lg">{{ $order->order_number }}</p>
-            </div>
-            
-            <!-- Action Button -->
-            <button onclick="closePopup()" 
+    @if (session('show_order_success'))
+        <div id="orderConfirmationPopup"
+            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div
+                class="bg-white rounded-2xl p-8 mx-4 max-w-md w-full text-center transform transition-all duration-300 scale-95 opacity-0">
+                <!-- Bigger Success Icon -->
+                <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-check text-green-600 text-4xl"></i>
+                </div>
+
+                <!-- Bigger Thank You Text -->
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">{{ __('messages.thank_you') }}</h2>
+                <p class="text-xl text-gray-600 mb-2">{{ __('messages.order_placed_success') }}</p>
+                <p class="text-lg text-gray-500 mb-6">{{ __('messages.preparing_items') }}</p>
+
+                <!-- Order ID -->
+                <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                    <p class="text-sm text-gray-500 mb-1">{{ __('messages.order_reference') }}</p>
+                    <p class="font-semibold text-gray-900 text-lg">{{ $order->order_number }}</p>
+                </div>
+
+                <!-- Action Button -->
+                <button onclick="closePopup()"
                     class="w-full bg-gray-900 text-white py-4 rounded-xl font-semibold hover:bg-gray-800 transition-colors text-lg">
-                {{ __('messages.continue_shopping') }}
-            </button>
+                    {{ __('messages.continue_shopping') }}
+                </button>
+            </div>
         </div>
-    </div>
     @endif
 
     <style>
@@ -358,7 +374,7 @@
         .scale-95 {
             transform: scale(0.95);
         }
-        
+
         .scale-100 {
             transform: scale(1);
         }
@@ -383,7 +399,7 @@
             const popup = document.getElementById('orderConfirmationPopup');
             if (popup) {
                 const popupContent = popup.querySelector('.bg-white');
-                
+
                 // Show popup with animation
                 setTimeout(() => {
                     popupContent.classList.remove('scale-95', 'opacity-0');
@@ -396,7 +412,9 @@
                         confetti({
                             particleCount: 100,
                             spread: 70,
-                            origin: { y: 0.6 }
+                            origin: {
+                                y: 0.6
+                            }
                         });
                     }
                 }, 800);
@@ -411,15 +429,15 @@
         function closePopup() {
             const popup = document.getElementById('orderConfirmationPopup');
             if (!popup) return;
-            
+
             const popupContent = popup.querySelector('.bg-white');
             popupContent.classList.remove('scale-100', 'opacity-100');
             popupContent.classList.add('scale-95', 'opacity-0');
-            
+
             setTimeout(() => {
                 popup.remove();
                 // Clear the session flag via AJAX so it doesn't show again
-                fetch('{{ route("clear.order.success") }}', {
+                fetch('{{ route('clear.order.success') }}', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -436,11 +454,76 @@
                 closePopup();
             }
         });
-        
+
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closePopup();
             }
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check URL for success parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const success = urlParams.get('success');
+            const checkout = urlParams.get('checkout');
+
+            if (success === '1' || checkout === 'success') {
+                // Clear URL parameters without refresh
+                window.history.replaceState({}, document.title, window.location.pathname);
+
+                // Show SweetAlert2 with auto-close after 4 seconds
+                Swal.fire({
+                    title: '🎉 {{ __('messages.order_message.success') }}',
+                    html: `
+                    <div class="text-center">
+                        <h3 class="text-xl font-bold text-gray-600 mb-2">{{ __('messages.order_message.thank_you') }}</h3>
+                        <p class="text-gray-600 mb-1">{{ __('messages.order_message.confirmed', ['order_number' => $order->order_number]) }}</p>
+                    </div>
+                `,
+                    icon: 'success',
+                    background: '#fff',
+                    backdrop: 'rgba(0, 0, 0, 0.5)',
+                    allowOutsideClick: true,
+                    showConfirmButton: false,
+                    showCloseButton: false,
+                    timer: 4000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        // Add confetti when modal opens
+                        if (typeof confetti === 'function') {
+                            confetti({
+                                particleCount: 100,
+                                spread: 70,
+                                origin: {
+                                    y: 0.6
+                                }
+                            });
+                        }
+                    },
+                    willClose: () => {
+                        console.log('Modal auto-closed');
+                    }
+                }).then((result) => {
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        console.log('Closed by timer');
+                    }
+                });
+            }
+
+            // Your existing animations
+            const orderItems = document.querySelectorAll('.bg-gray-50.rounded-xl');
+            orderItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(-20px)';
+
+                setTimeout(() => {
+                    item.style.transition = 'all 0.5s ease';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateX(0)';
+                }, index * 100);
+            });
         });
     </script>
 @endsection

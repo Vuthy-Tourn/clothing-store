@@ -3,8 +3,52 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
             <!-- Logo -->
-            <div class="shrink-0">
-                <a href="/" class="text-2xl font-bold text-gray-900 tracking-tight">OUTFIT 818</a>
+            <div
+                class="px-4 py-1.5 border-b border-gray-200/50 bg-gradient-to-r from-white to-Ocean/5 relative overflow-hidden">
+                <!-- Background accent -->
+                <div class="absolute -right-8 -top-8 w-24 h-24 bg-Ocean/5 rounded-full blur-xl"></div>
+
+                <div class="flex items-center space-x-4 relative">
+                    <!-- logo container -->
+                    <div class="logo-container relative group">
+                        <!-- Logo with multiple animations -->
+                        <div class="logo-glow relative overflow-hidden rounded-lg p-1.5">
+                            <a href="/">
+                                <img src="{{ asset('assets/images/logo1.png') }}" alt="Nova Studio"
+                                    class="h-7 w-auto object-contain transition-all duration-500 group-hover:scale-105"
+                                    style="filter: drop-shadow(0 4px 8px rgba(88, 104, 121, 0.15));" />
+                            </a>
+
+                        </div>
+
+                        <!-- "STUDIO" text with animation -->
+                        <div class="absolute -bottom-5 left-1/2 transform -translate-x-1/2 w-full">
+                            <div
+                                class="studio-text text-center text-[10px] font-semibold uppercase tracking-[0.15em] text-gray-500/80 opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:translate-y-0 translate-y-1">
+                                STUDIO
+                                <!-- Underline animation -->
+                                <div
+                                    class="h-px bg-gradient-to-r from-transparent via-Ocean/30 to-transparent w-0 group-hover:w-full transition-all duration-700 mx-auto mt-0.5">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Floating particles animation -->
+                        <div
+                            class="absolute -inset-2 -z-10 opacity-0 group-hover:opacity-30 transition-opacity duration-700">
+                            <div class="absolute top-1/4 left-1/4 w-1 h-1 bg-Ocean/30 rounded-full animate-float-1">
+                            </div>
+                            <div
+                                class="absolute top-1/3 right-1/4 w-0.5 h-0.5 bg-Ocean/20 rounded-full animate-float-2">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Close button with hover animation -->
+                    <button id="closeSidebar"
+                        class="lg:hidden text-gray-500 hover:text-Ocean p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 group">
+                        <i class="fas fa-times text-lg group-hover:rotate-90 transition-transform duration-300"></i>
+                    </button>
+                </div>
             </div>
 
             <!-- Desktop Navigation -->
@@ -15,10 +59,8 @@
                     $menCategories = $categories->where('gender', 'men')->sortBy('sort_order');
                 @endphp
                 @if ($menCategories->count() > 0)
-                    <div class="relative group" id="menCategory" x-data="{ open: false }" 
-                         @mouseenter="open = true" 
-                         @mouseleave="open = false"
-                         @keydown.escape="open = false">
+                    <div class="relative group" id="menCategory" x-data="{ open: false }" @mouseenter="open = true"
+                        @mouseleave="open = false" @keydown.escape="open = false">
                         <a href="{{ url('men') }}"
                             class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10 {{ request()->is('men') || request()->is('men/*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">
                             {{ __('messages.men') }}
@@ -26,16 +68,14 @@
                         <!-- Mega Dropdown with invisible spacer -->
                         <div class="absolute left-0 w-full h-4" style="top: 100%;"></div>
                         <!-- Mega Dropdown -->
-                        <div x-show="open" 
-                             x-cloak
-                             x-transition:enter="transition ease-out duration-200"
-                             x-transition:enter-start="opacity-0 translate-y-1"
-                             x-transition:enter-end="opacity-100 translate-y-0"
-                             x-transition:leave="transition ease-in duration-150"
-                             x-transition:leave-start="opacity-100 translate-y-0"
-                             x-transition:leave-end="opacity-0 translate-y-1"
-                             class="absolute left-0 mt-4 w-screen max-w-6xl bg-white shadow-lg rounded-lg z-50 border border-gray-100 ml-48"
-                             style="left: 50%; transform: translateX(-50%);">
+                        <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 translate-y-1"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 translate-y-1"
+                            class="absolute left-0 mt-4 w-screen max-w-6xl bg-white shadow-lg rounded-lg z-50 border border-gray-100 ml-48"
+                            style="left: 50%; transform: translateX(-50%);">
                             <div class="px-8 py-6 grid grid-cols-3 gap-8">
                                 <!-- Clothing Section -->
                                 <div>
@@ -63,13 +103,13 @@
                                     <ul class="space-y-3">
                                         @foreach ($menCategories->whereNotIn('name', ['Shirts', 'T-Shirts', 'Pants'])->take(8) as $category)
                                             <li>
-                                                <a href="{{ url('category/' . $category->slug) }}"
+                                                <a href="{{ url('men/?category=' . $category->slug) }}"
                                                     class="text-gray-600 hover:text-gray-900 text-sm block py-1 hover:bg-gray-50 rounded px-2 transition-colors">
                                                     {{ $category->name }}
                                                 </a>
                                             </li>
                                         @endforeach
-                                        <!-- Add more default items if needed -->
+                                        {{-- <!-- Add more default items if needed -->
                                         <li>
                                             <a href="#"
                                                 class="text-gray-600 hover:text-gray-900 text-sm block py-1 hover:bg-gray-50 rounded px-2 transition-colors">
@@ -99,7 +139,7 @@
                                                 class="text-gray-600 hover:text-gray-900 text-sm block py-1 hover:bg-gray-50 rounded px-2 transition-colors">
                                                 {{ __('messages.activewear') }}
                                             </a>
-                                        </li>
+                                        </li> --}}
                                     </ul>
                                 </div>
 
@@ -126,10 +166,8 @@
                     $womenCategories = $categories->where('gender', 'women')->sortBy('sort_order');
                 @endphp
                 @if ($womenCategories->count() > 0)
-                    <div class="relative group" id="womenCategory" x-data="{ open: false }" 
-                         @mouseenter="open = true" 
-                         @mouseleave="open = false"
-                         @keydown.escape="open = false">
+                    <div class="relative group" id="womenCategory" x-data="{ open: false }" @mouseenter="open = true"
+                        @mouseleave="open = false" @keydown.escape="open = false">
                         <a href="{{ url('women') }}"
                             class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10 {{ request()->is('women') || request()->is('women/*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">
                             {{ __('messages.women') }}
@@ -137,16 +175,14 @@
                         <!-- Invisible spacer to bridge the gap -->
                         <div class="absolute left-0 w-full h-4" style="top: 100%;"></div>
                         <!-- Mega Dropdown -->
-                        <div x-show="open" 
-                             x-cloak
-                             x-transition:enter="transition ease-out duration-200"
-                             x-transition:enter-start="opacity-0 translate-y-1"
-                             x-transition:enter-end="opacity-100 translate-y-0"
-                             x-transition:leave="transition ease-in duration-150"
-                             x-transition:leave-start="opacity-100 translate-y-0"
-                             x-transition:leave-end="opacity-0 translate-y-1"
-                             class="absolute left-0 mt-4 w-screen max-w-6xl bg-white shadow-lg rounded-lg z-50 border border-gray-100 ml-36"
-                             style="left: 50%; transform: translateX(-50%);">
+                        <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 translate-y-1"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 translate-y-1"
+                            class="absolute left-0 mt-4 w-screen max-w-6xl bg-white shadow-lg rounded-lg z-50 border border-gray-100 ml-36"
+                            style="left: 50%; transform: translateX(-50%);">
                             <div class="px-8 py-6 grid grid-cols-3 gap-8">
                                 <!-- Clothing Section -->
                                 <div>
@@ -174,13 +210,13 @@
                                     <ul class="space-y-3">
                                         @foreach ($womenCategories->whereNotIn('name', ['Dresses', 'Tops', 'T-Shirts'])->take(8) as $category)
                                             <li>
-                                                <a href="{{ url('category/' . $category->slug) }}"
+                                                <a href="{{ url('women/?category=' . $category->slug) }}"
                                                     class="text-gray-600 hover:text-gray-900 text-sm block py-1 hover:bg-gray-50 rounded px-2 transition-colors">
                                                     {{ $category->name }}
                                                 </a>
                                             </li>
                                         @endforeach
-                                        <!-- Add more default items if needed -->
+                                        {{-- <!-- Add more default items if needed -->
                                         <li>
                                             <a href="#"
                                                 class="text-gray-600 hover:text-gray-900 text-sm block py-1 hover:bg-gray-50 rounded px-2 transition-colors">
@@ -210,7 +246,7 @@
                                                 class="text-gray-600 hover:text-gray-900 text-sm block py-1 hover:bg-gray-50 rounded px-2 transition-colors">
                                                 {{ __('messages.jumpsuits') }}
                                             </a>
-                                        </li>
+                                        </li> --}}
                                     </ul>
                                 </div>
 
@@ -234,13 +270,11 @@
 
                 <!-- Kids Category -->
                 @php
-                    $kidsCategories = $categories->where('gender', 'unisex')->sortBy('sort_order');
+                    $kidsCategories = $categories->where('gender', 'kids')->sortBy('sort_order');
                 @endphp
                 @if ($kidsCategories->count() > 0)
-                    <div class="relative group" id="kidsCategory" x-data="{ open: false }" 
-                         @mouseenter="open = true" 
-                         @mouseleave="open = false"
-                         @keydown.escape="open = false">
+                    <div class="relative group" id="kidsCategory" x-data="{ open: false }" @mouseenter="open = true"
+                        @mouseleave="open = false" @keydown.escape="open = false">
                         <a href="{{ url('kids') }}"
                             class="nav-link text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors duration-200 relative z-10 {{ request()->is('kids') || request()->is('kids/*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">
                             {{ __('messages.kids') }}
@@ -248,16 +282,14 @@
                         <!-- Invisible spacer to bridge the gap -->
                         <div class="absolute left-0 w-full h-4" style="top: 100%;"></div>
                         <!-- Mega Dropdown -->
-                        <div x-show="open" 
-                             x-cloak
-                             x-transition:enter="transition ease-out duration-200"
-                             x-transition:enter-start="opacity-0 translate-y-1"
-                             x-transition:enter-end="opacity-100 translate-y-0"
-                             x-transition:leave="transition ease-in duration-150"
-                             x-transition:leave-start="opacity-100 translate-y-0"
-                             x-transition:leave-end="opacity-0 translate-y-1"
-                             class="absolute left-0 mt-4 w-screen max-w-6xl bg-white shadow-lg rounded-lg z-50 border border-gray-100  ml-36"
-                             style="left: 50%; transform: translateX(-50%);">
+                        <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 translate-y-1"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 translate-y-1"
+                            class="absolute left-0 mt-4 w-screen max-w-6xl bg-white shadow-lg rounded-lg z-50 border border-gray-100  ml-36"
+                            style="left: 50%; transform: translateX(-50%);">
                             <div class="px-8 py-6 grid grid-cols-3 gap-8">
                                 <!-- Boys Section -->
                                 <div>
@@ -265,7 +297,7 @@
                                         {{ __('messages.boys') }}
                                     </h3>
                                     <ul class="space-y-3">
-                                        @foreach ($kidsCategories->where('name', 'T-Shirts') as $category)
+                                        @foreach ($kidsCategories->whereIn('name', ['Shirts', 'T-Shirts', 'Sweaters']) as $category)
                                             <li>
                                                 <a href="{{ url('kids/?category=' . $category->slug) }}"
                                                     class="text-gray-600 hover:text-gray-900 text-sm block py-1 hover:bg-gray-50 rounded px-2 transition-colors">
@@ -273,7 +305,7 @@
                                                 </a>
                                             </li>
                                         @endforeach
-                                        <li>
+                                        {{-- <li>
                                             <a href="#"
                                                 class="text-gray-600 hover:text-gray-900 text-sm block py-1 hover:bg-gray-50 rounded px-2 transition-colors">
                                                 {{ __('messages.pants_jeans') }}
@@ -290,7 +322,7 @@
                                                 class="text-gray-600 hover:text-gray-900 text-sm block py-1 hover:bg-gray-50 rounded px-2 transition-colors">
                                                 {{ __('messages.shoes') }}
                                             </a>
-                                        </li>
+                                        </li> --}}
                                     </ul>
                                 </div>
 
@@ -300,7 +332,15 @@
                                         {{ __('messages.girls') }}
                                     </h3>
                                     <ul class="space-y-3">
-                                        <li>
+                                        @foreach ($kidsCategories->whereIn('name', ['Jackets', 'T-Shirts', 'Sweaters']) as $category)
+                                            <li>
+                                                <a href="{{ url('kids/?category=' . $category->slug) }}"
+                                                    class="text-gray-600 hover:text-gray-900 text-sm block py-1 hover:bg-gray-50 rounded px-2 transition-colors">
+                                                    {{ $category->name }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                        {{-- <li>
                                             <a href="#"
                                                 class="text-gray-600 hover:text-gray-900 text-sm block py-1 hover:bg-gray-50 rounded px-2 transition-colors">
                                                 {{ __('messages.dresses') }}
@@ -323,7 +363,7 @@
                                                 class="text-gray-600 hover:text-gray-900 text-sm block py-1 hover:bg-gray-50 rounded px-2 transition-colors">
                                                 {{ __('messages.shoes') }}
                                             </a>
-                                        </li>
+                                        </li> --}}
                                     </ul>
                                 </div>
 
@@ -351,12 +391,12 @@
                         {{ __('messages.orders') }}
                     </a>
 
-                    @if (auth()->user()->user_type === 'admin')
+                    {{-- @if (auth()->user()->user_type === 'admin')
                         <a href="{{ route('admin.dashboard') }}"
                             class="nav-link text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200 {{ request()->routeIs('admin.*') ? 'text-gray-900 font-semibold border-b-2 border-gray-900' : '' }}">
                             {{ __('messages.admin') }}
                         </a>
-                    @endif
+                    @endif --}}
                 @endauth
             </div>
 
@@ -432,9 +472,9 @@
                                 {{ __('messages.my_orders') }}
                             </a>
                             <div class="border-t border-gray-100 mt-1">
-                                <form method="POST" action="{{ route('logout') }}">
+                                <form method="POST" action="{{ route('logout') }}" id="logoutForm">
                                     @csrf
-                                    <button type="submit"
+                                    <button type="button" onclick="confirmLogout(event)"
                                         class="flex items-center w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200 group">
                                         <i
                                             class="fas fa-sign-out-alt mr-3 text-gray-400 group-hover:text-gray-600 transition-colors duration-200"></i>
@@ -495,11 +535,11 @@
                     <a href="{{ route('orders.index') }}" class="block py-2 text-gray-700 hover:text-gray-900">
                         {{ __('messages.orders') }}
                     </a>
-                    @if (auth()->user()->user_type === 'admin')
+                    {{-- @if (auth()->user()->user_type === 'admin')
                         <a href="{{ route('admin.dashboard') }}" class="block py-2 text-gray-700 hover:text-gray-900">
                             {{ __('messages.admin') }}
                         </a>
-                    @endif
+                    @endif --}}
 
                     <!-- Mobile User Info -->
                     <div class="px-3 py-2 border-t border-gray-200 mt-2 pt-3">
@@ -529,10 +569,10 @@
                                 class="block text-sm text-gray-700 hover:text-gray-900 py-1">
                                 <i class="fas fa-shopping-bag mr-2 text-gray-400"></i> {{ __('messages.my_orders') }}
                             </a>
-                            <form method="POST" action="{{ route('logout') }}">
+                            <form method="POST" action="{{ route('logout') }}" id="logoutFormMobile">
                                 @csrf
-                                <button type="submit"
-                                    class="block w-full text-left text-sm text-gray-700 hover:text-gray-900 py-1">
+                                <button type="button" onclick="confirmLogout(event)"
+                                    class="block w-full text-left text-sm text-gray-700 hover:text-gray-900 py-2">
                                     <i class="fas fa-sign-out-alt mr-2 text-gray-400"></i> {{ __('messages.sign_out') }}
                                 </button>
                             </form>
@@ -703,9 +743,10 @@
                             </div>
 
                             <!-- Products Grid -->
-                            <div id="searchResults" class="p-6 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <!-- Products will be loaded here -->
-                            </div>
+                           <!-- Replace this section in your HTML -->
+<div id="searchResults" class="p-6 overflow-y-auto">
+    <!-- Products will be loaded here -->
+</div>
                         </div>
                     </div>
                 </div>
@@ -727,13 +768,13 @@
     [x-cloak] {
         display: none !important;
     }
-    
+
     /* Fix dropdown positioning */
     .relative.group .absolute {
         left: 50% !important;
         transform: translateX(-50%) !important;
     }
-    
+
     /* Ensure smooth transitions */
     .navbar {
         will-change: transform;
@@ -741,6 +782,8 @@
         -webkit-font-smoothing: antialiased;
     }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     // User dropdown functionality
@@ -1081,11 +1124,11 @@
                 const formattedMaxPrice = maxPrice > minPrice ? `$${maxPrice.toFixed(2)}` : '';
 
                 html += `
-            <div class="group bg-white rounded-lg overflow-hidden border border-gray-200 hover:border-gray-300 transition-all duration-200">
+            <div class="group bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-200">
                 <!-- Compact Product Card -->
                 <div class="flex p-3">
                     <!-- Image Container (Smaller) -->
-                    <div class="w-20 h-20 flex-shrink-0 relative">
+                    <div class="w-14 h-w-14 flex-shrink-0 relative">
                         <a href="/product/${product.slug}" class="block relative overflow-hidden bg-gray-100 rounded-md">
                             <img src="${imageUrl}" alt="${product.name}"
                                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
@@ -1135,18 +1178,6 @@
                             </div>` : 
                             ''
                         }
-                        
-                        <!-- Action Buttons (Compact) -->
-                        <div class="mt-2 flex items-center space-x-2">
-                            <button onclick="addToCartFromSearch('${product.slug}', event)"
-                                    class="px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded hover:bg-gray-800 transition-colors">
-                                {{ __('messages.add_to_cart') }}
-                            </button>
-                            <button onclick="quickView('${product.slug}', event)"
-                                    class="px-3 py-1.5 border border-gray-300 text-gray-700 text-xs font-medium rounded hover:bg-gray-50 transition-colors">
-                                {{ __('messages.quick_view') }}
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -1359,21 +1390,22 @@
         // FIX: Close all dropdowns before page navigation to prevent flickering
         document.querySelectorAll('a[href]').forEach(link => {
             link.addEventListener('click', function(e) {
-                if (this.getAttribute('href').startsWith('/') && !this.getAttribute('href').startsWith('#')) {
+                if (this.getAttribute('href').startsWith('/') && !this.getAttribute('href')
+                    .startsWith('#')) {
                     // Close all mega dropdowns
                     document.querySelectorAll('[x-data]').forEach(el => {
                         if (el.__x && el.__x.$data && el.__x.$data.open !== undefined) {
                             el.__x.$data.open = false;
                         }
                     });
-                    
+
                     // Close user dropdown
                     const userDropdown = document.getElementById('userDropdown');
                     if (userDropdown && !userDropdown.classList.contains('hidden')) {
                         userDropdown.classList.add('hidden');
                         userDropdown.classList.remove('animate-fadeIn');
                     }
-                    
+
                     // Close mobile menu
                     const mobileMenu = document.getElementById('mobileMenu');
                     if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
@@ -1561,4 +1593,57 @@
         `;
         document.head.appendChild(style);
     });
+
+    // Logout confirmation with SweetAlert2 - form version
+    window.confirmLogout = async function(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        const result = await Swal.fire({
+            title: '{{ __('messages.confirm_logout') }}',
+            text: '{{ __('messages.are_you_sure_logout') }}',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: '{{ __('messages.yes_logout') }}',
+            cancelButtonText: '{{ __('messages.cancel') }}',
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#6b7280',
+            reverseButtons: true,
+            customClass: {
+                popup: 'rounded-xl shadow-2xl',
+                confirmButton: 'px-4 py-2 rounded-lg',
+                cancelButton: 'px-4 py-2 rounded-lg'
+            }
+        });
+
+        if (result.isConfirmed) {
+            // Find and submit the appropriate form
+            let form;
+            if (window.innerWidth >= 768) {
+                form = document.getElementById('logoutForm');
+            } else {
+                form = document.getElementById('logoutFormMobile');
+            }
+
+            if (form) {
+                form.submit();
+            } else {
+                // Fallback: create and submit form
+                const newForm = document.createElement('form');
+                newForm.method = 'POST';
+                newForm.action = '{{ route('logout') }}';
+
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = '{{ csrf_token() }}';
+
+                newForm.appendChild(csrfToken);
+                document.body.appendChild(newForm);
+                newForm.submit();
+            }
+        }
+    };
 </script>

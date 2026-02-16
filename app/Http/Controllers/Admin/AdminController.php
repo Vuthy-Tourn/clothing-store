@@ -250,48 +250,92 @@ public function topProducts()
     }
 }
 
-  public function orderStatusDistribution()
-{
-    try {
-        // Your order statuses from the database
-        $statuses = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'refunded'];
-        $distribution = [];
-        
-        foreach ($statuses as $status) {
-            $distribution[] = Order::where('order_status', $status)->count() ?? 0;
+  public function orderStatusDistribution(Request $request)
+    {
+        try {
+            // IMPORTANT: Set locale from session for AJAX requests
+            if (session()->has('locale')) {
+                app()->setLocale(session('locale'));
+            }
+            
+            // DEBUG: Verify locale is set correctly
+            Log::info('Order Status Distribution - Fixed locale:', [
+                'session_locale' => session('locale'),
+                'app_locale' => app()->getLocale(),
+                'is_km' => app()->getLocale() === 'km'
+            ]);
+
+            // Your order statuses from the database
+            $statusKeys = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'refunded'];
+            $distribution = [];
+            
+            foreach ($statusKeys as $status) {
+                $distribution[] = Order::where('order_status', $status)->count() ?? 0;
+            }
+
+            // Also get payment status distribution
+            $paymentStatusKeys = ['pending', 'paid', 'failed', 'refunded'];
+            $paymentDistribution = [];
+            
+            foreach ($paymentStatusKeys as $status) {
+                $paymentDistribution[] = Order::where('payment_status', $status)->count() ?? 0;
+            }
+
+            // Map database statuses to translation keys
+            $orderStatusLabels = array_map(function($status) {
+                return __('admin.orders.status.' . $status);
+            }, $statusKeys);
+            
+            $paymentStatusLabels = array_map(function($status) {
+                return __('admin.payments.status.' . $status);
+            }, $paymentStatusKeys);
+
+            return response()->json([
+                'order_status_distribution' => $distribution,
+                'order_status_labels' => $orderStatusLabels,
+                'order_status_keys' => $statusKeys,
+                'payment_status_distribution' => $paymentDistribution,
+                'payment_status_labels' => $paymentStatusLabels,
+                'payment_status_keys' => $paymentStatusKeys,
+                'debug' => [
+                    'locale' => app()->getLocale(),
+                    'session_locale' => session('locale'),
+                    'is_km' => app()->getLocale() === 'km',
+                    'test_translation' => __('admin.orders.status.pending')
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Order Status Error: ' . $e->getMessage());
+            
+            // Fallback translated labels
+            $orderStatusLabels = [
+                __('admin.orders.status.pending'),
+                __('admin.orders.status.confirmed'),
+                __('admin.orders.status.processing'),
+                __('admin.orders.status.shipped'),
+                __('admin.orders.status.delivered'),
+                __('admin.orders.status.cancelled'),
+                __('admin.orders.status.refunded')
+            ];
+            
+            $paymentStatusLabels = [
+                __('admin.payments.status.pending'),
+                __('admin.payments.status.paid'),
+                __('admin.payments.status.failed'),
+                __('admin.payments.status.refunded')
+            ];
+            
+            return response()->json([
+                'error' => 'Failed to fetch order distribution',
+                'message' => $e->getMessage(),
+                'order_status_distribution' => array_fill(0, count($orderStatusLabels), 0),
+                'order_status_labels' => $orderStatusLabels,
+                'payment_status_distribution' => array_fill(0, count($paymentStatusLabels), 0),
+                'payment_status_labels' => $paymentStatusLabels
+            ], 200);
         }
-
-        // Also get payment status distribution
-        $paymentStatuses = ['pending', 'paid', 'failed', 'refunded'];
-        $paymentDistribution = [];
-        
-        foreach ($paymentStatuses as $status) {
-            $paymentDistribution[] = Order::where('payment_status', $status)->count() ?? 0;
-        }
-
-        return response()->json([
-            'order_status_distribution' => $distribution,
-            'order_status_labels' => $statuses,
-            'payment_status_distribution' => $paymentDistribution,
-            'payment_status_labels' => $paymentStatuses
-        ]);
-
-    } catch (\Exception $e) {
-        Log::error('Order Status Error: ' . $e->getMessage());
-        
-        $statuses = ['Pending', 'Confirmed', 'Processing', 'Shipped', 'Delivered', 'Cancelled', 'Refunded'];
-        $paymentStatuses = ['pending', 'paid', 'failed', 'refunded'];
-        
-        return response()->json([
-            'error' => 'Failed to fetch order distribution',
-            'message' => $e->getMessage(),
-            'order_status_distribution' => array_fill(0, count($statuses), 0),
-            'order_status_labels' => $statuses,
-            'payment_status_distribution' => array_fill(0, count($paymentStatuses), 0),
-            'payment_status_labels' => $paymentStatuses
-        ], 200);
     }
-}
 
    public function performanceMetrics()
 {
@@ -359,20 +403,35 @@ public function topProducts()
 
 public function salesChart(Request $request)
 {
+    // Set locale from session for AJAX requests
+    if (session()->has('locale')) {
+        app()->setLocale(session('locale'));
+    }
+    
     $period = $request->get('period', 'week');
     
     try {
         $data = [];
         $labels = [];
-        $debugInfo = []; // For debugging
+        $debugInfo = [];
 
         if ($period === 'week') {
             // Last 7 days
             for ($i = 6; $i >= 0; $i--) {
                 $date = now()->subDays($i);
-                $dayName = $date->format('D');
+                $dayNumber = $date->format('N'); // 1 (Monday) through 7 (Sunday)
                 
-                // Check if there are ANY orders on this date
+                // Full day name translations
+                $dayTranslations = [
+                    '1' => __('admin.charts.days.monday'),
+                    '2' => __('admin.charts.days.tuesday'),
+                    '3' => __('admin.charts.days.wednesday'),
+                    '4' => __('admin.charts.days.thursday'),
+                    '5' => __('admin.charts.days.friday'),
+                    '6' => __('admin.charts.days.saturday'),
+                    '7' => __('admin.charts.days.sunday'),
+                ];
+                
                 $totalOrders = Order::whereDate('created_at', $date->toDateString())
                     ->count();
                 
@@ -381,13 +440,13 @@ public function salesChart(Request $request)
                     ->whereDate('created_at', $date->toDateString())
                     ->sum('total_amount') ?? 0;
                 
-                $labels[] = $dayName;
+                // Use full day name
+                $labels[] = $dayTranslations[$dayNumber] ?? $date->format('l');
                 $data[] = (float) $sales;
                 
-                // Debug info
                 $debugInfo[] = [
                     'date' => $date->toDateString(),
-                    'day' => $dayName,
+                    'day' => $labels[count($labels)-1],
                     'total_orders' => $totalOrders,
                     'sales' => $sales
                 ];
@@ -408,12 +467,16 @@ public function salesChart(Request $request)
                     ->sum('total_amount') ?? 0;
                 
                 $weekNum = 4 - $i;
-                $labels[] = 'Week ' . $weekNum;
+                $labels[] = __('admin.charts.week_number', ['number' => $weekNum]);
                 $data[] = (float) $sales;
                 
                 $debugInfo[] = [
-                    'period' => $startDate->format('M d') . ' - ' . $endDate->format('M d'),
-                    'week' => 'Week ' . $weekNum,
+                    'period' => __('admin.charts.date_range', [
+                        'start' => $startDate->format('d'),
+                        'end' => $endDate->format('d'),
+                        'month' => __('admin.charts.months.' . strtolower($startDate->format('F')))
+                    ]),
+                    'week' => __('admin.charts.week_number', ['number' => $weekNum]),
                     'total_orders' => $totalOrders,
                     'sales' => $sales
                 ];
@@ -423,7 +486,23 @@ public function salesChart(Request $request)
             // Last 12 months
             for ($i = 11; $i >= 0; $i--) {
                 $month = now()->subMonths($i);
-                $monthName = $month->format('M');
+                $monthNumber = $month->format('n'); // 1-12
+                
+                // Full month name translations
+                $monthTranslations = [
+                    '1' => __('admin.charts.months.january'),
+                    '2' => __('admin.charts.months.february'),
+                    '3' => __('admin.charts.months.march'),
+                    '4' => __('admin.charts.months.april'),
+                    '5' => __('admin.charts.months.may'),
+                    '6' => __('admin.charts.months.june'),
+                    '7' => __('admin.charts.months.july'),
+                    '8' => __('admin.charts.months.august'),
+                    '9' => __('admin.charts.months.september'),
+                    '10' => __('admin.charts.months.october'),
+                    '11' => __('admin.charts.months.november'),
+                    '12' => __('admin.charts.months.december'),
+                ];
                 
                 $totalOrders = Order::whereMonth('created_at', $month->month)
                     ->whereYear('created_at', $month->year)
@@ -435,11 +514,13 @@ public function salesChart(Request $request)
                     ->whereYear('created_at', $month->year)
                     ->sum('total_amount') ?? 0;
                 
-                $labels[] = $monthName;
+                // Use full month name
+                $labels[] = $monthTranslations[$monthNumber] ?? $month->format('F');
                 $data[] = (float) $sales;
                 
                 $debugInfo[] = [
-                    'month' => $monthName,
+                    'month' => $labels[count($labels)-1],
+                    'year' => $month->format('Y'),
                     'total_orders' => $totalOrders,
                     'sales' => $sales
                 ];
@@ -452,22 +533,48 @@ public function salesChart(Request $request)
             'period' => $period,
             'total_sales' => array_sum($data),
             'average_sales' => count($data) > 0 ? round(array_sum($data) / count($data), 2) : 0,
-            'debug' => $debugInfo, // Add debug info
+            'debug' => $debugInfo,
             'has_data' => array_sum($data) > 0
         ]);
 
     } catch (\Exception $e) {
         Log::error('Sales Chart Error: ' . $e->getMessage());
         
-        // Return empty data structure
+        // Return translated full labels for empty data structure
         if ($period === 'week') {
-            $labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            $labels = [
+                __('admin.charts.days.monday'),
+                __('admin.charts.days.tuesday'),
+                __('admin.charts.days.wednesday'),
+                __('admin.charts.days.thursday'),
+                __('admin.charts.days.friday'),
+                __('admin.charts.days.saturday'),
+                __('admin.charts.days.sunday'),
+            ];
             $data = array_fill(0, 7, 0);
         } elseif ($period === 'month') {
-            $labels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+            $labels = [
+                __('admin.charts.week_number', ['number' => 1]),
+                __('admin.charts.week_number', ['number' => 2]),
+                __('admin.charts.week_number', ['number' => 3]),
+                __('admin.charts.week_number', ['number' => 4]),
+            ];
             $data = array_fill(0, 4, 0);
         } else {
-            $labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            $labels = [
+                __('admin.charts.months.january'),
+                __('admin.charts.months.february'),
+                __('admin.charts.months.march'),
+                __('admin.charts.months.april'),
+                __('admin.charts.months.may'),
+                __('admin.charts.months.june'),
+                __('admin.charts.months.july'),
+                __('admin.charts.months.august'),
+                __('admin.charts.months.september'),
+                __('admin.charts.months.october'),
+                __('admin.charts.months.november'),
+                __('admin.charts.months.december'),
+            ];
             $data = array_fill(0, 12, 0);
         }
         
